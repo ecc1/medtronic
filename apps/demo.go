@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	dev, err := spi.Open(cc1100.SpiSpeed, 0)
+	dev, err := spi.Open(cc1100.SpiSpeed)
 	if err != nil {
 		log.Fatal(err)
 	}
