@@ -10,12 +10,12 @@ package cc1100
 //	Copyright © 2008 Keith Packard <keithp@keithp.com>
 
 const (
+	// Crystal frequency in Hz.
 	FXOSC = 26000000
 
-	// Definitions to support burst/single access:
-	WRITE_BURST = 0x40
-	READ_SINGLE = 0x80
-	READ_BURST  = 0xC0
+	// SPI transaction header bits for read/write and burst/single access.
+	READ_MODE  = 1 << 7
+	BURST_MODE = 1 << 6
 )
 
 // R/W configuration registers
@@ -123,21 +123,23 @@ const (
 )
 
 // Status registers (read-only)
+// Since these must be read with the burst access bit set,
+// it is included in the address for simplicity.
 const (
-	PARTNUM        = 0x30 // Part number
-	VERSION        = 0x31 // Current version number
-	FREQEST        = 0x32 // Frequency offset estimate
-	LQI            = 0x33 // Demodulator estimate for link quality
-	RSSI           = 0x34 // Received signal strength indication
-	MARCSTATE      = 0x35 // Control state machine state
-	WORTIME1       = 0x36 // High byte of WOR timer
-	WORTIME0       = 0x37 // Low byte of WOR timer
-	PKTSTATUS      = 0x38 // Current GDOx status and packet status
-	VCO_VC_DAC     = 0x39 // Current setting from PLL cal module
-	TXBYTES        = 0x3A // Underflow and # of bytes in TXFIFO
-	RXBYTES        = 0x3B // Overflow and # of bytes in RXFIFO
-	RCCTRL1_STATUS = 0x3C
-	RCCTRL0_STATUS = 0x3D
+	PARTNUM        = 0x70 // Part number
+	VERSION        = 0x71 // Current version number
+	FREQEST        = 0x72 // Frequency offset estimate
+	LQI            = 0x73 // Demodulator estimate for link quality
+	RSSI           = 0x74 // Received signal strength indication
+	MARCSTATE      = 0x75 // Control state machine state
+	WORTIME1       = 0x76 // High byte of WOR timer
+	WORTIME0       = 0x77 // Low byte of WOR timer
+	PKTSTATUS      = 0x78 // Current GDOx status and packet status
+	VCO_VC_DAC     = 0x79 // Current setting from PLL cal module
+	TXBYTES        = 0x7A // Underflow and # of bytes in TXFIFO
+	RXBYTES        = 0x7B // Overflow and # of bytes in RXFIFO
+	RCCTRL1_STATUS = 0x7C
+	RCCTRL0_STATUS = 0x7D
 )
 
 const (
@@ -147,20 +149,26 @@ const (
 	// FIFOs
 	TXFIFO = 0x3F
 	RXFIFO = 0x3F
+)
 
-	CHIP_RDY = 0x80
+const (
+	STATE_IDLE = iota
+	STATE_RX
+	STATE_TX
+	STATE_FSTXON
+	STATE_CALIBRATE
+	STATE_SETTLING
+	STATE_RXFIFO_OVERFLOW
+	STATE_TXFIFO_UNDERFLOW
 
 	// status bits 6:4
-	STATE_MASK             = (0x07 << 4)
-	STATE_IDLE             = (0x00 << 4)
-	STATE_RX               = (0x01 << 4)
-	STATE_TX               = (0x02 << 4)
-	STATE_FSTXON           = (0x03 << 4)
-	STATE_CALIBRATE        = (0x04 << 4)
-	STATE_SETTLING         = (0x05 << 4)
-	STATE_RXFIFO_OVERFLOW  = (0X06 << 4)
-	STATE_TXFIFO_UNDERFLOW = (0x07 << 4)
+	STATE_MASK  = 0x7
+	STATE_SHIFT = 4
 
+	CHIP_RDY = 0x80
+)
+
+const (
 	GDO2_INV      = (1 << 6)
 	GDO2_CFG_MASK = 0x3f
 
