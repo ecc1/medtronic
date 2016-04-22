@@ -8,7 +8,6 @@ import (
 )
 
 func DumpRF(dev *spi.Device) {
-	awaitIdleState(dev)
 	freq, err := ReadFrequency(dev)
 	if err != nil {
 		log.Fatal(err)
@@ -25,17 +24,6 @@ func readReg(dev *spi.Device, addr byte) byte {
 		log.Fatal(err)
 	}
 	return v
-}
-
-func awaitIdleState(dev *spi.Device) {
-	for {
-		m := readReg(dev, MARCSTATE)
-		fmt.Printf("MARCSTATE: %s\n", marcState[m&MARCSTATE_MASK])
-		switch m & MARCSTATE_MASK {
-		case MARCSTATE_SLEEP, MARCSTATE_IDLE:
-			return
-		}
-	}
 }
 
 func showFreqSynthControl(dev *spi.Device) {
@@ -61,13 +49,12 @@ func showModemConfig(dev *spi.Device) {
 	fmt.Printf("Modulation format: %s\n", modFormat[(m2&MDMCFG2_MOD_FORMAT_MASK)>>4])
 	fmt.Printf("Sync mode: %s\n", syncMode[m2&MDMCFG2_SYNC_MODE_MASK])
 
-	m1 := readReg(dev, MDMCFG1)
-	showBoolCondition("Forward Error Correction", m1&MDMCFG1_FEC_EN != 0)
-	fmt.Printf("Min preamble bytes: %d\n", numPreamble[(m1&MDMCFG1_NUM_PREAMBLE_MASK)>>4])
-
-	chanspc_E := m1 & MDMCFG1_CHANSPC_E_MASK
-	chanspc_M := readReg(dev, MDMCFG0)
-	chanspc := (((256+uint64(chanspc_M))<<chanspc_E)*FXOSC) >> 18
+	fec, minPreamble, chanspc, err := ReadModemConfig(dev)
+	if err != nil {
+		log.Fatal(err)
+	}
+	showBoolCondition("Forward Error Correction", fec)
+	fmt.Printf("Min preamble bytes: %d\n", minPreamble)
 	fmt.Printf("Channel spacing: %d Hz\n", chanspc)
 }
 
@@ -79,18 +66,57 @@ func showBoolCondition(name string, cond bool) {
 	}
 }
 
+func strobeName(strobe byte) string {
+	return strobeString[strobe-SRES]
+}
+
 var (
+	stateName = []string{
+		"IDLE",
+		"RX",
+		"TX",
+		"FSTXON",
+		"CALIBRATE",
+		"SETTLING",
+		"RXFIFO_OVERFLOW",
+		"TXFIFO_UNDERFLOW",
+	}
+
 	marcState = []string{
-		"SLEEP", "IDLE", "XOFF", "VCOON_MC",
-		"REGON_MC", "MANCAL", "VCOON", "REGON",
-		"STARTCAL", "BWBOOST", "FS_LOCK", "IFADCON",
-		"ENDCAL", "RX", "RX_END", "RX_RST",
-		"TXRX_SWITCH", "RX_OVERFLOW", "FSTXON", "TX",
-		"TX_END", "RXTX_SWITCH", "TX_UNDERFLOW",
+		"SLEEP",
+		"IDLE",
+		"XOFF",
+		"VCOON_MC",
+		"REGON_MC",
+		"MANCAL",
+		"VCOON",
+		"REGON",
+		"STARTCAL",
+		"BWBOOST",
+		"FS_LOCK",
+		"IFADCON",
+		"ENDCAL",
+		"RX",
+		"RX_END",
+		"RX_RST",
+		"TXRX_SWITCH",
+		"RXFIFO_OVERFLOW",
+		"FSTXON",
+		"TX",
+		"TX_END",
+		"RXTX_SWITCH",
+		"TXFIFO_UNDERFLOW",
 	}
 
 	modFormat = []string{
-		"2-FSK", "GFSK", "-", "OOK", "-", "-", "-", "MSK",
+		"2-FSK",
+		"GFSK",
+		"-",
+		"OOK",
+		"-",
+		"-",
+		"-",
+		"MSK",
 	}
 
 	syncMode = []string{
@@ -105,4 +131,21 @@ var (
 	}
 
 	numPreamble = []uint8{2, 3, 4, 6, 8, 12, 16, 24}
+
+	strobeString = []string{
+		"SRES",
+		"SFSTXON",
+		"SXOFF",
+		"SCAL",
+		"SRX",
+		"STX",
+		"SIDLE",
+		"SAFC",
+		"SWOR",
+		"SPWD",
+		"SFRX",
+		"SFTX",
+		"SWORRST",
+		"SNOP",
+	}
 )

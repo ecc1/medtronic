@@ -1,11 +1,14 @@
 package cc1100
 
 import (
+	"log"
+	"time"
+
 	"github.com/ecc1/spi"
 )
 
 func InitRF(dev *spi.Device) error {
-	err := Write(dev, []byte{
+	err := WriteEach(dev, []byte{
 		IOCFG2, 0x0E,
 		IOCFG1, GDO1_DS,
 		IOCFG0, 0x06,
@@ -127,7 +130,7 @@ func InitRF(dev *spi.Device) error {
 	// Power amplifier output settings
 	// (see Table 72 on page 207 of the datasheet)
 	err = dev.Transfer([]byte{
-		WRITE_BURST | PATABLE,
+		BURST_MODE | PATABLE,
 		0x00,
 		0xC0, // 10dBm, 36mA
 	})
@@ -180,6 +183,100 @@ func ReadChannelParams(dev *spi.Device) (chanbw uint32, drate uint32, err error)
 	}
 
 	chanbw = uint32(FXOSC / ((4 + uint64(chanbw_M)) << (chanbw_E + 3)))
-	drate = uint32((((256+uint64(drate_M))<<drate_E)*FXOSC) >> 28)
+	drate = uint32((((256 + uint64(drate_M)) << drate_E) * FXOSC) >> 28)
 	return
+}
+
+func ReadModemConfig(dev *spi.Device) (fec bool, minPreamble byte, chanspc uint32, err error) {
+	var m1 byte
+	m1, err = ReadRegister(dev, MDMCFG1)
+	if err != nil {
+		return
+	}
+	fec = m1&MDMCFG1_FEC_EN != 0
+	minPreamble = numPreamble[(m1&MDMCFG1_NUM_PREAMBLE_MASK)>>4]
+	chanspc_E := m1 & MDMCFG1_CHANSPC_E_MASK
+	var chanspc_M byte
+	chanspc_M, err = ReadRegister(dev, MDMCFG0)
+	if err != nil {
+		return
+	}
+	chanspc = uint32((((256 + uint64(chanspc_M)) << chanspc_E) * FXOSC) >> 18)
+	return
+}
+
+const (
+	rssi_offset = 74 // see data sheet section 17.3
+	minRSSI     = -80
+)
+
+func ReadRSSI(dev *spi.Device) (int, error) {
+	r, err := ReadRegister(dev, RSSI)
+	if err != nil {
+		return 0, err
+	}
+	d := int(r)
+	if d >= 128 {
+		d -= 256
+	}
+	return d/2 - rssi_offset, nil
+}
+
+func PollReceiver(dev *spi.Device) (byte, bool, error) {
+	rxbytes, err := ReadRegister(dev, RXBYTES)
+	if err != nil {
+		return 0, false, err
+	}
+	return rxbytes & NUM_RXBYTES_MASK, rxbytes&RXFIFO_OVERFLOW != 0, nil
+}
+
+func ReceivePacket(dev *spi.Device) ([]byte, error) {
+	for {
+		state, err := ReadState(dev)
+		if err != nil {
+			return nil, err
+		}
+		if state != STATE_RX {
+			err = ChangeState(dev, SRX, STATE_RX)
+			if err != nil {
+				return nil, err
+			}
+			continue
+		}
+		n, overflow, err := PollReceiver(dev)
+		if err != nil {
+			return nil, err
+		}
+		if overflow {
+			log.Printf("RX overflow\n")
+			err = ChangeState(dev, SIDLE, STATE_IDLE)
+			if err != nil {
+				return nil, err
+			}
+			_, err = Strobe(dev, SFRX)
+			if err != nil {
+				return nil, err
+			}
+			err := ChangeState(dev, SRX, STATE_RX)
+			if err != nil {
+				return nil, err
+			}
+			continue
+		}
+		if n != 0 {
+			r, err := ReadRSSI(dev)
+			if err != nil {
+				return nil, err
+			}
+			packet, err := ReadFifo(dev, n)
+			if r >= minRSSI {
+				log.Printf("RSSI = %d, bytes = %d\n", r, n)
+				return packet, err
+			} else {
+				// ignore noise packet
+				continue
+			}
+		}
+		time.Sleep(time.Millisecond)
+	}
 }
