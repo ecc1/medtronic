@@ -46,6 +46,11 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		r, err := cc1100.ReadRSSI(dev)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
 		printPacket(packet)
 	}
 }

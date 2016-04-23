@@ -109,20 +109,29 @@ func ReadState(dev *spi.Device) (byte, error) {
 }
 
 func ChangeState(dev *spi.Device, strobe byte, desired byte) error {
-	log.Printf("issuing %s command, waiting for %s\n", strobeName(strobe), stateName[desired])
-	status, err := Strobe(dev, strobe)
-	if err != nil {
-		return err
-	}
+	cmd := strobe
 	for {
+		log.Printf("issuing %s command, waiting for %s\n", strobeName(cmd), stateName[desired])
+		status, err := Strobe(dev, cmd)
+		if err != nil {
+			return err
+		}
 		s := (status >> STATE_SHIFT) & STATE_MASK
 		log.Printf("state = %s\n", stateName[s])
 		if s == desired {
 			return nil
 		}
-		status, err = Strobe(dev, SNOP)
-		if err != nil {
-			return err
+		switch s {
+		case STATE_RXFIFO_OVERFLOW:
+			Strobe(dev, SIDLE)
+			Strobe(dev, SFRX)
+			cmd = strobe
+		case STATE_TXFIFO_UNDERFLOW:
+			Strobe(dev, SIDLE)
+			Strobe(dev, SFTX)
+			cmd = strobe
+		default:
+			cmd = SNOP
 		}
 	}
 }

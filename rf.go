@@ -1,7 +1,6 @@
 package cc1100
 
 import (
-	"log"
 	"time"
 
 	"github.com/ecc1/spi"
@@ -23,7 +22,6 @@ func InitRF(dev *spi.Device) error {
 		// always accept sync word
 		// do not append status
 		// no address check
-
 		PKTCTRL1, 0x00,
 
 		// no whitening mode
@@ -207,7 +205,6 @@ func ReadModemConfig(dev *spi.Device) (fec bool, minPreamble byte, chanspc uint3
 
 const (
 	rssi_offset = 74 // see data sheet section 17.3
-	minRSSI     = -80
 )
 
 func ReadRSSI(dev *spi.Device) (int, error) {
@@ -222,15 +219,16 @@ func ReadRSSI(dev *spi.Device) (int, error) {
 	return d/2 - rssi_offset, nil
 }
 
-func PollReceiver(dev *spi.Device) (byte, bool, error) {
+func PollReceiver(dev *spi.Device) (byte, error) {
 	rxbytes, err := ReadRegister(dev, RXBYTES)
 	if err != nil {
-		return 0, false, err
+		return 0, err
 	}
-	return rxbytes & NUM_RXBYTES_MASK, rxbytes&RXFIFO_OVERFLOW != 0, nil
+	return rxbytes & NUM_RXBYTES_MASK, nil
 }
 
 func ReceivePacket(dev *spi.Device) ([]byte, error) {
+	var packet []byte
 	for {
 		state, err := ReadState(dev)
 		if err != nil {
@@ -243,40 +241,25 @@ func ReceivePacket(dev *spi.Device) ([]byte, error) {
 			}
 			continue
 		}
-		n, overflow, err := PollReceiver(dev)
+		n, err := PollReceiver(dev)
 		if err != nil {
 			return nil, err
 		}
-		if overflow {
-			log.Printf("RX overflow\n")
-			err = ChangeState(dev, SIDLE, STATE_IDLE)
-			if err != nil {
-				return nil, err
-			}
-			_, err = Strobe(dev, SFRX)
-			if err != nil {
-				return nil, err
-			}
-			err := ChangeState(dev, SRX, STATE_RX)
-			if err != nil {
-				return nil, err
-			}
+		if n == 0 {
+			time.Sleep(250 * time.Microsecond)
 			continue
 		}
-		if n != 0 {
-			r, err := ReadRSSI(dev)
-			if err != nil {
-				return nil, err
-			}
-			packet, err := ReadFifo(dev, n)
-			if r >= minRSSI {
-				log.Printf("RSSI = %d, bytes = %d\n", r, n)
-				return packet, err
-			} else {
-				// ignore noise packet
-				continue
-			}
+		data, err := ReadFifo(dev, n)
+		if err != nil {
+			return nil, err
 		}
-		time.Sleep(time.Millisecond)
+		if data[0] != 0 {
+			for i := 0; i < len(data); i++ {
+				if data[i] == 0 {
+					return append(packet, data[:i]...), nil
+				}
+			}
+			packet = append(packet, data...)
+		}
 	}
 }
