@@ -36,11 +36,6 @@ func main() {
 	fmt.Printf("\nRF settings after initialization:\n")
 	cc1100.DumpRF(dev)
 
-	err = cc1100.ChangeState(dev, cc1100.SRX, cc1100.STATE_RX)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	for {
 		packet, err := cc1100.ReceivePacket(dev)
 		if err != nil {
@@ -51,11 +46,18 @@ func main() {
 			log.Fatal(err)
 		}
 		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
-		printPacket(packet)
+		printPacket("raw", packet)
+		data, err := cc1100.Decode6b4b(packet)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+		} else {
+			printPacket("decoded", data)
+		}
 	}
 }
 
-func printPacket(data []byte) {
+func printPacket(msg string, data []byte) {
+	fmt.Printf("%s:\n", msg)
 	for i, v := range data {
 		fmt.Printf("%02X ", v)
 		if (i+1)%20 == 0 {
