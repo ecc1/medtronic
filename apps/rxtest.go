@@ -8,6 +8,10 @@ import (
 	"github.com/ecc1/spi"
 )
 
+const (
+	verbose = false
+)
+
 func main() {
 	dev, err := spi.Open(cc1100.SpiSpeed)
 	if err != nil {
@@ -33,8 +37,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("\nRF settings after initialization:\n")
-	cc1100.DumpRF(dev)
+	if verbose {
+		fmt.Printf("\nRF settings after initialization:\n")
+		cc1100.DumpRF(dev)
+	}
 
 	for {
 		packet, err := cc1100.ReceivePacket(dev)
@@ -45,19 +51,34 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
-		printPacket("raw", packet)
+		if verbose {
+			fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
+			printPacket(packet)
+		}
 		data, err := cc1100.Decode6b4b(packet)
 		if err != nil {
-			fmt.Printf("%v\n", err)
-		} else {
-			printPacket("decoded", data)
+			if verbose {
+				fmt.Printf("%v\n", err)
+			}
+			continue
+		}
+		if verbose {
+			printPacket(data)
+		}
+		crc := cc1100.Crc8(data[:len(data)-1])
+		if data[len(data)-1] != crc {
+			if verbose {
+				fmt.Printf("CRC should be %02X, not %02X\n", crc, data[len(data)-1])
+			}
+			continue
+		}
+		if !verbose {
+			printPacket(data)
 		}
 	}
 }
 
-func printPacket(msg string, data []byte) {
-	fmt.Printf("%s:\n", msg)
+func printPacket(data []byte) {
 	for i, v := range data {
 		fmt.Printf("%02X ", v)
 		if (i+1)%20 == 0 {
