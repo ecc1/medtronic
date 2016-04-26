@@ -2,6 +2,7 @@ package cc1100
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -12,7 +13,14 @@ const (
 	writeUsingTransfer = false
 	verifyWrite        = true
 	retryWrite         = false
+	verbose            = false
 )
+
+func init() {
+	if !verbose {
+		log.SetOutput(ioutil.Discard)
+	}
+}
 
 func ReadRegister(dev *spi.Device, addr byte) (byte, error) {
 	buf := []byte{READ_MODE | addr, 0xFF}
