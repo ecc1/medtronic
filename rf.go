@@ -1,43 +1,43 @@
 package cc1100
 
 import (
-	"time"
-
 	"github.com/ecc1/spi"
 )
 
 func InitRF(dev *spi.Device) error {
 	err := WriteEach(dev, []byte{
+		// Carrier sense: high if RSSI level is above threshold
 		IOCFG2, 0x0E,
-		IOCFG1, GDO1_DS,
+		IOCFG1, 0x00,
+		// Assert when sync word has been sent/received
 		IOCFG0, 0x06,
 
-		// sync word
+		// Sync word
 		SYNC1, 0xFF,
 		SYNC0, 0x00,
 
-		// packet length (default)
+		// Packet length
 		PKTLEN, 0xFF,
 
-		// always accept sync word
-		// do not append status
-		// no address check
+		// Always accept sync word
+		// Do not append status
+		// No address check
 		PKTCTRL1, 0x00,
 
-		// no whitening mode
-		// normal format
-		// disable CRC calculation and check
-		// fixed packet length mode
+		// No whitening mode
+		// Normal format
+		// Disable CRC calculation and check
+		// Fixed packet length mode
 		PKTCTRL0, 0x00,
 
 		// channel number
 		CHANNR, 0x00,
 
-		// intermediate frequency
+		// Intermediate frequency
 		// 0x06 * 26 MHz / 2^10 == 152 kHz
 		FSCTRL1, 0x06,
 
-		// frequency offset
+		// Frequency offset
 		FSCTRL0, 0x00,
 
 		// 24-bit base frequency
@@ -46,14 +46,14 @@ func InitRF(dev *spi.Device) error {
 		FREQ1, 0x40,
 		FREQ0, 0xFC,
 
-		// CHANBW_E = 1, CHANBW_M = 1, DRATE_E = 9
-		// channel BW = 26 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 325 kHz
-		MDMCFG4, ((1 << MDMCFG4_CHANBW_E_SHIFT) |
+		// CHANBW_E = 2, CHANBW_M = 1, DRATE_E = 9
+		// Channel BW = 26 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 162.5 kHz
+		MDMCFG4, ((2 << MDMCFG4_CHANBW_E_SHIFT) |
 			(1 << MDMCFG4_CHANBW_M_SHIFT) |
 			(9 << MDMCFG4_DRATE_E_SHIFT)),
 
 		// DRATE_M = 74 (0x4A)
-		// data rate = (256 + DRATE_M) * 2^DRATE_E * 26 MHz / 2^28 == 16365 Baud
+		// Data rate = (256 + DRATE_M) * 2^DRATE_E * 26 MHz / 2^28 == 16365 Baud
 		MDMCFG3, 0x4A,
 
 		MDMCFG2, (MDMCFG2_DEM_DCFILT_ON |
@@ -66,15 +66,15 @@ func InitRF(dev *spi.Device) error {
 			(1 << MDMCFG1_CHANSPC_E_SHIFT)),
 
 		// CHANSPC_M = 248 (0xF8)
-		// channel spacing
+		// cHannel spacing
 		// (256 + CHANSPC_M) * 2^CHANSPC_E * 26 MHz / 2^18 == 99975 Hz
 		MDMCFG0, 0xF8,
 
-		MCSM2, MCSM2_RX_TIME_END_OF_PACKET, // (default)
+		MCSM2, MCSM2_RX_TIME_END_OF_PACKET,
 
 		MCSM1, (MCSM1_CCA_MODE_RSSI_BELOW_UNLESS_RECEIVING |
 			MCSM1_RXOFF_MODE_IDLE |
-			MCSM1_TXOFF_MODE_IDLE), // (default)
+			MCSM1_TXOFF_MODE_IDLE),
 
 		MCSM0, (MCSM0_FS_AUTOCAL_FROM_IDLE |
 			MCSM0_MAGIC_3 |
@@ -91,23 +91,23 @@ func InitRF(dev *spi.Device) error {
 
 		AGCCTRL2, (AGCCTRL2_MAX_DVGA_GAIN_ALL |
 			AGCCTRL2_MAX_LNA_GAIN_0 |
-			AGCCTRL2_MAGN_TARGET_33dB), // (default)
+			AGCCTRL2_MAGN_TARGET_33dB),
 
 		AGCCTRL1, (AGCCTRL1_AGC_LNA_PRIORITY_1 |
 			AGCCTRL1_CARRIER_SENSE_REL_THR_DISABLE |
-			AGCCTRL1_CARRIER_SENSE_ABS_THR_0DB), // (default)
+			AGCCTRL1_CARRIER_SENSE_ABS_THR_0DB),
 
 		AGCCTRL0, (AGCCTRL0_HYST_LEVEL_MEDIUM |
 			AGCCTRL0_WAIT_TIME_16 |
 			AGCCTRL0_AGC_FREEZE_NORMAL |
-			AGCCTRL0_FILTER_LENGTH_16), // (default)
+			AGCCTRL0_FILTER_LENGTH_16),
 
 		FREND1, ((1 << FREND1_LNA_CURRENT_SHIFT) |
 			(1 << FREND1_LNA2MIX_CURRENT_SHIFT) |
 			(1 << FREND1_LODIV_BUF_CURRENT_RX_SHIFT) |
-			(2 << FREND1_MIX_CURRENT_SHIFT)), // (default)
+			(2 << FREND1_MIX_CURRENT_SHIFT)),
 
-		// use PA_TABLE 1 for transmitting '1' in ASK
+		// Use PA_TABLE 1 for transmitting '1' in ASK
 		// (PA_TABLE 0 is always used for '0')
 		FREND0, ((1 << FREND0_LODIV_BUF_CURRENT_TX_SHIFT) |
 			(1 << FREND0_PA_POWER_SHIFT)),
@@ -132,6 +132,11 @@ func InitRF(dev *spi.Device) error {
 		0x00,
 		0xC0, // 10dBm, 36mA
 	})
+	if err != nil {
+		return err
+	}
+
+	err = startReceiver(dev)
 	if err != nil {
 		return err
 	}
@@ -217,49 +222,4 @@ func ReadRSSI(dev *spi.Device) (int, error) {
 		d -= 256
 	}
 	return d/2 - rssi_offset, nil
-}
-
-func PollReceiver(dev *spi.Device) (byte, error) {
-	rxbytes, err := ReadRegister(dev, RXBYTES)
-	if err != nil {
-		return 0, err
-	}
-	return rxbytes & NUM_RXBYTES_MASK, nil
-}
-
-func ReceivePacket(dev *spi.Device) ([]byte, error) {
-	var packet []byte
-	for {
-		state, err := ReadState(dev)
-		if err != nil {
-			return nil, err
-		}
-		if state != STATE_RX {
-			err = ChangeState(dev, SRX, STATE_RX)
-			if err != nil {
-				return nil, err
-			}
-			continue
-		}
-		n, err := PollReceiver(dev)
-		if err != nil {
-			return nil, err
-		}
-		if n == 0 {
-			time.Sleep(250 * time.Microsecond)
-			continue
-		}
-		data, err := ReadFifo(dev, n)
-		if err != nil {
-			return nil, err
-		}
-		if data[0] != 0 {
-			for i := 0; i < len(data); i++ {
-				if data[i] == 0 {
-					return append(packet, data[:i]...), nil
-				}
-			}
-			packet = append(packet, data...)
-		}
-	}
 }

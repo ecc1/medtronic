@@ -3,13 +3,25 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/ecc1/cc1100"
 	"github.com/ecc1/spi"
 )
 
 const (
-	verbose = false
+	verbose     = true
+	printBinary = false
+)
+
+var (
+	signalChan = make(chan os.Signal, 1)
+
+	rxPackets      int
+	rxDecodeErrors int
+	rxCrcErrors    int
 )
 
 func main() {
@@ -25,7 +37,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Max speed: %d Hz\n", speed)
+	if verbose {
+		fmt.Printf("Max speed: %d Hz\n", speed)
+	}
 
 	err = cc1100.Reset(dev)
 	if err != nil {
@@ -42,11 +56,22 @@ func main() {
 		cc1100.DumpRF(dev)
 	}
 
+	signal.Notify(signalChan, os.Interrupt)
+	go stats()
+
 	for {
+		if verbose {
+			fmt.Printf("AwaitPacket\n")
+		}
+		err := cc1100.AwaitPacket(dev)
+		if err != nil {
+			log.Fatal(err)
+		}
 		packet, err := cc1100.ReceivePacket(dev)
 		if err != nil {
 			log.Fatal(err)
 		}
+		rxPackets++
 		r, err := cc1100.ReadRSSI(dev)
 		if err != nil {
 			log.Fatal(err)
@@ -57,6 +82,7 @@ func main() {
 		}
 		data, err := cc1100.Decode6b4b(packet)
 		if err != nil {
+			rxDecodeErrors++
 			if verbose {
 				fmt.Printf("%v\n", err)
 			}
@@ -67,6 +93,7 @@ func main() {
 		}
 		crc := cc1100.Crc8(data[:len(data)-1])
 		if data[len(data)-1] != crc {
+			rxCrcErrors++
 			if verbose {
 				fmt.Printf("CRC should be %02X, not %02X\n", crc, data[len(data)-1])
 			}
@@ -74,6 +101,9 @@ func main() {
 		}
 		if !verbose {
 			printPacket(data)
+		}
+		if rxPackets%10 == 0 {
+			printStats()
 		}
 	}
 }
@@ -88,4 +118,33 @@ func printPacket(data []byte) {
 	if len(data)%20 != 0 {
 		fmt.Print("\n")
 	}
+	if !printBinary {
+		return
+	}
+	for i, v := range data {
+		fmt.Printf("%08b", v)
+		if (i+1)%10 == 0 {
+			fmt.Print("\n")
+		}
+	}
+	if len(data)%10 != 0 {
+		fmt.Print("\n")
+	}
+}
+
+func stats() {
+	tick := time.Tick(10 * time.Second)
+	for {
+		select {
+		case <-signalChan:
+			printStats()
+			os.Exit(0)
+		case <-tick:
+			printStats()
+		}
+	}
+}
+
+func printStats() {
+	fmt.Printf("\nTotal: %6d    decode errs: %6d    CRC errs: %6d\n", rxPackets, rxDecodeErrors, rxCrcErrors)
 }
