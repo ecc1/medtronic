@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/ecc1/cc1100"
-	"github.com/ecc1/spi"
 )
 
 const (
@@ -25,35 +24,24 @@ var (
 )
 
 func main() {
-	dev, err := spi.Open(cc1100.SpiSpeed)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = dev.SetMaxSpeed(cc1100.SpiSpeed)
-	if err != nil {
-		log.Fatal(err)
-	}
-	speed, err := dev.MaxSpeed()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if verbose {
-		fmt.Printf("Max speed: %d Hz\n", speed)
-	}
-
-	err = cc1100.Reset(dev)
+	dev, err := cc1100.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = cc1100.InitRF(dev)
+	err = dev.Reset()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = dev.InitRF()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	if verbose {
 		fmt.Printf("\nRF settings after initialization:\n")
-		cc1100.DumpRF(dev)
+		dev.DumpRF()
 	}
 
 	signal.Notify(signalChan, os.Interrupt)
@@ -63,16 +51,16 @@ func main() {
 		if verbose {
 			fmt.Printf("AwaitPacket\n")
 		}
-		err := cc1100.AwaitPacket(dev)
+		err := dev.AwaitPacket()
 		if err != nil {
 			log.Fatal(err)
 		}
-		packet, err := cc1100.ReceivePacket(dev)
+		packet, err := dev.ReceivePacket()
 		if err != nil {
 			log.Fatal(err)
 		}
 		rxPackets++
-		r, err := cc1100.ReadRSSI(dev)
+		r, err := dev.ReadRSSI()
 		if err != nil {
 			log.Fatal(err)
 		}

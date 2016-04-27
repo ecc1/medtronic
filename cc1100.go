@@ -441,7 +441,3 @@ const (
 	NUM_RXBYTES_MASK = 0x7f
 	RXFIFO_OVERFLOW  = (1 << 7)
 )
-
-const (
-	SpiSpeed = 1000000 // Hz
-)

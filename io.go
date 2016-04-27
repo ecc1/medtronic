@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"time"
-
-	"github.com/ecc1/spi"
 )
 
 const (
@@ -22,37 +20,37 @@ func init() {
 	}
 }
 
-func ReadRegister(dev *spi.Device, addr byte) (byte, error) {
+func (dev *Device) ReadRegister(addr byte) (byte, error) {
 	buf := []byte{READ_MODE | addr, 0xFF}
-	err := dev.Transfer(buf)
+	err := dev.spiDev.Transfer(buf)
 	if err != nil {
 		return 0, err
 	}
 	return buf[1], nil
 }
 
-func ReadFifo(dev *spi.Device, n uint8) ([]byte, error) {
+func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
 	buf := make([]byte, n+1)
 	buf[0] = READ_MODE | BURST_MODE | RXFIFO
-	err := dev.Transfer(buf)
+	err := dev.spiDev.Transfer(buf)
 	if err != nil {
 		return nil, err
 	}
 	return buf[1:], nil
 }
 
-func WriteRegister(dev *spi.Device, addr byte, value byte) error {
+func (dev *Device) WriteRegister(addr byte, value byte) error {
 	for {
 		var err error
 		if writeUsingTransfer {
-			err = dev.Transfer([]byte{addr, value})
+			err = dev.spiDev.Transfer([]byte{addr, value})
 		} else {
-			err = dev.Write([]byte{addr, value})
+			err = dev.spiDev.Write([]byte{addr, value})
 		}
 		if err != nil || !verifyWrite {
 			return err
 		}
-		v, err := ReadRegister(dev, addr)
+		v, err := dev.ReadRegister(addr)
 		if err != nil || v == value {
 			return err
 		}
@@ -65,22 +63,22 @@ func WriteRegister(dev *spi.Device, addr byte, value byte) error {
 	}
 }
 
-func WriteFifo(dev *spi.Device, data []byte) error {
+func (dev *Device) WriteFifo(data []byte) error {
 	buf := append([]byte{BURST_MODE | TXFIFO}, data...)
 	if writeUsingTransfer {
-		return dev.Transfer(buf)
+		return dev.spiDev.Transfer(buf)
 	} else {
-		return dev.Write(buf)
+		return dev.spiDev.Write(buf)
 	}
 }
 
-func WriteEach(dev *spi.Device, data []byte) error {
+func (dev *Device) WriteEach(data []byte) error {
 	n := len(data)
 	if n%2 != 0 {
 		panic("odd data length")
 	}
 	for i := 0; i < n; i += 2 {
-		err := WriteRegister(dev, data[i], data[i+1])
+		err := dev.WriteRegister(data[i], data[i+1])
 		if err != nil {
 			return err
 		}
@@ -88,39 +86,39 @@ func WriteEach(dev *spi.Device, data []byte) error {
 	return nil
 }
 
-func Strobe(dev *spi.Device, cmd byte) (byte, error) {
+func (dev *Device) Strobe(cmd byte) (byte, error) {
 	buf := []byte{cmd}
-	err := dev.Transfer(buf)
+	err := dev.spiDev.Transfer(buf)
 	if err != nil {
 		return 0, err
 	}
 	return buf[0], nil
 }
 
-func Reset(dev *spi.Device) error {
-	err := ChangeState(dev, SRES, STATE_IDLE)
+func (dev *Device) Reset() error {
+	err := dev.ChangeState(SRES, STATE_IDLE)
 	if err != nil {
 		return err
 	}
 	if verifyWrite {
-		err = WriteRegister(dev, SYNC0, 0x55)
+		err = dev.WriteRegister(SYNC0, 0x55)
 	}
 	return err
 }
 
-func ReadState(dev *spi.Device) (byte, error) {
-	status, err := Strobe(dev, SNOP)
+func (dev *Device) ReadState() (byte, error) {
+	status, err := dev.Strobe(SNOP)
 	if err != nil {
 		return 0, err
 	}
 	return (status >> STATE_SHIFT) & STATE_MASK, nil
 }
 
-func ChangeState(dev *spi.Device, strobe byte, desired byte) error {
+func (dev *Device) ChangeState(strobe byte, desired byte) error {
 	cmd := strobe
 	for {
 		log.Printf("issuing %s command, waiting for %s\n", strobeName(cmd), stateName[desired])
-		status, err := Strobe(dev, cmd)
+		status, err := dev.Strobe(cmd)
 		if err != nil {
 			return err
 		}
@@ -131,12 +129,12 @@ func ChangeState(dev *spi.Device, strobe byte, desired byte) error {
 		}
 		switch s {
 		case STATE_RXFIFO_OVERFLOW:
-			Strobe(dev, SIDLE)
-			Strobe(dev, SFRX)
+			dev.Strobe(SIDLE)
+			dev.Strobe(SFRX)
 			cmd = strobe
 		case STATE_TXFIFO_UNDERFLOW:
-			Strobe(dev, SIDLE)
-			Strobe(dev, SFTX)
+			dev.Strobe(SIDLE)
+			dev.Strobe(SFTX)
 			cmd = strobe
 		default:
 			cmd = SNOP

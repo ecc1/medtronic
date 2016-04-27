@@ -5,28 +5,27 @@ import (
 	"log"
 
 	"github.com/ecc1/cc1100"
-	"github.com/ecc1/spi"
 )
 
 func main() {
-	dev, err := spi.Open(cc1100.SpiSpeed)
+	dev, err := cc1100.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	cc1100.Reset(dev)
+	dev.Reset()
 
-	x, err := cc1100.ReadRegister(dev, cc1100.SYNC0)
+	x, err := dev.ReadRegister(cc1100.SYNC0)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Before write: %#X\n", x)
 
-	err = cc1100.WriteRegister(dev, cc1100.SYNC0, 0x44)
+	err = dev.WriteRegister(cc1100.SYNC0, 0x44)
 	if err != nil {
 		log.Fatal(err)
 	}
-	x, err = cc1100.ReadRegister(dev, cc1100.SYNC0)
+	x, err = dev.ReadRegister(cc1100.SYNC0)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,7 +33,7 @@ func main() {
 
 	// 24-bit base frequency
 	// 0x2340FC * 26MHz / 2^16 == 916.6MHz (916599975 Hz)
-	err = cc1100.WriteEach(dev, []byte{
+	err = dev.WriteEach([]byte{
 		cc1100.FREQ2, 0x23,
 		cc1100.FREQ1, 0x40,
 		cc1100.FREQ0, 0xFC,
@@ -43,7 +42,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	freq, err := cc1100.ReadFrequency(dev)
+	freq, err := dev.ReadFrequency()
 	if err != nil {
 		log.Fatal(err)
 	}
