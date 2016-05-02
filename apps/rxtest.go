@@ -45,7 +45,7 @@ func main() {
 	}
 
 	signal.Notify(signalChan, os.Interrupt)
-	go stats()
+	go stats(dev)
 
 	for {
 		if verbose {
@@ -91,7 +91,7 @@ func main() {
 			printPacket(data)
 		}
 		if rxPackets%10 == 0 {
-			printStats()
+			printStats(dev)
 		}
 	}
 }
@@ -120,19 +120,21 @@ func printPacket(data []byte) {
 	}
 }
 
-func stats() {
+func stats(dev *cc1100.Device) {
 	tick := time.Tick(10 * time.Second)
 	for {
+		printStats(dev)
 		select {
 		case <-signalChan:
-			printStats()
 			os.Exit(0)
 		case <-tick:
-			printStats()
+			continue
 		}
 	}
 }
 
-func printStats() {
+func printStats(dev *cc1100.Device) {
 	fmt.Printf("\nTotal: %6d    decode errs: %6d    CRC errs: %6d\n", rxPackets, rxDecodeErrors, rxCrcErrors)
+	s, _ := dev.ReadState()
+	fmt.Printf("State: %s\n", cc1100.StateName(s))
 }

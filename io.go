@@ -117,13 +117,13 @@ func (dev *Device) ReadState() (byte, error) {
 func (dev *Device) ChangeState(strobe byte, desired byte) error {
 	cmd := strobe
 	for {
-		log.Printf("issuing %s command, waiting for %s\n", strobeName(cmd), stateName[desired])
+		log.Printf("issuing %s command, waiting for %s\n", strobeName(cmd), StateName(desired))
 		status, err := dev.Strobe(cmd)
 		if err != nil {
 			return err
 		}
 		s := (status >> STATE_SHIFT) & STATE_MASK
-		log.Printf("state = %s\n", stateName[s])
+		log.Printf("state = %s\n", StateName(s))
 		if s == desired {
 			return nil
 		}

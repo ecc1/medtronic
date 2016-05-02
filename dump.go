@@ -64,6 +64,10 @@ func showBoolCondition(name string, cond bool) {
 	}
 }
 
+func StateName(state byte) string {
+	return stateName[state]
+}
+
 func strobeName(strobe byte) string {
 	return strobeString[strobe-SRES]
 }
