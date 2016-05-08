@@ -1,6 +1,7 @@
 package cc1100
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -8,14 +9,18 @@ import (
 )
 
 const (
+	Verbose = false
+
 	writeUsingTransfer = false
-	verifyWrite        = true
+	verifyWrite        = false
 	retryWrite         = false
-	verbose            = false
+
+	readFifoUsingBurst  = true
+	writeFifoUsingBurst = true
 )
 
 func init() {
-	if !verbose {
+	if !Verbose {
 		log.SetOutput(ioutil.Discard)
 	}
 }
@@ -29,25 +34,62 @@ func (dev *Device) ReadRegister(addr byte) (byte, error) {
 	return buf[1], nil
 }
 
-func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
-	buf := make([]byte, n+1)
-	buf[0] = READ_MODE | BURST_MODE | RXFIFO
-	err := dev.spiDev.Transfer(buf)
-	if err != nil {
-		return nil, err
+var RxFifoOverflow = errors.New("RXFIFO overflow")
+
+// Per section 20 of data sheet, read NUM_RXBYTES
+// repeatedly until same value is returned twice.
+func (dev *Device) ReadNumRxBytes() (byte, error) {
+	m := byte(0)
+	for {
+		n, err := dev.ReadRegister(RXBYTES)
+		if err != nil {
+			return 0, err
+		}
+		if n&RXFIFO_OVERFLOW != 0 {
+			return 0, RxFifoOverflow
+		}
+		n &= NUM_RXBYTES_MASK
+		if n == m {
+			return n, nil
+		}
+		m = n
 	}
-	return buf[1:], nil
+}
+
+func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
+	if readFifoUsingBurst {
+		buf := make([]byte, n+1)
+		buf[0] = READ_MODE | BURST_MODE | RXFIFO
+		err := dev.spiDev.Transfer(buf)
+		if err != nil {
+			return nil, err
+		}
+		return buf[1:], nil
+	} else {
+		buf := make([]byte, n)
+		var err error
+		for i := uint8(0); i < n; i++ {
+			buf[i], err = dev.ReadRegister(RXFIFO)
+			if err != nil {
+				return nil, err
+			}
+		}
+		return buf, nil
+	}
+}
+
+func (dev *Device) writeData(data []byte) error {
+	if writeUsingTransfer {
+		return dev.spiDev.Transfer(data)
+	} else {
+		return dev.spiDev.Write(data)
+	}
 }
 
 func (dev *Device) WriteRegister(addr byte, value byte) error {
 	for {
-		var err error
-		if writeUsingTransfer {
-			err = dev.spiDev.Transfer([]byte{addr, value})
-		} else {
-			err = dev.spiDev.Write([]byte{addr, value})
-		}
-		if err != nil || !verifyWrite {
+		err := dev.writeData([]byte{addr, value})
+		if err != nil || !verifyWrite || addr == TXFIFO {
 			return err
 		}
 		v, err := dev.ReadRegister(addr)
@@ -64,11 +106,16 @@ func (dev *Device) WriteRegister(addr byte, value byte) error {
 }
 
 func (dev *Device) WriteFifo(data []byte) error {
-	buf := append([]byte{BURST_MODE | TXFIFO}, data...)
-	if writeUsingTransfer {
-		return dev.spiDev.Transfer(buf)
+	if writeFifoUsingBurst {
+		return dev.writeData(append([]byte{BURST_MODE | TXFIFO}, data...))
 	} else {
-		return dev.spiDev.Write(buf)
+		for _, b := range data {
+			err := dev.WriteRegister(TXFIFO, b)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
 	}
 }
 

@@ -10,17 +10,8 @@ import (
 	"github.com/ecc1/cc1100"
 )
 
-const (
-	verbose     = true
-	printBinary = false
-)
-
 var (
 	signalChan = make(chan os.Signal, 1)
-
-	rxPackets      int
-	rxDecodeErrors int
-	rxCrcErrors    int
 )
 
 func main() {
@@ -39,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if verbose {
+	if cc1100.Verbose {
 		fmt.Printf("\nRF settings after initialization:\n")
 		dev.DumpRF()
 	}
@@ -48,10 +39,10 @@ func main() {
 	go stats(dev)
 
 	for {
-		if verbose {
+		if cc1100.Verbose {
 			fmt.Printf("AwaitPacket\n")
 		}
-		err := dev.AwaitPacket()
+		_, err := dev.AwaitPacket(0)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -59,82 +50,33 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		rxPackets++
 		r, err := dev.ReadRSSI()
 		if err != nil {
 			log.Fatal(err)
 		}
-		if verbose {
-			fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
-			printPacket(packet)
-		}
-		data, err := cc1100.Decode6b4b(packet)
-		if err != nil {
-			rxDecodeErrors++
-			if verbose {
-				fmt.Printf("%v\n", err)
-			}
+		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
+		fmt.Printf("Raw data: ")
+		cc1100.PrintBytes(packet)
+		if len(packet) == 0 {
 			continue
 		}
-		if verbose {
-			printPacket(data)
+		data, err := dev.DecodePacket(packet)
+		if !cc1100.Verbose && err == nil {
+			cc1100.PrintBytes(data)
 		}
-		crc := cc1100.Crc8(data[:len(data)-1])
-		if data[len(data)-1] != crc {
-			rxCrcErrors++
-			if verbose {
-				fmt.Printf("CRC should be %02X, not %02X\n", crc, data[len(data)-1])
-			}
-			continue
-		}
-		if !verbose {
-			printPacket(data)
-		}
-		if rxPackets%10 == 0 {
-			printStats(dev)
-		}
-	}
-}
-
-func printPacket(data []byte) {
-	for i, v := range data {
-		fmt.Printf("%02X ", v)
-		if (i+1)%20 == 0 {
-			fmt.Print("\n")
-		}
-	}
-	if len(data)%20 != 0 {
-		fmt.Print("\n")
-	}
-	if !printBinary {
-		return
-	}
-	for i, v := range data {
-		fmt.Printf("%08b", v)
-		if (i+1)%10 == 0 {
-			fmt.Print("\n")
-		}
-	}
-	if len(data)%10 != 0 {
-		fmt.Print("\n")
 	}
 }
 
 func stats(dev *cc1100.Device) {
 	tick := time.Tick(10 * time.Second)
 	for {
-		printStats(dev)
 		select {
 		case <-signalChan:
+			dev.PrintStats()
 			os.Exit(0)
 		case <-tick:
+			dev.PrintStats()
 			continue
 		}
 	}
-}
-
-func printStats(dev *cc1100.Device) {
-	fmt.Printf("\nTotal: %6d    decode errs: %6d    CRC errs: %6d\n", rxPackets, rxDecodeErrors, rxCrcErrors)
-	s, _ := dev.ReadState()
-	fmt.Printf("State: %s\n", cc1100.StateName(s))
 }
