@@ -18,7 +18,7 @@ func (dev *Device) InitRF() error {
 		// Always accept sync word
 		// Do not append status
 		// No address check
-		PKTCTRL1, 0x00,
+		PKTCTRL1, 2 << PKTCTRL1_PQT_SHIFT,
 
 		// No whitening mode
 		// Normal format
@@ -54,7 +54,7 @@ func (dev *Device) InitRF() error {
 
 		MDMCFG2, (MDMCFG2_DEM_DCFILT_ON |
 			MDMCFG2_MOD_FORMAT_ASK_OOK |
-			MDMCFG2_SYNC_MODE_30_32),
+			MDMCFG2_SYNC_MODE_30_32_THRES),
 
 		// CHANSPC_E = 1
 		MDMCFG1, (MDMCFG1_FEC_DIS |
@@ -87,16 +87,16 @@ func (dev *Device) InitRF() error {
 
 		AGCCTRL2, (AGCCTRL2_MAX_DVGA_GAIN_ALL |
 			AGCCTRL2_MAX_LNA_GAIN_0 |
-			AGCCTRL2_MAGN_TARGET_33dB),
+			AGCCTRL2_MAGN_TARGET_38dB),
 
-		AGCCTRL1, (AGCCTRL1_AGC_LNA_PRIORITY_1 |
+		AGCCTRL1, (AGCCTRL1_AGC_LNA_PRIORITY_0 |
 			AGCCTRL1_CARRIER_SENSE_REL_THR_DISABLE |
 			AGCCTRL1_CARRIER_SENSE_ABS_THR_0DB),
 
 		AGCCTRL0, (AGCCTRL0_HYST_LEVEL_MEDIUM |
 			AGCCTRL0_WAIT_TIME_16 |
 			AGCCTRL0_AGC_FREEZE_NORMAL |
-			AGCCTRL0_FILTER_LENGTH_16),
+			AGCCTRL0_FILTER_LENGTH_32),
 
 		FREND1, ((1 << FREND1_LNA_CURRENT_SHIFT) |
 			(1 << FREND1_LNA2MIX_CURRENT_SHIFT) |
@@ -199,11 +199,8 @@ func (dev *Device) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32
 	return
 }
 
-const (
-	rssi_offset = 74 // see data sheet section 17.3
-)
-
 func (dev *Device) ReadRSSI() (int, error) {
+	const rssi_offset = 74 // see data sheet section 17.3
 	r, err := dev.ReadRegister(RSSI)
 	if err != nil {
 		return 0, err
