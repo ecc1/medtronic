@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	spiSpeed = 1000000 // Hz
+	spiSpeed = 6000000 // Hz
 	gpioPin  = 14      // Intel Edison GPIO connected to GDO0
 )
 
@@ -24,7 +24,7 @@ func Open() (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-	g, err := gpio.Input(gpioPin, "rising", false)
+	g, err := gpio.Input(gpioPin, "both", false)
 	if err != nil {
 		return nil, err
 	}
