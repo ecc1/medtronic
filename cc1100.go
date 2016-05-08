@@ -74,24 +74,26 @@ const (
 	// Reset chip.
 	SRES = 0x30
 
-	// Enable and calibrate frequency synthesizer (if MCSM0.FS_AUTOCAL=1).
-	// If in RX/TX: Go to a wait state where only the synthesizer is
-	// running (for quick RX / TX turnaround).
+	// Enable and calibrate frequency synthesizer
+	// (if MCSM0.FS_AUTOCAL=1). If in RX/TX (with CCA):
+	// Go to a wait state where only the synthesizer is running
+	// (for quick RX / TX turnaround).
 	SFSTXON = 0x31
 
 	// Turn off crystal oscillator.
 	SXOFF = 0x32
 
-	// Calibrate frequency synthesizer and turn it off
-	// (enables quick start).
+	// Calibrate frequency synthesizer and turn it off.
+	// SCAL can be strobed from IDLE mode without setting
+	//  manual calibration mode (MCSM0.FS_AUTOCAL=0)
 	SCAL = 0x33
 
-	// Enable RX. Perform calibration first if coming from IDLE = and
-	// MCSM0.FS_AUTOCAL = 1.
+	// Enable RX. Perform calibration first if coming from IDLE
+	// and MCSM0.FS_AUTOCAL=1.
 	SRX = 0x34
 
 	// In IDLE state: Enable TX. Perform calibration first if
-	// MCSM0.FS_AUTOCAL = 1. If in RX state and CCA is enabled:
+	// MCSM0.FS_AUTOCAL=1. If in RX state and CCA is enabled:
 	// Only go to TX if channel is clear.
 	STX = 0x35
 
@@ -99,26 +101,28 @@ const (
 	// Wake-On-Radio mode if applicable.
 	SIDLE = 0x36
 
-	// Perform AFC adjustment of the frequency synthesizer
+	// Perform AFC adjustment of the frequency synthesizer.
 	SAFC = 0x37
 
 	// Start automatic RX polling sequence (Wake-on-Radio)
+	// if WORCTRL.RC_PD=0.
 	SWOR = 0x38
 
 	// Enter power down mode when CSn goes high.
 	SPWD = 0x39
 
 	// Flush the RX FIFO buffer.
+	// Only issue SFRX in IDLE or RXFIFO_OVERFLOW states.
 	SFRX = 0x3A
 
 	// Flush the TX FIFO buffer.
+	// Only issue SFTX in IDLE or TXFIFO_UNDERFLOW states.
 	SFTX = 0x3B
 
-	// Reset real time clock.
+	// Reset real time clock to Event1 value.
 	SWORRST = 0x3C
 
-	// No operation. May be used to pad strobe commands to two
-	// bytes for simpler software.
+	// No operation. May be used to get access to the chip status byte.
 	SNOP = 0x3D
 )
 
