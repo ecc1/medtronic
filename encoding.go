@@ -1,76 +1,64 @@
 package cc1100
 
 import (
-	"fmt"
+	"errors"
 )
 
 func Encode4b6b(src []byte) []byte {
 	// 2 input bytes produce 3 output bytes.
 	// Odd final input byte, if any, produces 2 output bytes.
-	dst := make([]byte, 3*(len(src)/2)+2*(len(src)%2))
-	i := 0
-	j := 0
-	for ; i < len(src)-1; i, j = i+2, j+3 {
+	n := len(src)
+	dst := make([]byte, 3*(n/2)+2*(n%2))
+	for i, j := 0, 0; i < n; i, j = i+2, j+3 {
 		x := src[i]
-		y := src[i+1]
-
 		a := encode4b[hi(4, x)]
 		b := encode4b[lo(4, x)]
-		c := encode4b[hi(4, y)]
-		d := encode4b[lo(4, y)]
-
 		dst[j] = (a << 2) | hi(4, b)
+		c := byte(0)
+		d := byte(0)
+		if i+1 < n {
+			y := src[i+1]
+			c = encode4b[hi(4, y)]
+			d = encode4b[lo(4, y)]
+			dst[j+2] = (lo(2, c) << 6) | d
+		}
 		dst[j+1] = (lo(4, b) << 4) | hi(6, c)
-		dst[j+2] = (lo(2, c) << 6) | d
-	}
-	if i == len(src)-1 {
-		x := src[i]
-
-		a := encode4b[hi(4, x)]
-		b := encode4b[lo(4, x)]
-
-		dst[j] = (a << 2) | hi(4, b)
-		dst[j+1] = (lo(4, b) << 4) | 0x5 // pad
 	}
 	return dst
 }
 
-var invalid = fmt.Errorf("%s", "4b6b decoding failure")
+var DecodingFailure = errors.New("4b/6b decoding failure")
 
 func Decode6b4b(src []byte) ([]byte, error) {
-	// 3 input bytes produce 2 output bytes.
-	// Final 2 input bytes produce 1 output byte.
-	dst := make([]byte, 2*(len(src)/3)+(len(src)%3)/2)
-	i := 0
-	j := 0
-	for ; i < len(src)-2; i, j = i+3, j+2 {
-		x := src[i]
-		y := src[i+1]
-		z := src[i+2]
-
-		a := decode6b[hi(6, x)]
-		b := decode6b[(lo(2, x)<<4)|hi(4, y)]
-		c := decode6b[(lo(4, y)<<2)|hi(2, z)]
-		d := decode6b[lo(6, z)]
-		if a == 0xFF || b == 0xFF || c == 0xFF || d == 0xFF {
-			return dst, invalid
-		}
-
-		dst[j] = (a << 4) | b
-		dst[j+1] = (c << 4) | d
+	n := len(src)
+	// Check for valid packet length.
+	if n%3 == 1 {
+		return nil, DecodingFailure
 	}
-	if i == len(src)-2 {
+	// 3 input bytes produce 2 output bytes.
+	// Final 2 input bytes, if any, produce 1 output byte.
+	dst := make([]byte, 2*(n/3)+(n%3)/2)
+	for i, j := 0, 0; i < n; i, j = i+3, j+2 {
+		if i+1 >= n {
+			return dst, DecodingFailure // shouldn't happen
+		}
 		x := src[i]
 		y := src[i+1]
-
 		a := decode6b[hi(6, x)]
 		b := decode6b[(lo(2, x)<<4)|hi(4, y)]
 		if a == 0xFF || b == 0xFF {
-			return dst, invalid
+			return dst, DecodingFailure
 		}
 		dst[j] = (a << 4) | b
-	} else if i == len(src)-1 {
-		return dst, invalid // shouldn't happen
+		if i+2 < n {
+			z := src[i+2]
+			c := decode6b[(lo(4, y)<<2)|hi(2, z)]
+			d := decode6b[lo(6, z)]
+			if c == 0xFF || d == 0xFF {
+				return dst, DecodingFailure
+			}
+			dst[j+1] = (c << 4) | d
+		}
 	}
 	return dst, nil
 }
