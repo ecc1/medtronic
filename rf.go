@@ -122,11 +122,11 @@ func (dev *Device) InitRF() error {
 	}
 
 	// Power amplifier output settings
-	// (see Table 72 on page 207 of the datasheet)
+	// (see section 24 of the datasheet)
 	err = dev.spiDev.Transfer([]byte{
 		BURST_MODE | PATABLE,
 		0x00,
-		0xC0, // 10dBm, 36mA
+		0xC0,
 	})
 	if err != nil {
 		return err
@@ -150,6 +150,15 @@ func (dev *Device) ReadFrequency() (uint32, error) {
 	}
 	f := uint32(freq2)<<16 + uint32(freq1)<<8 + uint32(freq0)
 	return uint32(uint64(f) * FXOSC >> 16), nil
+}
+
+func (dev *Device) WriteFrequency(freq uint32) error {
+	f := (uint64(freq)<<16 + FXOSC/2) / FXOSC
+	return dev.WriteEach([]byte{
+		FREQ2, byte(f >> 16),
+		FREQ1, byte(f >> 8),
+		FREQ0, byte(f),
+	})
 }
 
 func (dev *Device) ReadIF() (uint32, error) {
