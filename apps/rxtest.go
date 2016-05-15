@@ -82,5 +82,6 @@ func stats(dev *cc1100.Device) {
 
 func printState(dev *cc1100.Device) {
 	s, _ := dev.ReadState()
-	fmt.Printf("State: %s\n", cc1100.StateName(s))
+	m, _ := dev.ReadMarcState()
+	fmt.Printf("State: %s / %s\n", cc1100.StateName(s), cc1100.MarcStateName(m))
 }
