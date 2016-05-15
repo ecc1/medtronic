@@ -54,7 +54,7 @@ func main() {
 		if len(packet) == 0 {
 			continue
 		}
-		data, err := cc1100.DecodePacket(packet)
+		data, err := dev.DecodePacket(packet)
 		if !cc1100.Verbose {
 			if err == nil {
 				cc1100.PrintBytes(data)
@@ -70,18 +70,10 @@ func stats(dev *cc1100.Device) {
 	for {
 		select {
 		case <-tick:
-			cc1100.PrintStats()
-			printState(dev)
+			dev.PrintStats()
 		case <-signalChan:
-			cc1100.PrintStats()
-			printState(dev)
+			dev.PrintStats()
 			os.Exit(0)
 		}
 	}
-}
-
-func printState(dev *cc1100.Device) {
-	s, _ := dev.ReadState()
-	m, _ := dev.ReadMarcState()
-	fmt.Printf("State: %s / %s\n", cc1100.StateName(s), cc1100.MarcStateName(m))
 }

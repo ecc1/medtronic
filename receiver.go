@@ -11,11 +11,12 @@ const (
 	pollInterval = time.Millisecond
 )
 
-var (
-	PacketsReceived = 0
-)
-
 func (dev *Device) ReceiveMode() error {
+	if !dev.receiverStarted {
+		dev.receiverStarted = true
+		dev.receivedPackets = make(chan []byte, 10)
+		go dev.receiver()
+	}
 	return dev.ChangeState(SRX, STATE_RX)
 }
 
@@ -29,23 +30,14 @@ func (dev *Device) AwaitPacket() error {
 			return nil
 		}
 		if !usePolling {
-			return dev.rxGPIO.Wait()
+			return dev.interruptPin.Wait()
 		}
 		time.Sleep(pollInterval)
 	}
 }
 
-var (
-	receiverStarted = false
-	receivedPackets = make(chan []byte, 10)
-)
-
 func (dev *Device) IncomingPackets() <-chan []byte {
-	if !receiverStarted {
-		go dev.receiver()
-		receiverStarted = true
-	}
-	return receivedPackets
+	return dev.receivedPackets
 }
 
 func (dev *Device) flushRxFifo() {
@@ -81,13 +73,13 @@ func (dev *Device) receiver() {
 		// End of packet.
 		size := packet.Len()
 		if size != 0 {
-			PacketsReceived++
+			dev.packetsReceived++
 			p := make([]byte, size)
 			_, err := packet.Read(p)
 			if err != nil {
 				log.Fatal(err)
 			}
-			receivedPackets <- p
+			dev.receivedPackets <- p
 		}
 		packet.Reset()
 		if numBytes > 1 {

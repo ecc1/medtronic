@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-var (
-	PacketsSent int
-)
-
 func (dev *Device) TransmitMode() error {
 	return dev.ChangeState(STX, STATE_TX)
 }
@@ -55,6 +51,6 @@ func (dev *Device) TransmitPacket(data []byte) error {
 	if err != nil {
 		return err
 	}
-	PacketsSent++
+	dev.packetsSent++
 	return nil
 }

@@ -10,15 +10,13 @@ const (
 )
 
 var (
-	DecodingErrors = 0
-	CrcErrors      = 0
-	CrcMismatch    = errors.New("CRC mismatch")
+	CrcMismatch = errors.New("CRC mismatch")
 )
 
-func DecodePacket(packet []byte) ([]byte, error) {
+func (dev *Device) DecodePacket(packet []byte) ([]byte, error) {
 	data, err := Decode6b4b(packet)
 	if err != nil {
-		DecodingErrors++
+		dev.decodingErrors++
 		if Verbose {
 			fmt.Printf("%v\n", err)
 		}
@@ -30,7 +28,7 @@ func DecodePacket(packet []byte) ([]byte, error) {
 	}
 	crc := Crc8(data[:len(data)-1])
 	if data[len(data)-1] != crc {
-		CrcErrors++
+		dev.crcErrors++
 		if Verbose {
 			fmt.Printf("CRC should be %X, not %X\n", crc, data[len(data)-1])
 		}
@@ -40,17 +38,7 @@ func DecodePacket(packet []byte) ([]byte, error) {
 }
 
 func EncodePacket(packet []byte) []byte {
-	packet = append(packet, Crc8(packet))
-	if Verbose {
-		fmt.Printf("Packet:  ")
-		PrintBytes(packet)
-	}
-	data := Encode4b6b(packet)
-	if Verbose {
-		fmt.Printf("Encoded: ")
-		PrintBytes(data)
-	}
-	return data
+	return Encode4b6b(append(packet, Crc8(packet)))
 }
 
 func PrintBytes(data []byte) {
@@ -69,7 +57,10 @@ func PrintBytes(data []byte) {
 	}
 }
 
-func PrintStats() {
-	good := PacketsReceived - DecodingErrors - CrcErrors
-	fmt.Printf("\nTX: %6d    RX: %6d    decode errs: %6d    CRC errs: %6d\n", PacketsSent, good, DecodingErrors, CrcErrors)
+func (dev *Device) PrintStats() {
+	good := dev.packetsReceived - dev.decodingErrors - dev.crcErrors
+	fmt.Printf("\nTX: %6d    RX: %6d    decode errs: %6d    CRC errs: %6d\n", dev.packetsSent, good, dev.decodingErrors, dev.crcErrors)
+	s, _ := dev.ReadState()
+	m, _ := dev.ReadMarcState()
+	fmt.Printf("State: %s / %s\n", StateName(s), MarcStateName(m))
 }

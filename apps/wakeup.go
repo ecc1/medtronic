@@ -67,7 +67,7 @@ func main() {
 			fmt.Print(".")
 			continue
 		}
-		data, err := cc1100.DecodePacket(response)
+		data, err := dev.DecodePacket(response)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			continue

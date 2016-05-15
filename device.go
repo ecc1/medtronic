@@ -11,8 +11,16 @@ const (
 )
 
 type Device struct {
-	spiDev *spi.Device
-	rxGPIO gpio.InputPin
+	spiDev       *spi.Device
+	interruptPin gpio.InputPin
+
+	receiverStarted bool
+	receivedPackets chan []byte
+
+	packetsSent     int
+	packetsReceived int
+	decodingErrors  int
+	crcErrors       int
 }
 
 func Open() (*Device, error) {
@@ -24,9 +32,9 @@ func Open() (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-	g, err := gpio.Input(gpioPin, "both", false)
+	pin, err := gpio.Input(gpioPin, "both", false)
 	if err != nil {
 		return nil, err
 	}
-	return &Device{spiDev: spiDev, rxGPIO: g}, nil
+	return &Device{spiDev: spiDev, interruptPin: pin}, nil
 }
