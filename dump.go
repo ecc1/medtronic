@@ -14,6 +14,12 @@ func (dev *Device) DumpRF() {
 	fmt.Printf("Channel: %d\n", dev.readReg(CHANNR))
 	dev.showFreqSynthControl()
 	dev.showModemConfig()
+	pa, err := dev.ReadPaTable()
+	if err != nil {
+		log.Fatal(err)
+	}
+	n := dev.readReg(FREND0) & FREND0_PA_POWER_MASK
+	fmt.Printf("PATABLE: % X using 0..%d\n", pa, n)
 }
 
 func (dev *Device) readReg(addr byte) byte {
@@ -66,6 +72,10 @@ func showBoolCondition(name string, cond bool) {
 
 func StateName(state byte) string {
 	return stateName[state]
+}
+
+func MarcStateName(state byte) string {
+	return marcState[state]
 }
 
 func strobeName(strobe byte) string {

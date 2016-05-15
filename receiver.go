@@ -16,49 +16,22 @@ var (
 )
 
 func (dev *Device) ReceiveMode() error {
-	state, err := dev.ReadState()
-	if err != nil {
-		return err
-	}
-	if state != STATE_RX {
-		err = dev.ChangeState(SRX, STATE_RX)
+	return dev.ChangeState(SRX, STATE_RX)
+}
+
+func (dev *Device) AwaitPacket() error {
+	for {
+		n, err := dev.ReadNumRxBytes()
 		if err != nil {
 			return err
 		}
-	}
-	return nil
-}
-
-func (dev *Device) AwaitPacket(timeout time.Duration) (bool, error) {
-	err := dev.ReceiveMode()
-	if err != nil {
-		return false, err
-	}
-	if usePolling {
-		poll := time.Tick(pollInterval)
-		var t <-chan time.Time
-		if timeout != 0 {
-			t = time.After(timeout)
+		if n != 0 {
+			return nil
 		}
-		for {
-			select {
-			case <-poll:
-				n, err := dev.ReadNumRxBytes()
-				if err != nil {
-					return false, err
-				}
-				if n != 0 {
-					return true, nil
-				}
-			case <-t:
-				return false, nil
-			}
+		if !usePolling {
+			return dev.rxGPIO.Wait()
 		}
-	}
-	if timeout == 0 {
-		return true, dev.rxGPIO.Wait()
-	} else {
-		return dev.rxGPIO.TimedWait(timeout)
+		time.Sleep(pollInterval)
 	}
 }
 
@@ -67,12 +40,17 @@ var (
 	receivedPackets = make(chan []byte, 10)
 )
 
-func (dev *Device) ReceivePacket() ([]byte, error) {
+func (dev *Device) IncomingPackets() <-chan []byte {
 	if !receiverStarted {
 		go dev.receiver()
 		receiverStarted = true
 	}
-	return <-receivedPackets, nil
+	return receivedPackets
+}
+
+func (dev *Device) flushRxFifo() {
+	dev.ChangeState(SFRX, STATE_IDLE)
+	dev.ChangeState(SRX, STATE_RX)
 }
 
 func (dev *Device) receiver() {
@@ -80,15 +58,13 @@ func (dev *Device) receiver() {
 	for {
 		numBytes, err := dev.ReadNumRxBytes()
 		if err == RxFifoOverflow {
-			dev.Strobe(SIDLE)
-			dev.Strobe(SFRX)
-			dev.AwaitPacket(0)
+			dev.flushRxFifo()
 			continue
 		} else if err != nil {
 			log.Fatal(err)
 		}
 		if numBytes == 0 {
-			dev.AwaitPacket(0)
+			dev.AwaitPacket()
 			continue
 		}
 		c, err := dev.ReadRegister(RXFIFO)
@@ -115,8 +91,9 @@ func (dev *Device) receiver() {
 		}
 		packet.Reset()
 		if numBytes > 1 {
-			dev.Strobe(SIDLE)
-			dev.Strobe(SFRX)
+			log.Printf("flushing %d bytes\n", numBytes-1)
+			dev.ChangeState(SIDLE, STATE_IDLE)
+			dev.flushRxFifo()
 		}
 	}
 }

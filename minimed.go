@@ -32,7 +32,7 @@ func (dev *Device) DecodePacket(packet []byte) ([]byte, error) {
 	if data[len(data)-1] != crc {
 		CrcErrors++
 		if Verbose {
-			fmt.Printf("CRC should be %02X, not %02X\n", crc, data[len(data)-1])
+			fmt.Printf("CRC should be %X, not %X\n", crc, data[len(data)-1])
 		}
 		return data, CrcMismatch
 	}
@@ -54,15 +54,7 @@ func (dev *Device) EncodePacket(packet []byte) []byte {
 }
 
 func PrintBytes(data []byte) {
-	for i, v := range data {
-		fmt.Printf("%02X ", v)
-		if (i+1)%20 == 0 {
-			fmt.Print("\n")
-		}
-	}
-	if len(data)%20 != 0 {
-		fmt.Print("\n")
-	}
+	fmt.Printf("% X\n", data)
 	if !printBinary {
 		return
 	}

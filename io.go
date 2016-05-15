@@ -34,12 +34,16 @@ func (dev *Device) ReadRegister(addr byte) (byte, error) {
 	return buf[1], nil
 }
 
-var RxFifoOverflow = errors.New("RXFIFO overflow")
+var (
+	RxFifoOverflow  = errors.New("RXFIFO overflow")
+	TxFifoUnderflow = errors.New("TXFIFO underflow")
+)
 
 // Per section 20 of data sheet, read NUM_RXBYTES
 // repeatedly until same value is returned twice.
 func (dev *Device) ReadNumRxBytes() (byte, error) {
-	m := byte(0)
+	last := byte(0)
+	read := false
 	for {
 		n, err := dev.ReadRegister(RXBYTES)
 		if err != nil {
@@ -49,11 +53,23 @@ func (dev *Device) ReadNumRxBytes() (byte, error) {
 			return 0, RxFifoOverflow
 		}
 		n &= NUM_RXBYTES_MASK
-		if n == m {
+		if read && n == last {
 			return n, nil
 		}
-		m = n
+		last = n
+		read = true
 	}
+}
+
+func (dev *Device) ReadNumTxBytes() (byte, error) {
+	n, err := dev.ReadRegister(TXBYTES)
+	if err != nil {
+		return 0, err
+	}
+	if n&TXFIFO_UNDERFLOW != 0 {
+		return 0, TxFifoUnderflow
+	}
+	return n & NUM_TXBYTES_MASK, nil
 }
 
 func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
@@ -96,7 +112,7 @@ func (dev *Device) WriteRegister(addr byte, value byte) error {
 		if err != nil || v == value {
 			return err
 		}
-		msg := fmt.Sprintf("read(%02X) returned %02X instead of %02X", addr, v, value)
+		msg := fmt.Sprintf("read(%X) returned %X instead of %X", addr, v, value)
 		if !retryWrite {
 			return fmt.Errorf("%s", msg)
 		}
@@ -134,6 +150,9 @@ func (dev *Device) WriteEach(data []byte) error {
 }
 
 func (dev *Device) Strobe(cmd byte) (byte, error) {
+	if cmd != SNOP {
+		log.Printf("issuing %s command\n", strobeName(cmd))
+	}
 	buf := []byte{cmd}
 	err := dev.spiDev.Transfer(buf)
 	if err != nil {
@@ -143,14 +162,7 @@ func (dev *Device) Strobe(cmd byte) (byte, error) {
 }
 
 func (dev *Device) Reset() error {
-	err := dev.ChangeState(SRES, STATE_IDLE)
-	if err != nil {
-		return err
-	}
-	if verifyWrite {
-		err = dev.WriteRegister(SYNC0, 0x55)
-	}
-	return err
+	return dev.ChangeState(SRES, STATE_IDLE)
 }
 
 func (dev *Device) ReadState() (byte, error) {
@@ -162,29 +174,24 @@ func (dev *Device) ReadState() (byte, error) {
 }
 
 func (dev *Device) ChangeState(strobe byte, desired byte) error {
-	cmd := strobe
+	log.Printf("change state to %s\n", StateName(desired))
 	for {
-		log.Printf("issuing %s command, waiting for %s\n", strobeName(cmd), StateName(desired))
-		status, err := dev.Strobe(cmd)
+		status, err := dev.Strobe(strobe)
 		if err != nil {
 			return err
 		}
 		s := (status >> STATE_SHIFT) & STATE_MASK
-		log.Printf("state = %s\n", StateName(s))
+		log.Printf("  %s\n", StateName(s))
 		if s == desired {
 			return nil
 		}
-		switch s {
-		case STATE_RXFIFO_OVERFLOW:
-			dev.Strobe(SIDLE)
-			dev.Strobe(SFRX)
-			cmd = strobe
-		case STATE_TXFIFO_UNDERFLOW:
-			dev.Strobe(SIDLE)
-			dev.Strobe(SFTX)
-			cmd = strobe
-		default:
-			cmd = SNOP
-		}
 	}
+}
+
+func (dev *Device) ReadMarcState() (byte, error) {
+	state, err := dev.ReadRegister(MARCSTATE)
+	if err != nil {
+		return 0, err
+	}
+	return state & MARCSTATE_MASK, nil
 }

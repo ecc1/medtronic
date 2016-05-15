@@ -38,18 +38,12 @@ func main() {
 	signal.Notify(signalChan, os.Interrupt)
 	go stats(dev)
 
+	err = dev.ReceiveMode()
+	if err != nil {
+		log.Fatal(err)
+	}
 	for {
-		if cc1100.Verbose {
-			fmt.Printf("AwaitPacket\n")
-		}
-		_, err := dev.AwaitPacket(0)
-		if err != nil {
-			log.Fatal(err)
-		}
-		packet, err := dev.ReceivePacket()
-		if err != nil {
-			log.Fatal(err)
-		}
+		packet := <-dev.IncomingPackets()
 		r, err := dev.ReadRSSI()
 		if err != nil {
 			log.Fatal(err)
@@ -61,8 +55,12 @@ func main() {
 			continue
 		}
 		data, err := dev.DecodePacket(packet)
-		if !cc1100.Verbose && err == nil {
-			cc1100.PrintBytes(data)
+		if !cc1100.Verbose {
+			if err == nil {
+				cc1100.PrintBytes(data)
+			} else {
+				fmt.Printf("%v\n", err)
+			}
 		}
 	}
 }
@@ -71,12 +69,11 @@ func stats(dev *cc1100.Device) {
 	tick := time.Tick(10 * time.Second)
 	for {
 		select {
+		case <-tick:
+			dev.PrintStats()
 		case <-signalChan:
 			dev.PrintStats()
 			os.Exit(0)
-		case <-tick:
-			dev.PrintStats()
-			continue
 		}
 	}
 }

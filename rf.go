@@ -24,9 +24,9 @@ func (dev *Device) InitRF() error {
 		// Normal format
 		// Disable CRC calculation and check
 		// Fixed packet length mode
-		PKTCTRL0, 0x00,
+		PKTCTRL0, PKTCTRL0_LENGTH_CONFIG_VARIABLE,
 
-		// channel number
+		// Channel number
 		CHANNR, 0x00,
 
 		// Intermediate frequency
@@ -62,8 +62,7 @@ func (dev *Device) InitRF() error {
 			(1 << MDMCFG1_CHANSPC_E_SHIFT)),
 
 		// CHANSPC_M = 248 (0xF8)
-		// cHannel spacing
-		// (256 + CHANSPC_M) * 2^CHANSPC_E * 26 MHz / 2^18 == 99975 Hz
+		// Channel spacing = (256 + CHANSPC_M) * 2^CHANSPC_E * 26 MHz / 2^18 == 99975 Hz
 		MDMCFG0, 0xF8,
 
 		MCSM2, MCSM2_RX_TIME_END_OF_PACKET,
@@ -123,7 +122,7 @@ func (dev *Device) InitRF() error {
 
 	// Power amplifier output settings
 	// (see section 24 of the datasheet)
-	err = dev.spiDev.Transfer([]byte{
+	err = dev.spiDev.Write([]byte{
 		BURST_MODE | PATABLE,
 		0x00,
 		0xC0,
@@ -219,4 +218,14 @@ func (dev *Device) ReadRSSI() (int, error) {
 		d -= 256
 	}
 	return d/2 - rssi_offset, nil
+}
+
+func (dev *Device) ReadPaTable() ([]byte, error) {
+	buf := make([]byte, 9)
+	buf[0] = READ_MODE | BURST_MODE | PATABLE
+	err := dev.spiDev.Transfer(buf)
+	if err != nil {
+		return nil, err
+	}
+	return buf[1:], nil
 }
