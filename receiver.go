@@ -91,7 +91,9 @@ func (dev *Device) receiver() {
 		}
 		packet.Reset()
 		if numBytes > 1 {
-			log.Printf("flushing %d bytes\n", numBytes-1)
+			if Verbose {
+				log.Printf("flushing %d bytes\n", numBytes-1)
+			}
 			dev.ChangeState(SIDLE, STATE_IDLE)
 			dev.flushRxFifo()
 		}

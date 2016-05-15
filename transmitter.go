@@ -47,7 +47,9 @@ func (dev *Device) TransmitPacket(data []byte) error {
 		if s != STATE_TX && s != STATE_TXFIFO_UNDERFLOW {
 			panic(StateName(s)) // FIXME
 		}
-		log.Printf("waiting to transmit %d bytes\n", n)
+		if Verbose {
+			log.Printf("waiting to transmit %d bytes\n", n)
+		}
 	}
 	err = dev.ChangeState(SIDLE, STATE_IDLE)
 	if err != nil {

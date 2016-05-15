@@ -3,7 +3,6 @@ package cc1100
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"time"
 )
@@ -18,12 +17,6 @@ const (
 	readFifoUsingBurst  = true
 	writeFifoUsingBurst = true
 )
-
-func init() {
-	if !Verbose {
-		log.SetOutput(ioutil.Discard)
-	}
-}
 
 func (dev *Device) ReadRegister(addr byte) (byte, error) {
 	buf := []byte{READ_MODE | addr, 0xFF}
@@ -116,7 +109,9 @@ func (dev *Device) WriteRegister(addr byte, value byte) error {
 		if !retryWrite {
 			return fmt.Errorf("%s", msg)
 		}
-		log.Printf("%s; sleeping\n", msg)
+		if Verbose {
+			log.Printf("%s; sleeping\n", msg)
+		}
 		time.Sleep(time.Millisecond)
 	}
 }
@@ -150,7 +145,7 @@ func (dev *Device) WriteEach(data []byte) error {
 }
 
 func (dev *Device) Strobe(cmd byte) (byte, error) {
-	if cmd != SNOP {
+	if Verbose && cmd != SNOP {
 		log.Printf("issuing %s command\n", strobeName(cmd))
 	}
 	buf := []byte{cmd}
@@ -174,14 +169,18 @@ func (dev *Device) ReadState() (byte, error) {
 }
 
 func (dev *Device) ChangeState(strobe byte, desired byte) error {
-	log.Printf("change state to %s\n", StateName(desired))
+	if Verbose {
+		log.Printf("change state to %s\n", StateName(desired))
+	}
 	for {
 		status, err := dev.Strobe(strobe)
 		if err != nil {
 			return err
 		}
 		s := (status >> STATE_SHIFT) & STATE_MASK
-		log.Printf("  %s\n", StateName(s))
+		if Verbose {
+			log.Printf("  %s\n", StateName(s))
+		}
 		if s == desired {
 			return nil
 		}
