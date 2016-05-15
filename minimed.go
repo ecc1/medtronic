@@ -15,7 +15,7 @@ var (
 	CrcMismatch    = errors.New("CRC mismatch")
 )
 
-func (dev *Device) DecodePacket(packet []byte) ([]byte, error) {
+func DecodePacket(packet []byte) ([]byte, error) {
 	data, err := Decode6b4b(packet)
 	if err != nil {
 		DecodingErrors++
@@ -39,7 +39,7 @@ func (dev *Device) DecodePacket(packet []byte) ([]byte, error) {
 	return data, nil
 }
 
-func (dev *Device) EncodePacket(packet []byte) []byte {
+func EncodePacket(packet []byte) []byte {
 	packet = append(packet, Crc8(packet))
 	if Verbose {
 		fmt.Printf("Packet:  ")
@@ -69,9 +69,7 @@ func PrintBytes(data []byte) {
 	}
 }
 
-func (dev *Device) PrintStats() {
+func PrintStats() {
 	good := PacketsReceived - DecodingErrors - CrcErrors
 	fmt.Printf("\nTX: %6d    RX: %6d    decode errs: %6d    CRC errs: %6d\n", PacketsSent, good, DecodingErrors, CrcErrors)
-	s, _ := dev.ReadState()
-	fmt.Printf("State: %s\n", StateName(s))
 }

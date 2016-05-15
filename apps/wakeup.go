@@ -39,7 +39,7 @@ func main() {
 		Wakeup,
 		0,
 	}
-	packet := dev.EncodePacket(command)
+	packet := cc1100.EncodePacket(command)
 	for i := 0; i < numWakeups; i++ {
 		err = dev.TransmitPacket(packet)
 		if err != nil {
@@ -67,7 +67,7 @@ func main() {
 			fmt.Print(".")
 			continue
 		}
-		data, err := dev.DecodePacket(response)
+		data, err := cc1100.DecodePacket(response)
 		if err != nil {
 			fmt.Printf("%v\n", err)
 			continue
