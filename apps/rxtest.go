@@ -38,12 +38,9 @@ func main() {
 	signal.Notify(signalChan, os.Interrupt)
 	go stats(dev)
 
-	err = dev.ReceiveMode()
-	if err != nil {
-		log.Fatal(err)
-	}
-	for {
-		packet := <-dev.IncomingPackets()
+	dev.StartRadio()
+	for packet := range dev.IncomingPackets() {
+		// FIXME: read RSSI at packet reception time
 		r, err := dev.ReadRSSI()
 		if err != nil {
 			log.Fatal(err)

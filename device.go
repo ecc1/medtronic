@@ -1,6 +1,8 @@
 package cc1100
 
 import (
+	"bytes"
+
 	"github.com/ecc1/gpio"
 	"github.com/ecc1/spi"
 )
@@ -11,16 +13,17 @@ const (
 )
 
 type Device struct {
-	spiDev       *spi.Device
-	interruptPin gpio.InputPin
-
-	receiverStarted bool
-	receivedPackets chan []byte
-
-	packetsSent     int
-	packetsReceived int
-	decodingErrors  int
-	crcErrors       int
+	spiDev             *spi.Device
+	interruptPin       gpio.InputPin
+	radioStarted       bool
+	receiveBuffer      bytes.Buffer
+	transmittedPackets chan []byte
+	receivedPackets    chan []byte
+	interrupt          chan struct{}
+	packetsSent        int
+	packetsReceived    int
+	decodingErrors     int
+	crcErrors          int
 }
 
 func Open() (*Device, error) {
@@ -36,5 +39,11 @@ func Open() (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Device{spiDev: spiDev, interruptPin: pin}, nil
+	return &Device{
+		spiDev:             spiDev,
+		interruptPin:       pin,
+		transmittedPackets: make(chan []byte, 100),
+		receivedPackets:    make(chan []byte, 10),
+		interrupt:          make(chan struct{}, 10),
+	}, nil
 }

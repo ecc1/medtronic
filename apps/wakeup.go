@@ -13,8 +13,9 @@ const (
 	Wakeup     = 0x5D
 	Ack        = 0x06
 
-	numWakeups  = 250
-	recvTimeout = 50 * time.Millisecond
+	numWakeups  = 100
+	xmitDelay   = 40 * time.Millisecond
+	recvTimeout = 3 * time.Second
 )
 
 func main() {
@@ -31,6 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	dev.StartRadio()
 	command := []byte{
 		PumpDevice,
 		cc1100.PumpID[0]<<4 | cc1100.PumpID[1],
@@ -41,22 +43,13 @@ func main() {
 	}
 	packet := cc1100.EncodePacket(command)
 	for i := 0; i < numWakeups; i++ {
-		err = dev.TransmitPacket(packet)
-		if err != nil {
-			log.Fatal(err)
-		}
+		dev.OutgoingPackets() <- packet
+		time.Sleep(xmitDelay)
 	}
 	tries := numWakeups
 	for {
-		err = dev.TransmitPacket(packet)
-		if err != nil {
-			log.Fatal(err)
-		}
+		dev.OutgoingPackets() <- packet
 		tries++
-		err = dev.ReceiveMode()
-		if err != nil {
-			log.Fatal(err)
-		}
 		timeout := time.After(recvTimeout)
 		var response []byte
 		select {

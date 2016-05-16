@@ -157,7 +157,7 @@ func (dev *Device) Strobe(cmd byte) (byte, error) {
 }
 
 func (dev *Device) Reset() error {
-	return dev.ChangeState(SRES, STATE_IDLE)
+	return dev.changeState(SRES, STATE_IDLE)
 }
 
 func (dev *Device) ReadState() (byte, error) {
@@ -166,25 +166,6 @@ func (dev *Device) ReadState() (byte, error) {
 		return 0, err
 	}
 	return (status >> STATE_SHIFT) & STATE_MASK, nil
-}
-
-func (dev *Device) ChangeState(strobe byte, desired byte) error {
-	if Verbose {
-		log.Printf("change state to %s\n", StateName(desired))
-	}
-	for {
-		status, err := dev.Strobe(strobe)
-		if err != nil {
-			return err
-		}
-		s := (status >> STATE_SHIFT) & STATE_MASK
-		if Verbose {
-			log.Printf("  %s\n", StateName(s))
-		}
-		if s == desired {
-			return nil
-		}
-	}
 }
 
 func (dev *Device) ReadMarcState() (byte, error) {
