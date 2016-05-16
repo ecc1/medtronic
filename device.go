@@ -12,13 +12,18 @@ const (
 	gpioPin  = 14      // Intel Edison GPIO connected to GDO0
 )
 
+type Packet struct {
+	Rssi int
+	Data []byte
+}
+
 type Device struct {
 	spiDev             *spi.Device
 	interruptPin       gpio.InputPin
 	radioStarted       bool
 	receiveBuffer      bytes.Buffer
-	transmittedPackets chan []byte
-	receivedPackets    chan []byte
+	transmittedPackets chan Packet
+	receivedPackets    chan Packet
 	interrupt          chan struct{}
 	packetsSent        int
 	packetsReceived    int
@@ -42,8 +47,8 @@ func Open() (*Device, error) {
 	return &Device{
 		spiDev:             spiDev,
 		interruptPin:       pin,
-		transmittedPackets: make(chan []byte, 100),
-		receivedPackets:    make(chan []byte, 10),
+		transmittedPackets: make(chan Packet, 100),
+		receivedPackets:    make(chan Packet, 10),
 		interrupt:          make(chan struct{}, 10),
 	}, nil
 }

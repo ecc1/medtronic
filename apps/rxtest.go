@@ -40,17 +40,9 @@ func main() {
 
 	dev.StartRadio()
 	for packet := range dev.IncomingPackets() {
-		// FIXME: read RSSI at packet reception time
-		r, err := dev.ReadRSSI()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet), r)
+		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet.Data), packet.Rssi)
 		fmt.Printf("Raw data: ")
-		cc1100.PrintBytes(packet)
-		if len(packet) == 0 {
-			continue
-		}
+		cc1100.PrintBytes(packet.Data)
 		data, err := dev.DecodePacket(packet)
 		if !cc1100.Verbose {
 			if err == nil {

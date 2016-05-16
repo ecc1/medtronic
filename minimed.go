@@ -13,8 +13,8 @@ var (
 	CrcMismatch = errors.New("CRC mismatch")
 )
 
-func (dev *Device) DecodePacket(packet []byte) ([]byte, error) {
-	data, err := Decode6b4b(packet)
+func (dev *Device) DecodePacket(packet Packet) ([]byte, error) {
+	data, err := Decode6b4b(packet.Data)
 	if err != nil {
 		dev.decodingErrors++
 		if Verbose {
@@ -37,8 +37,8 @@ func (dev *Device) DecodePacket(packet []byte) ([]byte, error) {
 	return data, nil
 }
 
-func EncodePacket(packet []byte) []byte {
-	return Encode4b6b(append(packet, Crc8(packet)))
+func EncodePacket(packet []byte) Packet {
+	return Packet{Data: Encode4b6b(append(packet, Crc8(packet)))}
 }
 
 func PrintBytes(data []byte) {

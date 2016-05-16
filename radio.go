@@ -20,11 +20,11 @@ func (dev *Device) StartRadio() {
 	}
 }
 
-func (dev *Device) IncomingPackets() <-chan []byte {
+func (dev *Device) IncomingPackets() <-chan Packet {
 	return dev.receivedPackets
 }
 
-func (dev *Device) OutgoingPackets() chan<- []byte {
+func (dev *Device) OutgoingPackets() chan<- Packet {
 	return dev.transmittedPackets
 }
 
@@ -36,7 +36,7 @@ func (dev *Device) radio() {
 	for {
 		select {
 		case packet := <-dev.transmittedPackets:
-			err = dev.transmit(packet)
+			err = dev.transmit(packet.Data)
 		case <-dev.interrupt:
 			err = dev.receive()
 		}
@@ -98,8 +98,8 @@ func (dev *Device) transmit(data []byte) error {
 		if err != nil {
 			return err
 		}
-		if s != STATE_TX && s != STATE_TXFIFO_UNDERFLOW {
-			panic(StateName(s)) // FIXME
+		if s != STATE_TX {
+			return fmt.Errorf("unexpected %s state during TXFIFO drain", StateName(s))
 		}
 		if Verbose {
 			log.Printf("waiting to transmit %d bytes\n", n)
@@ -135,6 +135,10 @@ func (dev *Device) receive() error {
 			continue
 		}
 		// End of packet.
+		rssi, err := dev.ReadRSSI()
+		if err != nil {
+			return err
+		}
 		size := dev.receiveBuffer.Len()
 		if size != 0 {
 			dev.packetsReceived++
@@ -144,7 +148,7 @@ func (dev *Device) receive() error {
 				return err
 			}
 			dev.receiveBuffer.Reset()
-			dev.receivedPackets <- p
+			dev.receivedPackets <- Packet{Rssi: rssi, Data: p}
 		}
 		return nil
 	}

@@ -51,7 +51,7 @@ func main() {
 		dev.OutgoingPackets() <- packet
 		tries++
 		timeout := time.After(recvTimeout)
-		var response []byte
+		var response cc1100.Packet
 		select {
 		case response = <-dev.IncomingPackets():
 			fmt.Print("\n")
