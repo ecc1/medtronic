@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	model, err := dev.PumpModel(3)
+	model, err := dev.PumpModel(3, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

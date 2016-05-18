@@ -57,7 +57,7 @@ func commandPacket(cmd PumpCommand) Packet {
 
 type ResponseHandler func([]byte) (interface{}, error)
 
-func (dev *Device) Execute(cmd PumpCommand, responseTimeout time.Duration, retries int, handler ResponseHandler) (interface{}, error) {
+func (dev *Device) Execute(cmd PumpCommand, responseTimeout time.Duration, retries int, handler ResponseHandler, rssi *int) (interface{}, error) {
 	packet := commandPacket(cmd)
 	for tries := 0; tries < retries || retries == 0; tries++ {
 		dev.OutgoingPackets() <- packet
@@ -75,6 +75,9 @@ func (dev *Device) Execute(cmd PumpCommand, responseTimeout time.Duration, retri
 		}
 		if !expected(cmd, data) {
 			return nil, unexpectedResponse(cmd, data)
+		}
+		if rssi != nil {
+			*rssi = response.Rssi
 		}
 		return handler(data[5:])
 	}
@@ -105,14 +108,14 @@ func (dev *Device) PumpID(retries int) (string, error) {
 		}
 		return nil, unexpectedResponse(PumpID, data)
 	}
-	result, err := dev.Execute(PumpID, 200*time.Millisecond, retries, getResult)
+	result, err := dev.Execute(PumpID, 200*time.Millisecond, retries, getResult, nil)
 	if err != nil {
 		return "", err
 	}
 	return result.(string), nil
 }
 
-func (dev *Device) PumpModel(retries int) (string, error) {
+func (dev *Device) PumpModel(retries int, rssi *int) (string, error) {
 	getResult := func(data []byte) (interface{}, error) {
 		if len(data) >= 2 {
 			n := int(data[1])
@@ -122,7 +125,7 @@ func (dev *Device) PumpModel(retries int) (string, error) {
 		}
 		return nil, unexpectedResponse(PumpModel, data)
 	}
-	result, err := dev.Execute(PumpModel, 200*time.Millisecond, retries, getResult)
+	result, err := dev.Execute(PumpModel, 200*time.Millisecond, retries, getResult, rssi)
 	if err != nil {
 		return "", err
 	}
@@ -133,7 +136,7 @@ func (dev *Device) PowerControl(retries int) error {
 	nop := func(_ []byte) (interface{}, error) {
 		return nil, nil
 	}
-	_, err := dev.Execute(PowerControl, 10*time.Second, retries, nop)
+	_, err := dev.Execute(PowerControl, 10*time.Second, retries, nop, nil)
 	return err
 }
 
