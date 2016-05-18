@@ -27,8 +27,6 @@ type Device struct {
 	interrupt          chan struct{}
 	packetsSent        int
 	packetsReceived    int
-	decodingErrors     int
-	crcErrors          int
 }
 
 func Open() (*Device, error) {
