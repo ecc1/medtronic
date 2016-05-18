@@ -19,13 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	err = dev.Reset()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = dev.InitRF()
+	err = dev.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +32,6 @@ func main() {
 	signal.Notify(signalChan, os.Interrupt)
 	go stats(dev)
 
-	dev.StartRadio()
 	for packet := range dev.IncomingPackets() {
 		fmt.Printf("Received %d bytes (RSSI = %d)\n", len(packet.Data), packet.Rssi)
 		fmt.Printf("Raw data: ")

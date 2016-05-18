@@ -52,3 +52,16 @@ func Open() (*Device, error) {
 		interrupt:          make(chan struct{}, 10),
 	}, nil
 }
+
+func (dev *Device) Init() error {
+	err := dev.Reset()
+	if err != nil {
+		return err
+	}
+	err = dev.InitRF()
+	if err != nil {
+		return err
+	}
+	dev.StartRadio()
+	return nil
+}
