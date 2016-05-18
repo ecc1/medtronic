@@ -184,6 +184,10 @@ const (
 	GDO0_INV                = (1 << 6)
 	GDO0_CFG_MASK           = 0x3f
 
+	FIFOTHR_MASK = 0xf
+	// FiFOTHR value n corresponds to 4*(n+1) bytes in RX FIFO
+	// or 65 - 4*(n+1) bytes in TX FIFO
+
 	PKTCTRL1_PQT_MASK                = (0x7 << 5)
 	PKTCTRL1_PQT_SHIFT               = 5
 	PKTCTRL1_APPEND_STATUS           = (1 << 2)

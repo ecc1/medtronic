@@ -10,6 +10,11 @@ const (
 	usePolling      = false
 	pollInterval    = time.Millisecond
 	maxPacketLength = 100
+
+	// Approximate time for one byte to be transmitted, based on
+	// the data rate.  It was determined empirically so that few
+	// if any iterations are needed in drainTxFifo().
+	byteDuration = time.Millisecond
 )
 
 func (dev *Device) StartRadio() {
@@ -61,13 +66,6 @@ func (dev *Device) awaitInterrupts() {
 	}
 }
 
-const (
-	// Approximate time for one byte to be transmitted, based on
-	// the data rate.  It was determined empirically so that few
-	// if any iterations are needed waiting for the TXFIFO to drain.
-	byteDuration = time.Millisecond
-)
-
 func (dev *Device) transmit(data []byte) error {
 	if len(data) > maxPacketLength {
 		return fmt.Errorf("packet too long (%d bytes)", len(data))
@@ -83,14 +81,17 @@ func (dev *Device) transmit(data []byte) error {
 	if err != nil {
 		return err
 	}
-	// Wait for TXFIFO to drain.
-	time.Sleep(time.Duration(len(data)+1) * byteDuration)
+	return dev.drainTxFifo(len(data) + 1)
+}
+
+func (dev *Device) drainTxFifo(numBytes int) error {
+	time.Sleep(time.Duration(numBytes) * byteDuration)
 	for {
 		n, err := dev.ReadNumTxBytes()
 		if err != nil && err != TxFifoUnderflow {
 			return err
 		}
-		if n == 0 {
+		if n == 0 || err == TxFifoUnderflow {
 			dev.packetsSent++
 			return nil
 		}
@@ -98,7 +99,7 @@ func (dev *Device) transmit(data []byte) error {
 		if err != nil {
 			return err
 		}
-		if s != STATE_TX {
+		if s != STATE_TX && s != STATE_TXFIFO_UNDERFLOW {
 			return fmt.Errorf("unexpected %s state during TXFIFO drain", StateName(s))
 		}
 		if Verbose {
@@ -112,6 +113,7 @@ func (dev *Device) receive() error {
 	if err != nil {
 		return err
 	}
+	waiting := false
 	for {
 		numBytes, err := dev.ReadNumRxBytes()
 		if err == RxFifoOverflow {
@@ -120,9 +122,17 @@ func (dev *Device) receive() error {
 		} else if err != nil {
 			return err
 		}
-		if numBytes == 0 {
-			return nil
+		// Don't read last byte of FIFO if packet is still
+		// being received. See Section 20 of data sheet.
+		if numBytes < 2 {
+			if waiting {
+				return nil
+			}
+			waiting = true
+			time.Sleep(byteDuration)
+			continue
 		}
+		waiting = false
 		c, err := dev.ReadRegister(RXFIFO)
 		if err != nil {
 			return err

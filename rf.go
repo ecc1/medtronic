@@ -28,7 +28,7 @@ func (dev *Device) InitRF() error {
 		// Normal format
 		// Disable CRC calculation and check
 		// Fixed packet length mode
-		PKTCTRL0, PKTCTRL0_LENGTH_CONFIG_VARIABLE,
+		PKTCTRL0, PKTCTRL0_LENGTH_CONFIG_INFINITE,
 
 		// Channel number
 		CHANNR, 0x00,
@@ -58,7 +58,7 @@ func (dev *Device) InitRF() error {
 		MDMCFG0, 0xF8,
 
 		MCSM2, MCSM2_RX_TIME_END_OF_PACKET,
-		MCSM1, MCSM1_CCA_MODE_RSSI_BELOW_UNLESS_RECEIVING | MCSM1_RXOFF_MODE_RX | MCSM1_TXOFF_MODE_RX,
+		MCSM1, MCSM1_CCA_MODE_RSSI_BELOW_UNLESS_RECEIVING | MCSM1_RXOFF_MODE_IDLE | MCSM1_TXOFF_MODE_IDLE,
 		MCSM0, MCSM0_FS_AUTOCAL_FROM_IDLE | MCSM0_MAGIC_3 | MCSM0_CLOSE_IN_RX_0DB,
 		FOCCFG, FOCCFG_FOC_PRE_K_3K | FOCCFG_FOC_POST_K_PRE_K_OVER_2 | FOCCFG_FOC_LIMIT_BW_OVER_2,
 		BSCFG, BSCFG_BS_PRE_K_2K | BSCFG_BS_PRE_KP_3KP | BSCFG_BS_POST_KI_PRE_KI_OVER_2 | BSCFG_BS_LIMIT_0,
@@ -89,8 +89,7 @@ func (dev *Device) InitRF() error {
 		return err
 	}
 
-	// Power amplifier output settings
-	// (see section 24 of the datasheet)
+	// Power amplifier output settings (see section 24 of the data sheet)
 	err = dev.spiDev.Write([]byte{
 		BURST_MODE | PATABLE,
 		0x00,
