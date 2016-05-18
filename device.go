@@ -17,24 +17,26 @@ type Packet struct {
 	Data []byte
 }
 
-type Device struct {
-	spiDev             *spi.Device
-	interruptPin       gpio.InputPin
+type Radio struct {
+	device       *spi.Device
+	interruptPin gpio.InputPin
+
 	radioStarted       bool
 	receiveBuffer      bytes.Buffer
 	transmittedPackets chan Packet
 	receivedPackets    chan Packet
 	interrupt          chan struct{}
-	packetsSent        int
-	packetsReceived    int
+
+	PacketsSent     int
+	PacketsReceived int
 }
 
-func Open() (*Device, error) {
-	spiDev, err := spi.Open(spiSpeed)
+func Open() (*Radio, error) {
+	dev, err := spi.Open(spiSpeed)
 	if err != nil {
 		return nil, err
 	}
-	err = spiDev.SetMaxSpeed(spiSpeed)
+	err = dev.SetMaxSpeed(spiSpeed)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +44,8 @@ func Open() (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Device{
-		spiDev:             spiDev,
+	return &Radio{
+		device:             dev,
 		interruptPin:       pin,
 		transmittedPackets: make(chan Packet, 100),
 		receivedPackets:    make(chan Packet, 10),
@@ -51,15 +53,15 @@ func Open() (*Device, error) {
 	}, nil
 }
 
-func (dev *Device) Init() error {
-	err := dev.Reset()
+func (r *Radio) Init() error {
+	err := r.Reset()
 	if err != nil {
 		return err
 	}
-	err = dev.InitRF()
+	err = r.InitRF()
 	if err != nil {
 		return err
 	}
-	dev.StartRadio()
+	r.startRadio()
 	return nil
 }

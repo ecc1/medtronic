@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Verbose = false
+	verbose = false
 
 	writeUsingTransfer = false
 	verifyWrite        = false
@@ -18,9 +18,9 @@ const (
 	writeFifoUsingBurst = true
 )
 
-func (dev *Device) ReadRegister(addr byte) (byte, error) {
+func (r *Radio) ReadRegister(addr byte) (byte, error) {
 	buf := []byte{READ_MODE | addr, 0xFF}
-	err := dev.spiDev.Transfer(buf)
+	err := r.device.Transfer(buf)
 	if err != nil {
 		return 0, err
 	}
@@ -34,11 +34,11 @@ var (
 
 // Per section 20 of data sheet, read NUM_RXBYTES
 // repeatedly until same value is returned twice.
-func (dev *Device) ReadNumRxBytes() (byte, error) {
+func (r *Radio) ReadNumRxBytes() (byte, error) {
 	last := byte(0)
 	read := false
 	for {
-		n, err := dev.ReadRegister(RXBYTES)
+		n, err := r.ReadRegister(RXBYTES)
 		if err != nil {
 			return 0, err
 		}
@@ -54,8 +54,8 @@ func (dev *Device) ReadNumRxBytes() (byte, error) {
 	}
 }
 
-func (dev *Device) ReadNumTxBytes() (byte, error) {
-	n, err := dev.ReadRegister(TXBYTES)
+func (r *Radio) ReadNumTxBytes() (byte, error) {
+	n, err := r.ReadRegister(TXBYTES)
 	if err != nil {
 		return 0, err
 	}
@@ -65,11 +65,11 @@ func (dev *Device) ReadNumTxBytes() (byte, error) {
 	return n & NUM_TXBYTES_MASK, nil
 }
 
-func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
+func (r *Radio) ReadFifo(n uint8) ([]byte, error) {
 	if readFifoUsingBurst {
 		buf := make([]byte, n+1)
 		buf[0] = READ_MODE | BURST_MODE | RXFIFO
-		err := dev.spiDev.Transfer(buf)
+		err := r.device.Transfer(buf)
 		if err != nil {
 			return nil, err
 		}
@@ -78,7 +78,7 @@ func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
 		buf := make([]byte, n)
 		var err error
 		for i := uint8(0); i < n; i++ {
-			buf[i], err = dev.ReadRegister(RXFIFO)
+			buf[i], err = r.ReadRegister(RXFIFO)
 			if err != nil {
 				return nil, err
 			}
@@ -87,21 +87,21 @@ func (dev *Device) ReadFifo(n uint8) ([]byte, error) {
 	}
 }
 
-func (dev *Device) writeData(data []byte) error {
+func (r *Radio) writeData(data []byte) error {
 	if writeUsingTransfer {
-		return dev.spiDev.Transfer(data)
+		return r.device.Transfer(data)
 	} else {
-		return dev.spiDev.Write(data)
+		return r.device.Write(data)
 	}
 }
 
-func (dev *Device) WriteRegister(addr byte, value byte) error {
+func (r *Radio) WriteRegister(addr byte, value byte) error {
 	for {
-		err := dev.writeData([]byte{addr, value})
+		err := r.writeData([]byte{addr, value})
 		if err != nil || !verifyWrite || addr == TXFIFO {
 			return err
 		}
-		v, err := dev.ReadRegister(addr)
+		v, err := r.ReadRegister(addr)
 		if err != nil || v == value {
 			return err
 		}
@@ -109,19 +109,19 @@ func (dev *Device) WriteRegister(addr byte, value byte) error {
 		if !retryWrite {
 			return fmt.Errorf("%s", msg)
 		}
-		if Verbose {
+		if verbose {
 			log.Printf("%s; sleeping\n", msg)
 		}
 		time.Sleep(time.Millisecond)
 	}
 }
 
-func (dev *Device) WriteFifo(data []byte) error {
+func (r *Radio) WriteFifo(data []byte) error {
 	if writeFifoUsingBurst {
-		return dev.writeData(append([]byte{BURST_MODE | TXFIFO}, data...))
+		return r.writeData(append([]byte{BURST_MODE | TXFIFO}, data...))
 	} else {
 		for _, b := range data {
-			err := dev.WriteRegister(TXFIFO, b)
+			err := r.WriteRegister(TXFIFO, b)
 			if err != nil {
 				return err
 			}
@@ -130,13 +130,13 @@ func (dev *Device) WriteFifo(data []byte) error {
 	}
 }
 
-func (dev *Device) WriteEach(data []byte) error {
+func (r *Radio) WriteEach(data []byte) error {
 	n := len(data)
 	if n%2 != 0 {
 		panic("odd data length")
 	}
 	for i := 0; i < n; i += 2 {
-		err := dev.WriteRegister(data[i], data[i+1])
+		err := r.WriteRegister(data[i], data[i+1])
 		if err != nil {
 			return err
 		}
@@ -144,32 +144,32 @@ func (dev *Device) WriteEach(data []byte) error {
 	return nil
 }
 
-func (dev *Device) Strobe(cmd byte) (byte, error) {
-	if Verbose && cmd != SNOP {
+func (r *Radio) Strobe(cmd byte) (byte, error) {
+	if verbose && cmd != SNOP {
 		log.Printf("issuing %s command\n", strobeName(cmd))
 	}
 	buf := []byte{cmd}
-	err := dev.spiDev.Transfer(buf)
+	err := r.device.Transfer(buf)
 	if err != nil {
 		return 0, err
 	}
 	return buf[0], nil
 }
 
-func (dev *Device) Reset() error {
-	return dev.changeState(SRES, STATE_IDLE)
+func (r *Radio) Reset() error {
+	return r.changeState(SRES, STATE_IDLE)
 }
 
-func (dev *Device) ReadState() (byte, error) {
-	status, err := dev.Strobe(SNOP)
+func (r *Radio) ReadState() (byte, error) {
+	status, err := r.Strobe(SNOP)
 	if err != nil {
 		return 0, err
 	}
 	return (status >> STATE_SHIFT) & STATE_MASK, nil
 }
 
-func (dev *Device) ReadMarcState() (byte, error) {
-	state, err := dev.ReadRegister(MARCSTATE)
+func (r *Radio) ReadMarcState() (byte, error) {
+	state, err := r.ReadRegister(MARCSTATE)
 	if err != nil {
 		return 0, err
 	}

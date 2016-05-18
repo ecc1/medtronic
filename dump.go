@@ -5,55 +5,55 @@ import (
 	"log"
 )
 
-func (dev *Device) DumpRF() {
-	freq, err := dev.ReadFrequency()
+func (r *Radio) DumpRF() {
+	freq, err := r.ReadFrequency()
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Frequency: %d\n", freq)
-	fmt.Printf("Channel: %d\n", dev.readReg(CHANNR))
-	dev.showFreqSynthControl()
-	dev.showModemConfig()
-	pa, err := dev.ReadPaTable()
+	fmt.Printf("Channel: %d\n", r.readReg(CHANNR))
+	r.showFreqSynthControl()
+	r.showModemConfig()
+	pa, err := r.ReadPaTable()
 	if err != nil {
 		log.Fatal(err)
 	}
-	n := dev.readReg(FREND0) & FREND0_PA_POWER_MASK
+	n := r.readReg(FREND0) & FREND0_PA_POWER_MASK
 	fmt.Printf("PATABLE: % X using 0..%d\n", pa, n)
 }
 
-func (dev *Device) readReg(addr byte) byte {
-	v, err := dev.ReadRegister(addr)
+func (r *Radio) readReg(addr byte) byte {
+	v, err := r.ReadRegister(addr)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return v
 }
 
-func (dev *Device) showFreqSynthControl() {
-	f, err := dev.ReadIF()
+func (r *Radio) showFreqSynthControl() {
+	f, err := r.ReadIF()
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Intermediate frequency: %d Hz\n", f)
-	fmt.Printf("Frequency offset: %d Hz\n", dev.readReg(FSCTRL0))
+	fmt.Printf("Frequency offset: %d Hz\n", r.readReg(FSCTRL0))
 }
 
-func (dev *Device) showModemConfig() {
-	chanbw, drate, err := dev.ReadChannelParams()
+func (r *Radio) showModemConfig() {
+	chanbw, drate, err := r.ReadChannelParams()
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Channel bandwidth: %d Hz\n", chanbw)
 	fmt.Printf("Data rate: %d Baud\n", drate)
 
-	m2 := dev.readReg(MDMCFG2)
+	m2 := r.readReg(MDMCFG2)
 	showBoolCondition("DC blocking filter", m2&MDMCFG2_DEM_DCFILT_OFF == 0)
 	showBoolCondition("Manchester encoding", m2&(1<<3) != 0)
 	fmt.Printf("Modulation format: %s\n", modFormat[(m2&MDMCFG2_MOD_FORMAT_MASK)>>4])
 	fmt.Printf("Sync mode: %s\n", syncMode[m2&MDMCFG2_SYNC_MODE_MASK])
 
-	fec, minPreamble, chanspc, err := dev.ReadModemConfig()
+	fec, minPreamble, chanspc, err := r.ReadModemConfig()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -4,8 +4,8 @@ const (
 	DefaultFrequency = 916600000
 )
 
-func (dev *Device) InitRF() error {
-	err := dev.WriteEach([]byte{
+func (r *Radio) InitRF() error {
+	err := r.WriteEach([]byte{
 		// Carrier sense: high if RSSI level is above threshold
 		IOCFG2, 0x0E,
 		IOCFG1, 0x00,
@@ -84,13 +84,13 @@ func (dev *Device) InitRF() error {
 		return err
 	}
 
-	err = dev.WriteFrequency(DefaultFrequency)
+	err = r.WriteFrequency(DefaultFrequency)
 	if err != nil {
 		return err
 	}
 
 	// Power amplifier output settings (see section 24 of the data sheet)
-	err = dev.spiDev.Write([]byte{
+	err = r.device.Write([]byte{
 		BURST_MODE | PATABLE,
 		0x00,
 		0xC0,
@@ -102,16 +102,16 @@ func (dev *Device) InitRF() error {
 	return nil
 }
 
-func (dev *Device) ReadFrequency() (uint32, error) {
-	freq2, err := dev.ReadRegister(FREQ2)
+func (r *Radio) ReadFrequency() (uint32, error) {
+	freq2, err := r.ReadRegister(FREQ2)
 	if err != nil {
 		return 0, err
 	}
-	freq1, err := dev.ReadRegister(FREQ1)
+	freq1, err := r.ReadRegister(FREQ1)
 	if err != nil {
 		return 0, err
 	}
-	freq0, err := dev.ReadRegister(FREQ0)
+	freq0, err := r.ReadRegister(FREQ0)
 	if err != nil {
 		return 0, err
 	}
@@ -119,26 +119,26 @@ func (dev *Device) ReadFrequency() (uint32, error) {
 	return uint32(uint64(f) * FXOSC >> 16), nil
 }
 
-func (dev *Device) WriteFrequency(freq uint32) error {
+func (r *Radio) WriteFrequency(freq uint32) error {
 	f := (uint64(freq)<<16 + FXOSC/2) / FXOSC
-	return dev.WriteEach([]byte{
+	return r.WriteEach([]byte{
 		FREQ2, byte(f >> 16),
 		FREQ1, byte(f >> 8),
 		FREQ0, byte(f),
 	})
 }
 
-func (dev *Device) ReadIF() (uint32, error) {
-	f, err := dev.ReadRegister(FSCTRL1)
+func (r *Radio) ReadIF() (uint32, error) {
+	f, err := r.ReadRegister(FSCTRL1)
 	if err != nil {
 		return 0, err
 	}
 	return uint32(uint64(f) * FXOSC >> 10), nil
 }
 
-func (dev *Device) ReadChannelParams() (chanbw uint32, drate uint32, err error) {
+func (r *Radio) ReadChannelParams() (chanbw uint32, drate uint32, err error) {
 	var m4 byte
-	m4, err = dev.ReadRegister(MDMCFG4)
+	m4, err = r.ReadRegister(MDMCFG4)
 	if err != nil {
 		return
 	}
@@ -147,7 +147,7 @@ func (dev *Device) ReadChannelParams() (chanbw uint32, drate uint32, err error) 
 	drate_E := (m4 >> MDMCFG4_DRATE_E_SHIFT) & 0xF
 
 	var drate_M byte
-	drate_M, err = dev.ReadRegister(MDMCFG3)
+	drate_M, err = r.ReadRegister(MDMCFG3)
 	if err != nil {
 		return
 	}
@@ -157,9 +157,9 @@ func (dev *Device) ReadChannelParams() (chanbw uint32, drate uint32, err error) 
 	return
 }
 
-func (dev *Device) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32, err error) {
+func (r *Radio) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32, err error) {
 	var m1 byte
-	m1, err = dev.ReadRegister(MDMCFG1)
+	m1, err = r.ReadRegister(MDMCFG1)
 	if err != nil {
 		return
 	}
@@ -167,7 +167,7 @@ func (dev *Device) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32
 	minPreamble = numPreamble[(m1&MDMCFG1_NUM_PREAMBLE_MASK)>>4]
 	chanspc_E := m1 & MDMCFG1_CHANSPC_E_MASK
 	var chanspc_M byte
-	chanspc_M, err = dev.ReadRegister(MDMCFG0)
+	chanspc_M, err = r.ReadRegister(MDMCFG0)
 	if err != nil {
 		return
 	}
@@ -175,23 +175,23 @@ func (dev *Device) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32
 	return
 }
 
-func (dev *Device) ReadRSSI() (int, error) {
+func (r *Radio) ReadRSSI() (int, error) {
 	const rssi_offset = 74 // see data sheet section 17.3
-	r, err := dev.ReadRegister(RSSI)
+	rssi, err := r.ReadRegister(RSSI)
 	if err != nil {
 		return 0, err
 	}
-	d := int(r)
+	d := int(rssi)
 	if d >= 128 {
 		d -= 256
 	}
 	return d/2 - rssi_offset, nil
 }
 
-func (dev *Device) ReadPaTable() ([]byte, error) {
+func (r *Radio) ReadPaTable() ([]byte, error) {
 	buf := make([]byte, 9)
 	buf[0] = READ_MODE | BURST_MODE | PATABLE
-	err := dev.spiDev.Transfer(buf)
+	err := r.device.Transfer(buf)
 	if err != nil {
 		return nil, err
 	}
