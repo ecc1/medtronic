@@ -93,7 +93,7 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 		}
 		if n == 0 || err == TxFifoUnderflow {
 			r.PacketsSent++
-			return nil
+			break
 		}
 		s, err := r.ReadState()
 		if err != nil {
@@ -106,6 +106,7 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 			log.Printf("waiting to transmit %d bytes\n", n)
 		}
 	}
+	return r.changeState(SIDLE, STATE_IDLE)
 }
 
 func (r *Radio) receive() error {
