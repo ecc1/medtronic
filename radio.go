@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	usePolling      = false
-	pollInterval    = time.Millisecond
-	maxPacketLength = 100
+	fifoSize     = 64
+	usePolling   = false
+	pollInterval = time.Millisecond
 
 	// Approximate time for one byte to be transmitted, based on
 	// the data rate.  It was determined empirically so that few
@@ -67,13 +67,19 @@ func (r *Radio) awaitInterrupts() {
 }
 
 func (r *Radio) transmit(data []byte) error {
-	if len(data) > maxPacketLength {
-		return fmt.Errorf("packet too long (%d bytes)", len(data))
-	}
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
 	// are transmitted before leaving TX state.
-	err := r.WriteFifo(append(data, []byte{0, 0}...))
+	data = append(data, []byte{0, 0}...)
+	if len(data) <= fifoSize {
+		return r.transmitSmall(data)
+	} else {
+		return r.transmitLarge(data)
+	}
+}
+
+func (r *Radio) transmitSmall(data []byte) error {
+	err := r.WriteFifo(data)
 	if err != nil {
 		return err
 	}
@@ -81,7 +87,43 @@ func (r *Radio) transmit(data []byte) error {
 	if err != nil {
 		return err
 	}
-	return r.drainTxFifo(len(data) + 1)
+	return r.drainTxFifo(len(data))
+}
+
+// Transmit a packet that is larger than the TXFIFO size.
+// See TI Design Note DN500 (swra109c).
+func (r *Radio) transmitLarge(data []byte) error {
+	avail := fifoSize
+	for {
+		err := r.WriteFifo(data[:avail])
+		if err != nil {
+			return err
+		}
+		err = r.changeState(STX, STATE_TX)
+		if err != nil {
+			return err
+		}
+		data = data[avail:]
+		if len(data) == 0 {
+			break
+		}
+		// Err on the short side here to avoid TXFIFO underflow.
+		time.Sleep(fifoSize/4 * byteDuration)
+		for {
+			n, err := r.ReadNumTxBytes()
+			if err != nil {
+				return err
+			}
+			if n < fifoSize {
+				avail = fifoSize - int(n)
+				if avail > len(data) {
+					avail = len(data)
+				}
+				break
+			}
+		}
+	}
+	return r.drainTxFifo(len(data))
 }
 
 func (r *Radio) drainTxFifo(numBytes int) error {

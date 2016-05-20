@@ -1,7 +1,7 @@
 package cc1100
 
 const (
-	DefaultFrequency = 916600000
+	DefaultFrequency = uint32(916600000)
 )
 
 func (r *Radio) InitRF() error {
