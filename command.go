@@ -14,7 +14,8 @@ const (
 	pumpEnvVar             = "MEDTRONIC_PUMP_ID"
 	PumpDevice             = 0xA7
 	Ack                    = 0x06
-	defaultResponseTimeout = 100 * time.Millisecond
+	maxPacketSize          = 70 // excluding CRC byte
+	defaultResponseTimeout = 200 * time.Millisecond
 )
 
 var (
@@ -63,9 +64,18 @@ type PumpCommand struct {
 
 func commandPacket(cmd PumpCommand) cc1100.Packet {
 	initCommandPrefix()
-	data := append(commandPrefix, byte(cmd.Code), byte(len(cmd.Params)))
+	n := len(commandPrefix)
+	var data []byte
+	if len(cmd.Params) == 0 {
+		data = make([]byte, n+2)
+	} else {
+		data = make([]byte, maxPacketSize)
+	}
+	copy(data, commandPrefix)
+	data[n] = byte(cmd.Code)
+	data[n+1] = byte(len(cmd.Params))
 	if len(cmd.Params) != 0 {
-		data = append(data, cmd.Params...)
+		copy(data[n+2:], cmd.Params)
 	}
 	return EncodePacket(data)
 }
@@ -90,7 +100,7 @@ func (pump *Pump) Execute(cmd PumpCommand) (interface{}, error) {
 		if err != nil {
 			continue
 		}
-		if !expected(cmd.Code, data) {
+		if !expected(cmd, data) {
 			return nil, unexpectedResponse(cmd.Code, data)
 		}
 		if cmd.Rssi != nil {
@@ -106,16 +116,22 @@ func (pump *Pump) Execute(cmd PumpCommand) (interface{}, error) {
 	return nil, noResponse(cmd.Code)
 }
 
-func expected(code CommandCode, data []byte) bool {
+func expected(cmd PumpCommand, data []byte) bool {
 	if len(data) < 5 {
 		return false
 	}
 	if !bytes.Equal(data[:len(commandPrefix)], commandPrefix) {
 		return false
 	}
-	if code == PowerControl {
+	if len(cmd.Params) != 0 || cmd.Code == PowerControl {
 		return data[4] == byte(Ack)
 	} else {
-		return data[4] == byte(code)
+		return data[4] == byte(cmd.Code)
 	}
+}
+
+func emptyResponseHandler(data []byte) interface{} {
+	// Return something other than nil, so that
+	// Execute does not treat the result as an error.
+	return true
 }
