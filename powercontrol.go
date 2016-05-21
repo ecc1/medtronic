@@ -13,10 +13,7 @@ func (pump *Pump) PowerControl(retries int) error {
 		Code:            PowerControl,
 		NumRetries:      retries,
 		ResponseTimeout: 10 * time.Second,
-		ResponseHandler: func(data []byte) interface{} {
-			// Return something other than nil
-			return true
-		},
+		ResponseHandler: emptyResponseHandler,
 	}
 	_, err := pump.Execute(cmd)
 	return err

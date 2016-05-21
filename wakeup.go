@@ -12,7 +12,7 @@ func (pump *Pump) Wakeup() error {
 		return nil
 	}
 	const (
-		numWakeups = 150
+		numWakeups = 200
 		xmitDelay  = 35 * time.Millisecond
 	)
 	packet := commandPacket(PumpCommand{Code: PowerControl})

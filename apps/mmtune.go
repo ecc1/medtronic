@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	startFreq  = uint32(916100000)
-	endFreq    = uint32(916900000)
-	stepSize   = uint32(50000)
+	startFreq  = uint32(916550000)
+	endFreq    = uint32(916770000)
+	stepSize   = uint32(10000)
 	sampleSize = 5
 )
 
@@ -57,7 +57,7 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) Result {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Frequency set to %s MHz\n", shortFreq(f))
+	log.Printf("frequency set to %s MHz\n", shortFreq(f))
 	count := 0
 	rssiSum := 0
 	rssi := -99
