@@ -13,16 +13,16 @@ func Encode4b6b(src []byte) []byte {
 		x := src[i]
 		a := encode4b[hi(4, x)]
 		b := encode4b[lo(4, x)]
-		dst[j] = (a << 2) | hi(4, b)
+		dst[j] = a<<2 | hi(4, b)
 		c := byte(0)
 		d := byte(0)
 		if i+1 < n {
 			y := src[i+1]
 			c = encode4b[hi(4, y)]
 			d = encode4b[lo(4, y)]
-			dst[j+2] = (lo(2, c) << 6) | d
+			dst[j+2] = lo(2, c)<<6 | d
 		}
-		dst[j+1] = (lo(4, b) << 4) | hi(6, c)
+		dst[j+1] = lo(4, b)<<4 | hi(6, c)
 	}
 	return dst
 }
@@ -45,19 +45,19 @@ func Decode6b4b(src []byte) ([]byte, error) {
 		x := src[i]
 		y := src[i+1]
 		a := decode6b[hi(6, x)]
-		b := decode6b[(lo(2, x)<<4)|hi(4, y)]
+		b := decode6b[lo(2, x)<<4|hi(4, y)]
 		if a == 0xFF || b == 0xFF {
 			return dst, DecodingFailure
 		}
-		dst[j] = (a << 4) | b
+		dst[j] = a<<4 | b
 		if i+2 < n {
 			z := src[i+2]
-			c := decode6b[(lo(4, y)<<2)|hi(2, z)]
+			c := decode6b[lo(4, y)<<2|hi(2, z)]
 			d := decode6b[lo(6, z)]
 			if c == 0xFF || d == 0xFF {
 				return dst, DecodingFailure
 			}
-			dst[j+1] = (c << 4) | d
+			dst[j+1] = c<<4 | d
 		}
 	}
 	return dst, nil
@@ -68,7 +68,7 @@ func hi(n, x byte) byte {
 }
 
 func lo(n, x byte) byte {
-	return x & ((1 << n) - 1)
+	return x & (1<<n - 1)
 }
 
 var (
