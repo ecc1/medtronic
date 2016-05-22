@@ -33,7 +33,7 @@ func main() {
 
 	r.Reset()
 	fmt.Printf("\nTesting burst writes\n")
-	err = r.WriteBurst(rfm69.RegSyncValue1, []byte{0x44,0x55, 0x66})
+	err = r.WriteBurst(rfm69.RegSyncValue1, []byte{0x44, 0x55, 0x66})
 	if err != nil {
 		log.Fatal(err)
 	}

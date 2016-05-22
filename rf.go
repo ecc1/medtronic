@@ -33,7 +33,7 @@ func (r *Radio) InitRF() error {
 		RegSyncValue4, 0x00,
 
 		RegPacketConfig1, VariableLength,
-		RegPayloadLength, 0,
+		RegPayloadLength, 0xFF,
 	})
 	if err != nil {
 		return err

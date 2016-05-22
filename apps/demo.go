@@ -33,6 +33,14 @@ func main() {
 		log.Fatal(err)
 	}
 	dumpRF(r)
+
+	log.Printf("Sleeping\n")
+	err = r.SetMode(rfm69.SleepMode)
+	if err != nil {
+		log.Fatal(err)
+	}
+	dumpRF(r)
+
 }
 
 func dumpRF(r *rfm69.Radio) {

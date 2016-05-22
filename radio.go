@@ -51,7 +51,6 @@ func (r *Radio) radio() {
 func (r *Radio) awaitInterrupts() {
 	for {
 		r.interruptPin.Wait()
-		log.Printf("Interrupt!\n") //XXX
 		r.interrupt <- struct{}{}
 	}
 }
@@ -74,13 +73,48 @@ func (r *Radio) transmitSmall(data []byte) error {
 }
 
 // Transmit a packet that is larger than the TXFIFO size.
-// See TI Design Note DN500 (swra109c).
 func (r *Radio) transmitLarge(data []byte) error {
 	// FIXME
 	return nil
 }
 
 func (r *Radio) receive() error {
-	// FIXME
-	return nil
+	for {
+		flags, err := r.ReadRegister(RegIrqFlags2)
+		if err != nil {
+			return err
+		}
+		if flags&FifoNotEmpty == 0 {
+			time.Sleep(byteDuration)
+			continue
+		}
+		c, err := r.ReadRegister(RegFifo)
+		if err != nil {
+			return err
+		}
+		if c != 0 {
+			err = r.receiveBuffer.WriteByte(c)
+			if err != nil {
+				return err
+			}
+			continue
+		}
+		// End of packet.
+		rssi, err := r.ReadRSSI()
+		if err != nil {
+			return err
+		}
+		size := r.receiveBuffer.Len()
+		if size != 0 {
+			r.PacketsReceived++
+			p := make([]byte, size)
+			_, err := r.receiveBuffer.Read(p)
+			if err != nil {
+				return err
+			}
+			r.receiveBuffer.Reset()
+			r.receivedPackets <- Packet{Rssi: rssi, Data: p}
+		}
+		return nil
+	}
 }
