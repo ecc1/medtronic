@@ -42,7 +42,7 @@ func (r *Radio) InitRF() error {
 
 		// CHANBW_E = 2, CHANBW_M = 1, DRATE_E = 9
 		// Channel BW = 26 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 162.5 kHz
-		MDMCFG4, (2 << MDMCFG4_CHANBW_E_SHIFT) | (1 << MDMCFG4_CHANBW_M_SHIFT) | (9 << MDMCFG4_DRATE_E_SHIFT),
+		MDMCFG4, 2<<MDMCFG4_CHANBW_E_SHIFT | 1<<MDMCFG4_CHANBW_M_SHIFT | 9<<MDMCFG4_DRATE_E_SHIFT,
 
 		// DRATE_M = 74 (0x4A)
 		// Data rate = (256 + DRATE_M) * 2^DRATE_E * 26 MHz / 2^28 == 16365 Baud
@@ -51,7 +51,7 @@ func (r *Radio) InitRF() error {
 		MDMCFG2, MDMCFG2_DEM_DCFILT_ON | MDMCFG2_MOD_FORMAT_ASK_OOK | MDMCFG2_SYNC_MODE_30_32_THRES,
 
 		// CHANSPC_E = 1
-		MDMCFG1, MDMCFG1_FEC_DIS | MDMCFG1_NUM_PREAMBLE_16 | (1 << MDMCFG1_CHANSPC_E_SHIFT),
+		MDMCFG1, MDMCFG1_FEC_DIS | MDMCFG1_NUM_PREAMBLE_16 | 1<<MDMCFG1_CHANSPC_E_SHIFT,
 
 		// CHANSPC_M = 248 (0xF8)
 		// Channel spacing = (256 + CHANSPC_M) * 2^CHANSPC_E * 26 MHz / 2^18 == 99975 Hz
@@ -65,20 +65,20 @@ func (r *Radio) InitRF() error {
 		AGCCTRL2, AGCCTRL2_MAX_DVGA_GAIN_ALL | AGCCTRL2_MAX_LNA_GAIN_0 | AGCCTRL2_MAGN_TARGET_38dB,
 		AGCCTRL1, AGCCTRL1_AGC_LNA_PRIORITY_0 | AGCCTRL1_CARRIER_SENSE_REL_THR_DISABLE | AGCCTRL1_CARRIER_SENSE_ABS_THR_0DB,
 		AGCCTRL0, AGCCTRL0_HYST_LEVEL_MEDIUM | AGCCTRL0_WAIT_TIME_16 | AGCCTRL0_AGC_FREEZE_NORMAL | AGCCTRL0_FILTER_LENGTH_32,
-		FREND1, (1 << FREND1_LNA_CURRENT_SHIFT) | (1 << FREND1_LNA2MIX_CURRENT_SHIFT) | (1 << FREND1_LODIV_BUF_CURRENT_RX_SHIFT) | (2 << FREND1_MIX_CURRENT_SHIFT),
+		FREND1, 1<<FREND1_LNA_CURRENT_SHIFT | 1<<FREND1_LNA2MIX_CURRENT_SHIFT | 1<<FREND1_LODIV_BUF_CURRENT_RX_SHIFT | 2<<FREND1_MIX_CURRENT_SHIFT,
 
 		// Use PA_TABLE 1 for transmitting '1' in ASK
 		// (PA_TABLE 0 is always used for '0')
-		FREND0, (1 << FREND0_LODIV_BUF_CURRENT_TX_SHIFT) | (1 << FREND0_PA_POWER_SHIFT),
+		FREND0, 1<<FREND0_LODIV_BUF_CURRENT_TX_SHIFT | 1<<FREND0_PA_POWER_SHIFT,
 
-		FSCAL3, (3 << 6) | (2 << 4) | 0x09,
-		FSCAL2, (1 << 5) | 0x0A, // VCO high
+		FSCAL3, 3<<6 | 2<<4 | 0x09,
+		FSCAL2, 1<<5 | 0x0A, // VCO high
 		FSCAL1, 0x00,
 		FSCAL0, 0x1F,
 
 		TEST2, TEST2_RX_LOW_DATA_RATE_MAGIC,
 		TEST1, TEST1_RX_LOW_DATA_RATE_MAGIC,
-		TEST0, (2 << 2) | 1, // disable VCO selection calibration
+		TEST0, 2<<2 | 1, // disable VCO selection calibration
 	})
 	if err != nil {
 		return err
@@ -153,7 +153,7 @@ func (r *Radio) ReadChannelParams() (chanbw uint32, drate uint32, err error) {
 	}
 
 	chanbw = uint32(FXOSC / ((4 + uint64(chanbw_M)) << (chanbw_E + 3)))
-	drate = uint32((((256 + uint64(drate_M)) << drate_E) * FXOSC) >> 28)
+	drate = uint32(((256 + uint64(drate_M)) << drate_E * FXOSC) >> 28)
 	return
 }
 
@@ -171,7 +171,7 @@ func (r *Radio) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32, e
 	if err != nil {
 		return
 	}
-	chanspc = uint32((((256 + uint64(chanspc_M)) << chanspc_E) * FXOSC) >> 18)
+	chanspc = uint32(((256 + uint64(chanspc_M)) << chanspc_E * FXOSC) >> 18)
 	return
 }
 
