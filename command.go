@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/ecc1/cc1100"
+	"github.com/ecc1/radio"
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 	PumpDevice             = 0xA7
 	Ack                    = 0x06
 	maxPacketSize          = 70 // excluding CRC byte
-	defaultResponseTimeout = 200 * time.Millisecond
+	defaultResponseTimeout = 500 * time.Millisecond
 )
 
 var (
@@ -62,7 +62,7 @@ type PumpCommand struct {
 	Rssi            *int
 }
 
-func commandPacket(cmd PumpCommand) cc1100.Packet {
+func commandPacket(cmd PumpCommand) radio.Packet {
 	initCommandPrefix()
 	n := len(commandPrefix)
 	var data []byte
@@ -89,7 +89,7 @@ func (pump *Pump) Execute(cmd PumpCommand) (interface{}, error) {
 	for tries := 0; tries < cmd.NumRetries || cmd.NumRetries == 0; tries++ {
 		pump.Radio.Outgoing() <- packet
 		timeout := time.After(responseTimeout)
-		var response cc1100.Packet
+		var response radio.Packet
 		select {
 		case response = <-pump.Radio.Incoming():
 			break

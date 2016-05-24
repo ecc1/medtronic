@@ -49,11 +49,11 @@ func scanFrequencies(pump *medtronic.Pump) []Result {
 }
 
 func tryFrequency(pump *medtronic.Pump, freq uint32) Result {
-	err := pump.Radio.WriteFrequency(freq)
+	err := pump.Radio.SetFrequency(freq)
 	if err != nil {
 		log.Fatal(err)
 	}
-	f, err := pump.Radio.ReadFrequency()
+	f, err := pump.Radio.Frequency()
 	if err != nil {
 		log.Fatal(err)
 	}

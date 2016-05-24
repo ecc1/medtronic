@@ -3,10 +3,10 @@ package medtronic
 import (
 	"fmt"
 
-	"github.com/ecc1/cc1100"
+	"github.com/ecc1/radio"
 )
 
-func (pump *Pump) DecodePacket(packet cc1100.Packet) ([]byte, error) {
+func (pump *Pump) DecodePacket(packet radio.Packet) ([]byte, error) {
 	data, err := Decode6b4b(packet.Data)
 	if err != nil {
 		pump.DecodingErrors++
@@ -20,14 +20,13 @@ func (pump *Pump) DecodePacket(packet cc1100.Packet) ([]byte, error) {
 	return data, nil
 }
 
-func EncodePacket(packet []byte) cc1100.Packet {
-	return cc1100.Packet{Data: Encode4b6b(append(packet, Crc8(packet)))}
+func EncodePacket(packet []byte) radio.Packet {
+	return radio.Packet{Data: Encode4b6b(append(packet, Crc8(packet)))}
 }
 
 func (pump *Pump) PrintStats() {
-	good := pump.Radio.PacketsReceived - pump.DecodingErrors - pump.CrcErrors
-	fmt.Printf("\nTX: %6d    RX: %6d    decode errs: %6d    CRC errs: %6d\n", pump.Radio.PacketsSent, good, pump.DecodingErrors, pump.CrcErrors)
-	s, _ := pump.Radio.ReadState()
-	m, _ := pump.Radio.ReadMarcState()
-	fmt.Printf("State: %s / %s\n", cc1100.StateName(s), cc1100.MarcStateName(m))
+	stats := pump.Radio.Statistics()
+	good := stats.Packets.Received - pump.DecodingErrors - pump.CrcErrors
+	fmt.Printf("\nTX: %6d    RX: %6d    decode errs: %6d    CRC errs: %6d\n", stats.Packets.Sent, good, pump.DecodingErrors, pump.CrcErrors)
+	fmt.Printf("State: %s\n", pump.Radio.State())
 }
