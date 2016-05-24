@@ -43,7 +43,7 @@ func main() {
 
 func dumpRegs(r *rfm69.Radio) {
 	start := rfm69.RegOpMode
-	finish := rfm69.RegTemp2
+	finish := rfm69.RegTestAfc
 	numRegs := finish - start + 1
 	fmt.Printf("Register dump:\n")
 	regs, err := r.ReadBurst(byte(start), numRegs)

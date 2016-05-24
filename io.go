@@ -6,10 +6,6 @@ import (
 
 const (
 	writeUsingTransfer = false
-	verifyWrite        = true
-
-	readFifoUsingBurst  = true
-	writeFifoUsingBurst = true
 )
 
 func (r *Radio) ReadRegister(addr byte) (byte, error) {
@@ -37,18 +33,7 @@ func (r *Radio) writeData(data []byte) error {
 }
 
 func (r *Radio) WriteRegister(addr byte, value byte) error {
-	err := r.writeData([]byte{SpiWriteMode | addr, value})
-	if err != nil || !verifyWrite || addr == RegFifo {
-		return err
-	}
-	v, err := r.ReadRegister(addr)
-	if err != nil {
-		return err
-	}
-	if v != value {
-		return fmt.Errorf("read(%X) returned %X instead of %X", addr, v, value)
-	}
-	return nil
+	return r.writeData([]byte{SpiWriteMode | addr, value})
 }
 
 func (r *Radio) WriteBurst(addr byte, data []byte) error {

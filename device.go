@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ecc1/gpio"
+	"github.com/ecc1/radio"
 	"github.com/ecc1/spi"
 )
 
@@ -14,11 +15,6 @@ const (
 	resetPin     = 12       // Intel Edison GPIO connected to RESET
 )
 
-type Packet struct {
-	Rssi int
-	Data []byte
-}
-
 type Radio struct {
 	device       *spi.Device
 	interruptPin gpio.InputPin
@@ -26,12 +22,10 @@ type Radio struct {
 
 	radioStarted       bool
 	receiveBuffer      bytes.Buffer
-	transmittedPackets chan Packet
-	receivedPackets    chan Packet
+	transmittedPackets chan radio.Packet
+	receivedPackets    chan radio.Packet
 	interrupt          chan struct{}
-
-	PacketsSent     int
-	PacketsReceived int
+	stats              radio.Statistics
 }
 
 func Open() (*Radio, error) {
@@ -55,8 +49,8 @@ func Open() (*Radio, error) {
 		device:             dev,
 		interruptPin:       intr,
 		resetPin:           reset,
-		transmittedPackets: make(chan Packet, 100),
-		receivedPackets:    make(chan Packet, 10),
+		transmittedPackets: make(chan radio.Packet, 100),
+		receivedPackets:    make(chan radio.Packet, 10),
 		interrupt:          make(chan struct{}, 10),
 	}, nil
 }
@@ -88,4 +82,8 @@ func (r *Radio) Init() error {
 	}
 	r.startRadio()
 	return nil
+}
+
+func (r *Radio) Statistics() radio.Statistics {
+	return r.stats
 }

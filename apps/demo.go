@@ -26,16 +26,16 @@ func main() {
 	}
 	dumpRF(r)
 
-	freq := uint32(915650000)
+	freq := uint32(916600000)
 	log.Printf("Changing frequency to %d\n", freq)
-	err = r.WriteFrequency(freq)
+	err = r.SetFrequency(freq)
 	if err != nil {
 		log.Fatal(err)
 	}
 	dumpRF(r)
 
 	log.Printf("Sleeping\n")
-	err = r.SetMode(rfm69.SleepMode)
+	err = r.Sleep()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,28 +44,9 @@ func main() {
 }
 
 func dumpRF(r *rfm69.Radio) {
-	mode, err := r.Mode()
-	if err != nil {
-		log.Fatal(err)
-	}
-	s := ""
-	switch mode {
-	case rfm69.SleepMode:
-		s = "Sleep"
-	case rfm69.StandbyMode:
-		s = "Standby"
-	case rfm69.FreqSynthMode:
-		s = "Frequency Synthesizer"
-	case rfm69.TransmitterMode:
-		s = "Transmitter"
-	case rfm69.ReceiverMode:
-		s = "Receiver"
-	default:
-		log.Panicf("Unknown operating mode (%X)\n", mode)
-	}
-	log.Printf("Mode: %s\n", s)
+	log.Printf("Mode: %s\n", r.State())
 
-	freq, err := r.ReadFrequency()
+	freq, err := r.Frequency()
 	if err != nil {
 		log.Fatal(err)
 	}

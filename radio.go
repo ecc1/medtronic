@@ -3,10 +3,14 @@ package rfm69
 import (
 	"log"
 	"time"
+
+	"github.com/ecc1/radio"
 )
 
 const (
-	fifoSize = 66
+	verbose       = false
+	fifoSize      = 66
+	fifoThreshold = 30
 
 	// Approximate time for one byte to be transmitted, based on
 	// the data rate.  It was determined empirically so that few
@@ -22,20 +26,28 @@ func (r *Radio) startRadio() {
 	}
 }
 
-func (r *Radio) Incoming() <-chan Packet {
+func (r *Radio) Incoming() <-chan radio.Packet {
 	return r.receivedPackets
 }
 
-func (r *Radio) Outgoing() chan<- Packet {
+func (r *Radio) Outgoing() chan<- radio.Packet {
 	return r.transmittedPackets
 }
 
 func (r *Radio) radio() {
-	err := r.SetMode(ReceiverMode)
-	if err != nil {
-		log.Fatal(err)
-	}
 	for {
+		//XXX ???
+		err := r.WriteEach([]byte{
+			RegPacketConfig1, VariableLength,
+			RegPayloadLength, 0xFF,
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = r.setMode(ReceiverMode)
+		if err != nil {
+			log.Fatal(err)
+		}
 		select {
 		case packet := <-r.transmittedPackets:
 			err = r.transmit(packet.Data)
@@ -56,29 +68,118 @@ func (r *Radio) awaitInterrupts() {
 }
 
 func (r *Radio) transmit(data []byte) error {
-	// Terminate packet with zero byte,
-	// and pad with another to ensure final bytes
-	// are transmitted before leaving TX state.
-	data = append(data, []byte{0, 0}...)
-	if len(data) <= fifoSize {
-		return r.transmitSmall(data)
-	} else {
-		return r.transmitLarge(data)
+	// Terminate packet with zero byte.
+	data = append(data, 0)
+	err := r.setMode(StandbyMode)
+	if err != nil {
+		return err
+	}
+	if verbose {
+		log.Printf("transmitting %d bytes\n", len(data))
+	}
+	defer r.setMode(StandbyMode)
+	//XXX ???
+	err = r.WriteEach([]byte{
+		RegPacketConfig1, FixedLength,
+		RegPayloadLength, uint8(len(data)),
+	})
+	if err != nil {
+		return err
+	}
+	err = r.send(data)
+	if err == nil {
+		r.stats.Packets.Sent++
+		r.stats.Bytes.Sent += len(data)
+	}
+	return err
+}
+
+func (r *Radio) send(data []byte) error {
+	avail := fifoSize
+	for {
+		if avail > len(data) {
+			avail = len(data)
+		}
+		err := r.WriteBurst(RegFifo, data[:avail])
+		if err != nil {
+			return err
+		}
+		err = r.setMode(TransmitterMode)
+		if err != nil {
+			return err
+		}
+		data = data[avail:]
+		if len(data) == 0 {
+			break
+		}
+		// Once the FifoLevel bit is clear, there will be
+		// at least fifoSize - fifoThreshold bytes available.
+		for {
+			flags, err := r.ReadRegister(RegIrqFlags2)
+			if err != nil {
+				return err
+			}
+			if flags&FifoLevel == 0 {
+				avail = fifoSize - fifoThreshold
+				break
+			}
+			// Err on the short side here to avoid TXFIFO underflow.
+			time.Sleep(fifoThreshold / 2 * byteDuration)
+		}
+
+	}
+	return r.awaitTxDone(avail)
+}
+
+/* XXX ???
+func (r *Radio) awaitTxDone(numBytes int) error {
+	for {
+		empty, err := r.txFifoEmpty()
+		if err != nil {
+			return err
+		}
+		if empty {
+			return nil
+		}
+		if verbose {
+			log.Printf("waiting for TXFIFO to empty\n")
+		}
+		time.Sleep(byteDuration)
+	}
+}
+*/
+
+func (r *Radio) awaitTxDone(numBytes int) error {
+	for {
+		flags, err := r.ReadRegister(RegIrqFlags2)
+		if err != nil {
+			return err
+		}
+		if flags&PacketSent != 0 {
+			return nil
+		}
+		if verbose {
+			log.Printf("waiting for packet to be sent\n")
+		}
+		time.Sleep(byteDuration)
 	}
 }
 
-func (r *Radio) transmitSmall(data []byte) error {
-	// FIXME
-	return nil
-}
-
-// Transmit a packet that is larger than the TXFIFO size.
-func (r *Radio) transmitLarge(data []byte) error {
-	// FIXME
-	return nil
+func (r *Radio) txFifoEmpty() (bool, error) {
+	flags, err := r.ReadRegister(RegIrqFlags2)
+	if err != nil {
+		return false, err
+	}
+	return flags&FifoNotEmpty == 0, nil
 }
 
 func (r *Radio) receive() error {
+	if verbose {
+		log.Printf("receiving\n")
+	}
+	// Make sure to enter standby mode when we're done
+	// so that we continue to receive SyncAddressMatch interrupts.
+	defer r.setMode(StandbyMode)
 	for {
 		flags, err := r.ReadRegister(RegIrqFlags2)
 		if err != nil {
@@ -106,14 +207,15 @@ func (r *Radio) receive() error {
 		}
 		size := r.receiveBuffer.Len()
 		if size != 0 {
-			r.PacketsReceived++
+			r.stats.Packets.Received++
+			r.stats.Bytes.Received += size
 			p := make([]byte, size)
 			_, err := r.receiveBuffer.Read(p)
 			if err != nil {
 				return err
 			}
 			r.receiveBuffer.Reset()
-			r.receivedPackets <- Packet{Rssi: rssi, Data: p}
+			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
 		}
 		return nil
 	}

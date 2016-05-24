@@ -2,10 +2,7 @@ package rfm69
 
 import (
 	"fmt"
-)
-
-const (
-	DefaultFrequency = 916600000
+	"log"
 )
 
 func (r *Radio) InitRF() error {
@@ -16,12 +13,24 @@ func (r *Radio) InitRF() error {
 		RegBitrateMsb, 0x07,
 		RegBitrateLsb, 0xA1,
 
+		// Use PA1 with 13 dbM output power
+		RegPaLevel, Pa1On | 0x1F<<OutputPowerShift,
+
+		// Default != reset value
+		RegLna, LnaZin | 1<<LnaCurrentGainShift | 0<<LnaGainSelectShift,
+
 		// FXOSC / (RxBwMant * 2^(RxBwExp + 3)) = 200 kHz
-		RegRxBw, RxBwMant20 | 0<<RxBwExpShift,
-		RegAfcBw, RxBwMant20 | 0<<RxBwExpShift,
+		RegRxBw, 2<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift,
+		RegAfcBw, 4<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift,
 
 		// Interrupt when Sync word is seen
 		RegDioMapping1, 2 << Dio0MappingShift,
+
+		// Default != reset value
+		RegDioMapping2, 7 << ClkOutShift,
+
+		// Default != reset value
+		RegRssiThresh, 0xE4,
 
 		// Use 4 bytes for Sync word
 		RegSyncConfig, SyncOn | 3<<SyncSizeShift,
@@ -32,20 +41,18 @@ func (r *Radio) InitRF() error {
 		RegSyncValue3, 0xFF,
 		RegSyncValue4, 0x00,
 
-		RegPacketConfig1, VariableLength,
-		RegPayloadLength, 0xFF,
+		//XXX		RegPacketConfig1, VariableLength,
+		//XXX		RegPayloadLength, 0xFF,
+		RegFifoThresh, TxStartFifoNotEmpty | fifoThreshold<<FifoThresholdShift,
+		RegPacketConfig2, AutoRxRestartOff,
+
+		// Default != reset value
+		RegTestDagc, 0x30,
 	})
-	if err != nil {
-		return err
-	}
-	err = r.WriteFrequency(DefaultFrequency)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
-func (r *Radio) ReadFrequency() (uint32, error) {
+func (r *Radio) Frequency() (uint32, error) {
 	frf, err := r.ReadBurst(RegFrfMsb, 3)
 	if err != nil {
 		return 0, err
@@ -54,7 +61,7 @@ func (r *Radio) ReadFrequency() (uint32, error) {
 	return uint32(uint64(f) * FXOSC >> 19), nil
 }
 
-func (r *Radio) WriteFrequency(freq uint32) error {
+func (r *Radio) SetFrequency(freq uint32) error {
 	f := (uint64(freq)<<19 + FXOSC/2) / FXOSC
 	return r.WriteBurst(RegFrfMsb, []byte{
 		byte(f >> 16),
@@ -119,7 +126,7 @@ func (r *Radio) ReadChannelBw() (uint32, error) {
 	}
 }
 
-func (r *Radio) Mode() (uint8, error) {
+func (r *Radio) mode() (uint8, error) {
 	cur, err := r.ReadRegister(RegOpMode)
 	if err != nil {
 		return 0, err
@@ -127,11 +134,52 @@ func (r *Radio) Mode() (uint8, error) {
 	return cur & ModeMask, nil
 }
 
-func (r *Radio) SetMode(mode uint8) error {
+func (r *Radio) setMode(mode uint8) error {
+	//XXX
+	flags, _ := r.ReadRegister(RegIrqFlags2)
+	if flags&FifoOverrun != 0 {
+		fmt.Printf("FIFO overrun!\n")
+	}
+	//XXX
 	old, err := r.ReadRegister(RegOpMode)
 	if err != nil {
 		return err
 	}
+	if old&ModeMask == mode {
+		return nil
+	}
+	if verbose {
+		log.Printf("change from %s to %s\n", stateName(old&ModeMask), stateName(mode))
+	}
 	new := old&^ModeMask | mode
 	return r.WriteRegister(RegOpMode, new)
+}
+
+func (r *Radio) Sleep() error {
+	return r.setMode(SleepMode)
+}
+
+func stateName(mode uint8) string {
+	switch mode {
+	case SleepMode:
+		return "Sleep"
+	case StandbyMode:
+		return "Standby"
+	case FreqSynthMode:
+		return "Frequency Synthesizer"
+	case TransmitterMode:
+		return "Transmitter"
+	case ReceiverMode:
+		return "Receiver"
+	default:
+		return fmt.Sprintf("Unknown operating mode (%X)", mode)
+	}
+}
+
+func (r *Radio) State() string {
+	mode, err := r.mode()
+	if err != nil {
+		return fmt.Sprintf("%v", err)
+	}
+	return stateName(mode)
 }
