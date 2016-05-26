@@ -1,65 +1,60 @@
 package cc1100
 
-const (
-	DefaultFrequency = uint32(916600000)
+import (
+	"errors"
+)
+
+var (
+	RxFifoOverflow  = errors.New("RXFIFO overflow")
+	TxFifoUnderflow = errors.New("TXFIFO underflow")
 )
 
 func (r *Radio) InitRF() error {
 	err := r.WriteEach([]byte{
-		// Carrier sense: high if RSSI level is above threshold
-		IOCFG2, 0x0E,
-		IOCFG1, 0x00,
+		// High impedance (3-state)
+		IOCFG2, 0x2E,
+		IOCFG1, 0x2E,
 		// Assert when sync word has been sent/received
 		IOCFG0, 0x06,
 
-		// Sync word
+		// 4 bytes in RX FIFO, 61 bytes in TX FIFO
+		FIFOTHR, 0x00,
+
 		SYNC1, 0xFF,
 		SYNC0, 0x00,
 
-		// Packet length
 		PKTLEN, 0xFF,
-
-		// Always accept sync word
-		// Do not append status
-		// No address check
 		PKTCTRL1, 2 << PKTCTRL1_PQT_SHIFT,
-
-		// No whitening mode
-		// Normal format
-		// Disable CRC calculation and check
-		// Fixed packet length mode
 		PKTCTRL0, PKTCTRL0_LENGTH_CONFIG_INFINITE,
 
-		// Channel number
 		CHANNR, 0x00,
 
 		// Intermediate frequency
-		// 0x06 * 26 MHz / 2^10 == 152 kHz
+		// 0x06 * 24 MHz / 2^10 == 140625 Hz
 		FSCTRL1, 0x06,
 
-		// Frequency offset
 		FSCTRL0, 0x00,
 
 		// CHANBW_E = 2, CHANBW_M = 1, DRATE_E = 9
-		// Channel BW = 26 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 162.5 kHz
+		// Channel BW = 24 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 150 kHz
 		MDMCFG4, 2<<MDMCFG4_CHANBW_E_SHIFT | 1<<MDMCFG4_CHANBW_M_SHIFT | 9<<MDMCFG4_DRATE_E_SHIFT,
 
-		// DRATE_M = 74 (0x4A)
-		// Data rate = (256 + DRATE_M) * 2^DRATE_E * 26 MHz / 2^28 == 16365 Baud
-		MDMCFG3, 0x4A,
+		// DRATE_M = 102 (0x66)
+		// Data rate = (256 + DRATE_M) * 2^DRATE_E * 24 MHz / 2^28 == 16388 Baud
+		MDMCFG3, 0x66,
 
 		MDMCFG2, MDMCFG2_DEM_DCFILT_ON | MDMCFG2_MOD_FORMAT_ASK_OOK | MDMCFG2_SYNC_MODE_30_32_THRES,
 
-		// CHANSPC_E = 1
-		MDMCFG1, MDMCFG1_FEC_DIS | MDMCFG1_NUM_PREAMBLE_16 | 1<<MDMCFG1_CHANSPC_E_SHIFT,
+		// CHANSPC_E = 2
+		MDMCFG1, MDMCFG1_FEC_DIS | MDMCFG1_NUM_PREAMBLE_16 | 2<<MDMCFG1_CHANSPC_E_SHIFT,
 
-		// CHANSPC_M = 248 (0xF8)
-		// Channel spacing = (256 + CHANSPC_M) * 2^CHANSPC_E * 26 MHz / 2^18 == 99975 Hz
-		MDMCFG0, 0xF8,
+		// CHANSPC_M = 26 (0x1A)
+		// Channel spacing = (256 + CHANSPC_M) * 2^CHANSPC_E * 24 MHz / 2^18 == 103271 Hz
+		MDMCFG0, 0x1A,
 
 		MCSM2, MCSM2_RX_TIME_END_OF_PACKET,
 		MCSM1, MCSM1_CCA_MODE_RSSI_BELOW_UNLESS_RECEIVING | MCSM1_RXOFF_MODE_IDLE | MCSM1_TXOFF_MODE_IDLE,
-		MCSM0, MCSM0_FS_AUTOCAL_FROM_IDLE | MCSM0_MAGIC_3 | MCSM0_CLOSE_IN_RX_0DB,
+		MCSM0, MCSM0_FS_AUTOCAL_FROM_IDLE,
 		FOCCFG, FOCCFG_FOC_PRE_K_3K | FOCCFG_FOC_POST_K_PRE_K_OVER_2 | FOCCFG_FOC_LIMIT_BW_OVER_2,
 		BSCFG, BSCFG_BS_PRE_K_2K | BSCFG_BS_PRE_KP_3KP | BSCFG_BS_POST_KI_PRE_KI_OVER_2 | BSCFG_BS_LIMIT_0,
 		AGCCTRL2, AGCCTRL2_MAX_DVGA_GAIN_ALL | AGCCTRL2_MAX_LNA_GAIN_0 | AGCCTRL2_MAGN_TARGET_38dB,
@@ -84,17 +79,8 @@ func (r *Radio) InitRF() error {
 		return err
 	}
 
-	err = r.WriteFrequency(DefaultFrequency)
-	if err != nil {
-		return err
-	}
-
 	// Power amplifier output settings (see section 24 of the data sheet)
-	err = r.device.Write([]byte{
-		BURST_MODE | PATABLE,
-		0x00,
-		0xC0,
-	})
+	err = r.WriteBurst(PATABLE, []byte{0x00, 0xC0})
 	if err != nil {
 		return err
 	}
@@ -102,29 +88,21 @@ func (r *Radio) InitRF() error {
 	return nil
 }
 
-func (r *Radio) ReadFrequency() (uint32, error) {
-	freq2, err := r.ReadRegister(FREQ2)
+func (r *Radio) Frequency() (uint32, error) {
+	freq, err := r.ReadBurst(FREQ2, 3)
 	if err != nil {
 		return 0, err
 	}
-	freq1, err := r.ReadRegister(FREQ1)
-	if err != nil {
-		return 0, err
-	}
-	freq0, err := r.ReadRegister(FREQ0)
-	if err != nil {
-		return 0, err
-	}
-	f := uint32(freq2)<<16 + uint32(freq1)<<8 + uint32(freq0)
+	f := uint32(freq[0])<<16 + uint32(freq[1])<<8 + uint32(freq[2])
 	return uint32(uint64(f) * FXOSC >> 16), nil
 }
 
-func (r *Radio) WriteFrequency(freq uint32) error {
+func (r *Radio) SetFrequency(freq uint32) error {
 	f := (uint64(freq)<<16 + FXOSC/2) / FXOSC
-	return r.WriteEach([]byte{
-		FREQ2, byte(f >> 16),
-		FREQ1, byte(f >> 8),
-		FREQ0, byte(f),
+	return r.WriteBurst(FREQ2, []byte{
+		byte(f >> 16),
+		byte(f >> 8),
+		byte(f),
 	})
 }
 
@@ -197,3 +175,107 @@ func (r *Radio) ReadPaTable() ([]byte, error) {
 	}
 	return buf[1:], nil
 }
+
+// Per section 20 of data sheet, read NUM_RXBYTES
+// repeatedly until same value is returned twice.
+func (r *Radio) ReadNumRxBytes() (byte, error) {
+	last := byte(0)
+	read := false
+	for {
+		n, err := r.ReadRegister(RXBYTES)
+		if err != nil {
+			return 0, err
+		}
+		if n&RXFIFO_OVERFLOW != 0 {
+			err = RxFifoOverflow
+		}
+		n &= NUM_RXBYTES_MASK
+		if read && n == last {
+			return n, err
+		}
+		last = n
+		read = true
+	}
+}
+
+func (r *Radio) ReadNumTxBytes() (byte, error) {
+	n, err := r.ReadRegister(TXBYTES)
+	if err != nil {
+		return 0, err
+	}
+	if n&TXFIFO_UNDERFLOW != 0 {
+		err = TxFifoUnderflow
+	}
+	return n & NUM_TXBYTES_MASK, err
+}
+
+func (r *Radio) State() string {
+	s, err := r.ReadState()
+	if err != nil {
+		return err.Error()
+	}
+	return StateName(s)
+}
+
+func (r *Radio) ReadState() (byte, error) {
+	status, err := r.Strobe(SNOP)
+	if err != nil {
+		return 0, err
+	}
+	return (status >> STATE_SHIFT) & STATE_MASK, nil
+}
+
+func StateName(state byte) string {
+	return stateName[state]
+}
+
+func (r *Radio) ReadMarcState() (byte, error) {
+	state, err := r.ReadRegister(MARCSTATE)
+	if err != nil {
+		return 0, err
+	}
+	return state & MARCSTATE_MASK, nil
+}
+
+func MarcStateName(state byte) string {
+	return marcState[state]
+}
+
+var (
+	stateName = []string{
+		"IDLE",
+		"RX",
+		"TX",
+		"FSTXON",
+		"CALIBRATE",
+		"SETTLING",
+		"RXFIFO_OVERFLOW",
+		"TXFIFO_UNDERFLOW",
+	}
+
+	marcState = []string{
+		"SLEEP",
+		"IDLE",
+		"XOFF",
+		"VCOON_MC",
+		"REGON_MC",
+		"MANCAL",
+		"VCOON",
+		"REGON",
+		"STARTCAL",
+		"BWBOOST",
+		"FS_LOCK",
+		"IFADCON",
+		"ENDCAL",
+		"RX",
+		"RX_END",
+		"RX_RST",
+		"TXRX_SWITCH",
+		"RXFIFO_OVERFLOW",
+		"FSTXON",
+		"TX",
+		"TX_END",
+		"RXTX_SWITCH",
+		"TXFIFO_UNDERFLOW",
+	}
+)

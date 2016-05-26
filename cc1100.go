@@ -11,7 +11,7 @@ package cc1100
 
 const (
 	// Crystal frequency in Hz.
-	FXOSC = 26000000
+	FXOSC = 24000000
 
 	// SPI transaction header bits for read/write and burst/single access.
 	READ_MODE  = 1 << 7
