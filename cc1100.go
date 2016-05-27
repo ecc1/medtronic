@@ -1,13 +1,6 @@
 package cc1100
 
-// Register definitions for Texas Instruments CC1100
-//
-// Derived from
-//	cc2500.h (libbuspirate)
-//	Copyright © 2010 Bruno Quoitin <bruno.quoitin@umons.ac.be>
-// and
-//	cc1111.h (AltOs)
-//	Copyright © 2008 Keith Packard <keithp@keithp.com>
+// Register definitions for Texas Instruments CC1101.
 
 const (
 	// Crystal frequency in Hz.
@@ -18,7 +11,7 @@ const (
 	BURST_MODE = 1 << 6
 )
 
-// R/W configuration registers
+// Configuration registers (read/write).
 const (
 	IOCFG2   = 0x00 // GDO2 output pin configuration
 	IOCFG1   = 0x01 // GDO1 output pin configuration
@@ -69,7 +62,7 @@ const (
 	TEST0    = 0x2E // Various test settings
 )
 
-// Command strobes
+// Command strobes (write-only).
 const (
 	// Reset chip.
 	SRES = 0x30
@@ -126,24 +119,24 @@ const (
 	SNOP = 0x3D
 )
 
-// Status registers (read-only)
+// Status registers (read-only).
 // Since these must be read with the burst access bit set,
 // it is included in the address for simplicity.
 const (
-	PARTNUM        = 0x70 // Part number
+	PARTNUM        = 0x70 // Part number for CC1101
 	VERSION        = 0x71 // Current version number
-	FREQEST        = 0x72 // Frequency offset estimate
-	LQI            = 0x73 // Demodulator estimate for link quality
+	FREQEST        = 0x72 // Frequency Offset Estimate
+	LQI            = 0x73 // Demodulator estimate for Link Quality
 	RSSI           = 0x74 // Received signal strength indication
 	MARCSTATE      = 0x75 // Control state machine state
 	WORTIME1       = 0x76 // High byte of WOR timer
 	WORTIME0       = 0x77 // Low byte of WOR timer
 	PKTSTATUS      = 0x78 // Current GDOx status and packet status
-	VCO_VC_DAC     = 0x79 // Current setting from PLL cal module
-	TXBYTES        = 0x7A // Underflow and # of bytes in TXFIFO
-	RXBYTES        = 0x7B // Overflow and # of bytes in RXFIFO
-	RCCTRL1_STATUS = 0x7C
-	RCCTRL0_STATUS = 0x7D
+	VCO_VC_DAC     = 0x79 // Current setting from PLL calibration module
+	TXBYTES        = 0x7A // Underflow and number of bytes in the TX FIFO
+	RXBYTES        = 0x7B // Overflow and number of bytes in the RX FIFO
+	RCCTRL1_STATUS = 0x7C // Last RC oscillator calibration result
+	RCCTRL0_STATUS = 0x7D // Last RC oscillator calibration result
 )
 
 const (
@@ -258,7 +251,7 @@ const (
 
 	MCSM2_RX_TIME_RSSI          = 1 << 4
 	MCSM2_RX_TIME_QUAL          = 1 << 3
-	MCSM2_RX_TIME_MASK          = 0x7
+	MCSM2_RX_TIME_MASK          = 0x7 << 0
 	MCSM2_RX_TIME_SHIFT         = 0
 	MCSM2_RX_TIME_END_OF_PACKET = 7
 
@@ -279,12 +272,10 @@ const (
 	MCSM0_FS_AUTOCAL_FROM_IDLE       = 1 << 4
 	MCSM0_FS_AUTOCAL_TO_IDLE         = 2 << 4
 	MCSM0_FS_AUTOCAL_TO_IDLE_EVERY_4 = 3 << 4
-	MCSM0_MAGIC_3                    = 1 << 3
-	MCSM0_MAGIC_2                    = 1 << 2
-	MCSM0_CLOSE_IN_RX_0DB            = 0 << 0
-	MCSM0_CLOSE_IN_RX_6DB            = 1 << 0
-	MCSM0_CLOSE_IN_RX_12DB           = 2 << 0
-	MCSM0_CLOSE_IN_RX_18DB           = 3 << 0
+	MCSM0_PO_TIMEOUT_SHIFT           = 2
+	MCSM0_PO_TIMEOUT_MASK            = 0x3 << 2
+	MCSM0_PIN_CTRL_EN                = 1 << 1
+	MCSM0_XOSC_FORCE_ON              = 1 << 0
 
 	FOCCFG_FOC_BS_CS_GATE          = 1 << 5
 	FOCCFG_FOC_PRE_K_1K            = 0 << 3
@@ -309,7 +300,7 @@ const (
 	BSCFG_BS_POST_KI_PRE_KI        = 0 << 3
 	BSCFG_BS_POST_KI_PRE_KI_OVER_2 = 1 << 3
 	BSCFG_BS_POST_KP_PRE_KP        = 0 << 2
-	BSCFG_BS_POST_KP_PRE_KP_OVER_2 = 1 << 2
+	BSCFG_BS_POST_KP_KP            = 1 << 2
 	BSCFG_BS_LIMIT_0               = 0 << 0
 	BSCFG_BS_LIMIT_3_125           = 1 << 0
 	BSCFG_BS_LIMIT_6_25            = 2 << 0
