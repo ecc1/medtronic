@@ -1,21 +1,12 @@
 package cc1100
 
 import (
-	"errors"
-	"fmt"
 	"log"
-	"time"
 )
 
 const (
-	verbose = false
-
+	verbose            = true
 	writeUsingTransfer = false
-	verifyWrite        = false
-	retryWrite         = false
-
-	readFifoUsingBurst  = true
-	writeFifoUsingBurst = true
 )
 
 func (r *Radio) ReadRegister(addr byte) (byte, error) {
@@ -27,64 +18,15 @@ func (r *Radio) ReadRegister(addr byte) (byte, error) {
 	return buf[1], nil
 }
 
-var (
-	RxFifoOverflow  = errors.New("RXFIFO overflow")
-	TxFifoUnderflow = errors.New("TXFIFO underflow")
-)
-
-// Per section 20 of data sheet, read NUM_RXBYTES
-// repeatedly until same value is returned twice.
-func (r *Radio) ReadNumRxBytes() (byte, error) {
-	last := byte(0)
-	read := false
-	for {
-		n, err := r.ReadRegister(RXBYTES)
-		if err != nil {
-			return 0, err
-		}
-		if n&RXFIFO_OVERFLOW != 0 {
-			return 0, RxFifoOverflow
-		}
-		n &= NUM_RXBYTES_MASK
-		if read && n == last {
-			return n, nil
-		}
-		last = n
-		read = true
+func (r *Radio) ReadBurst(addr byte, n int) ([]byte, error) {
+	reg := addr & 0x3F
+	if 0x30 <= reg && reg <= 0x3D {
+		log.Panicf("burst access for status register %X is not available\n", reg)
 	}
-}
-
-func (r *Radio) ReadNumTxBytes() (byte, error) {
-	n, err := r.ReadRegister(TXBYTES)
-	if err != nil {
-		return 0, err
-	}
-	if n&TXFIFO_UNDERFLOW != 0 {
-		return 0, TxFifoUnderflow
-	}
-	return n & NUM_TXBYTES_MASK, nil
-}
-
-func (r *Radio) ReadFifo(n uint8) ([]byte, error) {
-	if readFifoUsingBurst {
-		buf := make([]byte, n+1)
-		buf[0] = READ_MODE | BURST_MODE | RXFIFO
-		err := r.device.Transfer(buf)
-		if err != nil {
-			return nil, err
-		}
-		return buf[1:], nil
-	} else {
-		buf := make([]byte, n)
-		var err error
-		for i := uint8(0); i < n; i++ {
-			buf[i], err = r.ReadRegister(RXFIFO)
-			if err != nil {
-				return nil, err
-			}
-		}
-		return buf, nil
-	}
+	buf := make([]byte, n+1)
+	buf[0] = READ_MODE | BURST_MODE | addr
+	err := r.device.Transfer(buf)
+	return buf[1:], err
 }
 
 func (r *Radio) writeData(data []byte) error {
@@ -96,38 +38,11 @@ func (r *Radio) writeData(data []byte) error {
 }
 
 func (r *Radio) WriteRegister(addr byte, value byte) error {
-	for {
-		err := r.writeData([]byte{addr, value})
-		if err != nil || !verifyWrite || addr == TXFIFO {
-			return err
-		}
-		v, err := r.ReadRegister(addr)
-		if err != nil || v == value {
-			return err
-		}
-		msg := fmt.Sprintf("read(%X) returned %X instead of %X", addr, v, value)
-		if !retryWrite {
-			return fmt.Errorf("%s", msg)
-		}
-		if verbose {
-			log.Printf("%s; sleeping\n", msg)
-		}
-		time.Sleep(time.Millisecond)
-	}
+	return r.writeData([]byte{addr, value})
 }
 
-func (r *Radio) WriteFifo(data []byte) error {
-	if writeFifoUsingBurst {
-		return r.writeData(append([]byte{BURST_MODE | TXFIFO}, data...))
-	} else {
-		for _, b := range data {
-			err := r.WriteRegister(TXFIFO, b)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	}
+func (r *Radio) WriteBurst(addr byte, data []byte) error {
+	return r.writeData(append([]byte{BURST_MODE | addr}, data...))
 }
 
 func (r *Radio) WriteEach(data []byte) error {
@@ -157,21 +72,18 @@ func (r *Radio) Strobe(cmd byte) (byte, error) {
 }
 
 func (r *Radio) Reset() error {
-	return r.changeState(SRES, STATE_IDLE)
+	_, err := r.Strobe(SRES)
+	return err
 }
 
-func (r *Radio) ReadState() (byte, error) {
-	status, err := r.Strobe(SNOP)
+func (r *Radio) Version() (uint16, error) {
+	p, err := r.ReadRegister(PARTNUM)
 	if err != nil {
 		return 0, err
 	}
-	return (status >> STATE_SHIFT) & STATE_MASK, nil
-}
-
-func (r *Radio) ReadMarcState() (byte, error) {
-	state, err := r.ReadRegister(MARCSTATE)
+	v, err := r.ReadRegister(VERSION)
 	if err != nil {
 		return 0, err
 	}
-	return state & MARCSTATE_MASK, nil
+	return uint16(p)<<8 | uint16(v), nil
 }
