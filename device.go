@@ -2,20 +2,18 @@ package cc1100
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/ecc1/gpio"
+	"github.com/ecc1/radio"
 	"github.com/ecc1/spi"
 )
 
 const (
-	spiSpeed = 6000000 // Hz
-	gpioPin  = 14      // Intel Edison GPIO connected to GDO0
+	spiSpeed  = 6000000 // Hz
+	gpioPin   = 14      // Intel Edison GPIO connected to GDO0
+	hwVersion = 0x0014
 )
-
-type Packet struct {
-	Rssi int
-	Data []byte
-}
 
 type Radio struct {
 	device       *spi.Device
@@ -23,12 +21,10 @@ type Radio struct {
 
 	radioStarted       bool
 	receiveBuffer      bytes.Buffer
-	transmittedPackets chan Packet
-	receivedPackets    chan Packet
+	transmittedPackets chan radio.Packet
+	receivedPackets    chan radio.Packet
 	interrupt          chan struct{}
-
-	PacketsSent     int
-	PacketsReceived int
+	stats              radio.Statistics
 }
 
 func Open() (*Radio, error) {
@@ -44,13 +40,18 @@ func Open() (*Radio, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Radio{
+	r := &Radio{
 		device:             dev,
 		interruptPin:       pin,
-		transmittedPackets: make(chan Packet, 100),
-		receivedPackets:    make(chan Packet, 10),
+		transmittedPackets: make(chan radio.Packet, 100),
+		receivedPackets:    make(chan radio.Packet, 10),
 		interrupt:          make(chan struct{}, 10),
-	}, nil
+	}
+	v, err := r.Version()
+	if err == nil && v != hwVersion {
+		err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
+	}
+	return r, err
 }
 
 func (r *Radio) Init() error {
@@ -64,4 +65,8 @@ func (r *Radio) Init() error {
 	}
 	r.startRadio()
 	return nil
+}
+
+func (r *Radio) Statistics() radio.Statistics {
+	return r.stats
 }
