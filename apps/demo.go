@@ -1,28 +1,38 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ecc1/cc1100"
 )
 
 func main() {
-	dev, err := cc1100.Open()
+	r, err := cc1100.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	dev.Reset()
-	fmt.Printf("\nDefault RF settings:\n")
-	dev.DumpRF()
+	log.Printf("Resetting radio\n")
+	err = r.Reset()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.DumpRF()
 
-	dev.InitRF()
-	fmt.Printf("\nRF settings after initialization:\n")
-	dev.DumpRF()
+	log.Println("")
+	log.Printf("Initializing radio\n")
+	err = r.InitRF()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.DumpRF()
 
-	freq := uint32(915800000)
-	dev.WriteFrequency(freq)
-	fmt.Printf("\nRF settings after changing frequency to %d:\n", freq)
-	dev.DumpRF()
+	freq := uint32(916600000)
+	log.Println("")
+	log.Printf("Changing frequency to %d\n", freq)
+	err = r.SetFrequency(freq)
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.DumpRF()
 }
