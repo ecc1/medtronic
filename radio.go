@@ -1,6 +1,7 @@
 package cc1100
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"time"
@@ -9,10 +10,9 @@ import (
 )
 
 const (
-	fifoSize      = 64
-	maxPacketSize = 200
-	usePolling    = false
-	pollInterval  = time.Millisecond
+	readFifoUsingBurst = true
+	fifoSize           = 64
+	maxPacketSize      = 110
 
 	// Approximate time for one byte to be transmitted, based on
 	// the data rate.  It was determined empirically so that few
@@ -24,7 +24,6 @@ func (r *Radio) startRadio() {
 	if !r.radioStarted {
 		r.radioStarted = true
 		go r.radio()
-		go r.awaitInterrupts()
 	}
 }
 
@@ -41,6 +40,7 @@ func (r *Radio) radio() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	go r.awaitInterrupts()
 	for {
 		select {
 		case packet := <-r.transmittedPackets:
@@ -56,16 +56,8 @@ func (r *Radio) radio() {
 
 func (r *Radio) awaitInterrupts() {
 	for {
-		if usePolling {
-			n, _ := r.ReadNumRxBytes()
-			if n == 0 {
-				time.Sleep(pollInterval)
-				continue
-			}
-		} else {
-			log.Printf("waiting for interrupt in %s state\n", r.State()) //XXX
-			r.interruptPin.Wait()
-		}
+		log.Printf("waiting for interrupt in %s state\n", r.State()) //XXX
+		r.interruptPin.Wait()
 		r.interrupt <- struct{}{}
 	}
 }
@@ -170,10 +162,6 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 }
 
 func (r *Radio) receive() error {
-	err := r.changeState(SRX, STATE_RX)
-	if err != nil {
-		return err
-	}
 	waiting := false
 	for {
 		numBytes, err := r.ReadNumRxBytes()
@@ -194,16 +182,38 @@ func (r *Radio) receive() error {
 			continue
 		}
 		waiting = false
-		c, err := r.ReadRegister(RXFIFO)
-		if err != nil {
-			return err
-		}
-		if c != 0 {
-			err = r.receiveBuffer.WriteByte(c)
+		if readFifoUsingBurst {
+			data, err := r.ReadBurst(RXFIFO, int(numBytes))
 			if err != nil {
 				return err
 			}
-			continue
+			i := bytes.IndexByte(data, 0)
+			if i == -1 {
+				// No zero byte found; packet is still incoming.
+				// Append all the data and continue to receive.
+				_, err = r.receiveBuffer.Write(data)
+				if err != nil {
+					return err
+				}
+				continue
+			}
+			// End of packet.
+			_, err = r.receiveBuffer.Write(data[:i])
+			if err != nil {
+				return err
+			}
+		} else {
+			c, err := r.ReadRegister(RXFIFO)
+			if err != nil {
+				return err
+			}
+			if c != 0 {
+				err = r.receiveBuffer.WriteByte(c)
+				if err != nil {
+					return err
+				}
+				continue
+			}
 		}
 		// End of packet.
 		rssi, err := r.ReadRSSI()
@@ -222,9 +232,9 @@ func (r *Radio) receive() error {
 			r.receiveBuffer.Reset()
 			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
 		}
+		n, _ := r.ReadNumRxBytes()                                                         //XXX
+		log.Printf("%d-byte packet; %d bytes remaining; state = %s\n", size, n, r.State()) //XXX
 		return nil
-//		return r.drainRxFifo()
-//		return r.changeState(SIDLE, STATE_IDLE)
 	}
 }
 
@@ -245,15 +255,10 @@ func (r *Radio) drainRxFifo() error {
 	case STATE_RX:
 		log.Printf("draining %d bytes from RXFIFO\n", n)
 		_, err = r.ReadBurst(RXFIFO, int(n))
-		if err != nil {
-			return err
-		}
-	case STATE_RXFIFO_OVERFLOW:
-		log.Printf("flushing RXFIFO\n")
+		return err
 	default:
 		return fmt.Errorf("unexpected %s state during RXFIFO drain", StateName(s))
 	}
-	return r.changeState(SIDLE, STATE_IDLE)
 }
 
 func (r *Radio) changeState(strobe byte, desired byte) error {
