@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	"github.com/ecc1/radio"
 )
 
 const (
-	fifoSize     = 64
-	usePolling   = false
-	pollInterval = time.Millisecond
+	fifoSize      = 64
+	maxPacketSize = 200
+	usePolling    = false
+	pollInterval  = time.Millisecond
 
 	// Approximate time for one byte to be transmitted, based on
 	// the data rate.  It was determined empirically so that few
@@ -25,11 +28,11 @@ func (r *Radio) startRadio() {
 	}
 }
 
-func (r *Radio) Incoming() <-chan Packet {
+func (r *Radio) Incoming() <-chan radio.Packet {
 	return r.receivedPackets
 }
 
-func (r *Radio) Outgoing() chan<- Packet {
+func (r *Radio) Outgoing() chan<- radio.Packet {
 	return r.transmittedPackets
 }
 
@@ -60,26 +63,42 @@ func (r *Radio) awaitInterrupts() {
 				continue
 			}
 		} else {
+			log.Printf("waiting for interrupt in %s state\n", r.State()) //XXX
 			r.interruptPin.Wait()
 		}
 		r.interrupt <- struct{}{}
 	}
 }
 
+// FIXME: move to per-radio struct
+var packetBuffer [maxPacketSize + 2]byte
+
 func (r *Radio) transmit(data []byte) error {
+	if len(data) > maxPacketSize {
+		log.Panicf("attempting to send %d-byte packet\n", len(data))
+	}
+	copy(packetBuffer[0:], data)
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
 	// are transmitted before leaving TX state.
-	data = append(data, []byte{0, 0}...)
+	packetBuffer[len(data)] = 0
+	packetBuffer[len(data)+1] = 0
+	data = packetBuffer[:len(data)+2]
+	var err error
 	if len(data) <= fifoSize {
-		return r.transmitSmall(data)
+		err = r.transmitSmall(data)
 	} else {
-		return r.transmitLarge(data)
+		err = r.transmitLarge(data)
 	}
+	if err != nil {
+		r.stats.Packets.Sent++
+		r.stats.Bytes.Sent += len(data)
+	}
+	return err
 }
 
 func (r *Radio) transmitSmall(data []byte) error {
-	err := r.WriteFifo(data)
+	err := r.WriteBurst(TXFIFO, data)
 	if err != nil {
 		return err
 	}
@@ -95,7 +114,7 @@ func (r *Radio) transmitSmall(data []byte) error {
 func (r *Radio) transmitLarge(data []byte) error {
 	avail := fifoSize
 	for {
-		err := r.WriteFifo(data[:avail])
+		err := r.WriteBurst(TXFIFO, data[:avail])
 		if err != nil {
 			return err
 		}
@@ -108,7 +127,7 @@ func (r *Radio) transmitLarge(data []byte) error {
 			break
 		}
 		// Err on the short side here to avoid TXFIFO underflow.
-		time.Sleep(fifoSize/4 * byteDuration)
+		time.Sleep(fifoSize / 4 * byteDuration)
 		for {
 			n, err := r.ReadNumTxBytes()
 			if err != nil {
@@ -123,7 +142,7 @@ func (r *Radio) transmitLarge(data []byte) error {
 			}
 		}
 	}
-	return r.drainTxFifo(len(data))
+	return r.drainTxFifo(avail)
 }
 
 func (r *Radio) drainTxFifo(numBytes int) error {
@@ -134,7 +153,6 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 			return err
 		}
 		if n == 0 || err == TxFifoUnderflow {
-			r.PacketsSent++
 			break
 		}
 		s, err := r.ReadState()
@@ -194,17 +212,48 @@ func (r *Radio) receive() error {
 		}
 		size := r.receiveBuffer.Len()
 		if size != 0 {
-			r.PacketsReceived++
+			r.stats.Packets.Received++
+			r.stats.Bytes.Received += size
 			p := make([]byte, size)
 			_, err := r.receiveBuffer.Read(p)
 			if err != nil {
 				return err
 			}
 			r.receiveBuffer.Reset()
-			r.receivedPackets <- Packet{Rssi: rssi, Data: p}
+			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
 		}
 		return nil
+//		return r.drainRxFifo()
+//		return r.changeState(SIDLE, STATE_IDLE)
 	}
+}
+
+func (r *Radio) drainRxFifo() error {
+	n, err := r.ReadNumRxBytes()
+	if err == RxFifoOverflow {
+		// Flush RX FIFO and change back to RX.
+		return r.changeState(SRX, STATE_RX)
+	}
+	if err != nil || n == 0 {
+		return err
+	}
+	s, err := r.ReadState()
+	if err != nil {
+		return err
+	}
+	switch s {
+	case STATE_RX:
+		log.Printf("draining %d bytes from RXFIFO\n", n)
+		_, err = r.ReadBurst(RXFIFO, int(n))
+		if err != nil {
+			return err
+		}
+	case STATE_RXFIFO_OVERFLOW:
+		log.Printf("flushing RXFIFO\n")
+	default:
+		return fmt.Errorf("unexpected %s state during RXFIFO drain", StateName(s))
+	}
+	return r.changeState(SIDLE, STATE_IDLE)
 }
 
 func (r *Radio) changeState(strobe byte, desired byte) error {
