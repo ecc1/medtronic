@@ -37,16 +37,21 @@ func main() {
 }
 
 func dumpRegs(r *cc1100.Radio) {
-	start := cc1100.IOCFG2
-	finish := cc1100.TEST0
-	numRegs := finish - start + 1
-	fmt.Printf("Register dump:\n")
-	regs, err := r.ReadBurst(byte(start), numRegs)
+	fmt.Printf("\nConfiguration registers:\n")
+	config, err := r.ReadConfiguration()
 	if err != nil {
 		log.Fatal(err)
 	}
+	regs := config.Bytes()
+	resetValue := cc1100.ResetRfConfiguration.Bytes()
 	for i, v := range regs {
-		fmt.Printf("%02X  %02X  %08b\n", start+i, v, v)
+		fmt.Printf("%02X  %02X  %08b", i, v, v)
+		r := resetValue[i]
+		if v == r {
+			fmt.Printf("\n")
+		} else {
+			fmt.Printf("  **** SHOULD BE %02X  %08b\n", r, r)
+		}
 	}
 }
 

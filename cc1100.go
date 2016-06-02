@@ -62,6 +62,108 @@ const (
 	TEST0    = 0x2E // Various test settings
 )
 
+type RfConfiguration struct {
+	IOCFG2   byte // GDO2 output pin configuration
+	IOCFG1   byte // GDO1 output pin configuration
+	IOCFG0   byte // GDO0 output pin configuration
+	FIFOTHR  byte // RX FIFO and TX FIFO thresholds
+	SYNC1    byte // Sync word, high byte
+	SYNC0    byte // Sync word, low byte
+	PKTLEN   byte // Packet length
+	PKTCTRL1 byte // Packet automation control
+	PKTCTRL0 byte // Packet automation control
+	ADDR     byte // Device address
+	CHANNR   byte // Channel number
+	FSCTRL1  byte // Frequency synthesizer control
+	FSCTRL0  byte // Frequency synthesizer control
+	FREQ2    byte // Frequency control word, high byte
+	FREQ1    byte // Frequency control word, middle byte
+	FREQ0    byte // Frequency control word, low byte
+	MDMCFG4  byte // Modem configuration
+	MDMCFG3  byte // Modem configuration
+	MDMCFG2  byte // Modem configuration
+	MDMCFG1  byte // Modem configuration
+	MDMCFG0  byte // Modem configuration
+	DEVIATN  byte // Modem deviation setting
+	MCSM2    byte // Main Radio Control State Machine configuration
+	MCSM1    byte // Main Radio Control State Machine configuration
+	MCSM0    byte // Main Radio Control State Machine configuration
+	FOCCFG   byte // Frequency Offset Compensation configuration
+	BSCFG    byte // Bit Synchronization configuration
+	AGCCTRL2 byte // AGC control
+	AGCCTRL1 byte // AGC control
+	AGCCTRL0 byte // AGC control
+	WOREVT1  byte // High byte Event 0 timeout
+	WOREVT0  byte // Low byte Event 0 timeout
+	WORCTRL  byte // Wake On Radio control
+	FREND1   byte // Front end RX configuration
+	FREND0   byte // Front end TX configuration
+	FSCAL3   byte // Frequency synthesizer calibration
+	FSCAL2   byte // Frequency synthesizer calibration
+	FSCAL1   byte // Frequency synthesizer calibration
+	FSCAL0   byte // Frequency synthesizer calibration
+	RCCTRL1  byte // RC oscillator configuration
+	RCCTRL0  byte // RC oscillator configuration
+	FSTEST   byte // Frequency synthesizer calibration control
+	PTEST    byte // Production test
+	AGCTEST  byte // AGC test
+	TEST2    byte // Various test settings
+	TEST1    byte // Various test settings
+	TEST0    byte // Various test settings
+}
+
+// Configuration register values after reset,
+// according to data sheet section 29.1.
+var ResetRfConfiguration = RfConfiguration{
+	IOCFG2:   0x29,
+	IOCFG1:   0x2E,
+	IOCFG0:   0x3F,
+	FIFOTHR:  0x07,
+	SYNC1:    0xD3,
+	SYNC0:    0x91,
+	PKTLEN:   0xFF,
+	PKTCTRL1: 1 << 2,
+	PKTCTRL0: 1<<6 | 1<<2 | 1<<0,
+	ADDR:     0x00,
+	CHANNR:   0x00,
+	FSCTRL1:  0x0F,
+	FSCTRL0:  0x00,
+	FREQ2:    0x1E,
+	FREQ1:    0xC4,
+	FREQ0:    0xEC,
+	MDMCFG4:  2<<6 | 0xC<<0,
+	MDMCFG3:  0x22,
+	MDMCFG2:  0x02,
+	MDMCFG1:  2<<4 | 2<<0,
+	MDMCFG0:  0xF8,
+	DEVIATN:  4<<4 | 7<<0,
+	MCSM2:    0x07,
+	MCSM1:    3 << 4,
+	MCSM0:    1 << 2,
+	FOCCFG:   1<<6 | 1<<5 | 2<<3 | 1<<2 | 2<<0,
+	BSCFG:    1<<6 | 2<<4 | 1<<3 | 1<<2,
+	AGCCTRL2: 0x03,
+	AGCCTRL1: 1 << 6,
+	AGCCTRL0: 2<<6 | 1<<4 | 1<<0,
+	WOREVT1:  0x87,
+	WOREVT0:  0x6B,
+	WORCTRL:  1<<7 | 7<<4 | 1<<3,
+	FREND1:   1<<6 | 1<<4 | 1<<2 | 2<<0,
+	FREND0:   1 << 4,
+	FSCAL3:   2<<6 | 2<<4 | 9<<0,
+	FSCAL2:   0x0A,
+	FSCAL1:   0x20,
+	FSCAL0:   0x0D,
+	RCCTRL1:  0x41,
+	RCCTRL0:  0x00,
+	FSTEST:   0x59,
+	PTEST:    0x7F,
+	AGCTEST:  0x3F,
+	TEST2:    0x88,
+	TEST1:    0x31,
+	TEST0:    2<<2 | 1<<1 | 1<<0,
+}
+
 // Command strobes (write-only).
 const (
 	// Reset chip.
