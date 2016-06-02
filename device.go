@@ -44,8 +44,8 @@ func Open() (*Radio, error) {
 		device:             dev,
 		interruptPin:       pin,
 		transmittedPackets: make(chan radio.Packet, 100),
-		receivedPackets:    make(chan radio.Packet, 10),
-		interrupt:          make(chan struct{}, 10),
+		receivedPackets:    make(chan radio.Packet, 100),
+		interrupt:          make(chan struct{}),
 	}
 	v, err := r.Version()
 	if err == nil && v != hwVersion {
