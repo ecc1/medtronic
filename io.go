@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	verbose            = true
+	verbose            = false
 	writeUsingTransfer = false
 )
 

@@ -61,7 +61,9 @@ func (r *Radio) radio() {
 
 func (r *Radio) awaitInterrupts() {
 	for {
-		log.Printf("waiting for interrupt in %s state\n", r.State()) //XXX
+		if verbose {
+			log.Printf("waiting for interrupt in %s state\n", r.State())
+		}
 		r.interruptPin.Wait()
 		r.interrupt <- struct{}{}
 	}
@@ -237,8 +239,13 @@ func (r *Radio) receive() error {
 			r.receiveBuffer.Reset()
 			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
 		}
-		n, _ := r.ReadNumRxBytes()                                                         //XXX
-		log.Printf("%d-byte packet; %d bytes remaining; state = %s\n", size, n, r.State()) //XXX
+		if verbose {
+			n, err := r.ReadNumRxBytes()
+			if err != nil {
+				return err
+			}
+			log.Printf("%d-byte packet; %d bytes remaining; state = %s\n", size, n, r.State())
+		}
 		return nil
 	}
 }
