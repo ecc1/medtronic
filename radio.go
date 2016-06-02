@@ -20,11 +20,16 @@ const (
 	byteDuration = time.Millisecond
 )
 
-func (r *Radio) startRadio() {
+func (r *Radio) Start() {
 	if !r.radioStarted {
 		r.radioStarted = true
 		go r.radio()
 	}
+}
+
+func (r *Radio) Stop() {
+	// stop radio goroutines and enter IDLE state
+	panic("not implemented")
 }
 
 func (r *Radio) Incoming() <-chan radio.Packet {
@@ -82,7 +87,7 @@ func (r *Radio) transmit(data []byte) error {
 	} else {
 		err = r.transmitLarge(data)
 	}
-	if err != nil {
+	if err == nil {
 		r.stats.Packets.Sent++
 		r.stats.Bytes.Sent += len(data)
 	}

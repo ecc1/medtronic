@@ -19,16 +19,17 @@ func main() {
 	}
 	r.DumpRF()
 
+	freq := uint32(916600000)
 	log.Println("")
-	log.Printf("Initializing radio\n")
-	err = r.InitRF()
+	log.Printf("Initializing radio to %d MHz\n", freq)
+	err = r.InitRF(freq)
 	if err != nil {
 		log.Fatal(err)
 	}
 	r.DumpRF()
 
-	freq := uint32(916600000)
 	log.Println("")
+	freq += 500000
 	log.Printf("Changing frequency to %d\n", freq)
 	err = r.SetFrequency(freq)
 	if err != nil {

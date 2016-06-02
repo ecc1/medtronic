@@ -23,8 +23,9 @@ func (r *Radio) WriteConfiguration(config *RfConfiguration) error {
 	return r.WriteBurst(IOCFG2, config.Bytes())
 }
 
-func (r *Radio) InitRF() error {
+func (r *Radio) InitRF(frequency uint32) error {
 	rf := ResetRfConfiguration
+	fb := frequencyBytes(frequency)
 
 	rf.IOCFG2 = 0x2F
 	rf.IOCFG1 = 0x2F
@@ -44,6 +45,10 @@ func (r *Radio) InitRF() error {
 	// Intermediate frequency
 	// 0x06 * 24 MHz / 2^10 == 140625 Hz
 	rf.FSCTRL1 = 0x06
+
+	rf.FREQ2 = fb[0]
+	rf.FREQ1 = fb[1]
+	rf.FREQ0 = fb[2]
 
 	// CHANBW_E = 2, CHANBW_M = 1, DRATE_E = 9
 	// Channel BW = 24 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 150 kHz
@@ -141,12 +146,16 @@ func (r *Radio) Frequency() (uint32, error) {
 }
 
 func (r *Radio) SetFrequency(freq uint32) error {
+	return r.WriteBurst(FREQ2, frequencyBytes(freq))
+}
+
+func frequencyBytes(freq uint32) []byte {
 	f := (uint64(freq)<<16 + FXOSC/2) / FXOSC
-	return r.WriteBurst(FREQ2, []byte{
+	return []byte{
 		byte(f >> 16),
 		byte(f >> 8),
 		byte(f),
-	})
+	}
 }
 
 func (r *Radio) ReadIF() (uint32, error) {

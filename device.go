@@ -54,16 +54,16 @@ func Open() (*Radio, error) {
 	return r, err
 }
 
-func (r *Radio) Init() error {
+func (r *Radio) Init(frequency uint32) error {
 	err := r.Reset()
 	if err != nil {
 		return err
 	}
-	err = r.InitRF()
+	err = r.InitRF(frequency)
 	if err != nil {
 		return err
 	}
-	r.startRadio()
+	r.Start()
 	return nil
 }
 
