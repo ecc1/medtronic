@@ -50,9 +50,9 @@ func (r *Radio) InitRF(frequency uint32) error {
 	rf.FREQ1 = fb[1]
 	rf.FREQ0 = fb[2]
 
-	// CHANBW_E = 2, CHANBW_M = 1, DRATE_E = 9
-	// Channel BW = 24 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 150 kHz
-	rf.MDMCFG4 = 2<<MDMCFG4_CHANBW_E_SHIFT |
+	// CHANBW_E = 1, CHANBW_M = 1, DRATE_E = 9
+	// Channel BW = 24 MHz / (8 * (4 + CHANBW_M) * 2^CHANBW_E) == 300 kHz
+	rf.MDMCFG4 = 1<<MDMCFG4_CHANBW_E_SHIFT |
 		1<<MDMCFG4_CHANBW_M_SHIFT |
 		9<<MDMCFG4_DRATE_E_SHIFT
 
