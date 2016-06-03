@@ -65,23 +65,44 @@ type PumpCommand struct {
 func commandPacket(cmd PumpCommand) radio.Packet {
 	initCommandPrefix()
 	n := len(commandPrefix)
-	var data []byte
-	if len(cmd.Params) == 0 {
-		data = make([]byte, n+2)
-	} else {
-		data = make([]byte, maxPacketSize)
-	}
+	data := make([]byte, n+2)
 	copy(data, commandPrefix)
 	data[n] = byte(cmd.Code)
-	data[n+1] = byte(len(cmd.Params))
-	if len(cmd.Params) != 0 {
-		copy(data[n+2:], cmd.Params)
-	}
+	data[n+1] = byte(0)
 	return EncodePacket(data)
 }
 
+func paramsPacket(cmd PumpCommand) radio.Packet {
+	initCommandPrefix()
+	n := len(commandPrefix)
+	data := make([]byte, maxPacketSize)
+	copy(data, commandPrefix)
+	data[n] = byte(cmd.Code)
+	data[n+1] = byte(len(cmd.Params))
+	copy(data[n+2:], cmd.Params)
+	return EncodePacket(data)
+}
+
+// Commands with parameters require an initial exchange with no parameters,
+// followed by an exchange with arguments.
 func (pump *Pump) Execute(cmd PumpCommand) (interface{}, error) {
-	packet := commandPacket(cmd)
+	result, err := pump.perform(cmd, false)
+	if err != nil || len(cmd.Params) == 0 {
+		return result, err
+	}
+	if cmd.ResponseHandler != nil {
+		panic("ResponseHandler != nil")
+	}
+	return pump.perform(cmd, true)
+}
+
+func (pump *Pump) perform(cmd PumpCommand, params bool) (interface{}, error) {
+	var packet radio.Packet
+	if params {
+		packet = paramsPacket(cmd)
+	} else {
+		packet = commandPacket(cmd)
+	}
 	responseTimeout := defaultResponseTimeout
 	if cmd.ResponseTimeout != 0 {
 		responseTimeout = cmd.ResponseTimeout
@@ -106,12 +127,14 @@ func (pump *Pump) Execute(cmd PumpCommand) (interface{}, error) {
 		if cmd.Rssi != nil {
 			*cmd.Rssi = response.Rssi
 		}
-		result := cmd.ResponseHandler(data[5:])
-		if result == nil {
-			return nil, unexpectedResponse(cmd.Code, data)
+		if cmd.ResponseHandler != nil {
+			result := cmd.ResponseHandler(data[5:])
+			if result == nil {
+				return nil, unexpectedResponse(cmd.Code, data)
+			}
+			return result, nil
 		}
-		return result, nil
-
+		return nil, nil
 	}
 	return nil, noResponse(cmd.Code)
 }
@@ -128,10 +151,4 @@ func expected(cmd PumpCommand, data []byte) bool {
 	} else {
 		return data[4] == byte(cmd.Code)
 	}
-}
-
-func emptyResponseHandler(data []byte) interface{} {
-	// Return something other than nil, so that
-	// Execute does not treat the result as an error.
-	return true
 }
