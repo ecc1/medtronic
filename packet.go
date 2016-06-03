@@ -20,8 +20,13 @@ func (pump *Pump) DecodePacket(packet radio.Packet) ([]byte, error) {
 	return data, nil
 }
 
-func EncodePacket(packet []byte) radio.Packet {
-	return radio.Packet{Data: Encode4b6b(append(packet, Crc8(packet)))}
+func EncodePacket(data []byte) radio.Packet {
+	// Don't use append() to add the CRC, because append
+	// may write into the array underlying the caller's slice.
+	buf := make([]byte, len(data)+1)
+	copy(buf, data)
+	buf[len(data)] = Crc8(data)
+	return radio.Packet{Data: Encode4b6b(buf)}
 }
 
 func (pump *Pump) PrintStats() {
