@@ -13,7 +13,6 @@ func (pump *Pump) PowerControl(retries int) error {
 		Code:            PowerControl,
 		NumRetries:      retries,
 		ResponseTimeout: 10 * time.Second,
-		ResponseHandler: emptyResponseHandler,
 	}
 	_, err := pump.Execute(cmd)
 	return err

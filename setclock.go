@@ -21,7 +21,6 @@ func (pump *Pump) SetClock(t time.Time, retries int) error {
 			byte(t.Day()),
 		},
 		NumRetries:      retries,
-		ResponseHandler: emptyResponseHandler,
 	}
 	_, err := pump.Execute(cmd)
 	if err != nil {
