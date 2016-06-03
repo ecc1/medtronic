@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	verbose = false
+	verbose = true
 )
 
 var (
@@ -17,6 +17,9 @@ var (
 )
 
 func main() {
+	if verbose {
+		log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
+	}
 	pump, err := medtronic.Open()
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +28,6 @@ func main() {
 	signal.Notify(signalChan, os.Interrupt)
 	go catchInterrupt(pump)
 
-	log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
 	for packet := range pump.Radio.Incoming() {
 		if verbose {
 			log.Printf("raw data: % X (RSSI = %d)\n", packet.Data, packet.Rssi)
