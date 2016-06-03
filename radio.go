@@ -69,25 +69,23 @@ func (r *Radio) awaitInterrupts() {
 	}
 }
 
-// FIXME: move to per-radio struct
-var packetBuffer [maxPacketSize + 2]byte
-
 func (r *Radio) transmit(data []byte) error {
 	if len(data) > maxPacketSize {
 		log.Panicf("attempting to send %d-byte packet\n", len(data))
 	}
-	copy(packetBuffer[0:], data)
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
 	// are transmitted before leaving TX state.
-	packetBuffer[len(data)] = 0
-	packetBuffer[len(data)+1] = 0
-	data = packetBuffer[:len(data)+2]
+	var buffer [maxPacketSize + 2]byte
+	copy(buffer[0:], data)
+	buffer[len(data)] = 0
+	buffer[len(data)+1] = 0
+	packet := buffer[:len(data)+2]
 	var err error
-	if len(data) <= fifoSize {
-		err = r.transmitSmall(data)
+	if len(packet) <= fifoSize {
+		err = r.transmitSmall(packet)
 	} else {
-		err = r.transmitLarge(data)
+		err = r.transmitLarge(packet)
 	}
 	if err == nil {
 		r.stats.Packets.Sent++
@@ -164,6 +162,7 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 		if verbose {
 			log.Printf("waiting to transmit %d bytes\n", n)
 		}
+		time.Sleep(byteDuration)
 	}
 	return r.changeState(SIDLE, STATE_IDLE)
 }
