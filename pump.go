@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/ecc1/cc1101"
 	"github.com/ecc1/radio"
-	"github.com/ecc1/rfm69"
 )
 
 const (
@@ -22,17 +22,13 @@ type Pump struct {
 }
 
 func Open() (*Pump, error) {
-	r, err := rfm69.Open()
-	if err != nil {
-		return nil, err
-	}
-	err = r.Init()
+	r, err := cc1101.Open()
 	if err != nil {
 		return nil, err
 	}
 	freq := defaultFreq()
 	log.Printf("setting frequency to %d\n", freq)
-	err = r.SetFrequency(freq)
+	err = r.Init(freq)
 	if err != nil {
 		return nil, err
 	}
