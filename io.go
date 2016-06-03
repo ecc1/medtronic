@@ -9,6 +9,12 @@ const (
 	writeUsingTransfer = false
 )
 
+func init() {
+	if verbose {
+		log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
+	}
+}
+
 func (r *Radio) ReadRegister(addr byte) (byte, error) {
 	buf := []byte{READ_MODE | addr, 0xFF}
 	err := r.device.Transfer(buf)
