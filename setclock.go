@@ -20,7 +20,7 @@ func (pump *Pump) SetClock(t time.Time, retries int) error {
 			byte(t.Month()),
 			byte(t.Day()),
 		},
-		NumRetries:      retries,
+		NumRetries: retries,
 	}
 	_, err := pump.Execute(cmd)
 	if err != nil {
