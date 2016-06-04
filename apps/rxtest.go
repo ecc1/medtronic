@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/ecc1/cc1101"
 )
@@ -29,19 +29,16 @@ func main() {
 }
 
 func getFrequency(s string) uint32 {
-	MHz := 0.0
-	n, err := fmt.Sscanf(s, "%f", &MHz)
-	if err == nil && n == 1 && 860.0 <= MHz && MHz <= 920.0 {
-		return uint32(MHz * 1000000.0)
-	}
-	Hz := uint32(0)
-	n, err = fmt.Sscanf(s, "%d", &Hz)
-	if err == nil && n == 1 && 860000000 <= Hz && Hz <= 920000000 {
-		return Hz
-	}
+	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		log.Fatalf("Argument (%s): %v\n", s, err)
+		log.Fatal(err)
 	}
-	log.Fatalf("Argument (%s) should be the pump frequency in MHz or Hz\n", s)
+	if 860.0 <= f && f <= 920.0 {
+		return uint32(f * 1000000.0)
+	}
+	if 860000000.0 <= f && f <= 920000000.0 {
+		return uint32(f)
+	}
+	log.Fatalf("%s: invalid pump frequency\n", s)
 	panic("unreachable")
 }
