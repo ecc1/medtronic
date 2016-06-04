@@ -1,22 +1,23 @@
 package medtronic
 
 const (
-	GetID CommandCode = 0x71
+	Model CommandCode = 0x8D
 )
 
-func (pump *Pump) ID(retries int) (string, error) {
+func (pump *Pump) Model(retries int, rssi *int) (string, error) {
 	cmd := PumpCommand{
-		Code:       GetID,
+		Code:       Model,
 		NumRetries: retries,
 		ResponseHandler: func(data []byte) interface{} {
-			if len(data) >= 1 {
-				n := int(data[0])
-				if len(data) >= 1+n {
-					return string(data[1 : 1+n])
+			if len(data) >= 2 {
+				n := int(data[1])
+				if len(data) >= 2+n {
+					return string(data[2 : 2+n])
 				}
 			}
 			return nil
 		},
+		Rssi: rssi,
 	}
 	result, err := pump.Execute(cmd)
 	if err != nil {

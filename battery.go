@@ -1,7 +1,7 @@
 package medtronic
 
 const (
-	GetBattery CommandCode = 0x72
+	Battery CommandCode = 0x72
 )
 
 type BatteryInfo struct {
@@ -11,7 +11,7 @@ type BatteryInfo struct {
 
 func (pump *Pump) Battery(retries int) (BatteryInfo, error) {
 	cmd := PumpCommand{
-		Code:       GetBattery,
+		Code:       Battery,
 		NumRetries: retries,
 		ResponseHandler: func(data []byte) interface{} {
 			if len(data) >= 4 && data[0] == 3 {

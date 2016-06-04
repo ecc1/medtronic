@@ -5,12 +5,12 @@ import (
 )
 
 const (
-	GetClock CommandCode = 0x70
+	Clock CommandCode = 0x70
 )
 
 func (pump *Pump) Clock(retries int) (time.Time, error) {
 	cmd := PumpCommand{
-		Code:       GetClock,
+		Code:       Clock,
 		NumRetries: retries,
 		ResponseHandler: func(data []byte) interface{} {
 			if len(data) >= 8 && data[0] == 7 {
