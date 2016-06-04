@@ -15,22 +15,17 @@ type StatusInfo struct {
 	Suspended bool
 }
 
-func (pump *Pump) PumpStatus(retries int) (StatusInfo, error) {
-	cmd := PumpCommand{
-		Code:       PumpStatus,
-		NumRetries: retries,
-		ResponseHandler: func(data []byte) interface{} {
-			if len(data) >= 4 && data[0] == 3 {
-				return StatusInfo{
-					Normal:    data[1] == 0x03,
-					Bolusing:  data[2] == 0x01,
-					Suspended: data[3] == 0x01,
-				}
+func (pump *Pump) PumpStatus() (StatusInfo, error) {
+	result, err := pump.Execute(PumpStatus, func(data []byte) interface{} {
+		if len(data) >= 4 && data[0] == 3 {
+			return StatusInfo{
+				Normal:    data[1] == 0x03,
+				Bolusing:  data[2] == 0x01,
+				Suspended: data[3] == 0x01,
 			}
-			return nil
-		},
-	}
-	result, err := pump.Execute(cmd)
+		}
+		return nil
+	})
 	if err != nil {
 		return StatusInfo{}, err
 	}

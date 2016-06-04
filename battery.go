@@ -9,21 +9,16 @@ type BatteryInfo struct {
 	LowBattery bool
 }
 
-func (pump *Pump) Battery(retries int) (BatteryInfo, error) {
-	cmd := PumpCommand{
-		Code:       Battery,
-		NumRetries: retries,
-		ResponseHandler: func(data []byte) interface{} {
-			if len(data) >= 4 && data[0] == 3 {
-				return BatteryInfo{
-					LowBattery: data[1] != 0,
-					Millivolts: (int(data[2])<<8 | int(data[3])) * 10,
-				}
+func (pump *Pump) Battery() (BatteryInfo, error) {
+	result, err := pump.Execute(Battery, func(data []byte) interface{} {
+		if len(data) >= 4 && data[0] == 3 {
+			return BatteryInfo{
+				LowBattery: data[1] != 0,
+				Millivolts: (int(data[2])<<8 | int(data[3])) * 10,
 			}
-			return nil
-		},
-	}
-	result, err := pump.Execute(cmd)
+		}
+		return nil
+	})
 	if err != nil {
 		return BatteryInfo{}, err
 	}

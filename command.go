@@ -11,11 +11,10 @@ import (
 )
 
 const (
-	pumpEnvVar             = "MEDTRONIC_PUMP_ID"
-	PumpDevice             = 0xA7
-	Ack                    = 0x06
-	maxPacketSize          = 70 // excluding CRC byte
-	defaultResponseTimeout = 500 * time.Millisecond
+	pumpEnvVar    = "MEDTRONIC_PUMP_ID"
+	PumpDevice    = 0xA7
+	Ack           = 0x06
+	maxPacketSize = 70 // excluding CRC byte
 )
 
 var (
@@ -53,63 +52,57 @@ func unexpectedResponse(code CommandCode, data []byte) error {
 	return fmt.Errorf("unexpected response to %s: % X", code.String(), data)
 }
 
-type PumpCommand struct {
-	Code            CommandCode
-	Params          []byte
-	ResponseHandler func([]byte) interface{}
-	ResponseTimeout time.Duration
-	NumRetries      int
-	Rssi            *int
+func (pump *Pump) SetTimeout(t time.Duration) time.Duration {
+	prev := pump.timeout
+	pump.timeout = t
+	return prev
 }
 
-func commandPacket(cmd PumpCommand) radio.Packet {
-	initCommandPrefix()
-	n := len(commandPrefix)
-	data := make([]byte, n+2)
-	copy(data, commandPrefix)
-	data[n] = byte(cmd.Code)
-	data[n+1] = byte(0)
-	return EncodePacket(data)
+func (pump *Pump) SetRetries(n int) int {
+	prev := pump.retries
+	pump.retries = n
+	return prev
 }
 
-func paramsPacket(cmd PumpCommand) radio.Packet {
+func (pump *Pump) Rssi() int {
+	return pump.rssi
+}
+
+type ResponseHandler func([]byte) interface{}
+
+func commandPacket(cmd CommandCode, params []byte) radio.Packet {
 	initCommandPrefix()
 	n := len(commandPrefix)
-	data := make([]byte, maxPacketSize)
+	var data []byte
+	if len(params) == 0 {
+		data = make([]byte, n+2)
+	} else {
+		data = make([]byte, maxPacketSize)
+	}
 	copy(data, commandPrefix)
-	data[n] = byte(cmd.Code)
-	data[n+1] = byte(len(cmd.Params))
-	copy(data[n+2:], cmd.Params)
+	data[n] = byte(cmd)
+	data[n+1] = byte(len(params))
+	if len(params) != 0 {
+		copy(data[n+2:], params)
+	}
 	return EncodePacket(data)
 }
 
 // Commands with parameters require an initial exchange with no parameters,
 // followed by an exchange with arguments.
-func (pump *Pump) Execute(cmd PumpCommand) (interface{}, error) {
-	result, err := pump.perform(cmd, false)
-	if err != nil || len(cmd.Params) == 0 {
+func (pump *Pump) Execute(cmd CommandCode, handler ResponseHandler, params ...byte) (interface{}, error) {
+	result, err := pump.perform(cmd, nil, handler)
+	if err != nil || len(params) == 0 {
 		return result, err
 	}
-	if cmd.ResponseHandler != nil {
-		panic("ResponseHandler != nil")
-	}
-	return pump.perform(cmd, true)
+	return pump.perform(cmd, params, handler)
 }
 
-func (pump *Pump) perform(cmd PumpCommand, params bool) (interface{}, error) {
-	var packet radio.Packet
-	if params {
-		packet = paramsPacket(cmd)
-	} else {
-		packet = commandPacket(cmd)
-	}
-	responseTimeout := defaultResponseTimeout
-	if cmd.ResponseTimeout != 0 {
-		responseTimeout = cmd.ResponseTimeout
-	}
-	for tries := 0; tries < cmd.NumRetries || cmd.NumRetries == 0; tries++ {
+func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandler) (interface{}, error) {
+	packet := commandPacket(cmd, params)
+	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
 		pump.Radio.Outgoing() <- packet
-		timeout := time.After(responseTimeout)
+		timeout := time.After(pump.timeout)
 		var response radio.Packet
 		select {
 		case response = <-pump.Radio.Incoming():
@@ -122,33 +115,27 @@ func (pump *Pump) perform(cmd PumpCommand, params bool) (interface{}, error) {
 			continue
 		}
 		if !expected(cmd, data) {
-			return nil, unexpectedResponse(cmd.Code, data)
+			return nil, unexpectedResponse(cmd, data)
 		}
-		if cmd.Rssi != nil {
-			*cmd.Rssi = response.Rssi
-		}
-		if cmd.ResponseHandler != nil {
-			result := cmd.ResponseHandler(data[5:])
+		pump.rssi = response.Rssi
+		if handler != nil {
+			result := handler(data[5:])
 			if result == nil {
-				return nil, unexpectedResponse(cmd.Code, data)
+				return nil, unexpectedResponse(cmd, data)
 			}
 			return result, nil
 		}
 		return nil, nil
 	}
-	return nil, noResponse(cmd.Code)
+	return nil, noResponse(cmd)
 }
 
-func expected(cmd PumpCommand, data []byte) bool {
+func expected(cmd CommandCode, data []byte) bool {
 	if len(data) < 5 {
 		return false
 	}
 	if !bytes.Equal(data[:len(commandPrefix)], commandPrefix) {
 		return false
 	}
-	if len(cmd.Params) == 0 && cmd.Code != Wakeup {
-		return data[4] == byte(cmd.Code)
-	} else {
-		return data[4] == byte(Ack)
-	}
+	return data[4] == byte(cmd) || data[4] == byte(Ack)
 }

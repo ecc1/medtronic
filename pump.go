@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/ecc1/cc1101"
 	"github.com/ecc1/radio"
@@ -12,10 +13,17 @@ import (
 const (
 	DefaultFrequency = 916600000
 	freqEnvVar       = "MEDTRONIC_FREQUENCY"
+	defaultTimeout   = 500 * time.Millisecond
+	defaultRetries   = 3
 )
 
 type Pump struct {
 	Radio radio.Interface
+
+	// Implicit parameters for command execution.
+	timeout time.Duration
+	retries int
+	rssi    int
 
 	DecodingErrors int
 	CrcErrors      int
@@ -32,7 +40,11 @@ func Open() (*Pump, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Pump{Radio: r}, nil
+	return &Pump{
+		Radio:   r,
+		timeout: defaultTimeout,
+		retries: defaultRetries,
+	}, nil
 }
 
 func defaultFreq() uint32 {

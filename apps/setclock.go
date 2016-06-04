@@ -31,7 +31,7 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("setting pump clock to %s\n", t.Format(time.UnixDate))
-	err = pump.SetClock(t, 3)
+	err = pump.SetClock(t)
 	if err != nil {
 		log.Fatal(err)
 	}

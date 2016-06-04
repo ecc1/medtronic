@@ -13,7 +13,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	t, err := pump.Clock(3)
+	t, err := pump.Clock()
 	if err != nil {
 		log.Fatal(err)
 	}

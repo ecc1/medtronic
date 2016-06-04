@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	startFreq  = uint32(916550000)
-	endFreq    = uint32(916770000)
+	startFreq  = uint32(916500000)
+	endFreq    = uint32(916800000)
 	stepSize   = uint32(10000)
 	sampleSize = 5
 )
@@ -42,6 +42,7 @@ func shortFreq(freq uint32) string {
 
 func scanFrequencies(pump *medtronic.Pump) []Result {
 	var results []Result
+	pump.SetRetries(1)
 	for freq := startFreq; freq <= endFreq; freq += stepSize {
 		results = append(results, tryFrequency(pump, freq))
 	}
@@ -62,13 +63,12 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) Result {
 	rssiSum := 0
 	rssi := -99
 	for i := 0; i < sampleSize; i++ {
-		r := -99
-		_, err := pump.Model(1, &r)
+		_, err := pump.Model()
 		if err != nil {
 			continue
 		}
 		count++
-		rssiSum += r
+		rssiSum += pump.Rssi()
 	}
 	if count != 0 {
 		rssi = (rssiSum + count/2) / count

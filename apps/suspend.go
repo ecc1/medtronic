@@ -17,10 +17,10 @@ func main() {
 	switch prog {
 	case "suspend":
 		log.Printf("suspending pump\n")
-		err = pump.Suspend(true, 3)
+		err = pump.Suspend(true)
 	case "resume":
 		log.Printf("resuming pump\n")
-		err = pump.Suspend(false, 3)
+		err = pump.Suspend(false)
 	default:
 		log.Fatalf("Program name (%s) must be \"suspend\" or \"resume\"\n", prog)
 	}

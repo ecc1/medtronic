@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	bat, err := pump.Battery(3)
+	bat, err := pump.Battery()
 	if err != nil {
 		log.Fatal(err)
 	}
