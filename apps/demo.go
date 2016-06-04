@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/ecc1/cc1100"
+	"github.com/ecc1/cc1101"
 )
 
 func main() {
-	r, err := cc1100.Open()
+	r, err := cc1101.Open()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,4 +1,4 @@
-package cc1100
+package cc1101
 
 // Register definitions for Texas Instruments CC1101.
 

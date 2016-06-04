@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ecc1/cc1100"
+	"github.com/ecc1/cc1101"
 )
 
 func main() {
-	r, err := cc1100.Open()
+	r, err := cc1101.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -17,11 +17,11 @@ func main() {
 	dumpRegs(r)
 
 	fmt.Printf("\nTesting individual writes\n")
-	err = r.WriteRegister(cc1100.SYNC1, 0x44)
+	err = r.WriteRegister(cc1101.SYNC1, 0x44)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = r.WriteRegister(cc1100.SYNC0, 0x55)
+	err = r.WriteRegister(cc1101.SYNC0, 0x55)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,21 +29,21 @@ func main() {
 
 	r.Reset()
 	fmt.Printf("\nTesting burst writes\n")
-	err = r.WriteBurst(cc1100.SYNC1, []byte{0x66, 0x77})
+	err = r.WriteBurst(cc1101.SYNC1, []byte{0x66, 0x77})
 	if err != nil {
 		log.Fatal(err)
 	}
 	readRegs(r)
 }
 
-func dumpRegs(r *cc1100.Radio) {
+func dumpRegs(r *cc1101.Radio) {
 	fmt.Printf("\nConfiguration registers:\n")
 	config, err := r.ReadConfiguration()
 	if err != nil {
 		log.Fatal(err)
 	}
 	regs := config.Bytes()
-	resetValue := cc1100.ResetRfConfiguration.Bytes()
+	resetValue := cc1101.ResetRfConfiguration.Bytes()
 	for i, v := range regs {
 		fmt.Printf("%02X  %02X  %08b", i, v, v)
 		r := resetValue[i]
@@ -55,17 +55,17 @@ func dumpRegs(r *cc1100.Radio) {
 	}
 }
 
-func readRegs(r *cc1100.Radio) {
-	x, err := r.ReadRegister(cc1100.SYNC1)
+func readRegs(r *cc1101.Radio) {
+	x, err := r.ReadRegister(cc1101.SYNC1)
 	if err != nil {
 		log.Fatal(err)
 	}
-	y, err := r.ReadRegister(cc1100.SYNC0)
+	y, err := r.ReadRegister(cc1101.SYNC0)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("individual: %X %X\n", x, y)
-	v, err := r.ReadBurst(cc1100.SYNC1, 2)
+	v, err := r.ReadBurst(cc1101.SYNC1, 2)
 	if err != nil {
 		log.Fatal(err)
 	}

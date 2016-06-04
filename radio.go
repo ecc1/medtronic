@@ -1,4 +1,4 @@
-package cc1100
+package cc1101
 
 import (
 	"bytes"
