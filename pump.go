@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	DefaultFrequency = 916600000
 	freqEnvVar       = "MEDTRONIC_FREQUENCY"
+	defaultFrequency = 916600000
 	defaultTimeout   = 500 * time.Millisecond
 	defaultRetries   = 3
 )
@@ -48,16 +48,23 @@ func Open() (*Pump, error) {
 }
 
 func defaultFreq() uint32 {
-	freq := uint32(DefaultFrequency)
-	f := os.Getenv(freqEnvVar)
-	if len(f) != 0 {
-		n, err := fmt.Sscanf(f, "%d", &freq)
-		if err != nil {
-			log.Fatalf("%s value (%s): %v\n", freqEnvVar, f, err)
-		}
-		if n != 1 || freq < 860000000 || freq > 920000000 {
-			log.Fatalf("%s value (%s) should be the pump frequency in Hz\n", freqEnvVar, f)
-		}
+	s := os.Getenv(freqEnvVar)
+	if len(s) == 0 {
+		return uint32(defaultFrequency)
 	}
-	return freq
+	MHz := 0.0
+	n, err := fmt.Sscanf(s, "%f", &MHz)
+	if err == nil && n == 1 && 860.0 <= MHz && MHz <= 920.0 {
+		return uint32(MHz * 1000000.0)
+	}
+	Hz := uint32(0)
+	n, err = fmt.Sscanf(s, "%d", &Hz)
+	if err == nil && n == 1 && 860000000 <= Hz && Hz <= 920000000 {
+		return Hz
+	}
+	if err != nil {
+		log.Fatalf("%s (%s): %v\n", freqEnvVar, s, err)
+	}
+	log.Fatalf("%s (%s): invalid pump frequency\n", freqEnvVar, s)
+	panic("unreachable")
 }
