@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/ecc1/medtronic"
 )
@@ -17,5 +16,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(t.Format(time.UnixDate))
+	fmt.Println(t)
 }
