@@ -146,9 +146,9 @@ func expected(cmd PumpCommand, data []byte) bool {
 	if !bytes.Equal(data[:len(commandPrefix)], commandPrefix) {
 		return false
 	}
-	if len(cmd.Params) != 0 || cmd.Code == PowerControl {
-		return data[4] == byte(Ack)
-	} else {
+	if len(cmd.Params) == 0 && cmd.Code != Wakeup {
 		return data[4] == byte(cmd.Code)
+	} else {
+		return data[4] == byte(Ack)
 	}
 }
