@@ -8,10 +8,9 @@ import (
 )
 
 const (
-	startFreq  = uint32(916500000)
-	endFreq    = uint32(916800000)
-	stepSize   = uint32(10000)
-	sampleSize = 5
+	startFreq = uint32(916500000)
+	endFreq   = uint32(916800000)
+	precision = uint32(10000)
 )
 
 func main() {
@@ -19,19 +18,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	printResults(scanFrequencies(pump))
-}
-
-type Result struct {
-	frequency uint32
-	count     int
-	rssi      int
-}
-
-func printResults(results []Result) {
-	for _, r := range results {
-		fmt.Printf("%s  %d  %3d\n", shortFreq(r.frequency), r.count, r.rssi)
-	}
+	fmt.Println(shortFreq(searchFrequencies(pump)))
 }
 
 func shortFreq(freq uint32) string {
@@ -40,16 +27,30 @@ func shortFreq(freq uint32) string {
 	return fmt.Sprintf("%3d.%03d", MHz, kHz)
 }
 
-func scanFrequencies(pump *medtronic.Pump) []Result {
-	var results []Result
+// Use ternary search to find frequency with maximum RSSI.
+func searchFrequencies(pump *medtronic.Pump) uint32 {
 	pump.SetRetries(1)
-	for freq := startFreq; freq <= endFreq; freq += stepSize {
-		results = append(results, tryFrequency(pump, freq))
+	lower := startFreq
+	upper := endFreq
+	for {
+		delta := upper - lower
+		if delta < precision {
+			return (lower + upper) / 2
+		}
+		delta /= 3
+		lowerThird := lower + delta
+		r1 := tryFrequency(pump, lowerThird)
+		upperThird := upper - delta
+		r2 := tryFrequency(pump, upperThird)
+		if r1 < r2 {
+			lower = lowerThird
+		} else {
+			upper = upperThird
+		}
 	}
-	return results
 }
 
-func tryFrequency(pump *medtronic.Pump, freq uint32) Result {
+func tryFrequency(pump *medtronic.Pump, freq uint32) int {
 	err := pump.Radio.SetFrequency(freq)
 	if err != nil {
 		log.Fatal(err)
@@ -58,20 +59,13 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) Result {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("frequency set to %s MHz\n", shortFreq(f))
-	count := 0
-	rssiSum := 0
-	rssi := -99
-	for i := 0; i < sampleSize; i++ {
-		_, err := pump.Model()
-		if err != nil {
-			continue
-		}
-		count++
-		rssiSum += pump.Rssi()
+	_, err = pump.Model()
+	rssi := 0
+	if err == nil {
+		rssi = pump.Rssi()
+	} else {
+		rssi = -99
 	}
-	if count != 0 {
-		rssi = (rssiSum + count/2) / count
-	}
-	return Result{frequency: freq, count: count, rssi: rssi}
+	log.Printf("%s MHz: %d\n", shortFreq(f), rssi)
+	return rssi
 }
