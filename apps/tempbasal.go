@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	result, err := pump.PumpStatus()
+	result, err := pump.TempBasal()
 	if err != nil {
 		log.Fatal(err)
 	}

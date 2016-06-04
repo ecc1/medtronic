@@ -12,9 +12,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	model, err := pump.Model()
+	result, err := pump.Model()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(model)
+	fmt.Println(result)
 }

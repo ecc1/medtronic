@@ -3,35 +3,34 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/ecc1/medtronic"
 )
 
 func usage() {
-	log.Fatalf("Usage: %s YYYY-MM-DD HH:MM:SS (or \"now\")\n", os.Args[0])
+	log.Fatalf("Usage: %s duration units/hr\n", os.Args[0])
 }
 
 func main() {
-	var t time.Time
-	switch len(os.Args) {
-	case 3:
-		t = parseTime(os.Args[1] + " " + os.Args[2])
-	case 2:
-		if os.Args[1] == "now" {
-			t = time.Now()
-		} else {
-			usage()
-		}
-	default:
+	if len(os.Args) != 3 {
 		usage()
+	}
+	duration, err := time.ParseDuration(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+	rate, err := strconv.ParseFloat(os.Args[2], 32)
+	if err != nil {
+		log.Fatal(err)
 	}
 	pump, err := medtronic.Open()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("setting pump clock to %v\n", t)
-	err = pump.SetClock(t)
+	log.Printf("setting temporary basal of %.3f units/hour for %v\n", rate, duration)
+	err = pump.SetTempBasal(duration, int(rate*1000))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -12,9 +12,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	bat, err := pump.Battery()
+	result, err := pump.Battery()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%+v\n", bat)
+	fmt.Printf("%+v\n", result)
 }

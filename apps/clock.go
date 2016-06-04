@@ -12,9 +12,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	t, err := pump.Clock()
+	result, err := pump.Clock()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(t)
+	fmt.Println(result)
 }
