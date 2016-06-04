@@ -44,12 +44,19 @@ type CommandCode byte
 
 //go:generate stringer -type=CommandCode
 
-func noResponse(code CommandCode) error {
-	return fmt.Errorf("no response to %s", code.String())
+type NoResponseError CommandCode
+
+func (e NoResponseError) Error() string {
+	return fmt.Sprintf("no response to %s", CommandCode(e).String())
 }
 
-func unexpectedResponse(code CommandCode, data []byte) error {
-	return fmt.Errorf("unexpected response to %s: % X", code.String(), data)
+type BadResponseError struct {
+	command CommandCode
+	data    []byte
+}
+
+func (e BadResponseError) Error() string {
+	return fmt.Sprintf("unexpected response to %s: % X", e.command.String(), e.data)
 }
 
 func (pump *Pump) SetTimeout(t time.Duration) time.Duration {
@@ -115,19 +122,19 @@ func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandle
 			continue
 		}
 		if !expected(cmd, data) {
-			return nil, unexpectedResponse(cmd, data)
+			return nil, BadResponseError{command: cmd, data: data}
 		}
 		pump.rssi = response.Rssi
 		if handler != nil {
 			result := handler(data[5:])
 			if result == nil {
-				return nil, unexpectedResponse(cmd, data)
+				return nil, BadResponseError{command: cmd, data: data}
 			}
 			return result, nil
 		}
 		return nil, nil
 	}
-	return nil, noResponse(cmd)
+	return nil, NoResponseError(cmd)
 }
 
 func expected(cmd CommandCode, data []byte) bool {

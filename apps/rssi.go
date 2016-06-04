@@ -14,6 +14,11 @@ func main() {
 	}
 	_, err = pump.Model()
 	if err != nil {
+		_, noResponse := err.(medtronic.NoResponseError)
+		if noResponse {
+			fmt.Println(-99)
+			return
+		}
 		log.Fatal(err)
 	}
 	fmt.Println(pump.Rssi())
