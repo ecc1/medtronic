@@ -41,33 +41,31 @@ func (r *Radio) Outgoing() chan<- radio.Packet {
 }
 
 func (r *Radio) radio() {
-	var err error
-	receiving := false
 	go r.awaitInterrupts()
 	for {
-		select {
-		case packet := <-r.transmittedPackets:
-			if receiving {
-				err = r.changeState(SIDLE, STATE_IDLE)
-				if err != nil {
-					log.Fatal(err)
-				}
-				receiving = false
-			}
-			err = r.transmit(packet.Data)
-		case <-r.interrupt:
-			err = r.receive()
-		default:
-			if !receiving {
-				err = r.changeState(SRX, STATE_RX)
-				if err != nil {
-					log.Fatal(err)
-				}
-				receiving = true
-			}
-		}
+		err := r.changeState(SRX, STATE_RX)
 		if err != nil {
 			log.Fatal(err)
+		}
+		select {
+		case packet := <-r.transmittedPackets:
+			err := r.changeState(SIDLE, STATE_IDLE)
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = r.transmit(packet.Data)
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = r.changeState(SIDLE, STATE_IDLE)
+			if err != nil {
+				log.Fatal(err)
+			}
+		case <-r.interrupt:
+			err = r.receive()
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 }
@@ -85,6 +83,9 @@ func (r *Radio) awaitInterrupts() {
 func (r *Radio) transmit(data []byte) error {
 	if len(data) > maxPacketSize {
 		log.Panicf("attempting to send %d-byte packet\n", len(data))
+	}
+	if verbose {
+		log.Printf("sending %d-byte packet in %s state\n", len(data), r.State())
 	}
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
@@ -159,14 +160,14 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 			return fmt.Errorf("unexpected %s state during TXFIFO drain", StateName(s))
 		}
 		if verbose {
-			log.Printf("waiting to transmit %d bytes in state %s\n", n, r.State())
+			log.Printf("waiting to transmit %d bytes in %s state\n", n, r.State())
 		}
 		time.Sleep(byteDuration)
 	}
 	if verbose {
-		log.Printf("TX FIFO drained in state %s\n", r.State())
+		log.Printf("TX FIFO drained in %s state\n", r.State())
 	}
-	return r.changeState(SIDLE, STATE_IDLE)
+	return nil
 }
 
 func (r *Radio) receive() error {
@@ -174,6 +175,7 @@ func (r *Radio) receive() error {
 	for {
 		numBytes, err := r.ReadNumRxBytes()
 		if err == RxFifoOverflow {
+			// Flush RX FIFO and change back to RX.
 			r.changeState(SRX, STATE_RX)
 			continue
 		} else if err != nil {
@@ -239,10 +241,10 @@ func (r *Radio) receive() error {
 			}
 			r.receiveBuffer.Reset()
 			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
-		}
-		if verbose {
-			n, _ := r.ReadNumRxBytes()
-			log.Printf("received %d-byte packet in state %s; %d bytes remaining\n", size, r.State(), n)
+			if verbose {
+				n, _ := r.ReadNumRxBytes()
+				log.Printf("received %d-byte packet in %s state; %d bytes remaining\n", size, r.State(), n)
+			}
 		}
 		return nil
 	}
