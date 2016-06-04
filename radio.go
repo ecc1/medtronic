@@ -94,12 +94,7 @@ func (r *Radio) transmit(data []byte) error {
 	buffer[len(data)] = 0
 	buffer[len(data)+1] = 0
 	packet := buffer[:len(data)+2]
-	var err error
-	if len(packet) <= fifoSize {
-		err = r.transmitSmall(packet)
-	} else {
-		err = r.transmitLarge(packet)
-	}
+	err := r.send(packet)
 	if err == nil {
 		r.stats.Packets.Sent++
 		r.stats.Bytes.Sent += len(data)
@@ -107,23 +102,12 @@ func (r *Radio) transmit(data []byte) error {
 	return err
 }
 
-func (r *Radio) transmitSmall(data []byte) error {
-	err := r.WriteBurst(TXFIFO, data)
-	if err != nil {
-		return err
-	}
-	err = r.changeState(STX, STATE_TX)
-	if err != nil {
-		return err
-	}
-	return r.drainTxFifo(len(data))
-}
-
-// Transmit a packet that is larger than the TXFIFO size.
-// See TI Design Note DN500 (swra109c).
-func (r *Radio) transmitLarge(data []byte) error {
+func (r *Radio) send(data []byte) error {
 	avail := fifoSize
 	for {
+		if avail > len(data) {
+			avail = len(data)
+		}
 		err := r.WriteBurst(TXFIFO, data[:avail])
 		if err != nil {
 			return err
@@ -136,6 +120,8 @@ func (r *Radio) transmitLarge(data []byte) error {
 		if len(data) == 0 {
 			break
 		}
+		// Transmitting a packet that is larger than the TXFIFO size.
+		// See TI Design Note DN500 (swra109c).
 		// Err on the short side here to avoid TXFIFO underflow.
 		time.Sleep(fifoSize / 4 * byteDuration)
 		for {
