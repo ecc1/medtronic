@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 
 	"github.com/ecc1/medtronic"
+	"github.com/ecc1/radio"
 )
 
 const (
-	startFreq = uint32(916500000)
-	endFreq   = uint32(916800000)
+	startFreq = uint32(916000000)
+	endFreq   = uint32(917000000)
 	precision = uint32(10000)
 )
 
@@ -18,13 +20,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(shortFreq(searchFrequencies(pump)))
-}
-
-func shortFreq(freq uint32) string {
-	MHz := freq / 1000000
-	kHz := (freq % 1000000) / 1000
-	return fmt.Sprintf("%3d.%03d", MHz, kHz)
+	f := searchFrequencies(pump)
+	showResults(f)
+	fmt.Println(radio.MegaHertz(f))
 }
 
 // Use ternary search to find frequency with maximum RSSI.
@@ -50,22 +48,57 @@ func searchFrequencies(pump *medtronic.Pump) uint32 {
 	}
 }
 
+type Result struct {
+	frequency uint32
+	rssi      int
+}
+
+type Results []Result
+
+// Results implements sort.Interface based on frequency.
+
+func (r Results) Len() int           { return len(r) }
+func (r Results) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }
+func (r Results) Less(i, j int) bool { return r[i].frequency < r[j].frequency }
+
+var results Results
+
 func tryFrequency(pump *medtronic.Pump, freq uint32) int {
+	const sampleSize = 2
 	err := pump.Radio.SetFrequency(freq)
 	if err != nil {
 		log.Fatal(err)
 	}
-	f, err := pump.Radio.Frequency()
-	if err != nil {
-		log.Fatal(err)
+	rssi := -99
+	count := 0
+	sum := 0
+	for i := 0; i < sampleSize; i++ {
+		_, err = pump.Model()
+		if err != nil {
+			continue
+		}
+		sum += pump.Rssi()
+		count++
 	}
-	_, err = pump.Model()
-	rssi := 0
-	if err == nil {
-		rssi = pump.Rssi()
-	} else {
-		rssi = -99
+	if count != 0 {
+		rssi = (sum + count/2) / count
 	}
-	log.Printf("%s MHz: %d\n", shortFreq(f), rssi)
+	results = append(results, Result{frequency: freq, rssi: rssi})
 	return rssi
+}
+
+func showResults(winner uint32) {
+	sort.Sort(results)
+	for _, r := range results {
+		fmt.Printf("%s  %d ", radio.MegaHertz(r.frequency), r.rssi)
+		n := r.rssi + 99
+		for i := 0; i < n; i++ {
+			fmt.Print("━")
+		}
+		if r.frequency == winner {
+			fmt.Print(" ⏺")
+		}
+		fmt.Printf("\n")
+	}
+	fmt.Printf("\n")
 }
