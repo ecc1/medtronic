@@ -45,7 +45,7 @@ func dumpRegs(r *cc1101.Radio) {
 	regs := config.Bytes()
 	resetValue := cc1101.ResetRfConfiguration.Bytes()
 	for i, v := range regs {
-		fmt.Printf("%02X  %02X  %08b", i, v, v)
+		fmt.Printf("%02X  %02X  %08b", cc1101.IOCFG2+i, v, v)
 		r := resetValue[i]
 		if v == r {
 			fmt.Printf("\n")
