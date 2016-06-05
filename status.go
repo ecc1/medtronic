@@ -1,13 +1,8 @@
 package medtronic
 
 const (
-	PumpStatus CommandCode = 0xCE
+	Status CommandCode = 0xCE
 )
-
-// Possible values other than 3 (normal):
-// 0: rewinding
-// 1: preparing to prime
-// 2: priming
 
 type StatusInfo struct {
 	Normal    bool
@@ -15,11 +10,16 @@ type StatusInfo struct {
 	Suspended bool
 }
 
-func (pump *Pump) PumpStatus() (StatusInfo, error) {
-	result, err := pump.Execute(PumpStatus, func(data []byte) interface{} {
+func (pump *Pump) Status() (StatusInfo, error) {
+	result, err := pump.Execute(Status, func(data []byte) interface{} {
 		if len(data) < 4 || data[0] != 3 {
 			return nil
 		}
+		// Observed values for data[1]:
+		//   0: rewinding
+		//   1: preparing to prime
+		//   2: priming
+		//   3: normal
 		return StatusInfo{
 			Normal:    data[1] == 0x03,
 			Bolusing:  data[2] == 0x01,
