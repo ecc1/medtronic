@@ -146,3 +146,7 @@ func expected(cmd CommandCode, data []byte) bool {
 	}
 	return data[4] == byte(cmd) || data[4] == byte(Ack)
 }
+
+func twoByteInt(data []byte) int {
+	return int(data[0])<<8 | int(data[1])
+}

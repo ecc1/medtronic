@@ -6,13 +6,14 @@ const (
 
 func (pump *Pump) PumpId() (string, error) {
 	result, err := pump.Execute(PumpId, func(data []byte) interface{} {
-		if len(data) >= 1 {
-			n := int(data[0])
-			if len(data) >= 1+n {
-				return string(data[1 : 1+n])
-			}
+		if len(data) == 0 {
+			return nil
 		}
-		return nil
+		n := int(data[0])
+		if len(data) < 1+n {
+			return nil
+		}
+		return string(data[1 : 1+n])
 	})
 	if err != nil {
 		return "", err
