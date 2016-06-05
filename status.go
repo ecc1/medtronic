@@ -22,8 +22,8 @@ func (pump *Pump) Status() (StatusInfo, error) {
 		//   3: normal
 		return StatusInfo{
 			Normal:    data[1] == 0x03,
-			Bolusing:  data[2] == 0x01,
-			Suspended: data[3] == 0x01,
+			Bolusing:  data[2] == 1,
+			Suspended: data[3] == 1,
 		}
 	})
 	if err != nil {
