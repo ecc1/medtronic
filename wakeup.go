@@ -16,7 +16,9 @@ func (pump *Pump) Wakeup() error {
 	}
 	log.Printf("waking pump\n")
 	const (
-		numWakeups = 200
+		// Older pumps should have RF enabled to increase the
+		// frequency with which they listen for wakeups.
+		numWakeups = 75
 		xmitDelay  = 35 * time.Millisecond
 	)
 	packet := commandPacket(Wakeup, nil)
