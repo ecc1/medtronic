@@ -10,11 +10,12 @@ const (
 
 type SettingsInfo struct {
 	AutoOff              time.Duration
-	MaxBolus             int // milliUnits
-	MaxBasal             int // milliUnits
-	TempBasalPercent     int
 	InsulinAction        time.Duration
 	InsulinConcentration int // 50 or 100
+	MaxBolus             int // milliUnits
+	MaxBasal             int // milliUnits
+	RfEnabled            bool
+	TempBasalPercent     int
 }
 
 func (pump *Pump) Settings() (SettingsInfo, error) {
@@ -33,6 +34,7 @@ func (pump *Pump) Settings() (SettingsInfo, error) {
 		info := SettingsInfo{
 			AutoOff:          time.Duration(data[1]) * time.Hour,
 			MaxBolus:         int(data[6]) * 100,
+			RfEnabled:        data[13] == 1,
 			TempBasalPercent: int(data[16]),
 			InsulinAction:    time.Duration(data[18]) * time.Hour,
 		}
