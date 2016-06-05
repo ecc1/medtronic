@@ -56,3 +56,11 @@ func (r *Radio) WriteEach(data []byte) error {
 	}
 	return nil
 }
+
+func (r *Radio) Version() (uint16, error) {
+	v, err := r.ReadRegister(RegVersion)
+	if err != nil {
+		return 0, err
+	}
+	return uint16(v>>4)<<8 | uint16(v&0xF), nil
+}

@@ -33,25 +33,29 @@ func main() {
 
 	r.Reset()
 	fmt.Printf("\nTesting burst writes\n")
-	err = r.WriteBurst(rfm69.RegSyncValue1, []byte{0x44, 0x55, 0x66})
+	err = r.WriteBurst(rfm69.RegSyncValue1, []byte{0x77, 0x88, 0x99})
 	if err != nil {
 		log.Fatal(err)
 	}
 	readRegs(r)
-
 }
 
 func dumpRegs(r *rfm69.Radio) {
-	start := rfm69.RegOpMode
-	finish := rfm69.RegTestAfc
-	numRegs := finish - start + 1
-	fmt.Printf("Register dump:\n")
-	regs, err := r.ReadBurst(byte(start), numRegs)
+	fmt.Printf("\nConfiguration registers:\n")
+	config, err := r.ReadConfiguration()
 	if err != nil {
 		log.Fatal(err)
 	}
+	regs := config.Bytes()
+	resetValue := rfm69.ResetRfConfiguration.Bytes()
 	for i, v := range regs {
-		fmt.Printf("%02X  %02X  %08b\n", start+i, v, v)
+		fmt.Printf("%02X  %02X  %08b", rfm69.RegOpMode+i, v, v)
+		r := resetValue[i]
+		if v == r {
+			fmt.Printf("\n")
+		} else {
+			fmt.Printf("  **** SHOULD BE %02X  %08b\n", r, r)
+		}
 	}
 }
 

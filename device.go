@@ -2,6 +2,7 @@ package rfm69
 
 import (
 	"bytes"
+	"fmt"
 	"time"
 
 	"github.com/ecc1/gpio"
@@ -13,6 +14,7 @@ const (
 	spiSpeed     = 10000000 // Hz
 	interruptPin = 14       // Intel Edison GPIO connected to DIO0
 	resetPin     = 12       // Intel Edison GPIO connected to RESET
+	hwVersion    = 0x0204
 )
 
 type Radio struct {
@@ -45,14 +47,19 @@ func Open() (*Radio, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Radio{
+	r := &Radio{
 		device:             dev,
 		interruptPin:       intr,
 		resetPin:           reset,
 		transmittedPackets: make(chan radio.Packet, 100),
-		receivedPackets:    make(chan radio.Packet, 10),
-		interrupt:          make(chan struct{}, 10),
-	}, nil
+		receivedPackets:    make(chan radio.Packet, 100),
+		interrupt:          make(chan struct{}),
+	}
+	v, err := r.Version()
+	if err == nil && v != hwVersion {
+		err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
+	}
+	return r, err
 }
 
 // Reset module.  See section 7.2.2 of data sheet.
@@ -71,16 +78,16 @@ func (r *Radio) Reset() error {
 	return nil
 }
 
-func (r *Radio) Init() error {
+func (r *Radio) Init(frequency uint32) error {
 	err := r.Reset()
 	if err != nil {
 		return err
 	}
-	err = r.InitRF()
+	err = r.InitRF(frequency)
 	if err != nil {
 		return err
 	}
-	r.startRadio()
+	r.Start()
 	return nil
 }
 
