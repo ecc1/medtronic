@@ -1,9 +1,9 @@
 package medtronic
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/ecc1/cc1101"
@@ -34,7 +34,7 @@ func Open() (*Pump, error) {
 	if err != nil {
 		return nil, err
 	}
-	freq := defaultFreq()
+	freq := getFrequency()
 	log.Printf("setting frequency to %d\n", freq)
 	err = r.Init(freq)
 	if err != nil {
@@ -47,23 +47,20 @@ func Open() (*Pump, error) {
 	}, nil
 }
 
-func defaultFreq() uint32 {
+func getFrequency() uint32 {
 	s := os.Getenv(freqEnvVar)
 	if len(s) == 0 {
 		return uint32(defaultFrequency)
 	}
-	MHz := 0.0
-	n, err := fmt.Sscanf(s, "%f", &MHz)
-	if err == nil && n == 1 && 860.0 <= MHz && MHz <= 920.0 {
-		return uint32(MHz * 1000000.0)
-	}
-	Hz := uint32(0)
-	n, err = fmt.Sscanf(s, "%d", &Hz)
-	if err == nil && n == 1 && 860000000 <= Hz && Hz <= 920000000 {
-		return Hz
-	}
+	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		log.Fatalf("%s (%s): %v\n", freqEnvVar, s, err)
+		log.Fatalf("%s: %v\n", freqEnvVar, err)
+	}
+	if 860.0 <= f && f <= 920.0 {
+		return uint32(f * 1000000.0)
+	}
+	if 860000000.0 <= f && f <= 920000000.0 {
+		return uint32(f)
 	}
 	log.Fatalf("%s (%s): invalid pump frequency\n", freqEnvVar, s)
 	panic("unreachable")
