@@ -116,6 +116,258 @@ const (
 	RegTestAfc  = 0x71 // AFC offset for low modulation index AFC
 )
 
+type RfConfiguration struct {
+	// Omit RegFifo to avoid reading or writing it with this struct.
+	RegOpMode        byte // Operating modes of the transceiver
+	RegDataModul     byte // Data operation mode and Modulation settings
+	RegBitrateMsb    byte // Bit Rate setting, Most Significant Bits
+	RegBitrateLsb    byte // Bit Rate setting, Least Significant Bits
+	RegFdevMsb       byte // Frequency Deviation setting, Most Significant Bits
+	RegFdevLsb       byte // Frequency Deviation setting, Least Significant Bits
+	RegFrfMsb        byte // RF Carrier Frequency, Most Significant Bits
+	RegFrfMid        byte // RF Carrier Frequency, Intermediate Bits
+	RegFrfLsb        byte // RF Carrier Frequency, Least Significant Bits
+	RegOsc1          byte // RF Oscillators Settings
+	RegAfcCtrl       byte // AFC control in low modulation index situations
+	reserved0C       byte
+	RegListen1       byte // Listen Mode settings
+	RegListen2       byte // Listen Mode Idle duration
+	RegListen3       byte // Listen Mode Rx duration
+	RegVersion       byte // PA selection and Output Power control
+	RegPaLevel       byte // PA selection and Output Power control
+	RegPaRamp        byte // Control of the PA ramp time in FSK mode
+	RegOcp           byte // Over Current Protection control
+	reserved14       byte
+	reserved15       byte
+	reserved16       byte
+	reserved17       byte
+	RegLna           byte // LNA settings
+	RegRxBw          byte // Channel Filter BW Control
+	RegAfcBw         byte // Channel Filter BW control during the AFC routine
+	RegOokPeak       byte // OOK demodulator selection and control in peak mode
+	RegOokAvg        byte // Average threshold control of the OOK demodulator
+	RegOokFix        byte // Fixed threshold control of the OOK demodulator
+	RegAfcFei        byte // AFC and FEI control and status
+	RegAfcMsb        byte // MSB of the frequency correction of the AFC
+	RegAfcLsb        byte // LSB of the frequency correction of the AFC
+	RegFeiMsb        byte // MSB of the calculated frequency error
+	RegFeiLsb        byte // LSB of the calculated frequency error
+	RegRssiConfig    byte // RSSI-related settings
+	RegRssiValue     byte // RSSI value in dBm
+	RegDioMapping1   byte // Mapping of pins DIO0 to DIO3
+	RegDioMapping2   byte // Mapping of pins DIO4 and DIO5, ClkOut frequency
+	RegIrqFlags1     byte // Status register: PLL Lock state, Timeout, RSSI > Threshold...
+	RegIrqFlags2     byte // Status register: FIFO handling flags...
+	RegRssiThresh    byte // RSSI Threshold control
+	RegRxTimeout1    byte // Timeout duration between Rx request and RSSI detection
+	RegRxTimeout2    byte // Timeout duration between RSSI detection and PayloadReady
+	RegPreambleMsb   byte // Preamble length, MSB
+	RegPreambleLsb   byte // Preamble length, LSB
+	RegSyncConfig    byte // Sync Word Recognition control
+	RegSyncValue1    byte // Sync Word bytes, 1 through 8
+	RegSyncValue2    byte
+	RegSyncValue3    byte
+	RegSyncValue4    byte
+	RegSyncValue5    byte
+	RegSyncValue6    byte
+	RegSyncValue7    byte
+	RegSyncValue8    byte // Packet mode settings
+	RegPacketConfig1 byte // Packet mode settings
+	RegPayloadLength byte // Payload length setting
+	RegNodeAdrs      byte // Node address
+	RegBroadcastAdrs byte // Broadcast address
+	RegAutoModes     byte // Auto modes settings
+	RegFifoThresh    byte // Fifo threshold, Tx start condition
+	RegPacketConfig2 byte // Packet mode settings
+	RegAesKey1       byte // 16 bytes of the cypher key
+	RegAesKey2       byte
+	RegAesKey3       byte
+	RegAesKey4       byte
+	RegAesKey5       byte
+	RegAesKey6       byte
+	RegAesKey7       byte
+	RegAesKey8       byte
+	RegAesKey9       byte
+	RegAesKey10      byte
+	RegAesKey11      byte
+	RegAesKey12      byte
+	RegAesKey13      byte
+	RegAesKey14      byte
+	RegAesKey15      byte
+	RegAesKey16      byte // Temperature Sensor control
+	RegTemp1         byte // Temperature Sensor control
+	RegTemp2         byte // Temperature readout Omit test
+	// Omit test registers to avoid undefined behavior
+	// when reading or writing this struct.
+}
+
+// Configuration register values after reset,
+// according to data sheet section 6.
+var ResetRfConfiguration = RfConfiguration{
+	RegOpMode:        0x04,
+	RegDataModul:     0x00,
+	RegBitrateMsb:    0x1A,
+	RegBitrateLsb:    0x0B,
+	RegFdevMsb:       0x00,
+	RegFdevLsb:       0x52,
+	RegFrfMsb:        0xE4,
+	RegFrfMid:        0xC0,
+	RegFrfLsb:        0x00,
+	RegOsc1:          0x41,
+	RegAfcCtrl:       0x40, // unused bits; disagrees with data sheet
+	reserved0C:       0x02,
+	RegListen1:       0x92,
+	RegListen2:       0xF5,
+	RegListen3:       0x20,
+	RegVersion:       0x24,
+	RegPaLevel:       0x9F,
+	RegPaRamp:        0x09,
+	RegOcp:           0x1A,
+	reserved14:       0x40,
+	reserved15:       0xB0,
+	reserved16:       0x7B,
+	reserved17:       0x9B,
+	RegLna:           0x08,
+	RegRxBw:          0x86,
+	RegAfcBw:         0x8A,
+	RegOokPeak:       0x40,
+	RegOokAvg:        0x80,
+	RegOokFix:        0x06,
+	RegAfcFei:        0x10,
+	RegAfcMsb:        0x00,
+	RegAfcLsb:        0x00,
+	RegFeiMsb:        0x00,
+	RegFeiLsb:        0x00,
+	RegRssiConfig:    0x02,
+	RegRssiValue:     0xFF,
+	RegDioMapping1:   0x00,
+	RegDioMapping2:   0x05,
+	RegIrqFlags1:     0x80,
+	RegIrqFlags2:     0x00,
+	RegRssiThresh:    0xFF,
+	RegRxTimeout1:    0x00,
+	RegRxTimeout2:    0x00,
+	RegPreambleMsb:   0x00,
+	RegPreambleLsb:   0x03,
+	RegSyncConfig:    0x98,
+	RegSyncValue1:    0x00,
+	RegSyncValue2:    0x00,
+	RegSyncValue3:    0x00,
+	RegSyncValue4:    0x00,
+	RegSyncValue5:    0x00,
+	RegSyncValue6:    0x00,
+	RegSyncValue7:    0x00,
+	RegSyncValue8:    0x00,
+	RegPacketConfig1: 0x10,
+	RegPayloadLength: 0x40,
+	RegNodeAdrs:      0x00,
+	RegBroadcastAdrs: 0x00,
+	RegAutoModes:     0x00,
+	RegFifoThresh:    0x0F,
+	RegPacketConfig2: 0x02,
+	RegAesKey1:       0x00,
+	RegAesKey2:       0x00,
+	RegAesKey3:       0x00,
+	RegAesKey4:       0x00,
+	RegAesKey5:       0x00,
+	RegAesKey6:       0x00,
+	RegAesKey7:       0x00,
+	RegAesKey8:       0x00,
+	RegAesKey9:       0x00,
+	RegAesKey10:      0x00,
+	RegAesKey11:      0x00,
+	RegAesKey12:      0x00,
+	RegAesKey13:      0x00,
+	RegAesKey14:      0x00,
+	RegAesKey15:      0x00,
+	RegAesKey16:      0x00,
+	RegTemp1:         0x01,
+	RegTemp2:         0x00,
+}
+
+// Default (recommended) values, according to data sheet section 6.
+var DefaultRfConfiguration = RfConfiguration{
+	RegOpMode:        0x04,
+	RegDataModul:     0x00,
+	RegBitrateMsb:    0x1A,
+	RegBitrateLsb:    0x0B,
+	RegFdevMsb:       0x00,
+	RegFdevLsb:       0x52,
+	RegFrfMsb:        0xE4,
+	RegFrfMid:        0xC0,
+	RegFrfLsb:        0x00,
+	RegOsc1:          0x41,
+	RegAfcCtrl:       0x00,
+	reserved0C:       0x02,
+	RegListen1:       0x92,
+	RegListen2:       0xF5,
+	RegListen3:       0x20,
+	RegVersion:       0x24,
+	RegPaLevel:       0x9F,
+	RegPaRamp:        0x09,
+	RegOcp:           0x1A,
+	reserved14:       0x40,
+	reserved15:       0xB0,
+	reserved16:       0x7B,
+	reserved17:       0x9B,
+	RegLna:           0x88,
+	RegRxBw:          0x55,
+	RegAfcBw:         0x8B,
+	RegOokPeak:       0x40,
+	RegOokAvg:        0x80,
+	RegOokFix:        0x06,
+	RegAfcFei:        0x10,
+	RegAfcMsb:        0x00,
+	RegAfcLsb:        0x00,
+	RegFeiMsb:        0x00,
+	RegFeiLsb:        0x00,
+	RegRssiConfig:    0x02,
+	RegRssiValue:     0xFF,
+	RegDioMapping1:   0x00,
+	RegDioMapping2:   0x07,
+	RegIrqFlags1:     0x80,
+	RegIrqFlags2:     0x00,
+	RegRssiThresh:    0xE4,
+	RegRxTimeout1:    0x00,
+	RegRxTimeout2:    0x00,
+	RegPreambleMsb:   0x00,
+	RegPreambleLsb:   0x03,
+	RegSyncConfig:    0x98,
+	RegSyncValue1:    0x01,
+	RegSyncValue2:    0x01,
+	RegSyncValue3:    0x01,
+	RegSyncValue4:    0x01,
+	RegSyncValue5:    0x01,
+	RegSyncValue6:    0x01,
+	RegSyncValue7:    0x01,
+	RegSyncValue8:    0x01,
+	RegPacketConfig1: 0x10,
+	RegPayloadLength: 0x40,
+	RegNodeAdrs:      0x00,
+	RegBroadcastAdrs: 0x00,
+	RegAutoModes:     0x00,
+	RegFifoThresh:    0x8F,
+	RegPacketConfig2: 0x02,
+	RegAesKey1:       0x00,
+	RegAesKey2:       0x00,
+	RegAesKey3:       0x00,
+	RegAesKey4:       0x00,
+	RegAesKey5:       0x00,
+	RegAesKey6:       0x00,
+	RegAesKey7:       0x00,
+	RegAesKey8:       0x00,
+	RegAesKey9:       0x00,
+	RegAesKey10:      0x00,
+	RegAesKey11:      0x00,
+	RegAesKey12:      0x00,
+	RegAesKey13:      0x00,
+	RegAesKey14:      0x00,
+	RegAesKey15:      0x00,
+	RegAesKey16:      0x00,
+	RegTemp1:         0x01,
+	RegTemp2:         0x00,
+}
+
 // RegOpMode
 const (
 	SequencerOff    = 1 << 7

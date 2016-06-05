@@ -3,53 +3,81 @@ package rfm69
 import (
 	"fmt"
 	"log"
+	"unsafe"
 )
 
-func (r *Radio) InitRF() error {
-	err := r.WriteEach([]byte{
-		RegDataModul, PacketMode | ModulationTypeOOK | 0<<ModulationShapingShift,
+func (config *RfConfiguration) Bytes() []byte {
+	return (*[RegTemp2 - RegOpMode + 1]byte)(unsafe.Pointer(config))[:]
+}
 
-		// FxOsc / BitRate = 16385 baud
-		RegBitrateMsb, 0x07,
-		RegBitrateLsb, 0xA1,
+func (r *Radio) ReadConfiguration() (*RfConfiguration, error) {
+	regs, err := r.ReadBurst(RegOpMode, RegTemp2-RegOpMode+1)
+	return (*RfConfiguration)(unsafe.Pointer(&regs[0])), err
+}
 
-		// Use PA1 with 13 dbM output power
-		RegPaLevel, Pa1On | 0x1F<<OutputPowerShift,
+func (r *Radio) WriteConfiguration(config *RfConfiguration) error {
+	return r.WriteBurst(RegOpMode, config.Bytes())
+}
 
-		// Default != reset value
-		RegLna, LnaZin | 1<<LnaCurrentGainShift | 0<<LnaGainSelectShift,
+func (r *Radio) InitRF(frequency uint32) error {
+	rf := DefaultRfConfiguration
+	fb := frequencyBytes(frequency)
 
-		// FXOSC / (RxBwMant * 2^(RxBwExp + 3)) = 200 kHz
-		RegRxBw, 2<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift,
-		RegAfcBw, 4<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift,
+	rf.RegDataModul = PacketMode | ModulationTypeOOK | 2<<ModulationShapingShift
 
-		// Interrupt when Sync word is seen
-		RegDioMapping1, 2 << Dio0MappingShift,
+	// FxOsc / BitRate = 16385 baud
+	rf.RegBitrateMsb = 0x07
+	rf.RegBitrateLsb = 0xA1
 
-		// Default != reset value
-		RegDioMapping2, 7 << ClkOutShift,
+	rf.RegFrfMsb = fb[0]
+	rf.RegFrfMid = fb[1]
+	rf.RegFrfLsb = fb[2]
 
-		// Default != reset value
-		RegRssiThresh, 0xE4,
+	// Use PA1 with 13 dbM output power
+	rf.RegPaLevel = Pa1On | 0x1F<<OutputPowerShift
 
-		// Use 4 bytes for Sync word
-		RegSyncConfig, SyncOn | 3<<SyncSizeShift,
+	// Default != reset value
+	rf.RegLna = LnaZin | 1<<LnaCurrentGainShift | 0<<LnaGainSelectShift
 
-		// Sync word
-		RegSyncValue1, 0xFF,
-		RegSyncValue2, 0x00,
-		RegSyncValue3, 0xFF,
-		RegSyncValue4, 0x00,
+	// FXOSC / (RxBwMant * 2^(RxBwExp + 3)) = 200 kHz
+	rf.RegRxBw = 2<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift
+	rf.RegAfcBw = 4<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift
 
-		//XXX		RegPacketConfig1, VariableLength,
-		//XXX		RegPayloadLength, 0xFF,
-		RegFifoThresh, TxStartFifoNotEmpty | fifoThreshold<<FifoThresholdShift,
-		RegPacketConfig2, AutoRxRestartOff,
+	// Interrupt when Sync word is seen
+	rf.RegDioMapping1 = 2 << Dio0MappingShift
 
-		// Default != reset value
-		RegTestDagc, 0x30,
-	})
-	return err
+	// Default != reset value
+	rf.RegDioMapping2 = 7 << ClkOutShift
+
+	// Default != reset value
+	rf.RegRssiThresh = 0xE4
+
+	// Use 4 bytes for Sync word
+	rf.RegSyncConfig = SyncOn | 3<<SyncSizeShift
+
+	// Sync word
+	rf.RegSyncValue1 = 0xFF
+	rf.RegSyncValue2 = 0x00
+	rf.RegSyncValue3 = 0xFF
+	rf.RegSyncValue4 = 0x00
+
+	rf.RegPacketConfig1 = VariableLength
+	rf.RegPayloadLength = 0xFF
+	rf.RegFifoThresh = TxStartFifoNotEmpty | fifoThreshold<<FifoThresholdShift
+	rf.RegPacketConfig2 = AutoRxRestartOff
+
+	err := r.WriteConfiguration(&rf)
+	if err != nil {
+		return err
+	}
+
+	// Default != reset value
+	err = r.WriteRegister(RegTestDagc, 0x30)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *Radio) Frequency() (uint32, error) {
@@ -62,12 +90,16 @@ func (r *Radio) Frequency() (uint32, error) {
 }
 
 func (r *Radio) SetFrequency(freq uint32) error {
+	return r.WriteBurst(RegFrfMsb, frequencyBytes(freq))
+}
+
+func frequencyBytes(freq uint32) []byte {
 	f := (uint64(freq)<<19 + FXOSC/2) / FXOSC
-	return r.WriteBurst(RegFrfMsb, []byte{
+	return []byte{
 		byte(f >> 16),
 		byte(f >> 8),
 		byte(f),
-	})
+	}
 }
 
 func (r *Radio) ReadRSSI() (int, error) {
