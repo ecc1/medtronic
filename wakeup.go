@@ -10,9 +10,9 @@ const (
 )
 
 func (pump *Pump) Wakeup() error {
-	m, err := pump.Model()
+	model, err := pump.Model()
 	if err == nil {
-		log.Printf("model %s pump is awake\n", m)
+		log.Printf("model %s pump is awake\n", model)
 		return nil
 	}
 	log.Printf("waking pump\n")
