@@ -20,6 +20,9 @@ const (
 type Pump struct {
 	Radio radio.Interface
 
+	// 22 for 522/722, 23 for 523/723, etc.
+	family int
+
 	// Implicit parameters for command execution.
 	timeout time.Duration
 	retries int
@@ -35,7 +38,7 @@ func Open() (*Pump, error) {
 		return nil, err
 	}
 	freq := getFrequency()
-	log.Printf("setting frequency to %d\n", freq)
+	log.Printf("setting frequency to %s\n", radio.MegaHertz(freq))
 	err = r.Init(freq)
 	if err != nil {
 		return nil, err
