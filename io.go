@@ -27,7 +27,7 @@ func (r *Radio) ReadRegister(addr byte) (byte, error) {
 func (r *Radio) ReadBurst(addr byte, n int) ([]byte, error) {
 	reg := addr & 0x3F
 	if 0x30 <= reg && reg <= 0x3D {
-		log.Panicf("burst access for status register %X is not available\n", reg)
+		log.Panicf("burst access for status register %X is not available", reg)
 	}
 	buf := make([]byte, n+1)
 	buf[0] = READ_MODE | BURST_MODE | addr
@@ -67,7 +67,7 @@ func (r *Radio) WriteEach(data []byte) error {
 
 func (r *Radio) Strobe(cmd byte) (byte, error) {
 	if verbose && cmd != SNOP {
-		log.Printf("issuing %s command\n", strobeName(cmd))
+		log.Printf("issuing %s command", strobeName(cmd))
 	}
 	buf := []byte{cmd}
 	err := r.device.Transfer(buf)

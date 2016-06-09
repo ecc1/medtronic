@@ -11,10 +11,10 @@ import (
 func main() {
 	log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
 	if len(os.Args) != 2 {
-		log.Fatalf("Usage: %s frequency\n", os.Args[0])
+		log.Fatalf("Usage: %s frequency", os.Args[0])
 	}
 	frequency := getFrequency(os.Args[1])
-	log.Printf("setting frequency to %d\n", frequency)
+	log.Printf("setting frequency to %d", frequency)
 	r, err := cc1101.Open()
 	if err != nil {
 		log.Fatal(err)
@@ -24,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	for packet := range r.Incoming() {
-		log.Printf("% X (RSSI = %d)\n", packet.Data, packet.Rssi)
+		log.Printf("% X (RSSI = %d)", packet.Data, packet.Rssi)
 	}
 }
 
@@ -39,6 +39,6 @@ func getFrequency(s string) uint32 {
 	if 860000000.0 <= f && f <= 920000000.0 {
 		return uint32(f)
 	}
-	log.Fatalf("%s: invalid pump frequency\n", s)
+	log.Fatalf("%s: invalid pump frequency", s)
 	panic("unreachable")
 }

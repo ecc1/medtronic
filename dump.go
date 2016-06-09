@@ -5,14 +5,14 @@ import (
 )
 
 func (r *Radio) DumpRF() {
-	log.Printf("State: %s\n", r.State())
+	log.Printf("State: %s", r.State())
 
 	freq, err := r.Frequency()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Frequency: %d\n", freq)
-	log.Printf("Channel: %d\n", r.readReg(CHANNR))
+	log.Printf("Frequency: %d", freq)
+	log.Printf("Channel: %d", r.readReg(CHANNR))
 	r.showFreqSynthControl()
 	r.showModemConfig()
 	pa, err := r.ReadPaTable()
@@ -20,7 +20,7 @@ func (r *Radio) DumpRF() {
 		log.Fatal(err)
 	}
 	n := r.readReg(FREND0) & FREND0_PA_POWER_MASK
-	log.Printf("PATABLE: % X using 0..%d\n", pa, n)
+	log.Printf("PATABLE: % X using 0..%d", pa, n)
 }
 
 func (r *Radio) readReg(addr byte) byte {
@@ -36,8 +36,8 @@ func (r *Radio) showFreqSynthControl() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Intermediate frequency: %d Hz\n", f)
-	log.Printf("Frequency offset: %d Hz\n", r.readReg(FSCTRL0))
+	log.Printf("Intermediate frequency: %d Hz", f)
+	log.Printf("Frequency offset: %d Hz", r.readReg(FSCTRL0))
 }
 
 func (r *Radio) showModemConfig() {
@@ -45,29 +45,29 @@ func (r *Radio) showModemConfig() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Channel bandwidth: %d Hz\n", chanbw)
-	log.Printf("Data rate: %d Baud\n", drate)
+	log.Printf("Channel bandwidth: %d Hz", chanbw)
+	log.Printf("Data rate: %d Baud", drate)
 
 	m2 := r.readReg(MDMCFG2)
 	showBoolCondition("DC blocking filter", m2&MDMCFG2_DEM_DCFILT_OFF == 0)
 	showBoolCondition("Manchester encoding", m2&(1<<3) != 0)
-	log.Printf("Modulation format: %s\n", modFormat[(m2&MDMCFG2_MOD_FORMAT_MASK)>>4])
-	log.Printf("Sync mode: %s\n", syncMode[m2&MDMCFG2_SYNC_MODE_MASK])
+	log.Printf("Modulation format: %s", modFormat[(m2&MDMCFG2_MOD_FORMAT_MASK)>>4])
+	log.Printf("Sync mode: %s", syncMode[m2&MDMCFG2_SYNC_MODE_MASK])
 
 	fec, minPreamble, chanspc, err := r.ReadModemConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 	showBoolCondition("Forward Error Correction", fec)
-	log.Printf("Min preamble bytes: %d\n", minPreamble)
-	log.Printf("Channel spacing: %d Hz\n", chanspc)
+	log.Printf("Min preamble bytes: %d", minPreamble)
+	log.Printf("Channel spacing: %d Hz", chanspc)
 }
 
 func showBoolCondition(name string, cond bool) {
 	if cond {
-		log.Printf("%s: enabled\n", name)
+		log.Printf("%s: enabled", name)
 	} else {
-		log.Printf("%s: disabled\n", name)
+		log.Printf("%s: disabled", name)
 	}
 }
 

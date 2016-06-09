@@ -12,7 +12,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("Resetting radio\n")
+	log.Printf("Resetting radio")
 	err = r.Reset()
 	if err != nil {
 		log.Fatal(err)
@@ -21,7 +21,7 @@ func main() {
 
 	freq := uint32(916600000)
 	log.Println("")
-	log.Printf("Initializing radio to %d MHz\n", freq)
+	log.Printf("Initializing radio to %d MHz", freq)
 	err = r.InitRF(freq)
 	if err != nil {
 		log.Fatal(err)
@@ -30,7 +30,7 @@ func main() {
 
 	log.Println("")
 	freq += 500000
-	log.Printf("Changing frequency to %d\n", freq)
+	log.Printf("Changing frequency to %d", freq)
 	err = r.SetFrequency(freq)
 	if err != nil {
 		log.Fatal(err)

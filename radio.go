@@ -73,7 +73,7 @@ func (r *Radio) radio() {
 func (r *Radio) awaitInterrupts() {
 	for {
 		if verbose {
-			log.Printf("waiting for interrupt in %s state\n", r.State())
+			log.Printf("waiting for interrupt in %s state", r.State())
 		}
 		r.interruptPin.Wait()
 		r.interrupt <- struct{}{}
@@ -82,10 +82,10 @@ func (r *Radio) awaitInterrupts() {
 
 func (r *Radio) transmit(data []byte) error {
 	if len(data) > maxPacketSize {
-		log.Panicf("attempting to send %d-byte packet\n", len(data))
+		log.Panicf("attempting to send %d-byte packet", len(data))
 	}
 	if verbose {
-		log.Printf("sending %d-byte packet in %s state\n", len(data), r.State())
+		log.Printf("sending %d-byte packet in %s state", len(data), r.State())
 	}
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
@@ -160,12 +160,12 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 			return fmt.Errorf("unexpected %s state during TXFIFO drain", StateName(s))
 		}
 		if verbose {
-			log.Printf("waiting to transmit %d bytes in %s state\n", n, r.State())
+			log.Printf("waiting to transmit %d bytes in %s state", n, r.State())
 		}
 		time.Sleep(byteDuration)
 	}
 	if verbose {
-		log.Printf("TX FIFO drained in %s state\n", r.State())
+		log.Printf("TX FIFO drained in %s state", r.State())
 	}
 	return nil
 }
@@ -243,7 +243,7 @@ func (r *Radio) receive() error {
 			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
 			if verbose {
 				n, _ := r.ReadNumRxBytes()
-				log.Printf("received %d-byte packet in %s state; %d bytes remaining\n", size, r.State(), n)
+				log.Printf("received %d-byte packet in %s state; %d bytes remaining", size, r.State(), n)
 			}
 		}
 		return nil
@@ -265,7 +265,7 @@ func (r *Radio) drainRxFifo() error {
 	}
 	switch s {
 	case STATE_RX:
-		log.Printf("draining %d bytes from RXFIFO\n", n)
+		log.Printf("draining %d bytes from RXFIFO", n)
 		_, err = r.ReadBurst(RXFIFO, int(n))
 		return err
 	default:
@@ -279,7 +279,7 @@ func (r *Radio) changeState(strobe byte, desired byte) error {
 		return err
 	}
 	if verbose && s != desired {
-		log.Printf("change from %s to %s\n", StateName(s), StateName(desired))
+		log.Printf("change from %s to %s", StateName(s), StateName(desired))
 	}
 	for {
 		switch s {
@@ -297,7 +297,7 @@ func (r *Radio) changeState(strobe byte, desired byte) error {
 		}
 		s = (s >> STATE_SHIFT) & STATE_MASK
 		if verbose {
-			log.Printf("  %s\n", StateName(s))
+			log.Printf("  %s", StateName(s))
 		}
 	}
 }
