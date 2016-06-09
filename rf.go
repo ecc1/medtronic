@@ -21,7 +21,8 @@ func (r *Radio) WriteConfiguration(config *RfConfiguration) error {
 
 func (r *Radio) InitRF(frequency uint32) error {
 	rf := DefaultRfConfiguration
-	fb := frequencyBytes(frequency)
+	fb := frequencyToRegisters(frequency)
+	bw := channelBwToRegister(250000)
 
 	rf.RegDataModul = PacketMode | ModulationTypeOOK | 2<<ModulationShapingShift
 
@@ -39,9 +40,8 @@ func (r *Radio) InitRF(frequency uint32) error {
 	// Default != reset value
 	rf.RegLna = LnaZin | 1<<LnaCurrentGainShift | 0<<LnaGainSelectShift
 
-	// FXOSC / (RxBwMant * 2^(RxBwExp + 3)) = 200 kHz
-	rf.RegRxBw = 2<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift
-	rf.RegAfcBw = 4<<DccFreqShift | RxBwMant20 | 0<<RxBwExpShift
+	rf.RegRxBw = 2<<DccFreqShift | bw
+	rf.RegAfcBw = 4<<DccFreqShift | bw
 
 	// Interrupt when Sync word is seen
 	rf.RegDioMapping1 = 2 << Dio0MappingShift
@@ -82,24 +82,21 @@ func (r *Radio) InitRF(frequency uint32) error {
 
 func (r *Radio) Frequency() (uint32, error) {
 	frf, err := r.ReadBurst(RegFrfMsb, 3)
-	if err != nil {
-		return 0, err
-	}
+	return registersToFrequency(frf), err
+}
+
+func registersToFrequency(frf []byte) uint32 {
 	f := uint32(frf[0])<<16 + uint32(frf[1])<<8 + uint32(frf[2])
-	return uint32(uint64(f) * FXOSC >> 19), nil
+	return uint32(uint64(f) * FXOSC >> 19)
 }
 
 func (r *Radio) SetFrequency(freq uint32) error {
-	return r.WriteBurst(RegFrfMsb, frequencyBytes(freq))
+	return r.WriteBurst(RegFrfMsb, frequencyToRegisters(freq))
 }
 
-func frequencyBytes(freq uint32) []byte {
+func frequencyToRegisters(freq uint32) []byte {
 	f := (uint64(freq)<<19 + FXOSC/2) / FXOSC
-	return []byte{
-		byte(f >> 16),
-		byte(f >> 8),
-		byte(f),
-	}
+	return []byte{byte(f >> 16), byte(f >> 8), byte(f)}
 }
 
 func (r *Radio) ReadRSSI() (int, error) {
@@ -127,11 +124,19 @@ func (r *Radio) ReadModulationType() (byte, error) {
 	return m & ModulationTypeMask, nil
 }
 
-func (r *Radio) ReadChannelBw() (uint32, error) {
+func (r *Radio) ChannelBw() (uint32, error) {
 	bw, err := r.ReadRegister(RegRxBw)
 	if err != nil {
 		return 0, err
 	}
+	m, err := r.ReadModulationType()
+	if err != nil {
+		return 0, err
+	}
+	return registerToChannelBw(bw, m), nil
+}
+
+func registerToChannelBw(bw byte, modType byte) uint32 {
 	mant := 0
 	switch bw & RxBwMantMask {
 	case RxBwMant16:
@@ -141,21 +146,55 @@ func (r *Radio) ReadChannelBw() (uint32, error) {
 	case RxBwMant24:
 		mant = 24
 	default:
-		panic(fmt.Sprintf("unknown RX bandwidth mantissa (%X)", bw&RxBwMantMask))
+		log.Panicf("unknown RX bandwidth mantissa (%X)", bw&RxBwMantMask)
 	}
 	e := bw & RxBwExpMask
-	m, err := r.ReadModulationType()
-	if err != nil {
-		return 0, err
-	}
-	switch m {
+	switch modType {
 	case ModulationTypeFSK:
-		return uint32(FXOSC) / (uint32(mant) << (e + 2)), nil
+		return uint32(FXOSC) / (uint32(mant) << (e + 2))
 	case ModulationTypeOOK:
-		return uint32(FXOSC) / (uint32(mant) << (e + 3)), nil
+		return uint32(FXOSC) / (uint32(mant) << (e + 3))
 	default:
-		panic(fmt.Sprintf("unknown modulation mode (%X)", m))
+		log.Panicf("unknown modulation mode (%X)", modType)
 	}
+	panic("unreachable")
+}
+
+func (r *Radio) SetChannelBw(bw uint32) error {
+	v := channelBwToRegister(bw)
+	err := r.WriteRegister(RegRxBw, 2<<DccFreqShift|v)
+	if err != nil {
+		return err
+	}
+	return r.WriteRegister(RegAfcBw, 4<<DccFreqShift|v)
+}
+
+// Channel BW = FXOSC / (RxBwMant * 2^(RxBwExp + 3), assuming OOK modulation.
+// The caller must add the desired DccFreq field to the result.
+func channelBwToRegister(bw uint32) byte {
+	bb := uint32(1302) // lowest possible channel bandwidth
+	rr := byte(RxBwMant24 | 7<<RxBwExpShift)
+	if bw < bb {
+		return rr
+	}
+	for i := 0; i < 8; i++ {
+		e := byte(7 - i)
+		for j := 0; j < 3; j++ {
+			m := byte((6 - j) * 4)
+			b := uint32(FXOSC) / (uint32(m) << (e + 3))
+			r := byte(2-j)<<RxBwMantShift | e<<RxBwExpShift
+			if b >= bw {
+				if b-bw < bw-bb {
+					return r
+				} else {
+					return rr
+				}
+			}
+			bb = b
+			rr = r
+		}
+	}
+	return rr
 }
 
 func (r *Radio) mode() (uint8, error) {

@@ -436,14 +436,15 @@ const (
 
 // RegRxBw
 const (
-	DccFreqShift = 5
-	DccFreqMask  = 7 << 5
-	RxBwMantMask = 3 << 3
-	RxBwMant16   = 0 << 3
-	RxBwMant20   = 1 << 3
-	RxBwMant24   = 2 << 3
-	RxBwExpShift = 0
-	RxBwExpMask  = 7 << 0
+	DccFreqShift  = 5
+	DccFreqMask   = 7 << 5
+	RxBwMantShift = 3
+	RxBwMantMask  = 3 << 3
+	RxBwMant16    = 0 << 3
+	RxBwMant20    = 1 << 3
+	RxBwMant24    = 2 << 3
+	RxBwExpShift  = 0
+	RxBwExpMask   = 7 << 0
 )
 
 // RegOokPeak

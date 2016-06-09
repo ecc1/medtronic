@@ -37,6 +37,16 @@ func main() {
 	}
 	dumpRF(r)
 
+	bw := uint32(100000)
+	log.Println("")
+	log.Printf("Changing channel bandwidth to %d Hz\n", bw)
+	err = r.SetChannelBw(bw)
+	if err != nil {
+		log.Fatal(err)
+	}
+	dumpRF(r)
+
+
 	log.Println("")
 	log.Printf("Sleeping\n")
 	err = r.Sleep()
@@ -75,7 +85,7 @@ func dumpRF(r *rfm69.Radio) {
 	}
 	log.Printf("Bitrate: %d baud\n", bitrate)
 
-	bw, err := r.ReadChannelBw()
+	bw, err := r.ChannelBw()
 	if err != nil {
 		log.Fatal(err)
 	}
