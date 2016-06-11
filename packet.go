@@ -2,31 +2,30 @@ package medtronic
 
 import (
 	"fmt"
-
-	"github.com/ecc1/radio"
 )
 
-func (pump *Pump) DecodePacket(packet radio.Packet) ([]byte, error) {
-	data, err := Decode6b4b(packet.Data)
+func (pump *Pump) DecodePacket(packet []byte) []byte {
+	data, err := Decode6b4b(packet)
 	if err != nil {
+		pump.err = err
 		pump.DecodingErrors++
-		return nil, err
+		return data
 	}
 	crc := Crc8(data[:len(data)-1])
 	if data[len(data)-1] != crc {
+		pump.err = fmt.Errorf("CRC should be %X, not %X", crc, data[len(data)-1])
 		pump.CrcErrors++
-		return data, fmt.Errorf("CRC should be %X, not %X", crc, data[len(data)-1])
 	}
-	return data, nil
+	return data
 }
 
-func EncodePacket(data []byte) radio.Packet {
+func EncodePacket(data []byte) []byte {
 	// Don't use append() to add the CRC, because append
 	// may write into the array underlying the caller's slice.
 	buf := make([]byte, len(data)+1)
 	copy(buf, data)
 	buf[len(data)] = Crc8(data)
-	return radio.Packet{Data: Encode4b6b(buf)}
+	return Encode4b6b(buf)
 }
 
 func (pump *Pump) PrintStats() {

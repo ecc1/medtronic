@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
-
-	"github.com/ecc1/radio"
 )
 
 const (
@@ -27,10 +24,10 @@ func initCommandPrefix() {
 	}
 	id := os.Getenv(pumpEnvVar)
 	if len(id) == 0 {
-		log.Fatalf("%s environment variable is not set\n", pumpEnvVar)
+		log.Fatalf("%s environment variable is not set", pumpEnvVar)
 	}
 	if len(id) != 6 {
-		log.Fatalf("%s environment variable must be 6 digits\n", pumpEnvVar)
+		log.Fatalf("%s environment variable must be 6 digits", pumpEnvVar)
 	}
 	commandPrefix = []byte{
 		PumpDevice,
@@ -59,25 +56,9 @@ func (e BadResponseError) Error() string {
 	return fmt.Sprintf("unexpected response to %s: % X", e.command.String(), e.data)
 }
 
-func (pump *Pump) SetTimeout(t time.Duration) time.Duration {
-	prev := pump.timeout
-	pump.timeout = t
-	return prev
-}
-
-func (pump *Pump) SetRetries(n int) int {
-	prev := pump.retries
-	pump.retries = n
-	return prev
-}
-
-func (pump *Pump) Rssi() int {
-	return pump.rssi
-}
-
 type ResponseHandler func([]byte) interface{}
 
-func commandPacket(cmd CommandCode, params []byte) radio.Packet {
+func commandPacket(cmd CommandCode, params []byte) []byte {
 	initCommandPrefix()
 	n := len(commandPrefix)
 	var data []byte
@@ -97,44 +78,47 @@ func commandPacket(cmd CommandCode, params []byte) radio.Packet {
 
 // Commands with parameters require an initial exchange with no parameters,
 // followed by an exchange with arguments.
-func (pump *Pump) Execute(cmd CommandCode, handler ResponseHandler, params ...byte) (interface{}, error) {
-	result, err := pump.perform(cmd, nil, handler)
-	if err != nil || len(params) == 0 {
-		return result, err
+func (pump *Pump) Execute(cmd CommandCode, handler ResponseHandler, params ...byte) interface{} {
+	result := pump.perform(cmd, nil, handler)
+	if len(params) != 0 {
+		result = pump.perform(cmd, params, handler)
 	}
-	return pump.perform(cmd, params, handler)
+	return result
 }
 
-func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandler) (interface{}, error) {
+func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandler) interface{} {
+	if pump.Error() != nil {
+		return nil
+	}
 	packet := commandPacket(cmd, params)
 	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
-		pump.Radio.Outgoing() <- packet
-		timeout := time.After(pump.timeout)
-		var response radio.Packet
-		select {
-		case response = <-pump.Radio.Incoming():
-			break
-		case <-timeout:
+		pump.Radio.Send(packet)
+		response, rssi := pump.Radio.Receive(pump.timeout)
+		if response == nil {
+			pump.SetError(nil)
 			continue
 		}
-		data, err := pump.DecodePacket(response)
-		if err != nil {
+		data := pump.DecodePacket(response)
+		if pump.Error() != nil {
+			pump.SetError(nil)
 			continue
 		}
 		if !expected(cmd, data) {
-			return nil, BadResponseError{command: cmd, data: data}
+			pump.err = BadResponseError{command: cmd, data: data}
+			return nil
 		}
-		pump.rssi = response.Rssi
+		pump.rssi = rssi
 		if handler != nil {
 			result := handler(data[5:])
 			if result == nil {
-				return nil, BadResponseError{command: cmd, data: data}
+				pump.err = BadResponseError{command: cmd, data: data}
 			}
-			return result, nil
+			return result
 		}
-		return nil, nil
+		return nil
 	}
-	return nil, NoResponseError(cmd)
+	pump.err = NoResponseError(cmd)
+	return nil
 }
 
 func expected(cmd CommandCode, data []byte) bool {

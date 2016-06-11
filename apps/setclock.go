@@ -9,7 +9,7 @@ import (
 )
 
 func usage() {
-	log.Fatalf("Usage: %s YYYY-MM-DD HH:MM:SS (or \"now\")\n", os.Args[0])
+	log.Fatalf("Usage: %s YYYY-MM-DD HH:MM:SS (or \"now\")", os.Args[0])
 }
 
 func main() {
@@ -26,14 +26,11 @@ func main() {
 	default:
 		usage()
 	}
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("setting pump clock to %v\n", t)
-	err = pump.SetClock(t)
-	if err != nil {
-		log.Fatal(err)
+	pump := medtronic.Open()
+	log.Printf("setting pump clock to %v", t)
+	pump.SetClock(t)
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
 	}
 }
 
@@ -41,7 +38,7 @@ func parseTime(date string) time.Time {
 	const layout = "2006-01-02 15:04:05"
 	t, err := time.ParseInLocation(layout, date, time.Local)
 	if err != nil {
-		log.Fatalf("Cannot parse %s: %v\n", date, err)
+		log.Fatalf("Cannot parse %s: %v", date, err)
 	}
 	return t
 }

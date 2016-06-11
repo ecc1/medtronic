@@ -4,8 +4,8 @@ const (
 	PumpId CommandCode = 0x71
 )
 
-func (pump *Pump) PumpId() (string, error) {
-	result, err := pump.Execute(PumpId, func(data []byte) interface{} {
+func (pump *Pump) PumpId() string {
+	result := pump.Execute(PumpId, func(data []byte) interface{} {
 		if len(data) == 0 {
 			return nil
 		}
@@ -15,8 +15,8 @@ func (pump *Pump) PumpId() (string, error) {
 		}
 		return string(data[1 : 1+n])
 	})
-	if err != nil {
-		return "", err
+	if pump.Error() != nil {
+		return ""
 	}
-	return result.(string), nil
+	return result.(string)
 }

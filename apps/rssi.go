@@ -8,15 +8,13 @@ import (
 )
 
 func main() {
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = pump.Model()
+	pump := medtronic.Open()
+	pump.Model()
+	err := pump.Error()
 	if err != nil {
 		_, noResponse := err.(medtronic.NoResponseError)
 		if noResponse {
-			fmt.Println(-99)
+			fmt.Println(-128)
 			return
 		}
 		log.Fatal(err)

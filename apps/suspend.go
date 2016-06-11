@@ -9,22 +9,19 @@ import (
 )
 
 func main() {
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
 	prog := path.Base(os.Args[0])
+	var turnOff bool
 	switch prog {
 	case "suspend":
-		log.Printf("suspending pump\n")
-		err = pump.Suspend(true)
+		turnOff = true
 	case "resume":
-		log.Printf("resuming pump\n")
-		err = pump.Suspend(false)
+		turnOff = false
 	default:
-		log.Fatalf("Program name (%s) must be \"suspend\" or \"resume\"\n", prog)
+		log.Fatalf("Program name (%s) must be \"suspend\" or \"resume\"", prog)
 	}
-	if err != nil {
-		log.Fatal(err)
+	pump := medtronic.Open()
+	pump.Suspend(turnOff)
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
 	}
 }

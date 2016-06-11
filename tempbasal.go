@@ -28,8 +28,8 @@ type PercentTempBasalInfo struct {
 func (info PercentTempBasalInfo) tagTempBasalInfo() {
 }
 
-func (pump *Pump) TempBasal() (TempBasalInfo, error) {
-	result, err := pump.Execute(TempBasal, func(data []byte) interface{} {
+func (pump *Pump) TempBasal() TempBasalInfo {
+	result := pump.Execute(TempBasal, func(data []byte) interface{} {
 		if len(data) < 7 || data[0] != 6 {
 			return nil
 		}
@@ -51,8 +51,8 @@ func (pump *Pump) TempBasal() (TempBasalInfo, error) {
 		}
 		return info
 	})
-	if err != nil {
-		return nil, err
+	if pump.Error() != nil {
+		return nil
 	}
-	return result.(TempBasalInfo), nil
+	return result.(TempBasalInfo)
 }

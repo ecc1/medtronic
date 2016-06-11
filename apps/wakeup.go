@@ -7,12 +7,9 @@ import (
 )
 
 func main() {
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = pump.Wakeup()
-	if err != nil {
-		log.Fatal(err)
+	pump := medtronic.Open()
+	pump.Wakeup()
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
 	}
 }

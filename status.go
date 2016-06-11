@@ -10,8 +10,8 @@ type StatusInfo struct {
 	Suspended bool
 }
 
-func (pump *Pump) Status() (StatusInfo, error) {
-	result, err := pump.Execute(Status, func(data []byte) interface{} {
+func (pump *Pump) Status() StatusInfo {
+	result := pump.Execute(Status, func(data []byte) interface{} {
 		if len(data) < 4 || data[0] != 3 {
 			return nil
 		}
@@ -26,8 +26,8 @@ func (pump *Pump) Status() (StatusInfo, error) {
 			Suspended: data[3] == 1,
 		}
 	})
-	if err != nil {
-		return StatusInfo{}, err
+	if pump.Error() != nil {
+		return StatusInfo{}
 	}
-	return result.(StatusInfo), nil
+	return result.(StatusInfo)
 }

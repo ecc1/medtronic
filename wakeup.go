@@ -9,12 +9,12 @@ const (
 	Wakeup CommandCode = 0x5D
 )
 
-func (pump *Pump) Wakeup() error {
-	_, err := pump.Model()
-	if err == nil {
-		return nil
+func (pump *Pump) Wakeup() {
+	pump.Model()
+	if pump.Error() == nil {
+		return
 	}
-	log.Printf("waking pump\n")
+	log.Printf("waking pump")
 	const (
 		// Older pumps should have RF enabled to increase the
 		// frequency with which they listen for wakeups.
@@ -23,13 +23,14 @@ func (pump *Pump) Wakeup() error {
 	)
 	packet := commandPacket(Wakeup, nil)
 	for i := 0; i < numWakeups; i++ {
-		pump.Radio.Outgoing() <- packet
+		pump.Radio.Send(packet)
 		time.Sleep(xmitDelay)
 	}
-	n := pump.SetRetries(1)
+	n := pump.Retries()
+	pump.SetRetries(1)
 	defer pump.SetRetries(n)
-	t := pump.SetTimeout(10 * time.Second)
+	t := pump.Timeout()
+	pump.SetTimeout(10 * time.Second)
 	defer pump.SetTimeout(t)
-	_, err = pump.Execute(Wakeup, nil)
-	return err
+	pump.Execute(Wakeup, nil)
 }

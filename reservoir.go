@@ -5,10 +5,10 @@ const (
 )
 
 // Reservoir returns the amount of insulin remaining, in milliUnits.
-func (pump *Pump) Reservoir() (int, error) {
+func (pump *Pump) Reservoir() int {
 	// Format of response depends on the pump family.
 	newer := pump.Family() >= 23
-	result, err := pump.Execute(Reservoir, func(data []byte) interface{} {
+	result := pump.Execute(Reservoir, func(data []byte) interface{} {
 		if newer {
 			if len(data) < 5 || data[0] != 4 {
 				return nil
@@ -21,8 +21,8 @@ func (pump *Pump) Reservoir() (int, error) {
 			return twoByteInt(data[1:3]) * 100
 		}
 	})
-	if err != nil {
-		return 0, err
+	if pump.Error() != nil {
+		return 0
 	}
-	return result.(int), nil
+	return result.(int)
 }

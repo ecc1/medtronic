@@ -9,8 +9,8 @@ type BatteryInfo struct {
 	LowBattery bool
 }
 
-func (pump *Pump) Battery() (BatteryInfo, error) {
-	result, err := pump.Execute(Battery, func(data []byte) interface{} {
+func (pump *Pump) Battery() BatteryInfo {
+	result := pump.Execute(Battery, func(data []byte) interface{} {
 		if len(data) < 4 || data[0] != 3 {
 			return nil
 		}
@@ -19,8 +19,8 @@ func (pump *Pump) Battery() (BatteryInfo, error) {
 			MilliVolts: twoByteInt(data[2:4]) * 10,
 		}
 	})
-	if err != nil {
-		return BatteryInfo{}, err
+	if pump.Error() != nil {
+		return BatteryInfo{}
 	}
-	return result.(BatteryInfo), nil
+	return result.(BatteryInfo)
 }

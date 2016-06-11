@@ -16,9 +16,9 @@ const (
 )
 
 func main() {
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
+	pump := medtronic.Open()
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
 	}
 	f := searchFrequencies(pump)
 	showResults(f)
@@ -65,16 +65,15 @@ var results Results
 
 func tryFrequency(pump *medtronic.Pump, freq uint32) int {
 	const sampleSize = 2
-	err := pump.Radio.SetFrequency(freq)
-	if err != nil {
-		log.Fatal(err)
-	}
-	rssi := -99
+	pump.Radio.SetFrequency(freq)
+	log.Printf("frequency set to %s", radio.MegaHertz(freq))
+	rssi := -128
 	count := 0
 	sum := 0
 	for i := 0; i < sampleSize; i++ {
-		_, err = pump.Model()
-		if err != nil {
+		pump.Model()
+		if pump.Error() != nil {
+			pump.SetError(nil)
 			continue
 		}
 		sum += pump.Rssi()
@@ -90,8 +89,8 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) int {
 func showResults(winner uint32) {
 	sort.Sort(results)
 	for _, r := range results {
-		fmt.Printf("%s  %d ", radio.MegaHertz(r.frequency), r.rssi)
-		n := r.rssi + 99
+		fmt.Printf("%s  %3d ", radio.MegaHertz(r.frequency), r.rssi)
+		n := r.rssi + 128
 		for i := 0; i < n; i++ {
 			fmt.Print("━")
 		}

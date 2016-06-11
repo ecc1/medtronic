@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ecc1/cc1101"
 	"github.com/ecc1/radio"
+	"github.com/ecc1/rfm69"
 )
 
 const (
@@ -27,27 +27,22 @@ type Pump struct {
 	timeout time.Duration
 	retries int
 	rssi    int
+	err     error
 
 	DecodingErrors int
 	CrcErrors      int
 }
 
-func Open() (*Pump, error) {
-	r, err := cc1101.Open()
-	if err != nil {
-		return nil, err
-	}
-	freq := getFrequency()
-	log.Printf("setting frequency to %s\n", radio.MegaHertz(freq))
-	err = r.Init(freq)
-	if err != nil {
-		return nil, err
-	}
-	return &Pump{
-		Radio:   r,
+func Open() *Pump {
+	pump := &Pump{
 		timeout: defaultTimeout,
 		retries: defaultRetries,
-	}, nil
+	}
+	pump.Radio = rfm69.Open()
+	freq := getFrequency()
+	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
+	pump.Radio.Init(freq)
+	return pump
 }
 
 func getFrequency() uint32 {
@@ -57,7 +52,7 @@ func getFrequency() uint32 {
 	}
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		log.Fatalf("%s: %v\n", freqEnvVar, err)
+		log.Fatalf("%s: %v", freqEnvVar, err)
 	}
 	if 860.0 <= f && f <= 920.0 {
 		return uint32(f * 1000000.0)
@@ -65,6 +60,39 @@ func getFrequency() uint32 {
 	if 860000000.0 <= f && f <= 920000000.0 {
 		return uint32(f)
 	}
-	log.Fatalf("%s (%s): invalid pump frequency\n", freqEnvVar, s)
+	log.Fatalf("%s (%s): invalid pump frequency", freqEnvVar, s)
 	panic("unreachable")
+}
+
+func (pump *Pump) Timeout() time.Duration {
+	return pump.timeout
+}
+
+func (pump *Pump) SetTimeout(t time.Duration) {
+	pump.timeout = t
+}
+
+func (pump *Pump) Retries() int {
+	return pump.retries
+}
+
+func (pump *Pump) SetRetries(n int) {
+	pump.retries = n
+}
+
+func (pump *Pump) Rssi() int {
+	return pump.rssi
+}
+
+func (pump *Pump) Error() error {
+	err := pump.Radio.Error()
+	if err != nil {
+		return err
+	}
+	return pump.err
+}
+
+func (pump *Pump) SetError(err error) {
+	pump.Radio.SetError(err)
+	pump.err = err
 }

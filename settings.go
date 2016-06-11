@@ -18,10 +18,10 @@ type SettingsInfo struct {
 	TempBasalPercent     int
 }
 
-func (pump *Pump) Settings() (SettingsInfo, error) {
+func (pump *Pump) Settings() SettingsInfo {
 	// Format of response depends on the pump family.
 	newer := pump.Family() >= 23
-	result, err := pump.Execute(Settings, func(data []byte) interface{} {
+	result := pump.Execute(Settings, func(data []byte) interface{} {
 		if newer {
 			if len(data) < 26 || data[0] != 25 {
 				return nil
@@ -53,8 +53,8 @@ func (pump *Pump) Settings() (SettingsInfo, error) {
 		}
 		return info
 	})
-	if err != nil {
-		return SettingsInfo{}, err
+	if pump.Error() != nil {
+		return SettingsInfo{}
 	}
-	return result.(SettingsInfo), nil
+	return result.(SettingsInfo)
 }

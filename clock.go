@@ -8,8 +8,8 @@ const (
 	Clock CommandCode = 0x70
 )
 
-func (pump *Pump) Clock() (time.Time, error) {
-	result, err := pump.Execute(Clock, func(data []byte) interface{} {
+func (pump *Pump) Clock() time.Time {
+	result := pump.Execute(Clock, func(data []byte) interface{} {
 		if len(data) < 8 && data[0] != 7 {
 			return nil
 		}
@@ -23,8 +23,8 @@ func (pump *Pump) Clock() (time.Time, error) {
 			0,                     // nsec
 			time.Local)
 	})
-	if err != nil {
-		return time.Time{}, err
+	if pump.Error() != nil {
+		return time.Time{}
 	}
-	return result.(time.Time), nil
+	return result.(time.Time)
 }

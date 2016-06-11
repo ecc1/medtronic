@@ -12,8 +12,8 @@ const (
 // Model requests the model number from the pump and returns it,
 // caching the pump family as a side effect.
 // Use Family to avoid contacting the pump more than once.
-func (pump *Pump) Model() (string, error) {
-	result, err := pump.Execute(Model, func(data []byte) interface{} {
+func (pump *Pump) Model() string {
+	result := pump.Execute(Model, func(data []byte) interface{} {
 		if len(data) < 2 {
 			return nil
 		}
@@ -23,29 +23,29 @@ func (pump *Pump) Model() (string, error) {
 		}
 		return string(data[2 : 2+n])
 	})
-	if err != nil {
-		return "", err
+	if pump.Error() != nil {
+		return ""
 	}
 	model := result.(string)
 	pump.cacheFamily(model)
-	return model, nil
+	return model
 }
 
 func (pump *Pump) cacheFamily(model string) {
 	if pump.family != 0 {
 		return
 	}
-	log.Printf("model %s pump\n", model)
+	log.Printf("model %s pump", model)
 	family := -1
 	n, err := strconv.Atoi(model)
 	if err != nil {
-		log.Printf("%v\n", err)
+		log.Printf("%v", err)
 	} else if 500 < n && n < 600 {
 		family = n - 500
 	} else if 700 < n && n < 800 {
 		family = n - 700
 	} else {
-		log.Printf("unsupported pump model %d\n", n)
+		log.Printf("unsupported pump model %d", n)
 	}
 	pump.family = family
 }
@@ -55,8 +55,8 @@ func (pump *Pump) cacheFamily(model string) {
 // caches the result.
 func (pump *Pump) Family() int {
 	if pump.family == 0 {
-		_, err := pump.Model()
-		if err != nil {
+		pump.Model()
+		if pump.Error() != nil {
 			return -1
 		}
 	}

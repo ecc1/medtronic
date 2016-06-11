@@ -8,13 +8,10 @@ import (
 )
 
 func main() {
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
-	result, err := pump.Model()
-	if err != nil {
-		log.Fatal(err)
+	pump := medtronic.Open()
+	result := pump.Model()
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
 	}
 	fmt.Println(result)
 }

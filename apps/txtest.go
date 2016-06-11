@@ -8,29 +8,28 @@ import (
 )
 
 const (
+	minPacketSize    = 1
 	maxPacketSize    = 70
 	interPacketDelay = time.Second
 )
 
 func main() {
-	pump, err := medtronic.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
+	pump := medtronic.Open()
 	data := make([]byte, maxPacketSize)
 	for i, _ := range data {
 		data[i] = byte(i + 1)
 	}
-	n := 1
-	for {
-		log.Printf("data:   % X\n", data[:n])
+	n := minPacketSize
+	for pump.Error() == nil {
+		log.Printf("data:   % X", data[:n])
 		packet := medtronic.EncodePacket(data[:n])
-		log.Printf("packet: % X\n", packet.Data)
-		pump.Radio.Outgoing() <- packet
+		log.Printf("packet: % X", packet)
+		pump.Radio.Send(packet)
 		n++
 		if n > maxPacketSize {
-			n = 1
+			n = minPacketSize
 		}
 		time.Sleep(interPacketDelay)
 	}
+	log.Fatal(pump.Error())
 }
