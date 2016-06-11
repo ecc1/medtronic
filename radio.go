@@ -1,13 +1,13 @@
 package radio
 
-type Packet struct {
-	Rssi int
-	Data []byte
-}
+import (
+	"fmt"
+	"time"
+)
 
 type Counters struct {
-	Received int
 	Sent     int
+	Received int
 }
 
 type Statistics struct {
@@ -16,14 +16,23 @@ type Statistics struct {
 }
 
 type Interface interface {
-	Init() error
+	Init(frequency uint32)
 
-	Frequency() (uint32, error)
-	SetFrequency(uint32) error
+	Frequency() uint32
+	SetFrequency(uint32)
 
-	Incoming() <-chan Packet
-	Outgoing() chan<- Packet
+	Send([]byte)
+	Receive(time.Duration) ([]byte, int)
 
 	State() string
 	Statistics() Statistics
+
+	Error() error
+	SetError(error)
+}
+
+func MegaHertz(freq uint32) string {
+	MHz := freq / 1000000
+	kHz := (freq % 1000000) / 1000
+	return fmt.Sprintf("%3d.%03d", MHz, kHz)
 }
