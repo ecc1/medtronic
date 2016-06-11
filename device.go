@@ -18,79 +18,70 @@ const (
 )
 
 type Radio struct {
-	device       *spi.Device
-	interruptPin gpio.InputPin
-	resetPin     gpio.OutputPin
-
-	radioStarted       bool
-	receiveBuffer      bytes.Buffer
-	transmittedPackets chan radio.Packet
-	receivedPackets    chan radio.Packet
-	interrupt          chan struct{}
-	stats              radio.Statistics
+	device        *spi.Device
+	interruptPin  gpio.InputPin
+	resetPin      gpio.OutputPin
+	receiveBuffer bytes.Buffer
+	stats         radio.Statistics
+	err           error
 }
 
-func Open() (*Radio, error) {
-	dev, err := spi.Open(spiSpeed)
-	if err != nil {
-		return nil, err
+func Open() *Radio {
+	r := Radio{}
+	r.device, r.err = spi.Open(spiSpeed)
+	if r.Error() != nil {
+		return &r
 	}
-	err = dev.SetMaxSpeed(spiSpeed)
-	if err != nil {
-		return nil, err
+	r.err = r.device.SetMaxSpeed(spiSpeed)
+	if r.Error() != nil {
+		return &r
 	}
-	intr, err := gpio.Input(interruptPin, "both", false)
-	if err != nil {
-		return nil, err
+	r.interruptPin, r.err = gpio.Input(interruptPin, "both", false)
+	if r.Error() != nil {
+		return &r
 	}
-	reset, err := gpio.Output(resetPin, false)
-	if err != nil {
-		return nil, err
+	r.resetPin, r.err = gpio.Output(resetPin, false)
+	if r.Error() != nil {
+		return &r
 	}
-	r := &Radio{
-		device:             dev,
-		interruptPin:       intr,
-		resetPin:           reset,
-		transmittedPackets: make(chan radio.Packet, 100),
-		receivedPackets:    make(chan radio.Packet, 100),
-		interrupt:          make(chan struct{}),
+	v := r.Version()
+	if v != hwVersion {
+		r.err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
 	}
-	v, err := r.Version()
-	if err == nil && v != hwVersion {
-		err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
-	}
-	return r, err
+	return &r
 }
 
 // Reset module.  See section 7.2.2 of data sheet.
-func (r *Radio) Reset() error {
-	err := r.resetPin.Write(true)
-	if err != nil {
+func (r *Radio) Reset() {
+	if r.Error() != nil {
+		return
+	}
+	r.err = r.resetPin.Write(true)
+	if r.Error() != nil {
 		r.resetPin.Write(false)
-		return err
+		return
 	}
 	time.Sleep(100 * time.Microsecond)
-	err = r.resetPin.Write(false)
-	if err != nil {
-		return err
+	r.err = r.resetPin.Write(false)
+	if r.Error() != nil {
+		return
 	}
 	time.Sleep(5 * time.Millisecond)
-	return nil
 }
 
-func (r *Radio) Init(frequency uint32) error {
-	err := r.Reset()
-	if err != nil {
-		return err
-	}
-	err = r.InitRF(frequency)
-	if err != nil {
-		return err
-	}
-	r.Start()
-	return nil
+func (r *Radio) Init(frequency uint32) {
+	r.Reset()
+	r.InitRF(frequency)
 }
 
 func (r *Radio) Statistics() radio.Statistics {
 	return r.stats
+}
+
+func (r *Radio) Error() error {
+	return r.err
+}
+
+func (r *Radio) SetError(err error) {
+	r.err = err
 }

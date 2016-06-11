@@ -37,6 +37,40 @@ func TestFrequency(t *testing.T) {
 	}
 }
 
+func TestBitrate(t *testing.T) {
+	cases := []struct {
+		br       uint32
+		b        []byte
+		brApprox uint32 // 0 => equal to br
+	}{
+		{1200, []byte{0x68, 0x2B}, 0},
+		{2400, []byte{0x34, 0x15}, 0},
+		{25000, []byte{0x05, 0x00}, 0},
+		{50000, []byte{0x02, 0x80}, 0},
+		// some that can't be represented exactly:
+		{16384, []byte{0x07, 0xA1}, 16385},
+		{19200, []byte{0x06, 0x83}, 19196},
+		{38400, []byte{0x03, 0x41}, 38415},
+		{150000, []byte{0x00, 0xD5}, 150235},
+	}
+	for _, c := range cases {
+		b := bitrateToRegisters(c.br)
+		if !bytes.Equal(b, c.b) {
+			t.Errorf("bitrateToRegisters(%d) == % X, want % X", c.br, b, c.b)
+		}
+		f := registersToBitrate(c.b)
+		if c.brApprox != 0 {
+			if f != c.brApprox {
+				t.Errorf("registersToBitrate(% X) == %d, want %d", c.b, f, c.brApprox)
+			}
+		} else {
+			if f != c.br {
+				t.Errorf("registersToBitrate(% X) == %d, want %d", c.b, f, c.br)
+			}
+		}
+	}
+}
+
 func TestChannelBw(t *testing.T) {
 	cases := []struct {
 		bw       uint32

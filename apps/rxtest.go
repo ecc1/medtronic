@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/ecc1/rfm69"
 )
@@ -11,21 +12,20 @@ import (
 func main() {
 	log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
 	if len(os.Args) != 2 {
-		log.Fatalf("Usage: %s frequency\n", os.Args[0])
+		log.Fatalf("Usage: %s frequency", os.Args[0])
 	}
 	frequency := getFrequency(os.Args[1])
-	log.Printf("setting frequency to %d\n", frequency)
-	r, err := rfm69.Open()
-	if err != nil {
-		log.Fatal(err)
+	r := rfm69.Open()
+	if r.Error() != nil {
+		log.Fatal(r.Error())
 	}
-	err = r.Init(frequency)
-	if err != nil {
-		log.Fatal(err)
+	log.Printf("setting frequency to %d", frequency)
+	r.Init(frequency)
+	for r.Error() == nil {
+		data, rssi := r.Receive(time.Hour)
+		log.Printf("% X (RSSI = %d)", data, rssi)
 	}
-	for packet := range r.Incoming() {
-		log.Printf("% X (RSSI = %d)\n", packet.Data, packet.Rssi)
-	}
+	log.Fatal(r.Error())
 }
 
 func getFrequency(s string) uint32 {
@@ -39,6 +39,6 @@ func getFrequency(s string) uint32 {
 	if 860000000.0 <= f && f <= 920000000.0 {
 		return uint32(f)
 	}
-	log.Fatalf("%s: invalid pump frequency\n", s)
+	log.Fatalf("%s: invalid pump frequency", s)
 	panic("unreachable")
 }

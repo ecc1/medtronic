@@ -7,87 +7,54 @@ import (
 )
 
 func main() {
-	r, err := rfm69.Open()
-	if err != nil {
-		log.Fatal(err)
+	r := rfm69.Open()
+	if r.Error() != nil {
+		log.Fatal(r.Error())
 	}
 
-	log.Printf("Resetting radio\n")
-	err = r.Reset()
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("Resetting radio")
+	r.Reset()
 	dumpRF(r)
 
 	freq := uint32(916600000)
 	log.Println("")
-	log.Printf("Initializing radio to %d MHz\n", freq)
-	err = r.InitRF(freq)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("Initializing radio to %d MHz", freq)
+	r.InitRF(freq)
 	dumpRF(r)
 
 	log.Println("")
 	freq += 500000
-	log.Printf("Changing frequency to %d\n", freq)
-	err = r.SetFrequency(freq)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("Changing frequency to %d", freq)
+	r.SetFrequency(freq)
 	dumpRF(r)
 
 	bw := uint32(100000)
 	log.Println("")
-	log.Printf("Changing channel bandwidth to %d Hz\n", bw)
-	err = r.SetChannelBw(bw)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("Changing channel bandwidth to %d Hz", bw)
+	r.SetChannelBw(bw)
 	dumpRF(r)
-
 
 	log.Println("")
-	log.Printf("Sleeping\n")
-	err = r.Sleep()
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("Sleeping")
+	r.Sleep()
 	dumpRF(r)
-
 }
 
 func dumpRF(r *rfm69.Radio) {
-	log.Printf("Mode: %s\n", r.State())
-
-	freq, err := r.Frequency()
-	if err != nil {
-		log.Fatal(err)
+	if r.Error() != nil {
+		log.Fatal(r.Error())
 	}
-	log.Printf("Frequency: %d Hz\n", freq)
-
-	mod, err := r.ReadModulationType()
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Printf("Mode: %s", r.State())
+	log.Printf("Frequency: %d Hz", r.Frequency())
+	mod := r.ReadModulationType()
 	switch mod {
 	case rfm69.ModulationTypeFSK:
-		log.Printf("Modulation type: FSK\n")
+		log.Printf("Modulation type: FSK")
 	case rfm69.ModulationTypeOOK:
-		log.Printf("Modulation type: OOK\n")
+		log.Printf("Modulation type: OOK")
 	default:
-		log.Panicf("Unknown modulation mode %X\n", mod)
+		log.Panicf("Unknown modulation mode %X", mod)
 	}
-
-	bitrate, err := r.ReadBitrate()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Bitrate: %d baud\n", bitrate)
-
-	bw, err := r.ChannelBw()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Channel BW: %d Hz\n", bw)
+	log.Printf("Bitrate: %d baud", r.ReadBitrate())
+	log.Printf("Channel BW: %d Hz", r.ChannelBw())
 }
