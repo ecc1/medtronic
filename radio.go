@@ -36,11 +36,11 @@ func (r *Radio) Send(data []byte) {
 		log.Printf("sending %d-byte packet in %s state", len(data), r.State())
 	}
 	// Terminate packet with zero byte.
-	var buffer [maxPacketSize + 1]byte
-	copy(buffer[0:], data)
-	buffer[len(data)] = 0
-	packet := buffer[:len(data)+1]
+	packet := make([]byte, len(data), len(data)+1)
+	copy(packet, data)
+	packet = packet[:cap(packet)]
 
+	r.setMode(TransmitterMode)
 	defer r.setMode(StandbyMode)
 	r.transmit(packet)
 	if r.err == nil {
@@ -59,7 +59,6 @@ func (r *Radio) transmit(data []byte) {
 			log.Printf("writing %d bytes to TX FIFO\n", avail)
 		}
 		r.WriteBurst(RegFifo, data[:avail])
-		r.setMode(TransmitterMode)
 		data = data[avail:]
 		if len(data) == 0 {
 			break

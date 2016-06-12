@@ -61,6 +61,10 @@ func (r *Radio) InitRF(frequency uint32) {
 	// Default != reset value.
 	rf.RegRssiThresh = 0xE4
 
+	// Make sure enough preamble bytes are sent.
+	rf.RegPreambleMsb = 0x00
+	rf.RegPreambleLsb = 0x10
+
 	// Use 4 bytes for Sync word.
 	rf.RegSyncConfig = SyncOn | 3<<SyncSizeShift
 
@@ -193,6 +197,7 @@ func (r *Radio) mode() byte {
 }
 
 func (r *Radio) setMode(mode uint8) {
+	r.SetError(nil)
 	cur := r.ReadRegister(RegOpMode)
 	if cur&ModeMask == mode {
 		return
