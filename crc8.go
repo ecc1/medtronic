@@ -1,6 +1,6 @@
 package medtronic
 
-//go:generate ../gen_crc_table/gen_crc_table
+//go:generate ../crcgen/crcgen
 
 func Crc8(msg []byte) byte {
 	res := byte(0)
