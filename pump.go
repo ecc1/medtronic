@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ecc1/radio"
-	"github.com/ecc1/rfm69"
+	"github.com/ecc1/medtronic/radio"
+	"github.com/ecc1/medtronic/rfm69"
 )
 
 const (

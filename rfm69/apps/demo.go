@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/ecc1/rfm69"
+	"github.com/ecc1/medtronic/rfm69"
 )
 
 func main() {
@@ -55,6 +55,6 @@ func dumpRF(r *rfm69.Radio) {
 	default:
 		log.Panicf("Unknown modulation mode %X", mod)
 	}
-	log.Printf("Bitrate: %d baud", r.ReadBitrate())
+	log.Printf("Bitrate: %d baud", r.Bitrate())
 	log.Printf("Channel BW: %d Hz", r.ChannelBw())
 }

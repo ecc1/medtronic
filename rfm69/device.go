@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/ecc1/gpio"
-	"github.com/ecc1/radio"
+	"github.com/ecc1/medtronic/radio"
 	"github.com/ecc1/spi"
 )
 
