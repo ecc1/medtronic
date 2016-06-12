@@ -89,7 +89,7 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) int {
 func showResults(winner uint32) {
 	sort.Sort(results)
 	for _, r := range results {
-		fmt.Printf("%s  %3d ", radio.MegaHertz(r.frequency), r.rssi)
+		fmt.Printf("%s  %4d ", radio.MegaHertz(r.frequency), r.rssi)
 		n := r.rssi + 128
 		for i := 0; i < n; i++ {
 			fmt.Print("━")
