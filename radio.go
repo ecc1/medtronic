@@ -90,11 +90,9 @@ func (r *Radio) transmit(data []byte) error {
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
 	// are transmitted before leaving TX state.
-	var buffer [maxPacketSize + 2]byte
-	copy(buffer[0:], data)
-	buffer[len(data)] = 0
-	buffer[len(data)+1] = 0
-	packet := buffer[:len(data)+2]
+	packet := make([]byte, len(data), len(data)+2)
+	copy(packet, data)
+	packet = packet[:cap(packet)]
 	err := r.send(packet)
 	if err == nil {
 		r.stats.Packets.Sent++
