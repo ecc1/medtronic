@@ -7,19 +7,42 @@ import (
 
 	"github.com/ecc1/gpio"
 	"github.com/ecc1/medtronic/radio"
-	"github.com/ecc1/spi"
 )
 
 const (
-	spiSpeed     = 10000000 // Hz
-	interruptPin = 14       // Intel Edison GPIO connected to DIO0
-	resetPin     = 12       // Intel Edison GPIO connected to RESET
-	hwVersion    = 0x0204
+	spiSpeed  = 10000000 // Hz
+	resetPin  = 12       // Intel Edison GPIO for hardware reset
+	hwVersion = 0x0204
 )
 
+type flavor struct{}
+
+func (hw flavor) Name() string {
+	return "RFM69HCW"
+}
+
+func (hw flavor) Speed() int {
+	return spiSpeed
+}
+
+func (hw flavor) ReadSingleAddress(addr byte) byte {
+	return addr
+}
+
+func (hw flavor) ReadBurstAddress(addr byte) byte {
+	return addr
+}
+
+func (hw flavor) WriteSingleAddress(addr byte) byte {
+	return SpiWriteMode | addr
+}
+
+func (hw flavor) WriteBurstAddress(addr byte) byte {
+	return SpiWriteMode | addr
+}
+
 type Radio struct {
-	device        *spi.Device
-	interruptPin  gpio.InputPin
+	hw            *radio.Hardware
 	resetPin      gpio.OutputPin
 	receiveBuffer bytes.Buffer
 	stats         radio.Statistics
@@ -27,28 +50,27 @@ type Radio struct {
 }
 
 func Open() *Radio {
-	r := Radio{}
-	r.device, r.err = spi.Open(spiSpeed)
+	r := &Radio{hw: radio.Open(flavor{})}
 	if r.Error() != nil {
-		return &r
-	}
-	r.err = r.device.SetMaxSpeed(spiSpeed)
-	if r.Error() != nil {
-		return &r
-	}
-	r.interruptPin, r.err = gpio.Input(interruptPin, "both", false)
-	if r.Error() != nil {
-		return &r
-	}
-	r.resetPin, r.err = gpio.Output(resetPin, false)
-	if r.Error() != nil {
-		return &r
+		return r
 	}
 	v := r.Version()
 	if v != hwVersion {
-		r.err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
+		r.hw.Close()
+		r.SetError(fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion))
+		return r
 	}
-	return &r
+	r.resetPin, r.err = gpio.Output(resetPin, false)
+	if r.Error() != nil {
+		r.hw.Close()
+		return r
+	}
+	return r
+}
+
+func (r *Radio) Version() uint16 {
+	v := r.hw.ReadRegister(RegVersion)
+	return uint16(v>>4)<<8 | uint16(v&0xF)
 }
 
 // Reset module.  See section 7.2.2 of data sheet.
@@ -79,9 +101,18 @@ func (r *Radio) Statistics() radio.Statistics {
 }
 
 func (r *Radio) Error() error {
+	err := r.hw.Error()
+	if err != nil {
+		return err
+	}
 	return r.err
 }
 
 func (r *Radio) SetError(err error) {
+	r.hw.SetError(err)
 	r.err = err
+}
+
+func (r *Radio) Hardware() *radio.Hardware {
+	return r.hw
 }

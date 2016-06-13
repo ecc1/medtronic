@@ -57,7 +57,7 @@ func (r *Radio) transmit(data []byte) {
 		if verbose {
 			log.Printf("writing %d bytes to TX FIFO\n", avail)
 		}
-		r.WriteBurst(RegFifo, data[:avail])
+		r.hw.WriteBurst(RegFifo, data[:avail])
 		data = data[avail:]
 		if len(data) == 0 {
 			break
@@ -98,15 +98,15 @@ func (r *Radio) finishTx() {
 }
 
 func (r *Radio) fifoEmpty() bool {
-	return r.ReadRegister(RegIrqFlags2)&FifoNotEmpty == 0
+	return r.hw.ReadRegister(RegIrqFlags2)&FifoNotEmpty == 0
 }
 
 func (r *Radio) fifoFull() bool {
-	return r.ReadRegister(RegIrqFlags2)&FifoFull != 0
+	return r.hw.ReadRegister(RegIrqFlags2)&FifoFull != 0
 }
 
 func (r *Radio) fifoThresholdExceeded() bool {
-	return r.ReadRegister(RegIrqFlags2)&FifoLevel != 0
+	return r.hw.ReadRegister(RegIrqFlags2)&FifoLevel != 0
 }
 
 func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
@@ -118,7 +118,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 	if verbose {
 		log.Printf("waiting for interrupt in %s state", r.State())
 	}
-	r.err = r.interruptPin.Wait(timeout)
+	r.hw.AwaitInterrupt(timeout)
 	startedWaiting := time.Time{}
 	for r.Error() == nil {
 		if r.fifoEmpty() {
@@ -130,7 +130,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 			time.Sleep(byteDuration)
 			continue
 		}
-		c := r.ReadRegister(RegFifo)
+		c := r.hw.ReadRegister(RegFifo)
 		if r.Error() != nil {
 			break
 		}

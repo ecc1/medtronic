@@ -19,12 +19,12 @@ func (r *Radio) ReadConfiguration() *RfConfiguration {
 	if r.Error() != nil {
 		return nil
 	}
-	regs := r.ReadBurst(RegOpMode, RegTemp2-RegOpMode+1)
+	regs := r.hw.ReadBurst(RegOpMode, RegTemp2-RegOpMode+1)
 	return (*RfConfiguration)(unsafe.Pointer(&regs[0]))
 }
 
 func (r *Radio) WriteConfiguration(config *RfConfiguration) {
-	r.WriteBurst(RegOpMode, config.Bytes())
+	r.hw.WriteBurst(RegOpMode, config.Bytes())
 }
 
 func (r *Radio) InitRF(frequency uint32) {
@@ -83,11 +83,11 @@ func (r *Radio) InitRF(frequency uint32) {
 	r.WriteConfiguration(&rf)
 
 	// Default != reset value.
-	r.WriteRegister(RegTestDagc, 0x30)
+	r.hw.WriteRegister(RegTestDagc, 0x30)
 }
 
 func (r *Radio) Frequency() uint32 {
-	return registersToFrequency(r.ReadBurst(RegFrfMsb, 3))
+	return registersToFrequency(r.hw.ReadBurst(RegFrfMsb, 3))
 }
 
 func registersToFrequency(frf []byte) uint32 {
@@ -96,7 +96,7 @@ func registersToFrequency(frf []byte) uint32 {
 }
 
 func (r *Radio) SetFrequency(freq uint32) {
-	r.WriteBurst(RegFrfMsb, frequencyToRegisters(freq))
+	r.hw.WriteBurst(RegFrfMsb, frequencyToRegisters(freq))
 }
 
 func frequencyToRegisters(freq uint32) []byte {
@@ -105,12 +105,12 @@ func frequencyToRegisters(freq uint32) []byte {
 }
 
 func (r *Radio) ReadRSSI() int {
-	rssi := r.ReadRegister(RegRssiValue)
+	rssi := r.hw.ReadRegister(RegRssiValue)
 	return -int(rssi) / 2
 }
 
 func (r *Radio) Bitrate() uint32 {
-	return registersToBitrate(r.ReadBurst(RegBitrateMsb, 2))
+	return registersToBitrate(r.hw.ReadBurst(RegBitrateMsb, 2))
 }
 
 // See data sheet section 3.3.2 and table 9.
@@ -125,11 +125,11 @@ func bitrateToRegisters(br uint32) []byte {
 }
 
 func (r *Radio) ReadModulationType() byte {
-	return r.ReadRegister(RegDataModul) & ModulationTypeMask
+	return r.hw.ReadRegister(RegDataModul) & ModulationTypeMask
 }
 
 func (r *Radio) ChannelBw() uint32 {
-	bw := r.ReadRegister(RegRxBw)
+	bw := r.hw.ReadRegister(RegRxBw)
 	m := r.ReadModulationType()
 	return registerToChannelBw(bw, m)
 }
@@ -160,8 +160,8 @@ func registerToChannelBw(bw byte, modType byte) uint32 {
 
 func (r *Radio) SetChannelBw(bw uint32) {
 	v := channelBwToRegister(bw)
-	r.WriteRegister(RegRxBw, 2<<DccFreqShift|v)
-	r.WriteRegister(RegAfcBw, 4<<DccFreqShift|v)
+	r.hw.WriteRegister(RegRxBw, 2<<DccFreqShift|v)
+	r.hw.WriteRegister(RegAfcBw, 4<<DccFreqShift|v)
 }
 
 // Channel BW = FXOSC / (RxBwMant * 2^(RxBwExp + 3), assuming OOK modulation.
@@ -193,19 +193,19 @@ func channelBwToRegister(bw uint32) byte {
 }
 
 func (r *Radio) mode() byte {
-	return r.ReadRegister(RegOpMode) & ModeMask
+	return r.hw.ReadRegister(RegOpMode) & ModeMask
 }
 
 func (r *Radio) setMode(mode uint8) {
 	r.SetError(nil)
-	cur := r.ReadRegister(RegOpMode)
+	cur := r.hw.ReadRegister(RegOpMode)
 	if cur&ModeMask == mode {
 		return
 	}
 	if verbose {
 		log.Printf("change from %s to %s", stateName(cur&ModeMask), stateName(mode))
 	}
-	r.WriteRegister(RegOpMode, cur&^ModeMask|mode)
+	r.hw.WriteRegister(RegOpMode, cur&^ModeMask|mode)
 	for r.Error() == nil && r.mode() != mode {
 		if verbose {
 			log.Printf("  %s", r.State())
