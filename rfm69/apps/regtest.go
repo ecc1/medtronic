@@ -28,12 +28,12 @@ func main() {
 }
 
 func dumpRegs(r *rfm69.Radio) {
-	if r.Error() != nil {
-		log.Fatal(r.Error())
-	}
 	fmt.Printf("\nConfiguration registers:\n")
 	regs := r.ReadConfiguration().Bytes()
 	resetValue := rfm69.ResetRfConfiguration.Bytes()
+	if r.Error() != nil {
+		log.Fatal(r.Error())
+	}
 	for i, v := range regs {
 		fmt.Printf("%02X  %02X  %08b", rfm69.RegOpMode+i, v, v)
 		r := resetValue[i]
@@ -46,9 +46,6 @@ func dumpRegs(r *rfm69.Radio) {
 }
 
 func readRegs(r *rfm69.Radio) {
-	if r.Error() != nil {
-		log.Fatal(r.Error())
-	}
 	x := r.ReadRegister(rfm69.RegSyncValue1)
 	y := r.ReadRegister(rfm69.RegSyncValue2)
 	z := r.ReadRegister(rfm69.RegSyncValue3)

@@ -25,13 +25,13 @@ func TestFrequency(t *testing.T) {
 			t.Errorf("frequencyToRegisters(%d) == % X, want % X", c.f, b, c.b)
 		}
 		f := registersToFrequency(c.b)
-		if c.fApprox != 0 {
-			if f != c.fApprox {
-				t.Errorf("registersToFrequency(% X) == %d, want %d", c.b, f, c.fApprox)
-			}
-		} else {
+		if c.fApprox == 0 {
 			if f != c.f {
 				t.Errorf("registersToFrequency(% X) == %d, want %d", c.b, f, c.f)
+			}
+		} else {
+			if f != c.fApprox {
+				t.Errorf("registersToFrequency(% X) == %d, want %d", c.b, f, c.fApprox)
 			}
 		}
 	}

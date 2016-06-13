@@ -26,11 +26,11 @@ func init() {
 }
 
 func (r *Radio) Send(data []byte) {
-	if r.Error() != nil {
-		return
-	}
 	if len(data) > maxPacketSize {
 		log.Panicf("attempting to send %d-byte packet", len(data))
+	}
+	if r.Error() != nil {
+		return
 	}
 	if verbose {
 		log.Printf("sending %d-byte packet in %s state", len(data), r.State())
@@ -39,11 +39,10 @@ func (r *Radio) Send(data []byte) {
 	packet := make([]byte, len(data), len(data)+1)
 	copy(packet, data)
 	packet = packet[:cap(packet)]
-
 	r.setMode(TransmitterMode)
 	defer r.setMode(StandbyMode)
 	r.transmit(packet)
-	if r.err == nil {
+	if r.Error() == nil {
 		r.stats.Packets.Sent++
 		r.stats.Bytes.Sent += len(data)
 	}

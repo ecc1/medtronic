@@ -43,10 +43,7 @@ func (r *Radio) WriteRegister(addr byte, value byte) {
 }
 
 func (r *Radio) WriteBurst(addr byte, data []byte) {
-	buf := make([]byte, len(data)+1)
-	buf[0] = SpiWriteMode | addr
-	copy(buf[1:], data)
-	r.writeData(buf)
+	r.writeData(append([]byte{SpiWriteMode | addr}, data...))
 }
 
 func (r *Radio) WriteEach(data []byte) {
