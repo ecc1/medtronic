@@ -10,17 +10,17 @@ func (r *Radio) DumpRF() {
 	}
 	log.Printf("State: %s", r.State())
 	log.Printf("Frequency: %d", r.Frequency())
-	log.Printf("Channel: %d", r.ReadRegister(CHANNR))
+	log.Printf("Channel: %d", r.hw.ReadRegister(CHANNR))
 	r.showFreqSynthControl()
 	r.showModemConfig()
 	pa := r.ReadPaTable()
-	n := r.ReadRegister(FREND0) & FREND0_PA_POWER_MASK
+	n := r.hw.ReadRegister(FREND0) & FREND0_PA_POWER_MASK
 	log.Printf("PATABLE: % X using 0..%d", pa, n)
 }
 
 func (r *Radio) showFreqSynthControl() {
 	log.Printf("Intermediate frequency: %d Hz", r.ReadIF())
-	log.Printf("Frequency offset: %d Hz", r.ReadRegister(FSCTRL0))
+	log.Printf("Frequency offset: %d Hz", r.hw.ReadRegister(FSCTRL0))
 }
 
 func (r *Radio) showModemConfig() {
@@ -28,7 +28,7 @@ func (r *Radio) showModemConfig() {
 	log.Printf("Channel bandwidth: %d Hz", chanbw)
 	log.Printf("Data rate: %d Baud", drate)
 
-	m2 := r.ReadRegister(MDMCFG2)
+	m2 := r.hw.ReadRegister(MDMCFG2)
 	showBoolCondition("DC blocking filter", m2&MDMCFG2_DEM_DCFILT_OFF == 0)
 	showBoolCondition("Manchester encoding", m2&(1<<3) != 0)
 	log.Printf("Modulation format: %s", modFormat[(m2&MDMCFG2_MOD_FORMAT_MASK)>>4])

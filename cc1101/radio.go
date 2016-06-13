@@ -7,13 +7,14 @@ import (
 )
 
 const (
-	readFifoUsingBurst = true
-	fifoSize           = 64
+	verbose            = false
 	maxPacketSize      = 110
+	fifoSize           = 64
+	readFifoUsingBurst = true
 
 	// Approximate time for one byte to be transmitted, based on
 	// the data rate.  It was determined empirically so that few
-	// if any iterations are needed in drainTxFifo().
+	// if any iterations are needed in finishTx().
 	byteDuration = time.Millisecond
 )
 
@@ -47,7 +48,7 @@ func (r *Radio) transmit(data []byte) {
 		if avail > len(data) {
 			avail = len(data)
 		}
-		r.WriteBurst(TXFIFO, data[:avail])
+		r.hw.WriteBurst(TXFIFO, data[:avail])
 		r.changeState(STX, STATE_TX)
 		data = data[avail:]
 		if len(data) == 0 {
@@ -101,7 +102,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 	if verbose {
 		log.Printf("waiting for interrupt in %s state", r.State())
 	}
-	r.err = r.interruptPin.Wait(timeout)
+	r.hw.AwaitInterrupt(timeout)
 	startedWaiting := time.Time{}
 	for r.Error() == nil {
 		numBytes := r.ReadNumRxBytes()
@@ -122,7 +123,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 			continue
 		}
 		if readFifoUsingBurst {
-			data := r.ReadBurst(RXFIFO, int(numBytes))
+			data := r.hw.ReadBurst(RXFIFO, int(numBytes))
 			if r.Error() != nil {
 				break
 			}
@@ -136,7 +137,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 			// End of packet.
 			_, r.err = r.receiveBuffer.Write(data[:i])
 		} else {
-			c := r.ReadRegister(RXFIFO)
+			c := r.hw.ReadRegister(RXFIFO)
 			if r.Error() != nil {
 				break
 			}

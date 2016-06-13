@@ -19,7 +19,7 @@ func main() {
 	r.Reset()
 	// Route CLK_XOSC/24 to GDO0 pin.
 	// See data sheet, Table 41.
-	r.WriteRegister(cc1101.IOCFG0, 0x39)
+	r.Hardware().WriteRegister(cc1101.IOCFG0, 0x39)
 	if r.Error() != nil {
 		log.Fatal(r.Error())
 	}

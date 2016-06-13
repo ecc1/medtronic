@@ -18,12 +18,12 @@ func (r *Radio) ReadConfiguration() *RfConfiguration {
 	if r.Error() != nil {
 		return nil
 	}
-	regs := r.ReadBurst(IOCFG2, TEST0-IOCFG2+1)
+	regs := r.hw.ReadBurst(IOCFG2, TEST0-IOCFG2+1)
 	return (*RfConfiguration)(unsafe.Pointer(&regs[0]))
 }
 
 func (r *Radio) WriteConfiguration(config *RfConfiguration) {
-	r.WriteBurst(IOCFG2, config.Bytes())
+	r.hw.WriteBurst(IOCFG2, config.Bytes())
 }
 
 func (r *Radio) InitRF(frequency uint32) {
@@ -128,11 +128,11 @@ func (r *Radio) InitRF(frequency uint32) {
 	r.WriteConfiguration(&rf)
 
 	// Power amplifier output settings (see section 24 of the data sheet)
-	r.WriteBurst(PATABLE, []byte{0x00, 0xC0})
+	r.hw.WriteBurst(PATABLE, []byte{0x00, 0xC0})
 }
 
 func (r *Radio) Frequency() uint32 {
-	return registersToFrequency(r.ReadBurst(FREQ2, 3))
+	return registersToFrequency(r.hw.ReadBurst(FREQ2, 3))
 }
 
 func registersToFrequency(freq []byte) uint32 {
@@ -141,7 +141,7 @@ func registersToFrequency(freq []byte) uint32 {
 }
 
 func (r *Radio) SetFrequency(freq uint32) {
-	r.WriteBurst(FREQ2, frequencyToRegisters(freq))
+	r.hw.WriteBurst(FREQ2, frequencyToRegisters(freq))
 }
 
 func frequencyToRegisters(freq uint32) []byte {
@@ -150,34 +150,34 @@ func frequencyToRegisters(freq uint32) []byte {
 }
 
 func (r *Radio) ReadIF() uint32 {
-	f := r.ReadRegister(FSCTRL1)
+	f := r.hw.ReadRegister(FSCTRL1)
 	return uint32(uint64(f) * FXOSC >> 10)
 }
 
 func (r *Radio) ReadChannelParams() (chanbw uint32, drate uint32) {
-	m4 := r.ReadRegister(MDMCFG4)
+	m4 := r.hw.ReadRegister(MDMCFG4)
 	chanbw_E := (m4 >> MDMCFG4_CHANBW_E_SHIFT) & 0x3
 	chanbw_M := (m4 >> MDMCFG4_CHANBW_M_SHIFT) & 0x3
 	drate_E := (m4 >> MDMCFG4_DRATE_E_SHIFT) & 0xF
-	drate_M := r.ReadRegister(MDMCFG3)
+	drate_M := r.hw.ReadRegister(MDMCFG3)
 	chanbw = uint32(FXOSC / ((4 + uint64(chanbw_M)) << (chanbw_E + 3)))
 	drate = uint32(((256 + uint64(drate_M)) << drate_E * FXOSC) >> 28)
 	return
 }
 
 func (r *Radio) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32) {
-	m1 := r.ReadRegister(MDMCFG1)
+	m1 := r.hw.ReadRegister(MDMCFG1)
 	fec = m1&MDMCFG1_FEC_EN != 0
 	minPreamble = numPreamble[(m1&MDMCFG1_NUM_PREAMBLE_MASK)>>4]
 	chanspc_E := m1 & MDMCFG1_CHANSPC_E_MASK
-	chanspc_M := r.ReadRegister(MDMCFG0)
+	chanspc_M := r.hw.ReadRegister(MDMCFG0)
 	chanspc = uint32(((256 + uint64(chanspc_M)) << chanspc_E * FXOSC) >> 18)
 	return
 }
 
 func (r *Radio) ReadRSSI() int {
 	const rssi_offset = 74 // see data sheet section 17.3
-	rssi := r.ReadRegister(RSSI)
+	rssi := r.hw.ReadRegister(RSSI)
 	d := int(rssi)
 	if d >= 128 {
 		d -= 256
@@ -186,10 +186,7 @@ func (r *Radio) ReadRSSI() int {
 }
 
 func (r *Radio) ReadPaTable() []byte {
-	buf := make([]byte, 9)
-	buf[0] = READ_MODE | BURST_MODE | PATABLE
-	r.err = r.device.Transfer(buf)
-	return buf[1:]
+	return r.hw.ReadBurst(PATABLE, 8)
 }
 
 // Per section 20 of data sheet, read NUM_RXBYTES
@@ -198,7 +195,7 @@ func (r *Radio) ReadNumRxBytes() byte {
 	last := byte(0)
 	read := false
 	for r.Error() == nil {
-		n := r.ReadRegister(RXBYTES)
+		n := r.hw.ReadRegister(RXBYTES)
 		if n&RXFIFO_OVERFLOW != 0 {
 			r.err = RxFifoOverflow
 		}
@@ -213,7 +210,7 @@ func (r *Radio) ReadNumRxBytes() byte {
 }
 
 func (r *Radio) ReadNumTxBytes() byte {
-	n := r.ReadRegister(TXBYTES)
+	n := r.hw.ReadRegister(TXBYTES)
 	if n&TXFIFO_UNDERFLOW != 0 {
 		r.err = TxFifoUnderflow
 	}
@@ -234,7 +231,7 @@ func StateName(state byte) string {
 }
 
 func (r *Radio) ReadMarcState() byte {
-	return r.ReadRegister(MARCSTATE) & MARCSTATE_MASK
+	return r.hw.ReadRegister(MARCSTATE) & MARCSTATE_MASK
 }
 
 func MarcStateName(state byte) string {

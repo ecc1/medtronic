@@ -17,13 +17,14 @@ func main() {
 	dumpRegs(r)
 
 	fmt.Printf("\nTesting individual writes\n")
-	r.WriteRegister(cc1101.SYNC1, 0x44)
-	r.WriteRegister(cc1101.SYNC0, 0x55)
+	hw := r.Hardware()
+	hw.WriteRegister(cc1101.SYNC1, 0x44)
+	hw.WriteRegister(cc1101.SYNC0, 0x55)
 	readRegs(r)
 
 	r.Reset()
 	fmt.Printf("\nTesting burst writes\n")
-	r.WriteBurst(cc1101.SYNC1, []byte{0x66, 0x77})
+	hw.WriteBurst(cc1101.SYNC1, []byte{0x66, 0x77})
 	readRegs(r)
 }
 
@@ -46,13 +47,14 @@ func dumpRegs(r *cc1101.Radio) {
 }
 
 func readRegs(r *cc1101.Radio) {
-	x := r.ReadRegister(cc1101.SYNC1)
-	y := r.ReadRegister(cc1101.SYNC0)
+	hw := r.Hardware()
+	x := hw.ReadRegister(cc1101.SYNC1)
+	y := hw.ReadRegister(cc1101.SYNC0)
 	if r.Error() != nil {
 		log.Fatal(r.Error())
 	}
 	fmt.Printf("individual: %X %X\n", x, y)
-	v := r.ReadBurst(cc1101.SYNC1, 2)
+	v := hw.ReadBurst(cc1101.SYNC1, 2)
 	if r.Error() != nil {
 		log.Fatal(r.Error())
 	}
