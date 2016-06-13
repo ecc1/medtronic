@@ -14,18 +14,21 @@ func (config *RfConfiguration) Bytes() []byte {
 	return (*[TEST0 - IOCFG2 + 1]byte)(unsafe.Pointer(config))[:]
 }
 
-func (r *Radio) ReadConfiguration() (*RfConfiguration, error) {
-	regs, err := r.ReadBurst(IOCFG2, TEST0-IOCFG2+1)
-	return (*RfConfiguration)(unsafe.Pointer(&regs[0])), err
+func (r *Radio) ReadConfiguration() *RfConfiguration {
+	if r.Error() != nil {
+		return nil
+	}
+	regs := r.ReadBurst(IOCFG2, TEST0-IOCFG2+1)
+	return (*RfConfiguration)(unsafe.Pointer(&regs[0]))
 }
 
-func (r *Radio) WriteConfiguration(config *RfConfiguration) error {
-	return r.WriteBurst(IOCFG2, config.Bytes())
+func (r *Radio) WriteConfiguration(config *RfConfiguration) {
+	r.WriteBurst(IOCFG2, config.Bytes())
 }
 
-func (r *Radio) InitRF(frequency uint32) error {
+func (r *Radio) InitRF(frequency uint32) {
 	rf := ResetRfConfiguration
-	fb := frequencyBytes(frequency)
+	fb := frequencyToRegisters(frequency)
 
 	rf.IOCFG2 = 0x2F
 	rf.IOCFG1 = 0x2F
@@ -122,171 +125,116 @@ func (r *Radio) InitRF(frequency uint32) error {
 	rf.TEST1 = TEST1_RX_LOW_DATA_RATE_MAGIC
 	rf.TEST0 = 2<<2 | 1 // disable VCO selection calibration
 
-	err := r.WriteConfiguration(&rf)
-	if err != nil {
-		return err
-	}
+	r.WriteConfiguration(&rf)
 
 	// Power amplifier output settings (see section 24 of the data sheet)
-	err = r.WriteBurst(PATABLE, []byte{0x00, 0xC0})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	r.WriteBurst(PATABLE, []byte{0x00, 0xC0})
 }
 
-func (r *Radio) Frequency() (uint32, error) {
-	freq, err := r.ReadBurst(FREQ2, 3)
-	if err != nil {
-		return 0, err
-	}
+func (r *Radio) Frequency() uint32 {
+	return registersToFrequency(r.ReadBurst(FREQ2, 3))
+}
+
+func registersToFrequency(freq []byte) uint32 {
 	f := uint32(freq[0])<<16 + uint32(freq[1])<<8 + uint32(freq[2])
-	return uint32(uint64(f) * FXOSC >> 16), nil
+	return uint32(uint64(f) * FXOSC >> 16)
 }
 
-func (r *Radio) SetFrequency(freq uint32) error {
-	return r.WriteBurst(FREQ2, frequencyBytes(freq))
+func (r *Radio) SetFrequency(freq uint32) {
+	r.WriteBurst(FREQ2, frequencyToRegisters(freq))
 }
 
-func frequencyBytes(freq uint32) []byte {
+func frequencyToRegisters(freq uint32) []byte {
 	f := (uint64(freq)<<16 + FXOSC/2) / FXOSC
-	return []byte{
-		byte(f >> 16),
-		byte(f >> 8),
-		byte(f),
-	}
+	return []byte{byte(f >> 16), byte(f >> 8), byte(f)}
 }
 
-func (r *Radio) ReadIF() (uint32, error) {
-	f, err := r.ReadRegister(FSCTRL1)
-	if err != nil {
-		return 0, err
-	}
-	return uint32(uint64(f) * FXOSC >> 10), nil
+func (r *Radio) ReadIF() uint32 {
+	f := r.ReadRegister(FSCTRL1)
+	return uint32(uint64(f) * FXOSC >> 10)
 }
 
-func (r *Radio) ReadChannelParams() (chanbw uint32, drate uint32, err error) {
-	var m4 byte
-	m4, err = r.ReadRegister(MDMCFG4)
-	if err != nil {
-		return
-	}
+func (r *Radio) ReadChannelParams() (chanbw uint32, drate uint32) {
+	m4 := r.ReadRegister(MDMCFG4)
 	chanbw_E := (m4 >> MDMCFG4_CHANBW_E_SHIFT) & 0x3
 	chanbw_M := (m4 >> MDMCFG4_CHANBW_M_SHIFT) & 0x3
 	drate_E := (m4 >> MDMCFG4_DRATE_E_SHIFT) & 0xF
-
-	var drate_M byte
-	drate_M, err = r.ReadRegister(MDMCFG3)
-	if err != nil {
-		return
-	}
-
+	drate_M := r.ReadRegister(MDMCFG3)
 	chanbw = uint32(FXOSC / ((4 + uint64(chanbw_M)) << (chanbw_E + 3)))
 	drate = uint32(((256 + uint64(drate_M)) << drate_E * FXOSC) >> 28)
 	return
 }
 
-func (r *Radio) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32, err error) {
-	var m1 byte
-	m1, err = r.ReadRegister(MDMCFG1)
-	if err != nil {
-		return
-	}
+func (r *Radio) ReadModemConfig() (fec bool, minPreamble byte, chanspc uint32) {
+	m1 := r.ReadRegister(MDMCFG1)
 	fec = m1&MDMCFG1_FEC_EN != 0
 	minPreamble = numPreamble[(m1&MDMCFG1_NUM_PREAMBLE_MASK)>>4]
 	chanspc_E := m1 & MDMCFG1_CHANSPC_E_MASK
-	var chanspc_M byte
-	chanspc_M, err = r.ReadRegister(MDMCFG0)
-	if err != nil {
-		return
-	}
+	chanspc_M := r.ReadRegister(MDMCFG0)
 	chanspc = uint32(((256 + uint64(chanspc_M)) << chanspc_E * FXOSC) >> 18)
 	return
 }
 
-func (r *Radio) ReadRSSI() (int, error) {
+func (r *Radio) ReadRSSI() int {
 	const rssi_offset = 74 // see data sheet section 17.3
-	rssi, err := r.ReadRegister(RSSI)
-	if err != nil {
-		return 0, err
-	}
+	rssi := r.ReadRegister(RSSI)
 	d := int(rssi)
 	if d >= 128 {
 		d -= 256
 	}
-	return d/2 - rssi_offset, nil
+	return d/2 - rssi_offset
 }
 
-func (r *Radio) ReadPaTable() ([]byte, error) {
+func (r *Radio) ReadPaTable() []byte {
 	buf := make([]byte, 9)
 	buf[0] = READ_MODE | BURST_MODE | PATABLE
-	err := r.device.Transfer(buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf[1:], nil
+	r.err = r.device.Transfer(buf)
+	return buf[1:]
 }
 
 // Per section 20 of data sheet, read NUM_RXBYTES
 // repeatedly until same value is returned twice.
-func (r *Radio) ReadNumRxBytes() (byte, error) {
+func (r *Radio) ReadNumRxBytes() byte {
 	last := byte(0)
 	read := false
-	for {
-		n, err := r.ReadRegister(RXBYTES)
-		if err != nil {
-			return 0, err
-		}
+	for r.Error() == nil {
+		n := r.ReadRegister(RXBYTES)
 		if n&RXFIFO_OVERFLOW != 0 {
-			err = RxFifoOverflow
+			r.err = RxFifoOverflow
 		}
 		n &= NUM_RXBYTES_MASK
 		if read && n == last {
-			return n, err
+			return n
 		}
 		last = n
 		read = true
 	}
+	return 0
 }
 
-func (r *Radio) ReadNumTxBytes() (byte, error) {
-	n, err := r.ReadRegister(TXBYTES)
-	if err != nil {
-		return 0, err
-	}
+func (r *Radio) ReadNumTxBytes() byte {
+	n := r.ReadRegister(TXBYTES)
 	if n&TXFIFO_UNDERFLOW != 0 {
-		err = TxFifoUnderflow
+		r.err = TxFifoUnderflow
 	}
-	return n & NUM_TXBYTES_MASK, err
+	return n & NUM_TXBYTES_MASK
 }
 
 func (r *Radio) State() string {
-	s, err := r.ReadState()
-	if err != nil {
-		return err.Error()
-	}
-	return StateName(s)
+	return StateName(r.ReadState())
 }
 
-func (r *Radio) ReadState() (byte, error) {
-	status, err := r.Strobe(SNOP)
-	if err != nil {
-		return 0, err
-	}
-	return (status >> STATE_SHIFT) & STATE_MASK, nil
+func (r *Radio) ReadState() byte {
+	status := r.Strobe(SNOP)
+	return (status >> STATE_SHIFT) & STATE_MASK
 }
 
 func StateName(state byte) string {
 	return stateName[state]
 }
 
-func (r *Radio) ReadMarcState() (byte, error) {
-	state, err := r.ReadRegister(MARCSTATE)
-	if err != nil {
-		return 0, err
-	}
-	return state & MARCSTATE_MASK, nil
+func (r *Radio) ReadMarcState() byte {
+	return r.ReadRegister(MARCSTATE) & MARCSTATE_MASK
 }
 
 func MarcStateName(state byte) string {
@@ -304,7 +252,6 @@ var (
 		"RXFIFO_OVERFLOW",
 		"TXFIFO_UNDERFLOW",
 	}
-
 	marcState = []string{
 		"SLEEP",
 		"IDLE",
@@ -330,4 +277,21 @@ var (
 		"RXTX_SWITCH",
 		"TXFIFO_UNDERFLOW",
 	}
+	strobeString = []string{
+		"SRES",
+		"SFSTXON",
+		"SXOFF",
+		"SCAL",
+		"SRX",
+		"STX",
+		"SIDLE",
+		"SAFC",
+		"SWOR",
+		"SPWD",
+		"SFRX",
+		"SFTX",
+		"SWORRST",
+		"SNOP",
+	}
+	numPreamble = []uint8{2, 3, 4, 6, 8, 12, 16, 24}
 )

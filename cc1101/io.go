@@ -15,81 +15,73 @@ func init() {
 	}
 }
 
-func (r *Radio) ReadRegister(addr byte) (byte, error) {
-	buf := []byte{READ_MODE | addr, 0xFF}
-	err := r.device.Transfer(buf)
-	if err != nil {
-		return 0, err
+func (r *Radio) ReadRegister(addr byte) byte {
+	if r.Error() != nil {
+		return 0
 	}
-	return buf[1], nil
+	buf := []byte{READ_MODE | addr, 0xFF}
+	r.err = r.device.Transfer(buf)
+	return buf[1]
 }
 
-func (r *Radio) ReadBurst(addr byte, n int) ([]byte, error) {
+func (r *Radio) ReadBurst(addr byte, n int) []byte {
 	reg := addr & 0x3F
 	if 0x30 <= reg && reg <= 0x3D {
 		log.Panicf("burst access for status register %X is not available", reg)
 	}
+	if r.Error() != nil {
+		return nil
+	}
 	buf := make([]byte, n+1)
 	buf[0] = READ_MODE | BURST_MODE | addr
-	err := r.device.Transfer(buf)
-	return buf[1:], err
+	r.err = r.device.Transfer(buf)
+	return buf[1:]
 }
 
-func (r *Radio) writeData(data []byte) error {
+func (r *Radio) writeData(data []byte) {
+	if r.Error() != nil {
+		return
+	}
 	if writeUsingTransfer {
-		return r.device.Transfer(data)
+		r.err = r.device.Transfer(data)
 	} else {
-		return r.device.Write(data)
+		r.err = r.device.Write(data)
 	}
 }
 
-func (r *Radio) WriteRegister(addr byte, value byte) error {
-	return r.writeData([]byte{addr, value})
+func (r *Radio) WriteRegister(addr byte, value byte) {
+	r.writeData([]byte{addr, value})
 }
 
-func (r *Radio) WriteBurst(addr byte, data []byte) error {
-	return r.writeData(append([]byte{BURST_MODE | addr}, data...))
+func (r *Radio) WriteBurst(addr byte, data []byte) {
+	r.writeData(append([]byte{BURST_MODE | addr}, data...))
 }
 
-func (r *Radio) WriteEach(data []byte) error {
+func (r *Radio) WriteEach(data []byte) {
 	n := len(data)
 	if n%2 != 0 {
-		panic("odd data length")
+		log.Panicf("odd data length (%d)", n)
 	}
 	for i := 0; i < n; i += 2 {
-		err := r.WriteRegister(data[i], data[i+1])
-		if err != nil {
-			return err
-		}
+		r.WriteRegister(data[i], data[i+1])
 	}
-	return nil
 }
 
-func (r *Radio) Strobe(cmd byte) (byte, error) {
+func (r *Radio) Strobe(cmd byte) byte {
 	if verbose && cmd != SNOP {
 		log.Printf("issuing %s command", strobeName(cmd))
 	}
 	buf := []byte{cmd}
-	err := r.device.Transfer(buf)
-	if err != nil {
-		return 0, err
-	}
-	return buf[0], nil
+	r.err = r.device.Transfer(buf)
+	return buf[0]
 }
 
-func (r *Radio) Reset() error {
-	_, err := r.Strobe(SRES)
-	return err
+func (r *Radio) Reset() {
+	r.Strobe(SRES)
 }
 
-func (r *Radio) Version() (uint16, error) {
-	p, err := r.ReadRegister(PARTNUM)
-	if err != nil {
-		return 0, err
-	}
-	v, err := r.ReadRegister(VERSION)
-	if err != nil {
-		return 0, err
-	}
-	return uint16(p)<<8 | uint16(v), nil
+func (r *Radio) Version() uint16 {
+	p := r.ReadRegister(PARTNUM)
+	v := r.ReadRegister(VERSION)
+	return uint16(p)<<8 | uint16(v)
 }

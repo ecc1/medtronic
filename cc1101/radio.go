@@ -2,11 +2,8 @@ package cc1101
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"time"
-
-	"github.com/ecc1/radio"
 )
 
 const (
@@ -20,69 +17,12 @@ const (
 	byteDuration = time.Millisecond
 )
 
-func (r *Radio) Start() {
-	if !r.radioStarted {
-		r.radioStarted = true
-		go r.radio()
-	}
-}
-
-func (r *Radio) Stop() {
-	// stop radio goroutines and enter IDLE state
-	panic("not implemented")
-}
-
-func (r *Radio) Incoming() <-chan radio.Packet {
-	return r.receivedPackets
-}
-
-func (r *Radio) Outgoing() chan<- radio.Packet {
-	return r.transmittedPackets
-}
-
-func (r *Radio) radio() {
-	go r.awaitInterrupts()
-	for {
-		err := r.changeState(SRX, STATE_RX)
-		if err != nil {
-			log.Fatal(err)
-		}
-		select {
-		case packet := <-r.transmittedPackets:
-			err := r.changeState(SIDLE, STATE_IDLE)
-			if err != nil {
-				log.Fatal(err)
-			}
-			err = r.transmit(packet.Data)
-			if err != nil {
-				log.Fatal(err)
-			}
-			err = r.changeState(SIDLE, STATE_IDLE)
-			if err != nil {
-				log.Fatal(err)
-			}
-		case <-r.interrupt:
-			err = r.receive()
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-	}
-}
-
-func (r *Radio) awaitInterrupts() {
-	for {
-		if verbose {
-			log.Printf("waiting for interrupt in %s state", r.State())
-		}
-		r.interruptPin.Wait()
-		r.interrupt <- struct{}{}
-	}
-}
-
-func (r *Radio) transmit(data []byte) error {
+func (r *Radio) Send(data []byte) {
 	if len(data) > maxPacketSize {
 		log.Panicf("attempting to send %d-byte packet", len(data))
+	}
+	if r.Error() != nil {
+		return
 	}
 	if verbose {
 		log.Printf("sending %d-byte packet in %s state", len(data), r.State())
@@ -93,28 +33,22 @@ func (r *Radio) transmit(data []byte) error {
 	packet := make([]byte, len(data), len(data)+2)
 	copy(packet, data)
 	packet = packet[:cap(packet)]
-	err := r.send(packet)
-	if err == nil {
+	defer r.changeState(SIDLE, STATE_IDLE)
+	r.transmit(packet)
+	if r.Error() == nil {
 		r.stats.Packets.Sent++
 		r.stats.Bytes.Sent += len(data)
 	}
-	return err
 }
 
-func (r *Radio) send(data []byte) error {
+func (r *Radio) transmit(data []byte) {
 	avail := fifoSize
-	for {
+	for r.Error() == nil {
 		if avail > len(data) {
 			avail = len(data)
 		}
-		err := r.WriteBurst(TXFIFO, data[:avail])
-		if err != nil {
-			return err
-		}
-		err = r.changeState(STX, STATE_TX)
-		if err != nil {
-			return err
-		}
+		r.WriteBurst(TXFIFO, data[:avail])
+		r.changeState(STX, STATE_TX)
 		data = data[avail:]
 		if len(data) == 0 {
 			break
@@ -123,11 +57,8 @@ func (r *Radio) send(data []byte) error {
 		// See TI Design Note DN500 (swra109c).
 		// Err on the short side here to avoid TXFIFO underflow.
 		time.Sleep(fifoSize / 4 * byteDuration)
-		for {
-			n, err := r.ReadNumTxBytes()
-			if err != nil {
-				return err
-			}
+		for r.Error() == nil {
+			n := r.ReadNumTxBytes()
 			if n < fifoSize {
 				avail = fifoSize - int(n)
 				if avail > len(data) {
@@ -137,25 +68,19 @@ func (r *Radio) send(data []byte) error {
 			}
 		}
 	}
-	return r.drainTxFifo(avail)
+	r.finishTx(avail)
 }
 
-func (r *Radio) drainTxFifo(numBytes int) error {
+func (r *Radio) finishTx(numBytes int) {
 	time.Sleep(time.Duration(numBytes) * byteDuration)
-	for {
-		n, err := r.ReadNumTxBytes()
-		if err != nil && err != TxFifoUnderflow {
-			return err
-		}
-		if n == 0 || err == TxFifoUnderflow {
+	for r.Error() == nil {
+		n := r.ReadNumTxBytes()
+		if n == 0 || r.Error() == TxFifoUnderflow {
 			break
 		}
-		s, err := r.ReadState()
-		if err != nil {
-			return err
-		}
+		s := r.ReadState()
 		if s != STATE_TX && s != STATE_TXFIFO_UNDERFLOW {
-			return fmt.Errorf("unexpected %s state during TXFIFO drain", StateName(s))
+			log.Panicf("unexpected %s state during TXFIFO drain", StateName(s))
 		}
 		if verbose {
 			log.Printf("waiting to transmit %d bytes in %s state", n, r.State())
@@ -165,133 +90,105 @@ func (r *Radio) drainTxFifo(numBytes int) error {
 	if verbose {
 		log.Printf("TX FIFO drained in %s state", r.State())
 	}
-	return nil
 }
 
-func (r *Radio) receive() error {
-	waiting := false
-	for {
-		numBytes, err := r.ReadNumRxBytes()
-		if err == RxFifoOverflow {
+func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
+	if r.Error() != nil {
+		return nil, 0
+	}
+	r.changeState(SRX, STATE_RX)
+	defer r.changeState(SIDLE, STATE_IDLE)
+	if verbose {
+		log.Printf("waiting for interrupt in %s state", r.State())
+	}
+	r.err = r.interruptPin.Wait(timeout)
+	startedWaiting := time.Time{}
+	for r.Error() == nil {
+		numBytes := r.ReadNumRxBytes()
+		if r.Error() == RxFifoOverflow {
 			// Flush RX FIFO and change back to RX.
 			r.changeState(SRX, STATE_RX)
 			continue
-		} else if err != nil {
-			return err
 		}
 		// Don't read last byte of FIFO if packet is still
 		// being received. See Section 20 of data sheet.
 		if numBytes < 2 {
-			if waiting {
-				return nil
+			if startedWaiting.IsZero() {
+				startedWaiting = time.Now()
+			} else if time.Since(startedWaiting) >= timeout {
+				break
 			}
-			waiting = true
 			time.Sleep(byteDuration)
 			continue
 		}
-		waiting = false
 		if readFifoUsingBurst {
-			data, err := r.ReadBurst(RXFIFO, int(numBytes))
-			if err != nil {
-				return err
+			data := r.ReadBurst(RXFIFO, int(numBytes))
+			if r.Error() != nil {
+				break
 			}
 			i := bytes.IndexByte(data, 0)
 			if i == -1 {
 				// No zero byte found; packet is still incoming.
 				// Append all the data and continue to receive.
-				_, err = r.receiveBuffer.Write(data)
-				if err != nil {
-					return err
-				}
+				_, r.err = r.receiveBuffer.Write(data)
 				continue
 			}
 			// End of packet.
-			_, err = r.receiveBuffer.Write(data[:i])
-			if err != nil {
-				return err
-			}
+			_, r.err = r.receiveBuffer.Write(data[:i])
 		} else {
-			c, err := r.ReadRegister(RXFIFO)
-			if err != nil {
-				return err
+			c := r.ReadRegister(RXFIFO)
+			if r.Error() != nil {
+				break
 			}
 			if c != 0 {
-				err = r.receiveBuffer.WriteByte(c)
-				if err != nil {
-					return err
-				}
+				r.err = r.receiveBuffer.WriteByte(c)
 				continue
 			}
 		}
 		// End of packet.
-		rssi, err := r.ReadRSSI()
-		if err != nil {
-			return err
-		}
+		rssi := r.ReadRSSI()
 		size := r.receiveBuffer.Len()
-		if size != 0 {
-			r.stats.Packets.Received++
-			r.stats.Bytes.Received += size
-			p := make([]byte, size)
-			_, err := r.receiveBuffer.Read(p)
-			if err != nil {
-				return err
-			}
-			r.receiveBuffer.Reset()
-			r.receivedPackets <- radio.Packet{Rssi: rssi, Data: p}
+		if size == 0 {
 			if verbose {
-				n, _ := r.ReadNumRxBytes()
-				log.Printf("received %d-byte packet in %s state; %d bytes remaining", size, r.State(), n)
+				log.Printf("ignoring empty packet in %s state", r.State())
 			}
+			continue
 		}
-		return nil
+		r.stats.Packets.Received++
+		r.stats.Bytes.Received += size
+		p := make([]byte, size)
+		_, r.err = r.receiveBuffer.Read(p)
+		if r.Error() != nil {
+			break
+		}
+		r.receiveBuffer.Reset()
+		if verbose {
+			log.Printf("received %d-byte packet in %s state; %d bytes remaining", size, r.State(), r.ReadNumRxBytes())
+		}
+		return p, rssi
 	}
+	return nil, 0
 }
 
-func (r *Radio) drainRxFifo() error {
-	n, err := r.ReadNumRxBytes()
-	if err == RxFifoOverflow {
-		// Flush RX FIFO and change back to RX.
-		return r.changeState(SRX, STATE_RX)
+func (r *Radio) changeState(strobe byte, desired byte) {
+	r.SetError(nil)
+	s := r.ReadState()
+	if s == desired {
+		return
 	}
-	if err != nil || n == 0 {
-		return err
-	}
-	s, err := r.ReadState()
-	if err != nil {
-		return err
-	}
-	switch s {
-	case STATE_RX:
-		log.Printf("draining %d bytes from RXFIFO", n)
-		_, err = r.ReadBurst(RXFIFO, int(n))
-		return err
-	default:
-		return fmt.Errorf("unexpected %s state during RXFIFO drain", StateName(s))
-	}
-}
-
-func (r *Radio) changeState(strobe byte, desired byte) error {
-	s, err := r.ReadState()
-	if err != nil {
-		return err
-	}
-	if verbose && s != desired {
+	if verbose {
 		log.Printf("change from %s to %s", StateName(s), StateName(desired))
 	}
-	for {
+	for r.Error() == nil {
 		switch s {
 		case desired:
-			return nil
+			return
 		case STATE_RXFIFO_OVERFLOW:
-			s, err = r.Strobe(SFRX)
+			s = r.Strobe(SFRX)
 		case STATE_TXFIFO_UNDERFLOW:
-			s, err = r.Strobe(SFTX)
+			s = r.Strobe(SFTX)
 		default:
-			s, err = r.Strobe(strobe)
-		}
-		if err != nil {
-			return err
+			s = r.Strobe(strobe)
 		}
 		s = (s >> STATE_SHIFT) & STATE_MASK
 		if verbose {

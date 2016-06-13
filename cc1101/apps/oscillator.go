@@ -11,19 +11,16 @@ package main
 import (
 	"log"
 
-	"github.com/ecc1/cc1101"
+	"github.com/ecc1/medtronic/cc1101"
 )
 
 func main() {
-	r, err := cc1101.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
+	r := cc1101.Open()
 	r.Reset()
 	// Route CLK_XOSC/24 to GDO0 pin.
 	// See data sheet, Table 41.
-	err = r.WriteRegister(cc1101.IOCFG0, 0x39)
-	if err != nil {
-		log.Fatal(err)
+	r.WriteRegister(cc1101.IOCFG0, 0x39)
+	if r.Error() != nil {
+		log.Fatal(r.Error())
 	}
 }

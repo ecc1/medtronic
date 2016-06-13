@@ -5,68 +5,58 @@ import (
 	"fmt"
 
 	"github.com/ecc1/gpio"
-	"github.com/ecc1/radio"
+	"github.com/ecc1/medtronic/radio"
 	"github.com/ecc1/spi"
 )
 
 const (
 	spiSpeed  = 6000000 // Hz
-	gpioPin   = 14      // Intel Edison GPIO connected to GDO0
+	interruptPin   = 14      // Intel Edison GPIO connected to GDO0
 	hwVersion = 0x0014
 )
 
 type Radio struct {
-	device       *spi.Device
-	interruptPin gpio.InputPin
-
-	radioStarted       bool
-	receiveBuffer      bytes.Buffer
-	transmittedPackets chan radio.Packet
-	receivedPackets    chan radio.Packet
-	interrupt          chan struct{}
-	stats              radio.Statistics
+	device        *spi.Device
+	interruptPin  gpio.InputPin
+	receiveBuffer bytes.Buffer
+	stats         radio.Statistics
+	err           error
 }
 
-func Open() (*Radio, error) {
-	dev, err := spi.Open(spiSpeed)
-	if err != nil {
-		return nil, err
+func Open() *Radio {
+	r := Radio{}
+	r.device, r.err = spi.Open(spiSpeed)
+	if r.Error() != nil {
+		return &r
 	}
-	err = dev.SetMaxSpeed(spiSpeed)
-	if err != nil {
-		return nil, err
+	r.err = r.device.SetMaxSpeed(spiSpeed)
+	if r.Error() != nil {
+		return &r
 	}
-	pin, err := gpio.Input(gpioPin, "both", false)
-	if err != nil {
-		return nil, err
+	r.interruptPin, r.err = gpio.Input(interruptPin, "both", false)
+	if r.Error() != nil {
+		return &r
 	}
-	r := &Radio{
-		device:             dev,
-		interruptPin:       pin,
-		transmittedPackets: make(chan radio.Packet, 100),
-		receivedPackets:    make(chan radio.Packet, 100),
-		interrupt:          make(chan struct{}),
+	v := r.Version()
+	if v != hwVersion {
+		r.err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
 	}
-	v, err := r.Version()
-	if err == nil && v != hwVersion {
-		err = fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion)
-	}
-	return r, err
+	return &r
 }
 
-func (r *Radio) Init(frequency uint32) error {
-	err := r.Reset()
-	if err != nil {
-		return err
-	}
-	err = r.InitRF(frequency)
-	if err != nil {
-		return err
-	}
-	r.Start()
-	return nil
+func (r *Radio) Init(frequency uint32) {
+	r.Reset()
+	r.InitRF(frequency)
 }
 
 func (r *Radio) Statistics() radio.Statistics {
 	return r.stats
+}
+
+func (r *Radio) Error() error {
+	return r.err
+}
+
+func (r *Radio) SetError(err error) {
+	r.err = err
 }

@@ -3,37 +3,28 @@ package main
 import (
 	"log"
 
-	"github.com/ecc1/cc1101"
+	"github.com/ecc1/medtronic/cc1101"
 )
 
 func main() {
-	r, err := cc1101.Open()
-	if err != nil {
-		log.Fatal(err)
+	r := cc1101.Open()
+	if r.Error() != nil {
+		log.Fatal(r.Error())
 	}
 
 	log.Printf("Resetting radio")
-	err = r.Reset()
-	if err != nil {
-		log.Fatal(err)
-	}
+	r.Reset()
 	r.DumpRF()
 
 	freq := uint32(916600000)
 	log.Println("")
 	log.Printf("Initializing radio to %d MHz", freq)
-	err = r.InitRF(freq)
-	if err != nil {
-		log.Fatal(err)
-	}
+	r.InitRF(freq)
 	r.DumpRF()
 
 	log.Println("")
 	freq += 500000
 	log.Printf("Changing frequency to %d", freq)
-	err = r.SetFrequency(freq)
-	if err != nil {
-		log.Fatal(err)
-	}
+	r.SetFrequency(freq)
 	r.DumpRF()
 }
