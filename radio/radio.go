@@ -29,6 +29,8 @@ type Interface interface {
 
 	Error() error
 	SetError(error)
+
+	Hardware() *Hardware
 }
 
 func MegaHertz(freq uint32) string {
