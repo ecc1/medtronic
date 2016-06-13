@@ -32,11 +32,11 @@ func (pump *Pump) Settings() SettingsInfo {
 			}
 		}
 		info := SettingsInfo{
-			AutoOff:          time.Duration(data[1]) * time.Hour,
-			MaxBolus:         int(data[6]) * 100,
+			AutoOff:         time.Duration(data[1]) * time.Hour,
+			MaxBolus:        int(data[6]) * 100,
 			SelectedPattern: int(data[12]),
-			RfEnabled:        data[13] == 1,
-			InsulinAction:    time.Duration(data[18]) * time.Hour,
+			RfEnabled:       data[13] == 1,
+			InsulinAction:   time.Duration(data[18]) * time.Hour,
 		}
 		switch data[10] {
 		case 0:
