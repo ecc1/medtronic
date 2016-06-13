@@ -1,11 +1,13 @@
 package medtronic
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/ecc1/medtronic/cc1101"
 	"github.com/ecc1/medtronic/radio"
 	"github.com/ecc1/medtronic/rfm69"
 )
@@ -38,7 +40,16 @@ func Open() *Pump {
 		timeout: defaultTimeout,
 		retries: defaultRetries,
 	}
-	pump.Radio = rfm69.Open()
+	pump.Radio = cc1101.Open()
+	if pump.Error() != nil {
+		pump.SetError(nil)
+		pump.Radio = rfm69.Open()
+	}
+	if pump.Error() != nil {
+		pump.SetError(fmt.Errorf("no radio hardware detected"))
+		return pump
+	}
+	log.Printf("connected to %s radio", pump.Radio.Hardware().Name())
 	freq := getFrequency()
 	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
 	pump.Radio.Init(freq)
