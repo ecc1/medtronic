@@ -2,6 +2,7 @@ package cc1101
 
 import (
 	"errors"
+	"log"
 	"unsafe"
 )
 
@@ -215,6 +216,33 @@ func (r *Radio) ReadNumTxBytes() byte {
 		r.err = TxFifoUnderflow
 	}
 	return n & NUM_TXBYTES_MASK
+}
+
+func (r *Radio) changeState(strobe byte, desired byte) {
+	r.SetError(nil)
+	s := r.ReadState()
+	if s == desired {
+		return
+	}
+	if verbose {
+		log.Printf("change from %s to %s", StateName(s), StateName(desired))
+	}
+	for r.Error() == nil {
+		switch s {
+		case desired:
+			return
+		case STATE_RXFIFO_OVERFLOW:
+			s = r.Strobe(SFRX)
+		case STATE_TXFIFO_UNDERFLOW:
+			s = r.Strobe(SFTX)
+		default:
+			s = r.Strobe(strobe)
+		}
+		s = (s >> STATE_SHIFT) & STATE_MASK
+		if verbose {
+			log.Printf("  %s", StateName(s))
+		}
+	}
 }
 
 func (r *Radio) State() string {

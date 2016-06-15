@@ -10,8 +10,8 @@ const (
 	maxPacketSize = 110
 	fifoSize      = 66
 
-	// The fifoThreshold value allows a maximum-sized packet to be
-	// written in two bursts, but large enough to avoid fifo underflow.
+	// The fifoThreshold value should allow a maximum-sized packet to be
+	// written in two bursts, but be large enough to avoid fifo underflow.
 	fifoThreshold = 20
 
 	// Approximate time for one byte to be transmitted, based on
@@ -39,7 +39,6 @@ func (r *Radio) Send(data []byte) {
 	packet := make([]byte, len(data), len(data)+1)
 	copy(packet, data)
 	packet = packet[:cap(packet)]
-	r.setMode(TransmitterMode)
 	defer r.setMode(StandbyMode)
 	r.transmit(packet)
 	if r.Error() == nil {
@@ -58,34 +57,33 @@ func (r *Radio) transmit(data []byte) {
 			log.Printf("writing %d bytes to TX FIFO\n", avail)
 		}
 		r.hw.WriteBurst(RegFifo, data[:avail])
+		r.setMode(TransmitterMode)
 		data = data[avail:]
 		if len(data) == 0 {
 			break
 		}
 		// Wait until there is room for at least
 		// fifoSize - fifoThreshold bytes in the FIFO.
+		// Err on the short side here to avoid TXFIFO underflow.
+		time.Sleep(fifoSize / 4 * byteDuration)
 		for r.Error() == nil {
 			if !r.fifoThresholdExceeded() {
 				avail = fifoSize - fifoThreshold
 				break
 			}
-			if verbose {
-				log.Printf("waiting for TX FIFO space in %s state\n", r.State())
-			}
-			// Err on the short side here to avoid FIFO underflow.
-			time.Sleep(byteDuration)
 		}
 	}
-	r.finishTx()
+	r.finishTx(avail)
 }
 
-func (r *Radio) finishTx() {
+func (r *Radio) finishTx(numBytes int) {
+	time.Sleep(time.Duration(numBytes) * byteDuration)
 	for r.Error() == nil {
 		if r.fifoEmpty() {
 			break
 		}
 		if r.mode() != TransmitterMode {
-			panic(r.State() + " instead of Transmitter state")
+			log.Panicf("unexpected %s state while finishing TX", r.State())
 		}
 		if verbose {
 			log.Printf("waiting for TX to finish in %s state", r.State())

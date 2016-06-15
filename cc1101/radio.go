@@ -13,10 +13,15 @@ const (
 	readFifoUsingBurst = true
 
 	// Approximate time for one byte to be transmitted, based on
-	// the data rate.  It was determined empirically so that few
-	// if any iterations are needed in finishTx().
+	// the data rate.
 	byteDuration = time.Millisecond
 )
+
+func init() {
+	if verbose {
+		log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
+	}
+}
 
 func (r *Radio) Send(data []byte) {
 	if len(data) > maxPacketSize {
@@ -81,7 +86,7 @@ func (r *Radio) finishTx(numBytes int) {
 		}
 		s := r.ReadState()
 		if s != STATE_TX && s != STATE_TXFIFO_UNDERFLOW {
-			log.Panicf("unexpected %s state during TXFIFO drain", StateName(s))
+			log.Panicf("unexpected %s state while finishing TX", StateName(s))
 		}
 		if verbose {
 			log.Printf("waiting to transmit %d bytes in %s state", n, r.State())
@@ -89,7 +94,7 @@ func (r *Radio) finishTx(numBytes int) {
 		time.Sleep(byteDuration)
 	}
 	if verbose {
-		log.Printf("TX FIFO drained in %s state", r.State())
+		log.Printf("TX finished in %s state", r.State())
 	}
 }
 
@@ -169,31 +174,4 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 		return p, rssi
 	}
 	return nil, 0
-}
-
-func (r *Radio) changeState(strobe byte, desired byte) {
-	r.SetError(nil)
-	s := r.ReadState()
-	if s == desired {
-		return
-	}
-	if verbose {
-		log.Printf("change from %s to %s", StateName(s), StateName(desired))
-	}
-	for r.Error() == nil {
-		switch s {
-		case desired:
-			return
-		case STATE_RXFIFO_OVERFLOW:
-			s = r.Strobe(SFRX)
-		case STATE_TXFIFO_UNDERFLOW:
-			s = r.Strobe(SFTX)
-		default:
-			s = r.Strobe(strobe)
-		}
-		s = (s >> STATE_SHIFT) & STATE_MASK
-		if verbose {
-			log.Printf("  %s", StateName(s))
-		}
-	}
 }
