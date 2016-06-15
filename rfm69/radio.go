@@ -117,6 +117,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 		log.Printf("waiting for interrupt in %s state", r.State())
 	}
 	r.hw.AwaitInterrupt(timeout)
+	rssi := r.ReadRSSI()
 	startedWaiting := time.Time{}
 	for r.Error() == nil {
 		if r.fifoEmpty() {
@@ -137,7 +138,6 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 			continue
 		}
 		// End of packet.
-		rssi := r.ReadRSSI()
 		size := r.receiveBuffer.Len()
 		if size == 0 {
 			if verbose {
