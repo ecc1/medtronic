@@ -11,9 +11,12 @@ func (pump *Pump) DecodePacket(packet []byte) []byte {
 		pump.DecodingErrors++
 		return data
 	}
-	crc := Crc8(data[:len(data)-1])
-	if data[len(data)-1] != crc {
-		pump.err = fmt.Errorf("CRC should be %X, not %X", crc, data[len(data)-1])
+	last := len(data) - 1
+	pktCrc := data[last]
+	data = data[:last] // without CRC
+	calcCrc := Crc8(data)
+	if pktCrc != calcCrc {
+		pump.err = fmt.Errorf("CRC should be %X, not %X", calcCrc, pktCrc)
 		pump.CrcErrors++
 	}
 	return data
