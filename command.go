@@ -104,14 +104,14 @@ func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandle
 			continue
 		}
 		if !expected(cmd, data) {
-			pump.err = BadResponseError{command: cmd, data: data}
+			pump.SetError(BadResponseError{command: cmd, data: data})
 			return nil
 		}
 		pump.rssi = rssi
 		if handler != nil {
 			result := handler(data[5:])
 			if result == nil {
-				pump.err = BadResponseError{command: cmd, data: data}
+				pump.SetError(BadResponseError{command: cmd, data: data})
 			}
 			return result
 		}
@@ -133,4 +133,8 @@ func expected(cmd CommandCode, data []byte) bool {
 
 func twoByteInt(data []byte) int {
 	return int(data[0])<<8 | int(data[1])
+}
+
+func fourByteInt(data []byte) int {
+	return twoByteInt(data[0:2])<<16 | twoByteInt(data[2:4])
 }
