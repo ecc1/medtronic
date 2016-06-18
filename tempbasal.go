@@ -62,10 +62,10 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 func (pump *Pump) SetTempBasal(duration time.Duration, milliUnitsPerHour int) {
 	const halfHour = 30 * time.Minute
 	if duration%halfHour != 0 {
-		pump.err = fmt.Errorf("temporary basal duration (%v) is not a multiple of 30 minutes", duration)
+		pump.SetError(fmt.Errorf("temporary basal duration (%v) is not a multiple of 30 minutes", duration))
 	}
 	if milliUnitsPerHour%25 != 0 {
-		pump.err = fmt.Errorf("temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", milliUnitsPerHour)
+		pump.SetError(fmt.Errorf("temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", milliUnitsPerHour))
 	}
 	pump.Execute(SetTempBasal, nil,
 		0,

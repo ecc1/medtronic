@@ -7,7 +7,7 @@ import (
 func (pump *Pump) DecodePacket(packet []byte) []byte {
 	data, err := Decode6b4b(packet)
 	if err != nil {
-		pump.err = err
+		pump.SetError(err)
 		pump.DecodingErrors++
 		return data
 	}
@@ -16,7 +16,7 @@ func (pump *Pump) DecodePacket(packet []byte) []byte {
 	data = data[:last] // without CRC
 	calcCrc := Crc8(data)
 	if pktCrc != calcCrc {
-		pump.err = fmt.Errorf("CRC should be %X, not %X", calcCrc, pktCrc)
+		pump.SetError(fmt.Errorf("CRC should be %X, not %X", calcCrc, pktCrc))
 		pump.CrcErrors++
 	}
 	return data

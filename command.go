@@ -117,7 +117,7 @@ func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandle
 		}
 		return nil
 	}
-	pump.err = NoResponseError(cmd)
+	pump.SetError(NoResponseError(cmd))
 	return nil
 }
 
