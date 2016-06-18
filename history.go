@@ -7,6 +7,8 @@ import (
 const (
 	CurrentPage CommandCode = 0x9D
 	History     CommandCode = 0x80
+
+	historyPageSize = 1024
 )
 
 func (pump *Pump) CurrentPage() int {
@@ -61,12 +63,12 @@ func (pump *Pump) History(page int) []byte {
 		}
 		data = data[5:]
 	}
-	if len(results) != 1024 {
+	if len(results) != historyPageSize {
 		pump.SetError(fmt.Errorf("unexpected history page size (%d)", len(results)))
 		return nil
 	}
-	dataCrc := uint16(twoByteInt(results[1022:]))
-	results = results[:1022]
+	dataCrc := twoByteUint(results[historyPageSize-2:])
+	results = results[:historyPageSize-2]
 	calcCrc := Crc16(results)
 	if dataCrc != calcCrc {
 		pump.SetError(fmt.Errorf("CRC should be %02X, not %02X", calcCrc, dataCrc))
