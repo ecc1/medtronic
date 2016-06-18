@@ -41,11 +41,6 @@ func (pump *Pump) basalSchedule(cmd CommandCode) BasalRateSchedule {
 	return result.(BasalRateSchedule)
 }
 
-// Convert a multiple of half-hours to a Duration.
-func scheduleToDuration(t uint8) time.Duration {
-	return time.Duration(t) * 30 * time.Minute
-}
-
 func (pump *Pump) BasalRates() BasalRateSchedule {
 	return pump.basalSchedule(BasalRates)
 }
@@ -68,11 +63,4 @@ func (s BasalRateSchedule) BasalRateAt(t time.Time) BasalRate {
 		last = v
 	}
 	return last
-}
-
-// Convert a time to a Duration representing the offset since 00:00:00.
-func sinceMidnight(t time.Time) time.Duration {
-	yy, mm, dd := t.Date()
-	midnight := time.Date(yy, mm, dd, 0, 0, 0, 0, t.Location())
-	return t.Sub(midnight)
 }
