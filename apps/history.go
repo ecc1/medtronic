@@ -27,9 +27,7 @@ func main() {
 		if pump.Error() != nil {
 			log.Fatal(pump.Error())
 		}
-		for i, v := range data {
-			fmt.Printf("[%02d] % X\n", i, v)
-		}
+		fmt.Printf("% X\n", data)
 	default:
 		log.Fatalf("Usage: %s [page#]", os.Args[0])
 	}

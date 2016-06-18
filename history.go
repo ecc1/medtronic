@@ -1,9 +1,5 @@
 package medtronic
 
-import (
-	"bytes"
-)
-
 const (
 	CurrentPage CommandCode = 0x9D
 	History     CommandCode = 0x80
@@ -22,7 +18,7 @@ func (pump *Pump) CurrentPage() int {
 	return result.(int)
 }
 
-func (pump *Pump) History(page int) [][]byte {
+func (pump *Pump) History(page int) []byte {
 	result := pump.Execute(History, func(data []byte) interface{} {
 		return data
 	}, byte(page))
@@ -30,15 +26,16 @@ func (pump *Pump) History(page int) [][]byte {
 		return nil
 	}
 	data := result.([]byte)
-	results := [][]byte{}
+	prev := byte(0)
 	ack := commandPacket(Ack, nil)
+	results := []byte{}
 	for {
 		done := data[0]&0x80 != 0
 		data[0] &^= 0x80
 		// Skip duplicate responses.
-		n := len(results)
-		if n == 0 || !bytes.Equal(results[n-1], data) {
-			results = append(results, data)
+		if data[0] != prev {
+			results = append(results, data[1:]...)
+			prev = data[0]
 		}
 		if done {
 			break
