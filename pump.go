@@ -35,17 +35,28 @@ type Pump struct {
 	CrcErrors      int
 }
 
+var radios = [](func() radio.Interface){cc1101.Open, rfm69.Open}
+
 func Open() *Pump {
 	pump := &Pump{
 		timeout: defaultTimeout,
 		retries: defaultRetries,
 	}
-	pump.Radio = cc1101.Open()
-	if pump.Error() != nil {
+	found := false
+	for _, openRadio := range radios {
+		pump.Radio = openRadio()
+		if pump.Error() == nil {
+			found = true
+			break
+		}
+		_, wrongVersion := pump.Error().(radio.HardwareVersionError)
+		if !wrongVersion {
+			log.Print(pump.Error())
+			break
+		}
 		pump.SetError(nil)
-		pump.Radio = rfm69.Open()
 	}
-	if pump.Error() != nil {
+	if !found {
 		pump.SetError(fmt.Errorf("no radio hardware detected"))
 		return pump
 	}
