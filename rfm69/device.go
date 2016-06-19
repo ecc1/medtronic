@@ -2,7 +2,6 @@ package rfm69
 
 import (
 	"bytes"
-	"fmt"
 	"time"
 
 	"github.com/ecc1/gpio"
@@ -49,15 +48,15 @@ type Radio struct {
 	err           error
 }
 
-func Open() *Radio {
+func Open() radio.Interface {
 	r := &Radio{hw: radio.Open(flavor{})}
+	v := r.Version()
 	if r.Error() != nil {
 		return r
 	}
-	v := r.Version()
 	if v != hwVersion {
 		r.hw.Close()
-		r.SetError(fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion))
+		r.SetError(radio.HardwareVersionError{Actual: v, Expected: hwVersion})
 		return r
 	}
 	r.resetPin, r.err = gpio.Output(resetPin, false)

@@ -2,7 +2,6 @@ package cc1101
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 
 	"github.com/ecc1/medtronic/radio"
@@ -50,15 +49,15 @@ type Radio struct {
 	err           error
 }
 
-func Open() *Radio {
+func Open() radio.Interface {
 	r := &Radio{hw: radio.Open(flavor{})}
+	v := r.Version()
 	if r.Error() != nil {
 		return r
 	}
-	v := r.Version()
 	if v != hwVersion {
 		r.hw.Close()
-		r.SetError(fmt.Errorf("unexpected hardware version (%04X instead of %04X)", v, hwVersion))
+		r.SetError(radio.HardwareVersionError{Actual: v, Expected: hwVersion})
 		return r
 	}
 	return r
@@ -93,10 +92,15 @@ func (r *Radio) Statistics() radio.Statistics {
 }
 
 func (r *Radio) Error() error {
+	err := r.hw.Error()
+	if err != nil {
+		return err
+	}
 	return r.err
 }
 
 func (r *Radio) SetError(err error) {
+	r.hw.SetError(err)
 	r.err = err
 }
 

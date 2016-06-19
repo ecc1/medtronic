@@ -1,6 +1,7 @@
 package radio
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -118,4 +119,13 @@ func (hw *Hardware) WriteEach(data []byte) {
 
 func (hw *Hardware) SpiDevice() *spi.Device {
 	return hw.device
+}
+
+type HardwareVersionError struct {
+	Actual   uint16
+	Expected uint16
+}
+
+func (e HardwareVersionError) Error() string {
+	return fmt.Sprintf("unexpected hardware version %04X (should be %04X)", e.Actual, e.Expected)
 }
