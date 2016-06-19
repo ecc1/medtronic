@@ -14,6 +14,10 @@ func (pump *Pump) Wakeup() {
 	if pump.Error() == nil {
 		return
 	}
+	_, noResponse := pump.Error().(NoResponseError)
+	if !noResponse {
+		return
+	}
 	pump.SetError(nil)
 	log.Printf("waking pump")
 	const (
