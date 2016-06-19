@@ -39,7 +39,7 @@ func initCommandPrefix() {
 
 type CommandCode byte
 
-//go:generate stringer -type=CommandCode
+//go:generate stringer -type CommandCode
 
 type NoResponseError CommandCode
 
