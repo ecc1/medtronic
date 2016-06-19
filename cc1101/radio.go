@@ -89,7 +89,7 @@ func (r *Radio) finishTx(numBytes int) {
 			log.Panicf("unexpected %s state while finishing TX", StateName(s))
 		}
 		if verbose {
-			log.Printf("waiting to transmit %d bytes in %s state", n, r.State())
+			log.Printf("waiting to transmit %d bytes in %s state", n, StateName(s))
 		}
 		time.Sleep(byteDuration)
 	}

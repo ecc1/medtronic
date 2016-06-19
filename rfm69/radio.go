@@ -82,11 +82,12 @@ func (r *Radio) finishTx(numBytes int) {
 		if r.fifoEmpty() {
 			break
 		}
-		if r.mode() != TransmitterMode {
-			log.Panicf("unexpected %s state while finishing TX", r.State())
+		s := r.mode()
+		if s != TransmitterMode {
+			log.Panicf("unexpected %s state while finishing TX", stateName(s))
 		}
 		if verbose {
-			log.Printf("waiting for TX to finish in %s state", r.State())
+			log.Printf("waiting for TX to finish in %s state", stateName(s))
 		}
 		time.Sleep(byteDuration)
 	}
