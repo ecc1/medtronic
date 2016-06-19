@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	r := cc1101.Open()
+	r := cc1101.Open().(*cc1101.Radio)
 	if r.Error() != nil {
 		log.Fatal(r.Error())
 	}

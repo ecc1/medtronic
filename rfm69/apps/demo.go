@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	r := rfm69.Open()
+	r := rfm69.Open().(*rfm69.Radio)
 	if r.Error() != nil {
 		log.Fatal(r.Error())
 	}

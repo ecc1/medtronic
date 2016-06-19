@@ -16,7 +16,7 @@ func main() {
 	}
 	frequency := getFrequency(os.Args[1])
 	log.Printf("setting frequency to %d", frequency)
-	r := cc1101.Open()
+	r := cc1101.Open().(*cc1101.Radio)
 	if r.Error() != nil {
 		log.Fatal(r.Error())
 	}
