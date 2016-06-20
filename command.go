@@ -204,7 +204,7 @@ func expected(cmd CommandCode, resp CommandCode, data []byte) bool {
 	if !bytes.Equal(data[:len(commandPrefix)], commandPrefix) {
 		return false
 	}
-	return data[4] == byte(cmd) || data[4] == byte(resp)
+	return data[4] == byte(cmd) || data[4] == byte(resp) || (cmd == Wakeup && data[4] == byte(Ack))
 }
 
 func twoByteInt(data []byte) int {
