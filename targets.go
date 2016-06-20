@@ -19,37 +19,36 @@ type GlucoseTargetSchedule struct {
 }
 
 func (pump *Pump) GlucoseTargets() GlucoseTargetSchedule {
-	result := pump.Execute(GlucoseTargets, func(data []byte) interface{} {
-		if len(data) < 2 || (data[0]-1)%3 != 0 {
-			return nil
-		}
-		n := (data[0] - 1) / 3
-		i := 2
-		units := GlucoseUnitsInfo(data[1])
-		info := []GlucoseTarget{}
-		for n != 0 {
-			start := scheduleToDuration(data[i])
-			low := int(data[i+1])
-			high := int(data[i+2])
-			if units == MmolPerLiter {
-				// Convert to μmol/L
-				low *= 100
-				high *= 100
-			}
-			info = append(info, GlucoseTarget{
-				Start: start,
-				Low:   low,
-				High:  high,
-			})
-			n--
-			i += 3
-		}
-		return GlucoseTargetSchedule{Schedule: info}
-	})
+	data := pump.Execute(GlucoseTargets)
 	if pump.Error() != nil {
 		return GlucoseTargetSchedule{}
 	}
-	return result.(GlucoseTargetSchedule)
+	if len(data) < 2 || (data[0]-1)%3 != 0 {
+		pump.BadResponse(GlucoseTargets, data)
+		return GlucoseTargetSchedule{}
+	}
+	n := (data[0] - 1) / 3
+	i := 2
+	units := GlucoseUnitsInfo(data[1])
+	info := []GlucoseTarget{}
+	for n != 0 {
+		start := scheduleToDuration(data[i])
+		low := int(data[i+1])
+		high := int(data[i+2])
+		if units == MmolPerLiter {
+			// Convert to μmol/L
+			low *= 100
+			high *= 100
+		}
+		info = append(info, GlucoseTarget{
+			Start: start,
+			Low:   low,
+			High:  high,
+		})
+		n--
+		i += 3
+	}
+	return GlucoseTargetSchedule{Schedule: info}
 }
 
 func (s GlucoseTargetSchedule) GlucoseTargetAt(t time.Time) GlucoseTarget {

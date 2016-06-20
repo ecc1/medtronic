@@ -56,7 +56,9 @@ func (e BadResponseError) Error() string {
 	return fmt.Sprintf("unexpected response to %s: % X", e.command.String(), e.data)
 }
 
-type ResponseHandler func([]byte) interface{}
+func (pump *Pump) BadResponse(cmd CommandCode, data []byte) {
+	pump.SetError(BadResponseError{command: cmd, data: data})
+}
 
 // commandPacket constructs a packet
 // with the specified command code and parameters,
@@ -92,16 +94,16 @@ func commandPacket(cmd CommandCode, params []byte) []byte {
 }
 
 // Commands with parameters require an initial exchange with no parameters,
-// followed by an exchange with arguments.
-func (pump *Pump) Execute(cmd CommandCode, handler ResponseHandler, params ...byte) interface{} {
-	result := pump.perform(cmd, nil, handler)
+// followed by an exchange with the actual arguments.
+func (pump *Pump) Execute(cmd CommandCode, params ...byte) []byte {
+	result := pump.perform(cmd, nil)
 	if len(params) != 0 {
-		result = pump.perform(cmd, params, handler)
+		result = pump.perform(cmd, params)
 	}
 	return result
 }
 
-func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandler) interface{} {
+func (pump *Pump) perform(cmd CommandCode, params []byte) []byte {
 	if pump.Error() != nil {
 		return nil
 	}
@@ -119,18 +121,11 @@ func (pump *Pump) perform(cmd CommandCode, params []byte, handler ResponseHandle
 			continue
 		}
 		if !expected(cmd, data) {
-			pump.SetError(BadResponseError{command: cmd, data: data})
+			pump.BadResponse(cmd, data)
 			return nil
 		}
 		pump.rssi = rssi
-		if handler != nil {
-			result := handler(data[5:])
-			if result == nil {
-				pump.SetError(BadResponseError{command: cmd, data: data})
-			}
-			return result
-		}
-		return nil
+		return data[5:]
 	}
 	pump.SetError(NoResponseError(cmd))
 	return nil

@@ -10,8 +10,15 @@ const (
 	SetTempBasal CommandCode = 0x4C
 )
 
+type TempBasalType byte
+
+const (
+	Absolute TempBasalType = 0
+	Percent  TempBasalType = 1
+)
+
 type TempBasalInfo interface {
-	tagTempBasalInfo()
+	Type() TempBasalType
 }
 
 type AbsoluteTempBasalInfo struct {
@@ -19,7 +26,8 @@ type AbsoluteTempBasalInfo struct {
 	MilliUnitsPerHour int
 }
 
-func (info AbsoluteTempBasalInfo) tagTempBasalInfo() {
+func (info AbsoluteTempBasalInfo) Type() TempBasalType {
+	return Absolute
 }
 
 type PercentTempBasalInfo struct {
@@ -27,36 +35,36 @@ type PercentTempBasalInfo struct {
 	Percentage int
 }
 
-func (info PercentTempBasalInfo) tagTempBasalInfo() {
+func (info PercentTempBasalInfo) Type() TempBasalType {
+	return Percent
 }
 
 func (pump *Pump) TempBasal() TempBasalInfo {
-	result := pump.Execute(TempBasal, func(data []byte) interface{} {
-		if len(data) < 7 || data[0] != 6 {
-			return nil
-		}
-		d := time.Duration(twoByteInt(data[5:7])) * time.Minute
-		var info TempBasalInfo
-		switch data[1] {
-		case 0:
-			info = AbsoluteTempBasalInfo{
-				Duration:          d,
-				MilliUnitsPerHour: twoByteInt(data[3:5]) * 25,
-			}
-		case 1:
-			info = PercentTempBasalInfo{
-				Duration:   d,
-				Percentage: int(data[2]),
-			}
-		default:
-			return nil
-		}
-		return info
-	})
+	data := pump.Execute(TempBasal)
 	if pump.Error() != nil {
 		return nil
 	}
-	return result.(TempBasalInfo)
+	if len(data) < 7 || data[0] != 6 {
+		pump.BadResponse(TempBasal, data)
+		return nil
+	}
+	d := time.Duration(twoByteInt(data[5:7])) * time.Minute
+	var info TempBasalInfo
+	switch TempBasalType(data[1]) {
+	case Absolute:
+		info = AbsoluteTempBasalInfo{
+			Duration:          d,
+			MilliUnitsPerHour: twoByteInt(data[3:5]) * 25,
+		}
+	case Percent:
+		info = PercentTempBasalInfo{
+			Duration:   d,
+			Percentage: int(data[2]),
+		}
+	default:
+		pump.BadResponse(TempBasal, data)
+	}
+	return info
 }
 
 func (pump *Pump) SetTempBasal(duration time.Duration, milliUnitsPerHour int) {
@@ -67,8 +75,5 @@ func (pump *Pump) SetTempBasal(duration time.Duration, milliUnitsPerHour int) {
 	if milliUnitsPerHour%25 != 0 {
 		pump.SetError(fmt.Errorf("temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", milliUnitsPerHour))
 	}
-	pump.Execute(SetTempBasal, nil,
-		0,
-		byte(milliUnitsPerHour/25),
-		byte(duration/halfHour))
+	pump.Execute(SetTempBasal, byte(Absolute), byte(milliUnitsPerHour/25), byte(duration/halfHour))
 }

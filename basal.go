@@ -20,25 +20,23 @@ type BasalRateSchedule struct {
 }
 
 func (pump *Pump) basalSchedule(cmd CommandCode) BasalRateSchedule {
-	result := pump.Execute(cmd, func(data []byte) interface{} {
-		info := []BasalRate{}
-		for i := 1; i < len(data); i += 3 {
-			r := data[i]
-			t := data[i+2]
-			// Don't stop if the 00:00 rate happens to be zero.
-			if i > 1 && r == 0 && t == 0 {
-				break
-			}
-			start := scheduleToDuration(t)
-			rate := int(r) * 25
-			info = append(info, BasalRate{Start: start, Rate: rate})
-		}
-		return BasalRateSchedule{Schedule: info}
-	})
+	data := pump.Execute(cmd)
 	if pump.Error() != nil {
 		return BasalRateSchedule{}
 	}
-	return result.(BasalRateSchedule)
+	info := []BasalRate{}
+	for i := 1; i < len(data); i += 3 {
+		r := data[i]
+		t := data[i+2]
+		// Don't stop if the 00:00 rate happens to be zero.
+		if i > 1 && r == 0 && t == 0 {
+			break
+		}
+		start := scheduleToDuration(t)
+		rate := int(r) * 25
+		info = append(info, BasalRate{Start: start, Rate: rate})
+	}
+	return BasalRateSchedule{Schedule: info}
 }
 
 func (pump *Pump) BasalRates() BasalRateSchedule {

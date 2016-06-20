@@ -48,23 +48,15 @@ func (u GlucoseUnitsInfo) String() string {
 }
 
 func (pump *Pump) whichUnits(cmd CommandCode) byte {
-	result := pump.Execute(cmd, func(data []byte) interface{} {
-		if len(data) < 2 || data[0] != 1 {
-			return nil
-		}
-		switch data[1] {
-		case 1:
-			return byte(1)
-		case 2:
-			return byte(2)
-		default:
-			return nil
-		}
-	})
+	data := pump.Execute(cmd)
 	if pump.Error() != nil {
 		return 0
 	}
-	return result.(byte)
+	if len(data) < 2 || data[0] != 1 {
+		pump.BadResponse(cmd, data)
+		return 0
+	}
+	return data[1]
 }
 
 func (pump *Pump) CarbUnits() CarbUnitsInfo {

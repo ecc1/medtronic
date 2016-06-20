@@ -13,20 +13,20 @@ const (
 // caching the pump family as a side effect.
 // Use Family to avoid contacting the pump more than once.
 func (pump *Pump) Model() string {
-	result := pump.Execute(Model, func(data []byte) interface{} {
-		if len(data) < 2 {
-			return nil
-		}
-		n := int(data[1])
-		if len(data) < 2+n {
-			return nil
-		}
-		return string(data[2 : 2+n])
-	})
+	data := pump.Execute(Model)
 	if pump.Error() != nil {
 		return ""
 	}
-	model := result.(string)
+	if len(data) < 2 {
+		pump.BadResponse(Model, data)
+		return ""
+	}
+	n := int(data[1])
+	if len(data) < 2+n {
+		pump.BadResponse(Model, data)
+		return ""
+	}
+	model := string(data[2 : 2+n])
 	pump.cacheFamily(model)
 	return model
 }

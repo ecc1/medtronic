@@ -5,11 +5,9 @@ const (
 )
 
 func (pump *Pump) Suspend(suspend bool) {
-	var off byte
 	if suspend {
-		off = 1
+		pump.Execute(Suspend, 1)
 	} else {
-		off = 0
+		pump.Execute(Suspend, 0)
 	}
-	pump.Execute(Suspend, nil, off)
 }

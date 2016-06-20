@@ -12,26 +12,22 @@ const (
 )
 
 func (pump *Pump) CurrentPage() int {
-	result := pump.Execute(CurrentPage, func(data []byte) interface{} {
-		if len(data) < 5 || data[0] != 4 {
-			return nil
-		}
-		return fourByteInt(data[1:5])
-	})
+	data := pump.Execute(CurrentPage)
 	if pump.Error() != nil {
 		return 0
 	}
-	return result.(int)
+	if len(data) < 5 || data[0] != 4 {
+		pump.BadResponse(CurrentPage, data)
+		return 0
+	}
+	return fourByteInt(data[1:5])
 }
 
 func (pump *Pump) History(page int) []byte {
-	result := pump.Execute(History, func(data []byte) interface{} {
-		return data
-	}, byte(page))
+	data := pump.Execute(History, byte(page))
 	if pump.Error() != nil {
 		return nil
 	}
-	data := result.([]byte)
 	prev := byte(0)
 	ack := commandPacket(Ack, nil)
 	results := []byte{}
@@ -58,7 +54,7 @@ func (pump *Pump) History(page int) []byte {
 			continue
 		}
 		if pump.Error() == nil && !expected(History, data) {
-			pump.SetError(BadResponseError{command: History, data: data})
+			pump.BadResponse(History, data)
 			break
 		}
 		data = data[5:]

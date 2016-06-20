@@ -18,30 +18,29 @@ type CarbRatioSchedule struct {
 }
 
 func (pump *Pump) CarbRatios() CarbRatioSchedule {
-	result := pump.Execute(CarbRatios, func(data []byte) interface{} {
-		if len(data) < 2 || (data[0]-1)%2 != 0 {
-			return nil
-		}
-		n := (data[0] - 1) / 2
-		i := 2
-		// units := CarbUnitsInfo(data[1])
-		info := []CarbRatio{}
-		for n != 0 {
-			start := scheduleToDuration(data[i])
-			value := int(data[i+1])
-			info = append(info, CarbRatio{
-				Start: start,
-				Carbs: value,
-			})
-			n--
-			i += 2
-		}
-		return CarbRatioSchedule{Schedule: info}
-	})
+	data := pump.Execute(CarbRatios)
 	if pump.Error() != nil {
 		return CarbRatioSchedule{}
 	}
-	return result.(CarbRatioSchedule)
+	if len(data) < 2 || (data[0]-1)%2 != 0 {
+		pump.BadResponse(CarbRatios, data)
+		return CarbRatioSchedule{}
+	}
+	n := (data[0] - 1) / 2
+	i := 2
+	// units := CarbUnitsInfo(data[1])
+	info := []CarbRatio{}
+	for n != 0 {
+		start := scheduleToDuration(data[i])
+		value := int(data[i+1])
+		info = append(info, CarbRatio{
+			Start: start,
+			Carbs: value,
+		})
+		n--
+		i += 2
+	}
+	return CarbRatioSchedule{Schedule: info}
 }
 
 func (s CarbRatioSchedule) CarbRatioAt(t time.Time) CarbRatio {

@@ -37,5 +37,5 @@ func (pump *Pump) Wakeup() {
 	t := pump.Timeout()
 	pump.SetTimeout(10 * time.Second)
 	defer pump.SetTimeout(t)
-	pump.Execute(Wakeup, nil)
+	pump.Execute(Wakeup)
 }
