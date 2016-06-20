@@ -15,14 +15,14 @@ const (
 
 func main() {
 	pump := medtronic.Open()
-	data := make([]byte, maxPacketSize)
-	for i, _ := range data {
-		data[i] = byte(i + 1)
-	}
 	n := minPacketSize
 	for pump.Error() == nil {
-		log.Printf("data:   % X", data[:n])
-		packet := medtronic.EncodePacket(data[:n])
+		data := make([]byte, n+1) // leave space for CRC
+		for i, _ := range data {
+			data[i] = byte(i + 1)
+		}
+		packet := medtronic.EncodePacket(data)
+		log.Printf("data:   % X", data)
 		log.Printf("packet: % X", packet)
 		pump.Radio.Send(packet)
 		n++

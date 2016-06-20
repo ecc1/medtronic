@@ -11,7 +11,7 @@ const (
 	pumpEnvVar    = "MEDTRONIC_PUMP_ID"
 	PumpDevice    = 0xA7
 	Ack           = 0x06
-	maxPacketSize = 70 // excluding CRC byte
+	maxPacketSize = 71 // including CRC byte
 )
 
 var (
@@ -58,12 +58,27 @@ func (e BadResponseError) Error() string {
 
 type ResponseHandler func([]byte) interface{}
 
+// commandPacket constructs a packet
+// with the specified command code and parameters,
+// A command packet with no parameters is 7 bytes long:
+//   device type (0xA7)
+//   3 bytes of pump ID
+//   command code
+//   length of parameters (0)
+//   CRC-8
+// A command packet with parameters is 71 bytes long:
+//   device type (0xA7)
+//   3 bytes of pump ID
+//   command code
+//   length of parameters
+//   64 bytes of parameters plus padding
+//   CRC-8
 func commandPacket(cmd CommandCode, params []byte) []byte {
 	initCommandPrefix()
 	n := len(commandPrefix)
-	var data []byte
+	data := []byte{}
 	if len(params) == 0 {
-		data = make([]byte, n+2)
+		data = make([]byte, n+3)
 	} else {
 		data = make([]byte, maxPacketSize)
 	}

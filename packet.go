@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+// DecodePacket performs 4b/6b decoding and CRC verification.
+// It returns the decoded data, excluding the CRC byte.
 func (pump *Pump) DecodePacket(packet []byte) []byte {
 	data, err := Decode6b4b(packet)
 	if err != nil {
@@ -22,13 +24,13 @@ func (pump *Pump) DecodePacket(packet []byte) []byte {
 	return data
 }
 
+// EncodePacket calculates and stores the final CRC byte
+// and returns the 4b/6b-encoded result.
+// The caller must provide space for the CRC byte.
 func EncodePacket(data []byte) []byte {
-	// Don't use append() to add the CRC, because append
-	// may write into the array underlying the caller's slice.
-	buf := make([]byte, len(data)+1)
-	copy(buf, data)
-	buf[len(data)] = Crc8(data)
-	return Encode4b6b(buf)
+	n := len(data) - 1
+	data[n] = Crc8(data[:n])
+	return Encode4b6b(data)
 }
 
 func (pump *Pump) PrintStats() {
