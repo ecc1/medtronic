@@ -141,10 +141,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 		// End of packet.
 		size := r.receiveBuffer.Len()
 		if size == 0 {
-			if verbose {
-				log.Printf("ignoring empty packet in %s state", r.State())
-			}
-			continue
+			break
 		}
 		r.stats.Packets.Received++
 		r.stats.Bytes.Received += size
@@ -159,5 +156,5 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 		}
 		return p, rssi
 	}
-	return nil, 0
+	return nil, rssi
 }
