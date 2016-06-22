@@ -17,6 +17,7 @@ type Statistics struct {
 
 type Interface interface {
 	Init(frequency uint32)
+	Reset()
 
 	Frequency() uint32
 	SetFrequency(uint32)
