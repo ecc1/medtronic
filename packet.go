@@ -8,7 +8,10 @@ import (
 // It returns the decoded data, excluding the CRC byte.
 func (pump *Pump) DecodePacket(packet []byte) []byte {
 	data, err := Decode6b4b(packet)
-	if err != nil {
+	if err != nil || len(data) == 0 {
+		if len(data) == 0 {
+			err = fmt.Errorf("empty packet")
+		}
 		pump.SetError(err)
 		pump.DecodingErrors++
 		return data
