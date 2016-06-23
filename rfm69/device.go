@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	spiSpeed  = 10000000 // Hz
-	resetPin  = 12       // Intel Edison GPIO for hardware reset
+	spiSpeed  = 6000000 // Hz
+	resetPin  = 12      // Intel Edison GPIO for hardware reset
 	hwVersion = 0x0204
 )
 
