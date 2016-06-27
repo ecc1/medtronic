@@ -13,7 +13,7 @@ func main() {
 	pump := medtronic.Open()
 	switch len(os.Args) {
 	case 1:
-		result := pump.CurrentPage()
+		result := pump.HistoryPageCount()
 		if pump.Error() != nil {
 			log.Fatal(pump.Error())
 		}
@@ -23,7 +23,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		data := pump.History(page)
+		data := pump.HistoryPage(page)
 		if pump.Error() != nil {
 			log.Fatal(pump.Error())
 		}
