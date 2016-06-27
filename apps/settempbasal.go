@@ -10,34 +10,37 @@ import (
 )
 
 func usage() {
-	log.Fatalf("Usage: %s duration units/hr", os.Args[0])
+	log.Fatalf("Usage: %s duration (units/hr | rate%%)", os.Args[0])
 }
 
 func main() {
-	if len(os.Args) != 3 {
+	if len(os.Args) != 3 || len(os.Args[1]) == 0 || len(os.Args[2]) == 0 {
 		usage()
 	}
 	duration, err := time.ParseDuration(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
 	}
-	rate, err := strconv.ParseFloat(os.Args[2], 32)
-	if err != nil {
-		log.Fatal(err)
-	}
 	pump := medtronic.Open()
-	log.Printf("setting temporary basal of %.3f units/hour for %v", rate, duration)
-	pump.SetTempBasal(duration, int(rate*1000))
+	rateArg := os.Args[2]
+	n := len(rateArg) - 1
+	if rateArg[n] == '%' {
+		percent, err := strconv.Atoi(rateArg[:n])
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("setting temporary basal of %d%% for %v", percent, duration)
+		pump.SetPercentTempBasal(duration, percent)
+	} else {
+		f, err := strconv.ParseFloat(rateArg, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+		rate := int(1000.0*f + 0.5)
+		log.Printf("setting temporary basal of %d.%03d units/hour for %v", rate/1000, rate%1000, duration)
+		pump.SetAbsoluteTempBasal(duration, rate)
+	}
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
-}
-
-func parseTime(date string) time.Time {
-	const layout = "2006-01-02 15:04:05"
-	t, err := time.ParseInLocation(layout, date, time.Local)
-	if err != nil {
-		log.Fatalf("Cannot parse %s: %v", date, err)
-	}
-	return t
 }
