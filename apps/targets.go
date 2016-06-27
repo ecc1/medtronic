@@ -16,5 +16,5 @@ func main() {
 	}
 	fmt.Printf("%+v\n", result)
 	t := result.GlucoseTargetAt(time.Now())
-	fmt.Printf("Current target: %d – %d\n", t.Low, t.High)
+	fmt.Printf("Current target: %d – %d %v\n", t.Low, t.High, t.Units)
 }

@@ -16,5 +16,5 @@ func main() {
 	}
 	fmt.Printf("%+v\n", result)
 	s := result.InsulinSensitivityAt(time.Now())
-	fmt.Printf("Current insulin sensitivity: %d\n", s.Sensitivity)
+	fmt.Printf("Current insulin sensitivity: %d %v\n", s.Sensitivity, s.Units)
 }

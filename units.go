@@ -9,14 +9,14 @@ const (
 	GlucoseUnits CommandCode = 0x89
 )
 
-type CarbUnitsInfo byte
+type CarbUnitsType byte
 
 const (
-	Grams     CarbUnitsInfo = 1
-	Exchanges CarbUnitsInfo = 2
+	Grams     CarbUnitsType = 1
+	Exchanges CarbUnitsType = 2
 )
 
-func (u CarbUnitsInfo) String() string {
+func (u CarbUnitsType) String() string {
 	switch u {
 	case Grams:
 		return "grams"
@@ -28,14 +28,14 @@ func (u CarbUnitsInfo) String() string {
 	panic("unreachable")
 }
 
-type GlucoseUnitsInfo byte
+type GlucoseUnitsType byte
 
 const (
-	MgPerDeciLiter GlucoseUnitsInfo = 1
-	MmolPerLiter   GlucoseUnitsInfo = 2
+	MgPerDeciLiter GlucoseUnitsType = 1
+	MmolPerLiter   GlucoseUnitsType = 2
 )
 
-func (u GlucoseUnitsInfo) String() string {
+func (u GlucoseUnitsType) String() string {
 	switch u {
 	case MgPerDeciLiter:
 		return "mg/dL"
@@ -59,10 +59,10 @@ func (pump *Pump) whichUnits(cmd CommandCode) byte {
 	return data[1]
 }
 
-func (pump *Pump) CarbUnits() CarbUnitsInfo {
-	return CarbUnitsInfo(pump.whichUnits(CarbUnits))
+func (pump *Pump) CarbUnits() CarbUnitsType {
+	return CarbUnitsType(pump.whichUnits(CarbUnits))
 }
 
-func (pump *Pump) GlucoseUnits() GlucoseUnitsInfo {
-	return GlucoseUnitsInfo(pump.whichUnits(GlucoseUnits))
+func (pump *Pump) GlucoseUnits() GlucoseUnitsType {
+	return GlucoseUnitsType(pump.whichUnits(GlucoseUnits))
 }

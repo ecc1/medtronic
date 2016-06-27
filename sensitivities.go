@@ -11,6 +11,7 @@ const (
 type InsulinSensitivity struct {
 	Start       time.Duration // offset from 00:00:00
 	Sensitivity int           // mg/dL or μmol/L reduction per insulin unit
+	Units       GlucoseUnitsType
 }
 
 type InsulinSensitivitySchedule struct {
@@ -28,7 +29,7 @@ func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
 	}
 	n := (data[0] - 1) / 2
 	i := 2
-	units := GlucoseUnitsInfo(data[1])
+	units := GlucoseUnitsType(data[1])
 	info := []InsulinSensitivity{}
 	for n != 0 {
 		start := scheduleToDuration(data[i])
@@ -40,6 +41,7 @@ func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
 		info = append(info, InsulinSensitivity{
 			Start:       start,
 			Sensitivity: value,
+			Units:       units,
 		})
 		n--
 		i += 2

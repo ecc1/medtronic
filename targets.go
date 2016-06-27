@@ -12,6 +12,7 @@ type GlucoseTarget struct {
 	Start time.Duration // offset from 00:00:00
 	Low   int           // mg/dL or μmol/L
 	High  int           // mg/dL or μmol/L
+	Units GlucoseUnitsType
 }
 
 type GlucoseTargetSchedule struct {
@@ -29,7 +30,7 @@ func (pump *Pump) GlucoseTargets() GlucoseTargetSchedule {
 	}
 	n := (data[0] - 1) / 3
 	i := 2
-	units := GlucoseUnitsInfo(data[1])
+	units := GlucoseUnitsType(data[1])
 	info := []GlucoseTarget{}
 	for n != 0 {
 		start := scheduleToDuration(data[i])
@@ -44,6 +45,7 @@ func (pump *Pump) GlucoseTargets() GlucoseTargetSchedule {
 			Start: start,
 			Low:   low,
 			High:  high,
+			Units: units,
 		})
 		n--
 		i += 3

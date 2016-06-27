@@ -16,5 +16,5 @@ func main() {
 	}
 	fmt.Printf("%+v\n", result)
 	s := result.CarbRatioAt(time.Now())
-	fmt.Printf("Current carb ratio: %d\n", s.Carbs)
+	fmt.Printf("Current carb ratio: %d.%d %v\n", s.Carbs/10, s.Carbs%10, s.Units)
 }
