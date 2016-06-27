@@ -9,9 +9,9 @@ const (
 )
 
 type CarbRatio struct {
-	Start time.Duration // offset from 00:00:00
-	Carbs int           // grams or exchanges covered by TEN insulin units
-	Units CarbUnitsType
+	Start     time.Duration // offset from 00:00:00
+	CarbRatio int           // grams or exchanges covered by TEN insulin units
+	Units     CarbUnitsType
 }
 
 type CarbRatioSchedule struct {
@@ -41,9 +41,9 @@ func (pump *Pump) CarbRatios() CarbRatioSchedule {
 			start := scheduleToDuration(data[i])
 			value := twoByteInt(data[i+1 : i+3])
 			info = append(info, CarbRatio{
-				Start: start,
-				Carbs: value,
-				Units: units,
+				Start:     start,
+				CarbRatio: value,
+				Units:     units,
 			})
 			n--
 			i += 3
@@ -59,9 +59,9 @@ func (pump *Pump) CarbRatios() CarbRatioSchedule {
 			start := scheduleToDuration(data[i])
 			value := int(data[i+1])
 			info = append(info, CarbRatio{
-				Start: start,
-				Carbs: value,
-				Units: units,
+				Start:     start,
+				CarbRatio: value,
+				Units:     units,
 			})
 			n--
 			i += 2
