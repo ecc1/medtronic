@@ -41,12 +41,21 @@ type CommandCode byte
 
 //go:generate stringer -type CommandCode
 
-const Ack CommandCode = 0x06
+const (
+	Ack          CommandCode = 0x06
+	CommandError CommandCode = 0x15
+)
 
 type NoResponseError CommandCode
 
 func (e NoResponseError) Error() string {
-	return fmt.Sprintf("no response to %s", CommandCode(e).String())
+	return fmt.Sprintf("no response to %v", CommandCode(e))
+}
+
+type InvalidCommandError CommandCode
+
+func (e InvalidCommandError) Error() string {
+	return fmt.Sprintf("invalid %v command", CommandCode(e))
 }
 
 type BadResponseError struct {
@@ -55,7 +64,7 @@ type BadResponseError struct {
 }
 
 func (e BadResponseError) Error() string {
-	return fmt.Sprintf("unexpected response to %s: % X", e.command.String(), e.data)
+	return fmt.Sprintf("unexpected response to %v: % X", e.command, e.data)
 }
 
 func (pump *Pump) BadResponse(cmd CommandCode, data []byte) {
@@ -186,8 +195,7 @@ func (pump *Pump) perform(cmd CommandCode, resp CommandCode, params []byte) []by
 			pump.SetError(nil)
 			continue
 		}
-		if !expected(cmd, resp, data) {
-			pump.BadResponse(cmd, data)
+		if pump.unexpected(cmd, resp, data) {
 			return nil
 		}
 		pump.rssi = rssi
@@ -197,14 +205,32 @@ func (pump *Pump) perform(cmd CommandCode, resp CommandCode, params []byte) []by
 	return nil
 }
 
-func expected(cmd CommandCode, resp CommandCode, data []byte) bool {
+func (pump *Pump) unexpected(cmd CommandCode, resp CommandCode, data []byte) bool {
 	if len(data) < 5 {
-		return false
+		pump.BadResponse(cmd, data)
+		return true
 	}
-	if !bytes.Equal(data[:len(commandPrefix)], commandPrefix) {
-		return false
+	n := len(commandPrefix)
+	if !bytes.Equal(data[:n], commandPrefix) {
+		pump.BadResponse(cmd, data)
+		return true
 	}
-	return data[4] == byte(cmd) || data[4] == byte(resp) || (cmd == Wakeup && data[4] == byte(Ack))
+	switch CommandCode(data[n]) {
+	case cmd:
+		return false
+	case resp:
+		return false
+	case Ack:
+		if cmd != Wakeup {
+			break
+		}
+		return false
+	case CommandError:
+		pump.SetError(InvalidCommandError(cmd))
+		return true
+	}
+	pump.BadResponse(cmd, data)
+	return true
 }
 
 func twoByteInt(data []byte) int {
