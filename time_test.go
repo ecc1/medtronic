@@ -49,7 +49,7 @@ func TestSinceMidnight(t *testing.T) {
 	}
 }
 
-func TestParseTimestamp(t *testing.T) {
+func TestDecodeTimestamp(t *testing.T) {
 	cases := []struct {
 		b []byte
 		t time.Time
@@ -60,9 +60,9 @@ func TestParseTimestamp(t *testing.T) {
 		{[]byte{0x40, 0x94, 0x12, 0x0F, 0x10}, parseTime("2016-06-15T18:20:00Z")},
 	}
 	for _, c := range cases {
-		ts := parseTimestamp(c.b)
+		ts := decodeTimestamp(c.b)
 		if !ts.Equal(c.t) {
-			t.Errorf("parseTimestamp(% X) == %v, want %v", c.b, ts, c.t)
+			t.Errorf("decodeTimestamp(% X) == %v, want %v", c.b, ts, c.t)
 		}
 	}
 }

@@ -16,8 +16,8 @@ func sinceMidnight(t time.Time) time.Duration {
 	return t.Sub(midnight)
 }
 
-// Parse a 5-byte timestamp from a pump history record.
-func parseTimestamp(data []byte) time.Time {
+// Decode a 5-byte timestamp from a pump history record.
+func decodeTimestamp(data []byte) time.Time {
 	s := int(data[0] & 0x3F)
 	m := int(data[1] & 0x3F)
 	h := int(data[2] & 0x1F)
