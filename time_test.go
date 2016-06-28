@@ -66,3 +66,19 @@ func TestDecodeTimestamp(t *testing.T) {
 		}
 	}
 }
+
+func TestDecodeDate(t *testing.T) {
+	cases := []struct {
+		b []byte
+		t time.Time
+	}{
+		{[]byte{0xBF, 0x0F}, parseTime("2015-10-31T00:00:00Z")},
+		{[]byte{0x78, 0x10}, parseTime("2016-06-24T00:00:00Z")},
+	}
+	for _, c := range cases {
+		ts := decodeDate(c.b)
+		if !ts.Equal(c.t) {
+			t.Errorf("decodeDate(% X) == %v, want %v", c.b, ts, c.t)
+		}
+	}
+}

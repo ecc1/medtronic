@@ -23,7 +23,15 @@ func decodeTimestamp(data []byte) time.Time {
 	h := int(data[2] & 0x1F)
 	dd := int(data[3] & 0x1F)
 	// The 4-bit month value is encoded in the high 2 bits of the first 2 bytes.
-	mm := time.Month((data[0]>>6)<<2 | data[1]>>6)
+	mm := time.Month(int(data[0]>>6)<<2 | int(data[1]>>6))
 	yy := 2000 + int(data[4]&0x7F)
 	return time.Date(yy, mm, dd, h, m, s, 0, time.UTC)
+}
+
+// Decode a 2-byte date from a pump history record.
+func decodeDate(data []byte) time.Time {
+	dd := int(data[0] & 0x1F)
+	mm := time.Month(int(data[0]>>5)<<1 + int(data[1]>>7))
+	yy := 2000 + int(data[1]&0x7F)
+	return time.Date(yy, mm, dd, 0, 0, 0, 0, time.UTC)
 }
