@@ -14,8 +14,27 @@ type InsulinSensitivity struct {
 	Units       GlucoseUnitsType
 }
 
-type InsulinSensitivitySchedule struct {
-	Schedule []InsulinSensitivity
+type InsulinSensitivitySchedule []InsulinSensitivity
+
+func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) InsulinSensitivitySchedule {
+	sched := []InsulinSensitivity{}
+	for i := 0; i < len(data); i += 2 {
+		start := scheduleToDuration(data[i])
+		if start == 0 && len(sched) != 0 {
+			break
+		}
+		value := int(data[i+1])
+		if units == MmolPerLiter {
+			// Convert to μmol/L
+			value *= 100
+		}
+		sched = append(sched, InsulinSensitivity{
+			Start:       start,
+			Sensitivity: value,
+			Units:       units,
+		})
+	}
+	return sched
 }
 
 func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
@@ -27,32 +46,15 @@ func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
 		pump.BadResponse(InsulinSensitivities, data)
 		return InsulinSensitivitySchedule{}
 	}
-	n := (data[0] - 1) / 2
-	i := 2
+	n := int(data[0]) - 1
 	units := GlucoseUnitsType(data[1])
-	info := []InsulinSensitivity{}
-	for n != 0 {
-		start := scheduleToDuration(data[i])
-		value := int(data[i+1])
-		if units == MmolPerLiter {
-			// Convert to μmol/L
-			value *= 100
-		}
-		info = append(info, InsulinSensitivity{
-			Start:       start,
-			Sensitivity: value,
-			Units:       units,
-		})
-		n--
-		i += 2
-	}
-	return InsulinSensitivitySchedule{Schedule: info}
+	return decodeInsulinSensitivitySchedule(data[2:2+n], units)
 }
 
 func (s InsulinSensitivitySchedule) InsulinSensitivityAt(t time.Time) InsulinSensitivity {
 	d := sinceMidnight(t)
 	last := InsulinSensitivity{}
-	for _, v := range s.Schedule {
+	for _, v := range s {
 		if v.Start > d {
 			break
 		}

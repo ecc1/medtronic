@@ -15,16 +15,14 @@ type BasalRate struct {
 	Rate  int           // milliUnits per hour
 }
 
-type BasalRateSchedule struct {
-	Schedule []BasalRate
-}
+type BasalRateSchedule []BasalRate
 
 func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 	data := pump.Execute(cmd)
 	if pump.Error() != nil {
 		return BasalRateSchedule{}
 	}
-	info := []BasalRate{}
+	sched := []BasalRate{}
 	for i := 1; i < len(data); i += 3 {
 		r := data[i]
 		t := data[i+2]
@@ -34,9 +32,9 @@ func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 		}
 		start := scheduleToDuration(t)
 		rate := int(r) * 25
-		info = append(info, BasalRate{Start: start, Rate: rate})
+		sched = append(sched, BasalRate{Start: start, Rate: rate})
 	}
-	return BasalRateSchedule{Schedule: info}
+	return sched
 }
 
 func (pump *Pump) BasalRates() BasalRateSchedule {
@@ -54,7 +52,7 @@ func (pump *Pump) BasalPatternB() BasalRateSchedule {
 func (s BasalRateSchedule) BasalRateAt(t time.Time) BasalRate {
 	d := sinceMidnight(t)
 	last := BasalRate{}
-	for _, v := range s.Schedule {
+	for _, v := range s {
 		if v.Start > d {
 			break
 		}

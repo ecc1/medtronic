@@ -14,8 +14,37 @@ type CarbRatio struct {
 	Units     CarbUnitsType
 }
 
-type CarbRatioSchedule struct {
-	Schedule []CarbRatio
+type CarbRatioSchedule []CarbRatio
+
+func carbRatioStep(newerPump bool) int {
+	if newerPump {
+		return 3
+	} else {
+		return 2
+	}
+}
+
+func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) CarbRatioSchedule {
+	sched := []CarbRatio{}
+	step := carbRatioStep(newerPump)
+	for i := 0; i < len(data); i += step {
+		start := scheduleToDuration(data[i])
+		if start == 0 && len(sched) != 0 {
+			break
+		}
+		value := 0
+		if newerPump {
+			value = twoByteInt(data[i+1 : i+3])
+		} else {
+			value = int(data[i+1])
+		}
+		sched = append(sched, CarbRatio{
+			Start:     start,
+			CarbRatio: value,
+			Units:     units,
+		})
+	}
+	return sched
 }
 
 func (pump *Pump) CarbRatios() CarbRatioSchedule {
@@ -25,55 +54,24 @@ func (pump *Pump) CarbRatios() CarbRatioSchedule {
 	if pump.Error() != nil {
 		return CarbRatioSchedule{}
 	}
-	info := []CarbRatio{}
-	units := CarbUnitsType(data[1])
-	if newer {
-		if len(data) < 2 || (data[0]-1)%3 != 0 {
-			pump.BadResponse(CarbRatios, data)
-			return CarbRatioSchedule{}
-		}
-		n := (data[0] - 1) / 3
-		i := 3
-		for n != 0 {
-			if data[i] == 0 && len(info) != 0 {
-				break
-			}
-			start := scheduleToDuration(data[i])
-			value := twoByteInt(data[i+1 : i+3])
-			info = append(info, CarbRatio{
-				Start:     start,
-				CarbRatio: value,
-				Units:     units,
-			})
-			n--
-			i += 3
-		}
-	} else {
-		if len(data) < 2 || (data[0]-1)%2 != 0 {
-			pump.BadResponse(CarbRatios, data)
-			return CarbRatioSchedule{}
-		}
-		n := (data[0] - 1) / 2
-		i := 2
-		for n != 0 {
-			start := scheduleToDuration(data[i])
-			value := int(data[i+1])
-			info = append(info, CarbRatio{
-				Start:     start,
-				CarbRatio: value,
-				Units:     units,
-			})
-			n--
-			i += 2
-		}
+	if len(data) < 2 {
+		pump.BadResponse(CarbRatios, data)
+		return CarbRatioSchedule{}
 	}
-	return CarbRatioSchedule{Schedule: info}
+	n := int(data[0]) - 1
+	step := carbRatioStep(newer)
+	if n%step != 0 {
+		pump.BadResponse(CarbRatios, data)
+		return CarbRatioSchedule{}
+	}
+	units := CarbUnitsType(data[1])
+	return decodeCarbRatioSchedule(data[step:step+n], units, newer)
 }
 
 func (s CarbRatioSchedule) CarbRatioAt(t time.Time) CarbRatio {
 	d := sinceMidnight(t)
 	last := CarbRatio{}
-	for _, v := range s.Schedule {
+	for _, v := range s {
 		if v.Start > d {
 			break
 		}
