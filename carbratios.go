@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	CarbRatios CommandCode = 0x8A
+	CarbRatios Command = 0x8A
 )
 
 type CarbRatio struct {

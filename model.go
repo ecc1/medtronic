@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	Model CommandCode = 0x8D
+	Model Command = 0x8D
 )
 
 // Model requests the model number from the pump and returns it,

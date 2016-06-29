@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	Clock    CommandCode = 0x70
-	SetClock CommandCode = 0x40
+	Clock    Command = 0x70
+	SetClock Command = 0x40
 )
 
 func (pump *Pump) Clock() time.Time {

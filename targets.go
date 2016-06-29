@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	GlucoseTargets CommandCode = 0x9F
+	GlucoseTargets Command = 0x9F
 )
 
 type GlucoseTarget struct {

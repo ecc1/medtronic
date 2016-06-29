@@ -1,7 +1,7 @@
 package medtronic
 
 const (
-	Reservoir CommandCode = 0x73
+	Reservoir Command = 0x73
 )
 
 // Reservoir returns the amount of insulin remaining, in milliUnits.

@@ -1,7 +1,7 @@
 package medtronic
 
 const (
-	PumpId CommandCode = 0x71
+	PumpId Command = 0x71
 )
 
 func (pump *Pump) PumpId() string {

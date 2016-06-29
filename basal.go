@@ -5,9 +5,9 @@ import (
 )
 
 const (
-	BasalRates    CommandCode = 0x92
-	BasalPatternA CommandCode = 0x93
-	BasalPatternB CommandCode = 0x94
+	BasalRates    Command = 0x92
+	BasalPatternA Command = 0x93
+	BasalPatternB Command = 0x94
 )
 
 type BasalRate struct {
@@ -19,7 +19,7 @@ type BasalRateSchedule struct {
 	Schedule []BasalRate
 }
 
-func (pump *Pump) basalSchedule(cmd CommandCode) BasalRateSchedule {
+func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 	data := pump.Execute(cmd)
 	if pump.Error() != nil {
 		return BasalRateSchedule{}

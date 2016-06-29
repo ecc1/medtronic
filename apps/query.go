@@ -23,7 +23,7 @@ func main() {
 	}
 	pump := medtronic.Open()
 	log.Printf("issuing command 0x%02X", cmd)
-	result := pump.Query(medtronic.CommandCode(cmd))
+	result := pump.Query(medtronic.Command(cmd))
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}

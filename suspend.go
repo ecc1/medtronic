@@ -1,7 +1,7 @@
 package medtronic
 
 const (
-	Suspend CommandCode = 0x4D
+	Suspend Command = 0x4D
 )
 
 func (pump *Pump) Suspend(suspend bool) {

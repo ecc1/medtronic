@@ -1,7 +1,7 @@
 package medtronic
 
 const (
-	Status CommandCode = 0xCE
+	Status Command = 0xCE
 )
 
 type StatusInfo struct {

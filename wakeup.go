@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	Wakeup CommandCode = 0x5D
+	Wakeup Command = 0x5D
 
 	// Older pumps should have RF enabled to increase the
 	// frequency with which they listen for wakeups.

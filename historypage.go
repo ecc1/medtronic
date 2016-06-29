@@ -1,8 +1,8 @@
 package medtronic
 
 const (
-	HistoryPageCount CommandCode = 0x9D
-	HistoryPage      CommandCode = 0x80
+	HistoryPageCount Command = 0x9D
+	HistoryPage      Command = 0x80
 )
 
 func (pump *Pump) HistoryPageCount() int {

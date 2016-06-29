@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	CarbUnits    CommandCode = 0x88
-	GlucoseUnits CommandCode = 0x89
+	CarbUnits    Command = 0x88
+	GlucoseUnits Command = 0x89
 )
 
 type CarbUnitsType byte
@@ -47,7 +47,7 @@ func (u GlucoseUnitsType) String() string {
 	panic("unreachable")
 }
 
-func (pump *Pump) whichUnits(cmd CommandCode) byte {
+func (pump *Pump) whichUnits(cmd Command) byte {
 	data := pump.Execute(cmd)
 	if pump.Error() != nil {
 		return 0

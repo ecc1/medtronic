@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	TempBasal            CommandCode = 0x98
-	SetAbsoluteTempBasal CommandCode = 0x4C
-	SetPercentTempBasal  CommandCode = 0x69
+	TempBasal            Command = 0x98
+	SetAbsoluteTempBasal Command = 0x4C
+	SetPercentTempBasal  Command = 0x69
 )
 
 type TempBasalType byte

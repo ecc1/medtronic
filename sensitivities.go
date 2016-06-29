@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	InsulinSensitivities CommandCode = 0x8B
+	InsulinSensitivities Command = 0x8B
 )
 
 type InsulinSensitivity struct {

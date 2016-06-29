@@ -37,29 +37,29 @@ func initCommandPrefix() {
 	}
 }
 
-type CommandCode byte
+type Command byte
 
-//go:generate stringer -type CommandCode
+//go:generate stringer -type Command
 
 const (
-	Ack          CommandCode = 0x06
-	CommandError CommandCode = 0x15
+	Ack          Command = 0x06
+	CommandError Command = 0x15
 )
 
-type NoResponseError CommandCode
+type NoResponseError Command
 
 func (e NoResponseError) Error() string {
-	return fmt.Sprintf("no response to %v", CommandCode(e))
+	return fmt.Sprintf("no response to %v", Command(e))
 }
 
-type InvalidCommandError CommandCode
+type InvalidCommandError Command
 
 func (e InvalidCommandError) Error() string {
-	return fmt.Sprintf("invalid %v command", CommandCode(e))
+	return fmt.Sprintf("invalid %v command", Command(e))
 }
 
 type BadResponseError struct {
-	command CommandCode
+	command Command
 	data    []byte
 }
 
@@ -67,7 +67,7 @@ func (e BadResponseError) Error() string {
 	return fmt.Sprintf("unexpected response to %v: % X", e.command, e.data)
 }
 
-func (pump *Pump) BadResponse(cmd CommandCode, data []byte) {
+func (pump *Pump) BadResponse(cmd Command, data []byte) {
 	pump.SetError(BadResponseError{command: cmd, data: data})
 }
 
@@ -86,7 +86,7 @@ func (pump *Pump) BadResponse(cmd CommandCode, data []byte) {
 //   length of parameters
 //   64 bytes of parameters plus padding
 //   CRC-8
-func commandPacket(cmd CommandCode, params []byte) []byte {
+func commandPacket(cmd Command, params []byte) []byte {
 	initCommandPrefix()
 	n := len(commandPrefix)
 	data := []byte{}
@@ -106,7 +106,7 @@ func commandPacket(cmd CommandCode, params []byte) []byte {
 
 // Commands with parameters require an initial exchange with no parameters,
 // followed by an exchange with the actual arguments.
-func (pump *Pump) Execute(cmd CommandCode, params ...byte) []byte {
+func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 	if len(params) != 0 {
 		pump.perform(cmd, Ack, nil)
 		return pump.perform(cmd, Ack, params)
@@ -121,7 +121,7 @@ func (pump *Pump) Execute(cmd CommandCode, params ...byte) []byte {
 // The 0x80 bit is set in the sequence number of the final record.
 // The page consists of the concatenated payloads.
 // The final 2 bytes are the CRC-16 of the preceding data.
-func (pump *Pump) Download(cmd CommandCode, page int) []byte {
+func (pump *Pump) Download(cmd Command, page int) []byte {
 	data := pump.Execute(cmd, byte(page))
 	if pump.Error() != nil {
 		return nil
@@ -178,7 +178,7 @@ func (pump *Pump) Download(cmd CommandCode, page int) []byte {
 	return results
 }
 
-func (pump *Pump) perform(cmd CommandCode, resp CommandCode, params []byte) []byte {
+func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 	if pump.Error() != nil {
 		return nil
 	}
@@ -205,7 +205,7 @@ func (pump *Pump) perform(cmd CommandCode, resp CommandCode, params []byte) []by
 	return nil
 }
 
-func (pump *Pump) unexpected(cmd CommandCode, resp CommandCode, data []byte) bool {
+func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 	if len(data) < 5 {
 		pump.BadResponse(cmd, data)
 		return true
@@ -215,7 +215,7 @@ func (pump *Pump) unexpected(cmd CommandCode, resp CommandCode, data []byte) boo
 		pump.BadResponse(cmd, data)
 		return true
 	}
-	switch CommandCode(data[n]) {
+	switch Command(data[n]) {
 	case cmd:
 		return false
 	case resp:

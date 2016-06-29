@@ -1,7 +1,7 @@
 package medtronic
 
 const (
-	Battery CommandCode = 0x72
+	Battery Command = 0x72
 )
 
 type BatteryInfo struct {

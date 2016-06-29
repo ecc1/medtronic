@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	Settings CommandCode = 0xC0
+	Settings Command = 0xC0
 )
 
 type SettingsInfo struct {
