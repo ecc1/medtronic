@@ -185,7 +185,7 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 	packet := commandPacket(cmd, params)
 	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
 		pump.Radio.Send(packet)
-		response, rssi := pump.Radio.Receive(pump.timeout)
+		response, rssi := pump.Radio.Receive(pump.Timeout())
 		if len(response) == 0 {
 			pump.SetError(nil)
 			continue

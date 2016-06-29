@@ -33,6 +33,7 @@ func (pump *Pump) Wakeup() {
 	pump.SetTimeout(xmitDelay)
 	pump.Execute(Wakeup)
 	pump.SetError(nil)
+	pump.SetRetries(1)
 	pump.SetTimeout(10 * time.Second)
 	pump.Execute(Wakeup)
 }
