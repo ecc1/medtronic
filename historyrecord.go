@@ -111,6 +111,7 @@ type BasalProfileRecord struct {
 	Rates BasalRateSchedule
 }
 
+// Note that this is a different format than the response to BasalRates.
 func decodeBasalRate(data []byte) BasalRate {
 	return BasalRate{
 		Start: scheduleToDuration(data[0]),
@@ -286,11 +287,34 @@ func (r *EnableMeterRecord) Decode(data []byte, newerPump bool) {
 
 const BolusWizardSetup HistoryRecordType = 0x5A
 
+type BolusWizardConfig struct {
+	Ratios        CarbRatioSchedule
+	Sensitivities InsulinSensitivitySchedule
+	Targets       GlucoseTargetSchedule
+}
+
+func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
+	const numEntries = 8
+	conf := BolusWizardConfig{}
+	carbUnits := Grams // FIXME
+	step := carbRatioStep(newerPump)
+	conf.Ratios = decodeCarbRatioSchedule(data[2:2+numEntries*step], carbUnits, newerPump)
+	data = data[2+numEntries*step:]
+	bgUnits := MgPerDeciLiter // FIXME
+	conf.Sensitivities = decodeInsulinSensitivitySchedule(data[:numEntries*2], bgUnits)
+	if newerPump {
+		data = data[numEntries*2+2:]
+	} else {
+		data = data[numEntries*2:]
+	}
+	conf.Targets = decodeGlucoseTargetSchedule(data[:numEntries*3], bgUnits)
+	return conf
+}
+
 type BolusWizardSetupRecord struct {
 	BaseRecord
-	//FIXME
-	Before []byte
-	After  []byte
+	Before BolusWizardConfig
+	After  BolusWizardConfig
 }
 
 func (r *BolusWizardSetupRecord) Decode(data []byte, newerPump bool) {
@@ -303,9 +327,8 @@ func (r *BolusWizardSetupRecord) Decode(data []byte, newerPump bool) {
 	n := r.Length() - 1
 	body := data[7:n]
 	half := (n - 7) / 2
-	//FIXME
-	r.Before = body[:half]
-	r.After = body[half:]
+	r.Before = decodeBolusWizardConfig(body[:half], newerPump)
+	r.After = decodeBolusWizardConfig(body[half:], newerPump)
 }
 
 const BolusWizard HistoryRecordType = 0x5B
