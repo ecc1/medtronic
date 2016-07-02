@@ -468,6 +468,92 @@ type ConnectOtherDevicesRecord struct {
 	BaseRecord // Value = 1 if enabled
 }
 
+func DecodeHistoryRecord(data []byte, newerPump bool) HistoryRecord {
+	var r HistoryRecord
+	switch HistoryRecordType(data[0]) {
+	case Bolus:
+		r = &BolusRecord{}
+	case Prime:
+		r = &PrimeRecord{}
+	case Alarm:
+		r = &AlarmRecord{}
+	case DailyTotal:
+		r = &DailyTotalRecord{}
+	case BasalProfileBefore:
+		r = &BasalProfileBeforeRecord{}
+	case BasalProfileAfter:
+		r = &BasalProfileAfterRecord{}
+	case BgCapture:
+		r = &BgCaptureRecord{}
+	case ClearAlarm:
+		r = &ClearAlarmRecord{}
+	case TempBasalDuration:
+		r = &TempBasalDurationRecord{}
+	case ChangeTime:
+		r = &ChangeTimeRecord{}
+	case NewTime:
+		r = &NewTimeRecord{}
+	case LowBattery:
+		r = &LowBatteryRecord{}
+	case BatteryChange:
+		r = &BatteryChangeRecord{}
+	case SetAutoOff:
+		r = &SetAutoOffRecord{}
+	case SuspendPump:
+		r = &SuspendPumpRecord{}
+	case ResumePump:
+		r = &ResumePumpRecord{}
+	case Rewind:
+		r = &RewindRecord{}
+	case EnableRemote:
+		r = &EnableRemoteRecord{}
+	case TempBasalRate:
+		r = &TempBasalRateRecord{}
+	case LowReservoir:
+		r = &LowReservoirRecord{}
+	case SensorStatus:
+		r = &SensorStatusRecord{}
+	case EnableMeter:
+		r = &EnableMeterRecord{}
+	case BolusWizardSetup:
+		r = &BolusWizardSetupRecord{}
+	case BolusWizard:
+		r = &BolusWizardRecord{}
+	case UnabsorbedInsulin:
+		r = &UnabsorbedInsulinRecord{}
+	case ChangeTempBasalType:
+		r = &ChangeTempBasalTypeRecord{}
+	case ChangeTimeDisplay:
+		r = &ChangeTimeDisplayRecord{}
+	case DailyTotal522:
+		r = &DailyTotal522Record{}
+	case DailyTotal523:
+		r = &DailyTotal523Record{}
+	case BasalProfileStart:
+		r = &BasalProfileStartRecord{}
+	case ConnectOtherDevices:
+		r = &ConnectOtherDevicesRecord{}
+	default:
+		panic(fmt.Sprintf("unknown record type here: % X", data))
+	}
+	r.Decode(data, newerPump)
+	return r
+}
+
+// Decode records in a page of data and return them in reverse order,
+// to match the order of the history pages themselves.
+func DecodeHistoryRecords(data []byte, newerPump bool) []HistoryRecord {
+	results := []HistoryRecord{}
+	for !allZero(data) {
+		r := DecodeHistoryRecord(data, newerPump)
+		results = append(results, r)
+		data = data[r.Length():]
+	}
+	reverseHistoryRecords(results)
+	return results
+}
+
+// Partially filled history pages are padded to the end with zero bytes.
 func allZero(data []byte) bool {
 	for _, b := range data {
 		if b != 0 {
@@ -477,77 +563,8 @@ func allZero(data []byte) bool {
 	return true
 }
 
-func DecodeHistoryRecords(data []byte, newerPump bool, handle func(HistoryRecord)) {
-	for !allZero(data) {
-		var r HistoryRecord
-		switch HistoryRecordType(data[0]) {
-		case Bolus:
-			r = &BolusRecord{}
-		case Prime:
-			r = &PrimeRecord{}
-		case Alarm:
-			r = &AlarmRecord{}
-		case DailyTotal:
-			r = &DailyTotalRecord{}
-		case BasalProfileBefore:
-			r = &BasalProfileBeforeRecord{}
-		case BasalProfileAfter:
-			r = &BasalProfileAfterRecord{}
-		case BgCapture:
-			r = &BgCaptureRecord{}
-		case ClearAlarm:
-			r = &ClearAlarmRecord{}
-		case TempBasalDuration:
-			r = &TempBasalDurationRecord{}
-		case ChangeTime:
-			r = &ChangeTimeRecord{}
-		case NewTime:
-			r = &NewTimeRecord{}
-		case LowBattery:
-			r = &LowBatteryRecord{}
-		case BatteryChange:
-			r = &BatteryChangeRecord{}
-		case SetAutoOff:
-			r = &SetAutoOffRecord{}
-		case SuspendPump:
-			r = &SuspendPumpRecord{}
-		case ResumePump:
-			r = &ResumePumpRecord{}
-		case Rewind:
-			r = &RewindRecord{}
-		case EnableRemote:
-			r = &EnableRemoteRecord{}
-		case TempBasalRate:
-			r = &TempBasalRateRecord{}
-		case LowReservoir:
-			r = &LowReservoirRecord{}
-		case SensorStatus:
-			r = &SensorStatusRecord{}
-		case EnableMeter:
-			r = &EnableMeterRecord{}
-		case BolusWizardSetup:
-			r = &BolusWizardSetupRecord{}
-		case BolusWizard:
-			r = &BolusWizardRecord{}
-		case UnabsorbedInsulin:
-			r = &UnabsorbedInsulinRecord{}
-		case ChangeTempBasalType:
-			r = &ChangeTempBasalTypeRecord{}
-		case ChangeTimeDisplay:
-			r = &ChangeTimeDisplayRecord{}
-		case DailyTotal522:
-			r = &DailyTotal522Record{}
-		case DailyTotal523:
-			r = &DailyTotal523Record{}
-		case BasalProfileStart:
-			r = &BasalProfileStartRecord{}
-		case ConnectOtherDevices:
-			r = &ConnectOtherDevicesRecord{}
-		default:
-			panic(fmt.Sprintf("unknown record type here: % X", data))
-		}
-		r.Decode(data, newerPump)
-		handle(r)
-		data = data[r.Length():]
+func reverseHistoryRecords(a []HistoryRecord) {
+	for i, j := 0, len(a)-1; i < len(a)/2; i,j = i+1,j-1 {
+		a[i], a[j] = a[j], a[i]
 	}
 }

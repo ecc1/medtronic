@@ -33,7 +33,9 @@ func main() {
 		}
 		data := readBytes(f)
 		f.Close()
-		medtronic.DecodeHistoryRecords(data, newer, printRecord)
+		for _, r := range medtronic.DecodeHistoryRecords(data, newer) {
+			printRecord(r)
+		}
 	}
 }
 
