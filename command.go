@@ -59,16 +59,16 @@ func (e InvalidCommandError) Error() string {
 }
 
 type BadResponseError struct {
-	command Command
-	data    []byte
+	Command Command
+	Data    []byte
 }
 
 func (e BadResponseError) Error() string {
-	return fmt.Sprintf("unexpected response to %v: % X", e.command, e.data)
+	return fmt.Sprintf("unexpected response to %v: % X", e.Command, e.Data)
 }
 
 func (pump *Pump) BadResponse(cmd Command, data []byte) {
-	pump.SetError(BadResponseError{command: cmd, data: data})
+	pump.SetError(BadResponseError{Command: cmd, Data: data})
 }
 
 // commandPacket constructs a packet
