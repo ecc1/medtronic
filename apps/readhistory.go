@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -33,8 +34,12 @@ func main() {
 		}
 		data := readBytes(f)
 		f.Close()
-		for _, r := range medtronic.DecodeHistoryRecords(data, newer) {
-			printRecord(r)
+		records, err := medtronic.DecodeHistoryRecords(data, newer)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+		}
+		for _, r := range records {
+			printRecord(r, *verbose || err != nil)
 		}
 	}
 }
@@ -59,15 +64,20 @@ func readBytes(r io.Reader) []byte {
 	return data
 }
 
-func printRecord(r medtronic.HistoryRecord) {
-	t := r.Time()
-	tStr := timeBlank
-	if !t.IsZero() {
-		tStr = t.Format(timeLayout)
-	}
-	if *verbose {
-		fmt.Printf("%s %v %+v\n", tStr, r.Type(), r)
+func printRecord(r medtronic.HistoryRecord, verbose bool) {
+	if verbose {
+		b, err := json.MarshalIndent(r, "", "  ")
+		if err != nil {
+			fmt.Printf("%v %v\n", r.Type(), err)
+		} else {
+			fmt.Printf("%v %s\n", r.Type(), string(b))
+		}
 	} else {
+		t := r.Time
+		tStr := timeBlank
+		if !t.IsZero() {
+			tStr = t.Format(timeLayout)
+		}
 		fmt.Printf("%s %v\n", tStr, r.Type())
 	}
 }
