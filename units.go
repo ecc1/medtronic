@@ -11,22 +11,12 @@ const (
 
 type CarbUnitsType byte
 
+//go:generate stringer -type CarbUnitsType
+
 const (
 	Grams     CarbUnitsType = 1
 	Exchanges CarbUnitsType = 2
 )
-
-func (u CarbUnitsType) String() string {
-	switch u {
-	case Grams:
-		return "grams"
-	case Exchanges:
-		return "exchanges"
-	default:
-		log.Panicf("unknown carb unit %d", u)
-	}
-	panic("unreachable")
-}
 
 type GlucoseUnitsType byte
 
@@ -65,4 +55,26 @@ func (pump *Pump) CarbUnits() CarbUnitsType {
 
 func (pump *Pump) GlucoseUnits() GlucoseUnitsType {
 	return GlucoseUnitsType(pump.whichUnits(GlucoseUnits))
+}
+
+type MilliUnits int
+
+func milliUnitsPerStroke(newerPump bool) MilliUnits {
+	if newerPump {
+		return 25
+	} else {
+		return 100
+	}
+}
+
+func intToMilliUnits(strokes int, newerPump bool) MilliUnits {
+	return MilliUnits(strokes) * milliUnitsPerStroke(newerPump)
+}
+
+func byteToMilliUnits(strokes uint8, newerPump bool) MilliUnits {
+	return intToMilliUnits(int(strokes), newerPump)
+}
+
+func twoByteMilliUnits(data []byte, newerPump bool) MilliUnits {
+	return MilliUnits(twoByteUint(data)) * milliUnitsPerStroke(newerPump)
 }

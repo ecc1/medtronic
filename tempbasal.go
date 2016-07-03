@@ -23,7 +23,8 @@ const (
 type TempBasalInfo struct {
 	Duration time.Duration
 	Type     TempBasalType
-	Rate     int // milliUnits per hour or percent
+	Rate     *MilliUnits `json:",omitempty"`
+	Percent  *uint8      `json:",omitempty"`
 }
 
 func (pump *Pump) TempBasal() TempBasalInfo {
@@ -40,21 +41,23 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 	info := TempBasalInfo{Duration: d, Type: tempType}
 	switch TempBasalType(data[1]) {
 	case Absolute:
-		info.Rate = twoByteInt(data[3:5]) * 25 // milliUnits per hour
+		rate := twoByteMilliUnits(data[3:5], true)
+		info.Rate = &rate
 	case Percent:
-		info.Rate = int(data[2]) // percent
+		percent := data[2]
+		info.Percent = &percent
 	default:
 		pump.BadResponse(TempBasal, data)
 	}
 	return info
 }
 
-func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, milliUnitsPerHour int) {
+func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate MilliUnits) {
 	d := pump.halfHours(duration)
-	if milliUnitsPerHour%25 != 0 {
-		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", milliUnitsPerHour))
+	if rate%25 != 0 {
+		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", rate))
 	}
-	pump.Execute(SetAbsoluteTempBasal, 0, byte(milliUnitsPerHour/25), d)
+	pump.Execute(SetAbsoluteTempBasal, 0, byte(rate/25), d)
 }
 
 func (pump *Pump) SetPercentTempBasal(duration time.Duration, percent int) {

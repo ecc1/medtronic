@@ -49,6 +49,7 @@ type (
 		Time              time.Time                `json:",omitempty"`
 		Value             *int                     `json:",omitempty"`
 		Enabled           *bool                    `json:",omitempty"`
+		Insulin           *MilliUnits              `json:",omitempty"`
 		Duration          *time.Duration           `json:",omitempty"`
 		TempBasalType     *TempBasalType           `json:",omitempty"`
 		BasalProfile      BasalRateSchedule        `json:",omitempty"`
@@ -66,14 +67,14 @@ type (
 	}
 
 	PrimeRecord struct {
-		Fixed  int // milliUnits
-		Manual int // milliUnits
+		Fixed  MilliUnits
+		Manual MilliUnits
 	}
 
 	BolusRecord struct {
-		Programmed int           // milliUnits
-		Amount     int           // milliUnits
-		Unabsorbed int           // milliUnits
+		Programmed MilliUnits
+		Amount     MilliUnits
+		Unabsorbed MilliUnits
 		Duration   time.Duration // non-zero for square wave bolus
 	}
 
@@ -84,10 +85,10 @@ type (
 		Sensitivity  int // mg/dL or μmol/L reduction per insulin unit
 		CarbInput    int // grams or exchanges
 		CarbRatio    int // grams or exchanges covered by TEN insulin units
-		Unabsorbed   int // milliUnits
-		Correction   int // milliUnits
-		Food         int // milliUnits
-		Bolus        int // milliUnits
+		Unabsorbed   MilliUnits
+		Correction   MilliUnits
+		Food         MilliUnits
+		Bolus        MilliUnits
 	}
 
 	BolusWizardConfig struct {
@@ -104,7 +105,7 @@ type (
 	UnabsorbedBoluses []PreviousBolus
 
 	PreviousBolus struct {
-		Bolus int
+		Bolus MilliUnits
 		Age   time.Duration
 	}
 
@@ -128,9 +129,9 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 	if newerPump {
 		return HistoryRecord{
 			Bolus: &BolusRecord{
-				Programmed: twoByteInt(data[1:3]) * 25,
-				Amount:     twoByteInt(data[3:5]) * 25,
-				Unabsorbed: twoByteInt(data[5:7]) * 25,
+				Programmed: twoByteMilliUnits(data[1:3], true),
+				Amount:     twoByteMilliUnits(data[3:5], true),
+				Unabsorbed: twoByteMilliUnits(data[5:7], true),
 				Duration:   scheduleToDuration(data[7]),
 			},
 			Time: decodeTimestamp(data[8:13]),
@@ -139,8 +140,8 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 	} else {
 		return HistoryRecord{
 			Bolus: &BolusRecord{
-				Programmed: int(data[1]) * 100,
-				Amount:     int(data[2]) * 100,
+				Programmed: byteToMilliUnits(data[1], false),
+				Amount:     byteToMilliUnits(data[2], false),
 				Duration:   scheduleToDuration(data[3]),
 			},
 			Time: decodeTimestamp(data[4:9]),
@@ -152,8 +153,8 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 func decodePrime(data []byte, newerPump bool) HistoryRecord {
 	return HistoryRecord{
 		Prime: &PrimeRecord{
-			Fixed:  int(data[2]) * 100,
-			Manual: int(data[4]) * 100,
+			Fixed:  byteToMilliUnits(data[2], false),
+			Manual: byteToMilliUnits(data[4], false),
 		},
 		Time: decodeTimestamp(data[5:10]),
 		Data: data[:10],
@@ -172,18 +173,18 @@ func decodeAlarm(data []byte, newerPump bool) HistoryRecord {
 
 func decodeDailyTotal(data []byte, newerPump bool) HistoryRecord {
 	t := decodeDate(data[5:7])
-	total := twoByteInt(data[3:5]) * 25
+	total := twoByteMilliUnits(data[3:5], true)
 	if newerPump {
 		return HistoryRecord{
-			Time:  t,
-			Value: &total,
-			Data:  data[:10],
+			Time:    t,
+			Insulin: &total,
+			Data:    data[:10],
 		}
 	} else {
 		return HistoryRecord{
-			Time:  t,
-			Value: &total,
-			Data:  data[:7],
+			Time:    t,
+			Insulin: &total,
+			Data:    data[:7],
 		}
 	}
 }
@@ -192,7 +193,7 @@ func decodeDailyTotal(data []byte, newerPump bool) HistoryRecord {
 func decodeBasalRate(data []byte) BasalRate {
 	return BasalRate{
 		Start: scheduleToDuration(data[0]),
-		Rate:  int(data[1]) * 25,
+		Rate:  byteToMilliUnits(data[1], true),
 		// data[2] unused
 	}
 }
@@ -330,10 +331,10 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 			CarbRatio:    (int(body[2]&0x7)<<8 | int(body[3])),
 			Sensitivity:  int(body[4]),
 			TargetLow:    int(body[5]),
-			Correction:   (int(body[9]&0x38)<<5 + int(body[6])) * 25,
-			Food:         twoByteInt(body[7:9]) * 25,
-			Unabsorbed:   twoByteInt(body[10:12]) * 25,
-			Bolus:        twoByteInt(body[12:14]) * 25,
+			Correction:   intToMilliUnits(int(body[9]&0x38)<<5+int(body[6]), true),
+			Food:         twoByteMilliUnits(body[7:9], true),
+			Unabsorbed:   twoByteMilliUnits(body[10:12], true),
+			Bolus:        twoByteMilliUnits(body[12:14], true),
 			TargetHigh:   int(body[14]),
 		}
 		r.Data = data[:22]
@@ -344,10 +345,10 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 			CarbRatio:    int(body[2]),
 			Sensitivity:  int(body[3]),
 			TargetLow:    int(body[4]),
-			Correction:   (int(body[7]) + int(body[5]&0xF)) * 100,
-			Food:         int(body[6]) * 100,
-			Unabsorbed:   int(body[9]) * 100,
-			Bolus:        int(body[11]) * 100,
+			Correction:   intToMilliUnits(int(body[7])+int(body[5]&0xF), false),
+			Food:         byteToMilliUnits(body[6], false),
+			Unabsorbed:   byteToMilliUnits(body[9], false),
+			Bolus:        byteToMilliUnits(body[11], false),
 			TargetHigh:   int(body[12]),
 		}
 		r.Data = data[:20]
@@ -360,7 +361,7 @@ func decodeUnabsorbedInsulin(data []byte, newerPump bool) HistoryRecord {
 	body := data[2:]
 	unabsorbed := []PreviousBolus{}
 	for i := 0; i < n; i += 3 {
-		amount := int(body[i]) * 25 // milliUnits
+		amount := byteToMilliUnits(body[i], true)
 		curve := body[i+2]
 		age := time.Duration(body[i+1]+(curve&0x30)<<4) * time.Minute
 		unabsorbed = append(unabsorbed, PreviousBolus{

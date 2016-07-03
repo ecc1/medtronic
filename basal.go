@@ -12,7 +12,7 @@ const (
 
 type BasalRate struct {
 	Start time.Duration // offset from 00:00:00
-	Rate  int           // milliUnits per hour
+	Rate  MilliUnits
 }
 
 type BasalRateSchedule []BasalRate
@@ -31,7 +31,7 @@ func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 			break
 		}
 		start := scheduleToDuration(t)
-		rate := int(r) * 25
+		rate := byteToMilliUnits(r, true)
 		sched = append(sched, BasalRate{Start: start, Rate: rate})
 	}
 	return sched
