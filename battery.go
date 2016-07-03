@@ -4,8 +4,10 @@ const (
 	Battery Command = 0x72
 )
 
+type MilliVolts int
+
 type BatteryInfo struct {
-	MilliVolts int
+	Voltage    MilliVolts
 	LowBattery bool
 }
 
@@ -20,6 +22,6 @@ func (pump *Pump) Battery() BatteryInfo {
 	}
 	return BatteryInfo{
 		LowBattery: data[1] != 0,
-		MilliVolts: twoByteInt(data[2:4]) * 10,
+		Voltage:    MilliVolts(twoByteInt(data[2:4]) * 10),
 	}
 }
