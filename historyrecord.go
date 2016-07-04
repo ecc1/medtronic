@@ -58,7 +58,7 @@ type (
 		Bolus             *BolusRecord             `json:",omitempty"`
 		BolusWizard       *BolusWizardRecord       `json:",omitempty"`
 		BolusWizardSetup  *BolusWizardSetupRecord  `json:",omitempty"`
-		UnabsorbedInsulin UnabsorbedBoluses        `json:",omitempty"`
+		UnabsorbedInsulin []UnabsorbedBolus        `json:",omitempty"`
 	}
 
 	BasalProfileStartRecord struct {
@@ -102,9 +102,7 @@ type (
 		After  BolusWizardConfig
 	}
 
-	UnabsorbedBoluses []PreviousBolus
-
-	PreviousBolus struct {
+	UnabsorbedBolus struct {
 		Bolus MilliUnits
 		Age   time.Duration
 	}
@@ -359,12 +357,12 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 func decodeUnabsorbedInsulin(data []byte, newerPump bool) HistoryRecord {
 	n := int(data[1]) - 2
 	body := data[2:]
-	unabsorbed := []PreviousBolus{}
+	unabsorbed := []UnabsorbedBolus{}
 	for i := 0; i < n; i += 3 {
 		amount := byteToMilliUnits(body[i], true)
 		curve := body[i+2]
 		age := time.Duration(body[i+1]+(curve&0x30)<<4) * time.Minute
-		unabsorbed = append(unabsorbed, PreviousBolus{
+		unabsorbed = append(unabsorbed, UnabsorbedBolus{
 			Bolus: amount,
 			Age:   age,
 		})

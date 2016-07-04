@@ -202,8 +202,8 @@ func (r *InsulinSensitivity) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-func (r PreviousBolus) MarshalJSON() ([]byte, error) {
-	type Original PreviousBolus
+func (r UnabsorbedBolus) MarshalJSON() ([]byte, error) {
+	type Original UnabsorbedBolus
 	rep := struct {
 		Age string
 		Original
@@ -214,8 +214,8 @@ func (r PreviousBolus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(rep)
 }
 
-func (r *PreviousBolus) UnmarshalJSON(data []byte) error {
-	type Original PreviousBolus
+func (r *UnabsorbedBolus) UnmarshalJSON(data []byte) error {
+	type Original UnabsorbedBolus
 	rep := struct {
 		Age string
 		*Original
