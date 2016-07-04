@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+const (
+	TimeLayout = "2006-01-02 15:04:05" // ISO 8601-ish
+)
+
 // Convert a multiple of half-hours to a Duration.
 func scheduleToDuration(t uint8) time.Duration {
 	return time.Duration(t) * 30 * time.Minute

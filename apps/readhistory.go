@@ -13,15 +13,11 @@ import (
 	"github.com/ecc1/medtronic"
 )
 
-const (
-	timeLayout = "2006-01-02 15:04:05"
-)
-
 var (
 	verbose = flag.Bool("v", false, "print record details")
 	model   = flag.Int("m", 523, "pump model")
 
-	timeBlank = strings.Repeat(" ", len(timeLayout))
+	timeBlank = strings.Repeat(" ", len(medtronic.TimeLayout))
 )
 
 func main() {
@@ -76,7 +72,7 @@ func printRecord(r medtronic.HistoryRecord, verbose bool) {
 		t := r.Time
 		tStr := timeBlank
 		if !t.IsZero() {
-			tStr = t.Format(timeLayout)
+			tStr = t.Format(medtronic.TimeLayout)
 		}
 		fmt.Printf("%s %v\n", tStr, r.Type())
 	}

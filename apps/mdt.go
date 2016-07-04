@@ -172,8 +172,6 @@ func sensitivities(pump *medtronic.Pump, _ []string) interface{} {
 	return pump.InsulinSensitivities()
 }
 
-const timeLayout = "2006-01-02 15:04:05"
-
 func setClock(pump *medtronic.Pump, args []string) interface{} {
 	t := time.Time{}
 	switch len(args) {
@@ -188,13 +186,13 @@ func setClock(pump *medtronic.Pump, args []string) interface{} {
 	default:
 		setClockUsage()
 	}
-	log.Printf("setting pump clock to %s", t.Format(timeLayout))
+	log.Printf("setting pump clock to %s", t.Format(medtronic.TimeLayout))
 	pump.SetClock(t)
 	return nil
 }
 
 func parseTime(date string) time.Time {
-	t, err := time.ParseInLocation(timeLayout, date, time.Local)
+	t, err := time.ParseInLocation(medtronic.TimeLayout, date, time.Local)
 	if err != nil {
 		setClockUsage()
 	}
