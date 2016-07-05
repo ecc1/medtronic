@@ -57,7 +57,7 @@ func Open(hf HwFlavor) *Hardware {
 		hw.Close()
 		return hw
 	}
-	hw.interruptPin, hw.err = gpio.Input(interruptPin, "both", false)
+	hw.interruptPin, hw.err = gpio.Input(interruptPin, "rising", false)
 	if hw.Error() != nil {
 		hw.Close()
 		return hw
