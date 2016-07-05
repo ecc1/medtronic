@@ -4,8 +4,13 @@ The top level `medtronic` package provides a unified API for
 communicating with Medtronic insulin pumps using SPI-connected radio
 modules.
 
-This package provides high-level commands like `Wakeup` and `SetTempBasal`
+Documentation: <https://godoc.org/github.com/ecc1/medtronic>
+
+This package provides high-level functions like `GlucoseTargets` and `SetTempBasal`
 and is intended as the primary API for applications.
+
+Decoding of messages to and from the pump is derived almost entirely from
+[Ben West's pioneering "Decoding Carelink" work.](https://github.com/bewest/decoding-carelink)
 
 # medtronic/radio
 
@@ -39,8 +44,14 @@ can be attached conveniently.
 
 ![rmf69 antenna](images/rfm69_sma.png)
 
+# medtronic/apps
+
+This directory contains a number of command-line applications,
+including a "Swiss army knife" application `mdt`
+(analogous to the the `openaps use pump ...` commands).
+
 # spilink backend for mmeowlink
 
 The `spilink` directory contains a backend server that can be used with
 [a proof-of-concept mmeowlink driver](https://github.com/ecc1/mmeowlink/tree/spilink)
-for [OpenAPS.](https://openaps.org)
+for [openaps.](https://openaps.org)
