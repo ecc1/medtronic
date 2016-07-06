@@ -10,7 +10,7 @@ const (
 
 type InsulinSensitivity struct {
 	Start       time.Duration // offset from 00:00:00
-	Sensitivity int           // mg/dL or μmol/L reduction per insulin unit
+	Sensitivity Glucose       // glucose reduction per insulin unit
 	Units       GlucoseUnitsType
 }
 
@@ -23,14 +23,9 @@ func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) Insul
 		if start == 0 && len(sched) != 0 {
 			break
 		}
-		value := int(data[i+1])
-		if units == MmolPerLiter {
-			// Convert to μmol/L
-			value *= 100
-		}
 		sched = append(sched, InsulinSensitivity{
 			Start:       start,
-			Sensitivity: value,
+			Sensitivity: byteToGlucose(data[i+1], units),
 			Units:       units,
 		})
 	}

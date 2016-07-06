@@ -18,6 +18,10 @@ const (
 	Exchanges CarbUnitsType = 2
 )
 
+// Glucose values are represented as either mg/dL or μmol/L,
+// so all conversions must include a GlucoseUnitsType parameter.
+type Glucose int
+
 type GlucoseUnitsType byte
 
 const (
@@ -47,6 +51,19 @@ func (pump *Pump) whichUnits(cmd Command) byte {
 		return 0
 	}
 	return data[1]
+}
+
+func intToGlucose(n int, t GlucoseUnitsType) Glucose {
+	if t == MmolPerLiter {
+		// Convert 10x mmol/L to μmol/L
+		return Glucose(n) * 100
+	} else {
+		return Glucose(n)
+	}
+}
+
+func byteToGlucose(n byte, t GlucoseUnitsType) Glucose {
+	return intToGlucose(int(n), t)
 }
 
 func (pump *Pump) CarbUnits() CarbUnitsType {

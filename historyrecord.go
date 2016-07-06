@@ -68,17 +68,18 @@ type (
 	HistoryRecord struct {
 		Data              []byte                   `json:",omitempty"`
 		Time              time.Time                `json:",omitempty"`
-		Value             *int                     `json:",omitempty"`
-		Enabled           *bool                    `json:",omitempty"`
-		Insulin           *Insulin                 `json:",omitempty"`
 		Duration          *time.Duration           `json:",omitempty"`
+		Enabled           *bool                    `json:",omitempty"`
+		Glucose           *Glucose                 `json:",omitempty"`
+		Insulin           *Insulin                 `json:",omitempty"`
 		TempBasalType     *TempBasalType           `json:",omitempty"`
+		Value             *int                     `json:",omitempty"`
 		BasalProfile      BasalRateSchedule        `json:",omitempty"`
 		BasalProfileStart *BasalProfileStartRecord `json:",omitempty"`
-		Prime             *PrimeRecord             `json:",omitempty"`
 		Bolus             *BolusRecord             `json:",omitempty"`
 		BolusWizard       *BolusWizardRecord       `json:",omitempty"`
 		BolusWizardSetup  *BolusWizardSetupRecord  `json:",omitempty"`
+		Prime             *PrimeRecord             `json:",omitempty"`
 		UnabsorbedInsulin UnabsorbedBolusHistory   `json:",omitempty"`
 	}
 
@@ -100,12 +101,12 @@ type (
 	}
 
 	BolusWizardRecord struct {
-		GlucoseInput int // mg/dL or μmol/L
-		TargetLow    int // mg/dL or μmol/L
-		TargetHigh   int // mg/dL or μmol/L
-		Sensitivity  int // mg/dL or μmol/L reduction per insulin unit
-		CarbInput    int // grams or exchanges
-		CarbRatio    int // grams or exchanges covered by TEN insulin units
+		GlucoseInput Glucose
+		TargetLow    Glucose
+		TargetHigh   Glucose
+		Sensitivity  Glucose // glucose reduction per insulin unit
+		CarbInput    int     // grams or exchanges
+		CarbRatio    int     // grams or exchanges covered by TEN insulin units
 		Unabsorbed   Insulin
 		Correction   Insulin
 		Food         Insulin
@@ -256,8 +257,8 @@ func decodeBasalProfile(data []byte, newerPump bool) HistoryRecord {
 
 func decodeBgCapture(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	bg := int(data[1]) | int(data[6]>>7)<<8
-	r.Value = &bg
+	bg := intToGlucose(int(data[1])|int(data[6]>>7)<<8, MgPerDeciLiter)
+	r.Glucose = &bg
 	return r
 }
 
@@ -307,12 +308,14 @@ func decodeEnableRemote(data []byte, newerPump bool) HistoryRecord {
 
 func decodeTempBasalRate(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	rate := int(data[1])
 	tempBasalType := TempBasalType(data[7] >> 3)
 	if tempBasalType == Absolute {
-		rate *= 25
+		rate := byteToInsulin(data[1], true)
+		r.Insulin = &rate
+	} else {
+		rate := int(data[1])
+		r.Value = &rate
 	}
-	r.Value = &rate
 	r.TempBasalType = &tempBasalType
 	r.Data = data[:8]
 	return r
@@ -381,30 +384,30 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 	body := data[7:]
 	if newerPump {
 		r.BolusWizard = &BolusWizardRecord{
-			GlucoseInput: bg | int(body[1]&0x3)<<8,
+			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, MgPerDeciLiter),
 			CarbInput:    int(body[1]&0xC)<<6 + int(body[0]),
 			CarbRatio:    (int(body[2]&0x7)<<8 | int(body[3])),
-			Sensitivity:  int(body[4]),
-			TargetLow:    int(body[5]),
+			Sensitivity:  byteToGlucose(body[4], MgPerDeciLiter),
+			TargetLow:    byteToGlucose(body[5], MgPerDeciLiter),
 			Correction:   intToInsulin(int(body[9]&0x38)<<5+int(body[6]), true),
 			Food:         twoByteInsulin(body[7:9], true),
 			Unabsorbed:   twoByteInsulin(body[10:12], true),
 			Bolus:        twoByteInsulin(body[12:14], true),
-			TargetHigh:   int(body[14]),
+			TargetHigh:   byteToGlucose(body[14], MgPerDeciLiter),
 		}
 		r.Data = data[:22]
 	} else {
 		r.BolusWizard = &BolusWizardRecord{
-			GlucoseInput: bg | int(body[1]&0xF)<<8,
+			GlucoseInput: intToGlucose(bg|int(body[1]&0xF)<<8, MgPerDeciLiter),
 			CarbInput:    int(body[0]),
 			CarbRatio:    int(body[2]),
-			Sensitivity:  int(body[3]),
-			TargetLow:    int(body[4]),
+			Sensitivity:  byteToGlucose(body[3], MgPerDeciLiter),
+			TargetLow:    byteToGlucose(body[4], MgPerDeciLiter),
 			Correction:   intToInsulin(int(body[7])+int(body[5]&0xF), false),
 			Food:         byteToInsulin(body[6], false),
 			Unabsorbed:   byteToInsulin(body[9], false),
 			Bolus:        byteToInsulin(body[11], false),
-			TargetHigh:   int(body[12]),
+			TargetHigh:   byteToGlucose(body[12], MgPerDeciLiter),
 		}
 		r.Data = data[:20]
 	}

@@ -10,8 +10,8 @@ const (
 
 type GlucoseTarget struct {
 	Start time.Duration // offset from 00:00:00
-	Low   int           // mg/dL or μmol/L
-	High  int           // mg/dL or μmol/L
+	Low   Glucose
+	High  Glucose
 	Units GlucoseUnitsType
 }
 
@@ -24,17 +24,10 @@ func decodeGlucoseTargetSchedule(data []byte, units GlucoseUnitsType) GlucoseTar
 		if start == 0 && len(sched) != 0 {
 			break
 		}
-		low := int(data[i+1])
-		high := int(data[i+2])
-		if units == MmolPerLiter {
-			// Convert to μmol/L
-			low *= 100
-			high *= 100
-		}
 		sched = append(sched, GlucoseTarget{
 			Start: start,
-			Low:   low,
-			High:  high,
+			Low:   byteToGlucose(data[i+1], units),
+			High:  byteToGlucose(data[i+2], units),
 			Units: units,
 		})
 	}
