@@ -10,37 +10,58 @@ type HistoryRecordType byte
 //go:generate stringer -type HistoryRecordType
 
 const (
-	Bolus               HistoryRecordType = 0x01
-	Prime               HistoryRecordType = 0x03
-	Alarm               HistoryRecordType = 0x06
-	DailyTotal          HistoryRecordType = 0x07
-	BasalProfileBefore  HistoryRecordType = 0x08
-	BasalProfileAfter   HistoryRecordType = 0x09
-	BgCapture           HistoryRecordType = 0x0A
-	ClearAlarm          HistoryRecordType = 0x0C
-	TempBasalDuration   HistoryRecordType = 0x16
-	ChangeTime          HistoryRecordType = 0x17
-	NewTime             HistoryRecordType = 0x18
-	LowBattery          HistoryRecordType = 0x19
-	BatteryChange       HistoryRecordType = 0x1A
-	SetAutoOff          HistoryRecordType = 0x1B
-	SuspendPump         HistoryRecordType = 0x1E
-	ResumePump          HistoryRecordType = 0x1F
-	Rewind              HistoryRecordType = 0x21
-	EnableRemote        HistoryRecordType = 0x26
-	TempBasalRate       HistoryRecordType = 0x33
-	LowReservoir        HistoryRecordType = 0x34
-	SensorStatus        HistoryRecordType = 0x3B
-	EnableMeter         HistoryRecordType = 0x3C
-	BolusWizardSetup    HistoryRecordType = 0x5A
-	BolusWizard         HistoryRecordType = 0x5B
-	UnabsorbedInsulin   HistoryRecordType = 0x5C
-	ChangeTempBasalType HistoryRecordType = 0x62
-	ChangeTimeDisplay   HistoryRecordType = 0x64
-	DailyTotal522       HistoryRecordType = 0x6D
-	DailyTotal523       HistoryRecordType = 0x6E
-	BasalProfileStart   HistoryRecordType = 0x7B
-	ConnectOtherDevices HistoryRecordType = 0x7C
+	Bolus                   HistoryRecordType = 0x01
+	Prime                   HistoryRecordType = 0x03
+	Alarm                   HistoryRecordType = 0x06
+	DailyTotal              HistoryRecordType = 0x07
+	BasalProfileBefore      HistoryRecordType = 0x08
+	BasalProfileAfter       HistoryRecordType = 0x09
+	BgCapture               HistoryRecordType = 0x0A
+	SensorAlarm             HistoryRecordType = 0x0B
+	ClearAlarm              HistoryRecordType = 0x0C
+	ChangeBasalPattern      HistoryRecordType = 0x14
+	TempBasalDuration       HistoryRecordType = 0x16
+	ChangeTime              HistoryRecordType = 0x17
+	NewTime                 HistoryRecordType = 0x18
+	LowBattery              HistoryRecordType = 0x19
+	BatteryChange           HistoryRecordType = 0x1A
+	SetAutoOff              HistoryRecordType = 0x1B
+	SuspendPump             HistoryRecordType = 0x1E
+	ResumePump              HistoryRecordType = 0x1F
+	SelfTest                HistoryRecordType = 0x20
+	Rewind                  HistoryRecordType = 0x21
+	EnableChildBlock        HistoryRecordType = 0x23
+	MaxBolus                HistoryRecordType = 0x24
+	EnableRemote            HistoryRecordType = 0x26
+	MaxBasal                HistoryRecordType = 0x2C
+	EnableBolusWizard       HistoryRecordType = 0x2D
+	SetAlarmClockTime       HistoryRecordType = 0x32
+	TempBasalRate           HistoryRecordType = 0x33
+	LowReservoir            HistoryRecordType = 0x34
+	SensorStatus            HistoryRecordType = 0x3B
+	EnableMeter             HistoryRecordType = 0x3C
+	ChangeBolusWizardSetup  HistoryRecordType = 0x4F
+	BolusWizardSetup        HistoryRecordType = 0x5A
+	BolusWizard             HistoryRecordType = 0x5B
+	UnabsorbedInsulin       HistoryRecordType = 0x5C
+	EnableVariableBolus     HistoryRecordType = 0x5E
+	ChangeEasyBolus         HistoryRecordType = 0x5F
+	EnableBgReminder        HistoryRecordType = 0x60
+	EnableAlarmClock        HistoryRecordType = 0x61
+	ChangeTempBasalType     HistoryRecordType = 0x62
+	ChangeAlarmType         HistoryRecordType = 0x63
+	ChangeTimeFormat        HistoryRecordType = 0x64
+	ChangeReservoirWarning  HistoryRecordType = 0x65
+	EnableBolusReminder     HistoryRecordType = 0x66
+	SetBolusReminderTime    HistoryRecordType = 0x67
+	DeleteBolusReminderTime HistoryRecordType = 0x68
+	DeleteAlarmClockTime    HistoryRecordType = 0x6A
+	DailyTotal522           HistoryRecordType = 0x6D
+	DailyTotal523           HistoryRecordType = 0x6E
+	BasalProfileStart       HistoryRecordType = 0x7B
+	ConnectOtherDevices     HistoryRecordType = 0x7C
+	ChangeOtherDevice       HistoryRecordType = 0x81
+	DeleteOtherDevice       HistoryRecordType = 0x82
 )
 
 type (
@@ -123,6 +144,13 @@ func decodeBase(data []byte, newerPump bool) HistoryRecord {
 	}
 }
 
+func decodeValue(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	v := int(data[1])
+	r.Value = &v
+	return r
+}
+
 func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 	if newerPump {
 		return HistoryRecord{
@@ -163,6 +191,16 @@ func decodeAlarm(data []byte, newerPump bool) HistoryRecord {
 	r := HistoryRecord{
 		Time: decodeTimestamp(data[4:9]),
 		Data: data[:9],
+	}
+	alarm := int(data[1])
+	r.Value = &alarm
+	return r
+}
+
+func decodeSensorAlarm(data []byte, newerPump bool) HistoryRecord {
+	r := HistoryRecord{
+		Time: decodeTimestamp(data[3:8]),
+		Data: data[:8],
 	}
 	alarm := int(data[1])
 	r.Value = &alarm
@@ -251,6 +289,13 @@ func decodeEnable(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
+func decodeMax(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	max := byteToMilliUnits(data[1], true)
+	r.Insulin = &max
+	return r
+}
+
 func decodeEnableRemote(data []byte, newerPump bool) HistoryRecord {
 	r := decodeEnable(data, newerPump)
 	r.Data = data[:21]
@@ -280,6 +325,12 @@ func decodeLowReservoir(data []byte, newerPump bool) HistoryRecord {
 func decodeEnableMeter(data []byte, newerPump bool) HistoryRecord {
 	r := decodeEnable(data, newerPump)
 	r.Data = data[:21]
+	return r
+}
+
+func decodeChangeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	r.Data = data[:39]
 	return r
 }
 
@@ -380,6 +431,25 @@ func decodeChangeTempBasalType(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
+func decodeChangeReservoirWarning(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	v := data[1]
+	if v&0x1 == 0 {
+		amount := MilliUnits(1000 * int(v>>2))
+		r.Insulin = &amount
+	} else {
+		d := scheduleToDuration(v >> 2)
+		r.Duration = &d
+	}
+	return r
+}
+
+func decodeBolusReminder(data []byte, newerPump bool) HistoryRecord {
+	r := decodeEnable(data, newerPump)
+	r.Data = data[:9]
+	return r
+}
+
 func decodeDailyTotal522(data []byte, newerPump bool) HistoryRecord {
 	return HistoryRecord{
 		Time: decodeDate(data[1:3]),
@@ -404,76 +474,74 @@ func decodeBasalProfileStart(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
+func decodeOtherDevice(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	r.Data = data[:12]
+	return r
+}
+
+var decode = map[HistoryRecordType]func([]byte, bool) HistoryRecord{
+	Bolus:                   decodeBolus,
+	Prime:                   decodePrime,
+	Alarm:                   decodeAlarm,
+	DailyTotal:              decodeDailyTotal,
+	BasalProfileBefore:      decodeBasalProfile,
+	BasalProfileAfter:       decodeBasalProfile,
+	BgCapture:               decodeBgCapture,
+	SensorAlarm:             decodeSensorAlarm,
+	ClearAlarm:              decodeValue,
+	ChangeBasalPattern:      decodeValue,
+	TempBasalDuration:       decodeTempBasalDuration,
+	ChangeTime:              decodeBase,
+	NewTime:                 decodeBase,
+	LowBattery:              decodeBase,
+	BatteryChange:           decodeBase,
+	SetAutoOff:              decodeSetAutoOff,
+	SuspendPump:             decodeBase,
+	ResumePump:              decodeBase,
+	SelfTest:                decodeBase,
+	Rewind:                  decodeBase,
+	EnableChildBlock:        decodeEnable,
+	MaxBolus:                decodeMax,
+	EnableRemote:            decodeEnableRemote,
+	MaxBasal:                decodeMax,
+	EnableBolusWizard:       decodeEnable,
+	SetAlarmClockTime:       decodeBase,
+	TempBasalRate:           decodeTempBasalRate,
+	LowReservoir:            decodeLowReservoir,
+	SensorStatus:            decodeEnable,
+	EnableMeter:             decodeEnableMeter,
+	ChangeBolusWizardSetup:  decodeChangeBolusWizardSetup,
+	BolusWizardSetup:        decodeBolusWizardSetup,
+	BolusWizard:             decodeBolusWizard,
+	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
+	EnableVariableBolus:     decodeEnable,
+	ChangeEasyBolus:         decodeBase,
+	EnableBgReminder:        decodeEnable,
+	EnableAlarmClock:        decodeEnable,
+	ChangeTempBasalType:     decodeChangeTempBasalType,
+	ChangeAlarmType:         decodeValue,
+	ChangeTimeFormat:        decodeValue,
+	ChangeReservoirWarning:  decodeChangeReservoirWarning,
+	EnableBolusReminder:     decodeEnable,
+	SetBolusReminderTime:    decodeBolusReminder,
+	DeleteBolusReminderTime: decodeBolusReminder,
+	DeleteAlarmClockTime:    decodeBase,
+	DailyTotal522:           decodeDailyTotal522,
+	DailyTotal523:           decodeDailyTotal523,
+	BasalProfileStart:       decodeBasalProfileStart,
+	ConnectOtherDevices:     decodeEnable,
+	ChangeOtherDevice:       decodeOtherDevice,
+	DeleteOtherDevice:       decodeOtherDevice,
+}
+
 func DecodeHistoryRecord(data []byte, newerPump bool) (HistoryRecord, error) {
-	r := HistoryRecord{}
-	err := error(nil)
-	switch HistoryRecordType(data[0]) {
-	case Bolus:
-		r = decodeBolus(data, newerPump)
-	case Prime:
-		r = decodePrime(data, newerPump)
-	case Alarm:
-		r = decodeAlarm(data, newerPump)
-	case DailyTotal:
-		r = decodeDailyTotal(data, newerPump)
-	case BasalProfileBefore:
-		r = decodeBasalProfile(data, newerPump)
-	case BasalProfileAfter:
-		r = decodeBasalProfile(data, newerPump)
-	case BgCapture:
-		r = decodeBgCapture(data, newerPump)
-	case ClearAlarm:
-		r = decodeClearAlarm(data, newerPump)
-	case TempBasalDuration:
-		r = decodeTempBasalDuration(data, newerPump)
-	case ChangeTime:
-		r = decodeBase(data, newerPump)
-	case NewTime:
-		r = decodeBase(data, newerPump)
-	case LowBattery:
-		r = decodeBase(data, newerPump)
-	case BatteryChange:
-		r = decodeBase(data, newerPump)
-	case SetAutoOff:
-		r = decodeSetAutoOff(data, newerPump)
-	case SuspendPump:
-		r = decodeBase(data, newerPump)
-	case ResumePump:
-		r = decodeBase(data, newerPump)
-	case Rewind:
-		r = decodeBase(data, newerPump)
-	case EnableRemote:
-		r = decodeEnableRemote(data, newerPump)
-	case TempBasalRate:
-		r = decodeTempBasalRate(data, newerPump)
-	case LowReservoir:
-		r = decodeLowReservoir(data, newerPump)
-	case SensorStatus:
-		r = decodeEnable(data, newerPump)
-	case EnableMeter:
-		r = decodeEnableMeter(data, newerPump)
-	case BolusWizardSetup:
-		r = decodeBolusWizardSetup(data, newerPump)
-	case BolusWizard:
-		r = decodeBolusWizard(data, newerPump)
-	case UnabsorbedInsulin:
-		r = decodeUnabsorbedInsulin(data, newerPump)
-	case ChangeTempBasalType:
-		r = decodeChangeTempBasalType(data, newerPump)
-	case ChangeTimeDisplay:
-		r = decodeBase(data, newerPump)
-	case DailyTotal522:
-		r = decodeDailyTotal522(data, newerPump)
-	case DailyTotal523:
-		r = decodeDailyTotal523(data, newerPump)
-	case BasalProfileStart:
-		r = decodeBasalProfileStart(data, newerPump)
-	case ConnectOtherDevices:
-		r = decodeEnable(data, newerPump)
-	default:
-		err = unknownRecord(data)
+	decoder := decode[HistoryRecordType(data[0])]
+	if decoder != nil {
+		return decoder(data, newerPump), nil
+	} else {
+		return HistoryRecord{}, unknownRecord(data)
 	}
-	return r, err
 }
 
 func (e UnknownRecordTypeError) Error() string {
