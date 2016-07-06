@@ -139,10 +139,14 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 		done := data[0]&0x80 != 0
 		seqNum := data[0] &^ 0x80
 		payload := data[1:]
-		// Skip duplicate responses.
-		if seqNum != prev {
+		if seqNum == prev {
+			// Skip duplicate responses.
+		} else if seqNum == prev+1 {
 			results = append(results, payload...)
 			prev = seqNum
+		} else {
+			pump.SetError(fmt.Errorf("received record %d instead of %d in history page", seqNum, prev+1))
+			break
 		}
 		if done {
 			if seqNum != 16 {
