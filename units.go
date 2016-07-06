@@ -57,9 +57,10 @@ func (pump *Pump) GlucoseUnits() GlucoseUnitsType {
 	return GlucoseUnitsType(pump.whichUnits(GlucoseUnits))
 }
 
-type MilliUnits int
+// Quantities and rates of insulin delivery are represented in milliunits.
+type Insulin int
 
-func milliUnitsPerStroke(newerPump bool) MilliUnits {
+func milliUnitsPerStroke(newerPump bool) Insulin {
 	if newerPump {
 		return 25
 	} else {
@@ -67,14 +68,14 @@ func milliUnitsPerStroke(newerPump bool) MilliUnits {
 	}
 }
 
-func intToMilliUnits(strokes int, newerPump bool) MilliUnits {
-	return MilliUnits(strokes) * milliUnitsPerStroke(newerPump)
+func intToInsulin(strokes int, newerPump bool) Insulin {
+	return Insulin(strokes) * milliUnitsPerStroke(newerPump)
 }
 
-func byteToMilliUnits(strokes uint8, newerPump bool) MilliUnits {
-	return intToMilliUnits(int(strokes), newerPump)
+func byteToInsulin(strokes uint8, newerPump bool) Insulin {
+	return intToInsulin(int(strokes), newerPump)
 }
 
-func twoByteMilliUnits(data []byte, newerPump bool) MilliUnits {
-	return MilliUnits(twoByteUint(data)) * milliUnitsPerStroke(newerPump)
+func twoByteInsulin(data []byte, newerPump bool) Insulin {
+	return Insulin(twoByteUint(data)) * milliUnitsPerStroke(newerPump)
 }

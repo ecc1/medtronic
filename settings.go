@@ -12,8 +12,8 @@ type SettingsInfo struct {
 	AutoOff              time.Duration
 	InsulinAction        time.Duration
 	InsulinConcentration int // 50 or 100
-	MaxBolus             MilliUnits
-	MaxBasal             MilliUnits
+	MaxBolus             Insulin
+	MaxBasal             Insulin
 	RfEnabled            bool
 	SelectedPattern      int
 }
@@ -38,7 +38,7 @@ func (pump *Pump) Settings() SettingsInfo {
 	}
 	info := SettingsInfo{
 		AutoOff:         time.Duration(data[1]) * time.Hour,
-		MaxBolus:        byteToMilliUnits(data[6], false),
+		MaxBolus:        byteToInsulin(data[6], false),
 		SelectedPattern: int(data[12]),
 		RfEnabled:       data[13] == 1,
 		InsulinAction:   time.Duration(data[18]) * time.Hour,
@@ -52,9 +52,9 @@ func (pump *Pump) Settings() SettingsInfo {
 		pump.BadResponse(Settings, data)
 	}
 	if newer {
-		info.MaxBasal = twoByteMilliUnits(data[8:10], true)
+		info.MaxBasal = twoByteInsulin(data[8:10], true)
 	} else {
-		info.MaxBasal = twoByteMilliUnits(data[7:9], false)
+		info.MaxBasal = twoByteInsulin(data[7:9], false)
 	}
 	return info
 }

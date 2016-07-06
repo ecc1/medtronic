@@ -226,7 +226,7 @@ func setTempBasal(pump *medtronic.Pump, args []string) interface{} {
 		if err != nil {
 			setTempBasalUsage()
 		}
-		rate := medtronic.MilliUnits(1000.0*f + 0.5)
+		rate := medtronic.Insulin(1000.0*f + 0.5)
 		log.Printf("setting temporary basal of %d.%03d units/hour for %v", rate/1000, rate%1000, duration)
 		pump.SetAbsoluteTempBasal(duration, rate)
 	}

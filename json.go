@@ -372,17 +372,17 @@ func (r *TempBasalType) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-func (r MilliUnits) MarshalJSON() ([]byte, error) {
+func (r Insulin) MarshalJSON() ([]byte, error) {
 	return json.Marshal(float64(r) / 1000)
 }
 
-func (r *MilliUnits) UnmarshalJSON(data []byte) error {
+func (r *Insulin) UnmarshalJSON(data []byte) error {
 	v := 0.0
 	err := json.Unmarshal(data, &v)
 	if err != nil {
 		return err
 	}
-	*r = MilliUnits(1000*v + 0.5)
+	*r = Insulin(1000*v + 0.5)
 	return nil
 }
 

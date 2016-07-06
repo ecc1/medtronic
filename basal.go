@@ -12,7 +12,7 @@ const (
 
 type BasalRate struct {
 	Start time.Duration // offset from 00:00:00
-	Rate  MilliUnits
+	Rate  Insulin
 }
 
 type BasalRateSchedule []BasalRate
@@ -31,7 +31,7 @@ func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 			break
 		}
 		start := scheduleToDuration(t)
-		rate := byteToMilliUnits(r, true)
+		rate := byteToInsulin(r, true)
 		sched = append(sched, BasalRate{Start: start, Rate: rate})
 	}
 	return sched
