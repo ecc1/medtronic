@@ -34,8 +34,17 @@ func main() {
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 		}
-		for _, r := range records {
-			printRecord(r, *verbose || err != nil)
+		if *verbose || err != nil {
+			b, err := json.MarshalIndent(records, "", "  ")
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Println(string(b))
+			}
+		} else {
+			for _, r := range records {
+				printRecord(r)
+			}
 		}
 	}
 }
@@ -60,20 +69,11 @@ func readBytes(r io.Reader) []byte {
 	return data
 }
 
-func printRecord(r medtronic.HistoryRecord, verbose bool) {
-	if verbose {
-		b, err := json.MarshalIndent(r, "", "  ")
-		if err != nil {
-			fmt.Printf("%v %v\n", r.Type(), err)
-		} else {
-			fmt.Printf("%v %s\n", r.Type(), string(b))
-		}
-	} else {
-		t := r.Time
-		tStr := timeBlank
-		if !t.IsZero() {
-			tStr = t.Format(medtronic.TimeLayout)
-		}
-		fmt.Printf("%s %v\n", tStr, r.Type())
+func printRecord(r medtronic.HistoryRecord) {
+	t := r.Time
+	tStr := timeBlank
+	if !t.IsZero() {
+		tStr = t.Format(medtronic.TimeLayout)
 	}
+	fmt.Printf("%s %v\n", tStr, r.Type())
 }
