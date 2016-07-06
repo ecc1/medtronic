@@ -114,6 +114,34 @@ func (r *BolusRecord) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+func (r BolusWizardConfig) MarshalJSON() ([]byte, error) {
+	type Original BolusWizardConfig
+	rep := struct {
+		InsulinAction string
+		Original
+	}{
+		InsulinAction: r.InsulinAction.String(),
+		Original:      Original(r),
+	}
+	return json.Marshal(rep)
+}
+
+func (r *BolusWizardConfig) UnmarshalJSON(data []byte) error {
+	type Original BolusWizardConfig
+	rep := struct {
+		InsulinAction string
+		*Original
+	}{
+		Original: (*Original)(r),
+	}
+	err := json.Unmarshal(data, &rep)
+	if err != nil {
+		return err
+	}
+	r.InsulinAction, err = time.ParseDuration(rep.InsulinAction)
+	return err
+}
+
 func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	type Original CarbRatio
 	rep := struct {

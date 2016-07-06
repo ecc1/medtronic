@@ -79,7 +79,7 @@ type (
 		Bolus             *BolusRecord             `json:",omitempty"`
 		BolusWizard       *BolusWizardRecord       `json:",omitempty"`
 		BolusWizardSetup  *BolusWizardSetupRecord  `json:",omitempty"`
-		UnabsorbedInsulin []UnabsorbedBolus        `json:",omitempty"`
+		UnabsorbedInsulin UnabsorbedBolusHistory   `json:",omitempty"`
 	}
 
 	BasalProfileStartRecord struct {
@@ -116,6 +116,7 @@ type (
 		Ratios        CarbRatioSchedule
 		Sensitivities InsulinSensitivitySchedule
 		Targets       GlucoseTargetSchedule
+		InsulinAction time.Duration
 	}
 
 	BolusWizardSetupRecord struct {
@@ -127,6 +128,8 @@ type (
 		Bolus MilliUnits
 		Age   time.Duration
 	}
+
+	UnabsorbedBolusHistory []UnabsorbedBolus
 
 	UnknownRecordTypeError struct {
 		Data []byte
@@ -337,11 +340,11 @@ func decodeChangeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
 func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 	const numEntries = 8
 	conf := BolusWizardConfig{}
-	carbUnits := Grams // FIXME
+	carbUnits := CarbUnitsType(data[0] & 0x3)
+	bgUnits := GlucoseUnitsType((data[0] >> 2) & 0x3)
 	step := carbRatioStep(newerPump)
 	conf.Ratios = decodeCarbRatioSchedule(data[2:2+numEntries*step], carbUnits, newerPump)
 	data = data[2+numEntries*step:]
-	bgUnits := MgPerDeciLiter // FIXME
 	conf.Sensitivities = decodeInsulinSensitivitySchedule(data[:numEntries*2], bgUnits)
 	if newerPump {
 		data = data[numEntries*2+2:]
@@ -362,10 +365,13 @@ func decodeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
 	n := len(r.Data) - 1
 	body := data[7:n]
 	half := (n - 7) / 2
-	r.BolusWizardSetup = &BolusWizardSetupRecord{
+	setup := &BolusWizardSetupRecord{
 		Before: decodeBolusWizardConfig(body[:half], newerPump),
 		After:  decodeBolusWizardConfig(body[half:], newerPump),
 	}
+	setup.Before.InsulinAction = time.Duration(data[n]&0xF) * time.Hour
+	setup.After.InsulinAction = time.Duration(data[n]>>4) * time.Hour
+	r.BolusWizardSetup = setup
 	return r
 }
 
