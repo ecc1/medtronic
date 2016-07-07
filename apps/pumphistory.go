@@ -20,7 +20,7 @@ func main() {
 	pump.Wakeup()
 	newer := pump.Family() >= 23
 	numPages := pump.HistoryPageCount()
-	cutoff := medtronic.TimeNow().Add(-time.Duration(*numHours) * time.Hour)
+	cutoff := time.Now().Add(-time.Duration(*numHours) * time.Hour)
 	log.Printf("retrieving records since %s", cutoff.Format(medtronic.TimeLayout))
 	results := []medtronic.HistoryRecord{}
 loop:

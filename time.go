@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	TimeLayout = "2006-01-02 15:04:05" // ISO 8601-ish
+	TimeLayout = time.RFC3339
 )
 
 // Convert a multiple of half-hours to a Duration.
@@ -29,7 +29,7 @@ func decodeTimestamp(data []byte) time.Time {
 	// The 4-bit month value is encoded in the high 2 bits of the first 2 bytes.
 	month := time.Month(int(data[0]>>6)<<2 | int(data[1]>>6))
 	year := 2000 + int(data[4]&0x7F)
-	return time.Date(year, month, day, hour, min, sec, 0, time.UTC)
+	return time.Date(year, month, day, hour, min, sec, 0, time.Local)
 }
 
 // Decode a 2-byte date from a pump history record.
@@ -37,13 +37,5 @@ func decodeDate(data []byte) time.Time {
 	day := int(data[0] & 0x1F)
 	month := time.Month(int(data[0]>>5)<<1 + int(data[1]>>7))
 	year := 2000 + int(data[1]&0x7F)
-	return time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
-}
-
-// TimeNow returns a UTC time with the same Date amd Clock value as time.Now.
-func TimeNow() time.Time {
-	now := time.Now()
-	year, month, day := now.Date()
-	hour, min, sec := now.Clock()
-	return time.Date(year, month, day, hour, min, sec, 0, time.UTC)
+	return time.Date(year, month, day, 0, 0, 0, 0, time.Local)
 }
