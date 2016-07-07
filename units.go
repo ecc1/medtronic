@@ -4,6 +4,9 @@ import (
 	"log"
 )
 
+// Carbs values are represented as either grams or 10x exchanges.
+type Carbs int
+
 const (
 	CarbUnits    Command = 0x88
 	GlucoseUnits Command = 0x89

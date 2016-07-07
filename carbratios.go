@@ -10,7 +10,7 @@ const (
 
 type CarbRatio struct {
 	Start     time.Duration // offset from 00:00:00
-	CarbRatio int           // grams or exchanges covered by TEN insulin units
+	CarbRatio int           // 10x grams/unit or 100x units/exchange
 	Units     CarbUnitsType
 }
 
