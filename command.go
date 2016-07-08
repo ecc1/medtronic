@@ -114,11 +114,11 @@ func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 	return pump.perform(cmd, cmd, nil)
 }
 
-// History pages are returned as a series of 65-byte records:
+// History pages are returned as a series of 65-byte fragments:
 //   sequence number (1 to 16)
 //   64 bytes of payload
-// The caller must Ack the record in order to receive the next one.
-// The 0x80 bit is set in the sequence number of the final record.
+// The caller must Ack the fragment in order to receive the next one.
+// The 0x80 bit is set in the sequence number of the final fragment.
 // The page consists of the concatenated payloads.
 // The final 2 bytes are the CRC-16 of the preceding data.
 func (pump *Pump) Download(cmd Command, page int) []byte {
@@ -133,7 +133,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 	prev := byte(0)
 	for {
 		if len(data) != 65 {
-			pump.SetError(fmt.Errorf("unexpected history record length (%d)", len(data)))
+			pump.SetError(fmt.Errorf("unexpected history fragment length (%d)", len(data)))
 			break
 		}
 		done := data[0]&0x80 != 0
@@ -145,7 +145,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 			results = append(results, payload...)
 			prev = seqNum
 		} else {
-			pump.SetError(fmt.Errorf("received record %d instead of %d in history page", seqNum, prev+1))
+			pump.SetError(fmt.Errorf("received fragment %d instead of %d in history page", seqNum, prev+1))
 			break
 		}
 		if done {
