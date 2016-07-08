@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
 const (
@@ -42,8 +43,8 @@ type Command byte
 //go:generate stringer -type Command
 
 const (
-	Ack          Command = 0x06
-	CommandError Command = 0x15
+	Ack Command = 0x06
+	Nak Command = 0x15
 )
 
 type NoResponseError Command
@@ -72,7 +73,7 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 }
 
 // commandPacket constructs a packet
-// with the specified command code and parameters,
+// with the specified command code and parameters.
 // A command packet with no parameters is 7 bytes long:
 //   device type (0xA7)
 //   3 bytes of pump ID
@@ -116,10 +117,19 @@ func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 // History pages are returned as a series of 65-byte fragments:
 //   sequence number (1 to 16)
 //   64 bytes of payload
-// The caller must Ack the fragment in order to receive the next one.
+// The caller must send an Ack to receive the next fragment
+// or a Nak to have the current one retransmitted.
 // The 0x80 bit is set in the sequence number of the final fragment.
 // The page consists of the concatenated payloads.
 // The final 2 bytes are the CRC-16 of the preceding data.
+
+const (
+	numFragments    = 16
+	fragmentLength  = 65
+	maxNaks         = 10
+	downloadTimeout = 150 * time.Millisecond
+)
+
 func (pump *Pump) Download(cmd Command, page int) []byte {
 	data := pump.Execute(cmd, byte(page))
 	if pump.Error() != nil {
@@ -129,43 +139,70 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 	retries := pump.Retries()
 	pump.SetRetries(1)
 	defer pump.SetRetries(retries)
-	prev := byte(0)
+	timeout := pump.Timeout()
+	pump.SetTimeout(downloadTimeout)
+	defer pump.SetTimeout(timeout)
+	expected := byte(1)
 	for {
-		if len(data) != 65 {
+		if len(data) != fragmentLength {
 			pump.SetError(fmt.Errorf("unexpected history fragment length (%d)", len(data)))
-			break
+			return nil
 		}
 		done := data[0]&0x80 != 0
 		seqNum := data[0] &^ 0x80
 		payload := data[1:]
-		if seqNum == prev {
-			// Skip duplicate responses.
-		} else if seqNum == prev+1 {
+		if seqNum == expected {
+			// Got the next fragment as expected.
 			results = append(results, payload...)
-			prev = seqNum
+			if done {
+				if seqNum != numFragments {
+					pump.SetError(fmt.Errorf("unexpected final sequence number for history page (%d)", seqNum))
+					return nil
+				}
+				break
+			}
+			expected = seqNum + 1
+		} else if seqNum < expected {
+			// Skip duplicate responses.
 		} else {
-			pump.SetError(fmt.Errorf("received fragment %d instead of %d in history page", seqNum, prev+1))
-			break
+			// Missed fragment.
+			pump.SetError(fmt.Errorf("received fragment %d instead of %d in history page", seqNum, expected))
+			return nil
 		}
-		if done {
-			if seqNum != 16 {
-				pump.SetError(fmt.Errorf("unexpected final sequence number for history page (%d)", seqNum))
+		next := []byte{}
+		// Acknowledge the current fragment.
+		next = pump.perform(Ack, cmd, nil)
+		if pump.Error() == nil {
+			data = next
+			continue
+		}
+		_, noResponse := pump.Error().(NoResponseError)
+		if !noResponse {
+			return nil
+		}
+		// No response to ACK. Send NAK to request retransmission.
+		pump.SetError(nil)
+		for count := 0; count < maxNaks; count++ {
+			next = pump.perform(Nak, cmd, nil)
+			if pump.Error() == nil {
+				format := "received fragment %d after %d NAK"
+				if count != 0 {
+					format += "s"
+				}
+				log.Printf(format, next[0]&^0x80, count+1)
+				break
 			}
-			break
-		}
-		next := pump.perform(Ack, cmd, nil)
-		if pump.Error() != nil {
 			_, noResponse := pump.Error().(NoResponseError)
-			if noResponse {
-				pump.SetError(nil)
-				continue
+			if !noResponse {
+				return nil
 			}
-			break
+			pump.SetError(nil)
+		}
+		if next == nil {
+			pump.SetError(fmt.Errorf("lost fragment %d in history page", expected))
+			return nil
 		}
 		data = next
-	}
-	if pump.Error() != nil {
-		return nil
 	}
 	if len(results) != historyPageSize {
 		pump.SetError(fmt.Errorf("unexpected history page size (%d)", len(results)))
@@ -228,7 +265,7 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 			break
 		}
 		return false
-	case CommandError:
+	case Nak:
 		pump.SetError(InvalidCommandError(cmd))
 		return true
 	}
