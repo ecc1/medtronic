@@ -563,8 +563,8 @@ func unknownRecord(data []byte) error {
 	}
 }
 
-// Decode records in a page of data and return them in reverse order,
-// to match the order of the history pages themselves.
+// Decode records in a page of data and return them in reverse chronological order
+// (most recent first) to match the order of the history pages themselves.
 func DecodeHistoryRecords(data []byte, newerPump bool) ([]HistoryRecord, error) {
 	results := []HistoryRecord{}
 	r := HistoryRecord{}
@@ -577,7 +577,7 @@ func DecodeHistoryRecords(data []byte, newerPump bool) ([]HistoryRecord, error) 
 		results = append(results, r)
 		data = data[len(r.Data):]
 	}
-	reverseHistoryRecords(results)
+	ReverseHistoryRecords(results)
 	return results, err
 }
 
@@ -591,7 +591,7 @@ func allZero(data []byte) bool {
 	return true
 }
 
-func reverseHistoryRecords(a []HistoryRecord) {
+func ReverseHistoryRecords(a []HistoryRecord) {
 	for i, j := 0, len(a)-1; i < len(a)/2; i, j = i+1, j-1 {
 		a[i], a[j] = a[j], a[i]
 	}
