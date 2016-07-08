@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	numHours = flag.Int("n", 6, "number of `hours`")
+	all      = flag.Bool("a", false, "get entire pump history")
+	numHours = flag.Int("n", 6, "number of `hours` of history to get")
 )
 
 func main() {
@@ -21,7 +22,11 @@ func main() {
 	newer := pump.Family() >= 23
 	numPages := pump.HistoryPageCount()
 	cutoff := time.Now().Add(-time.Duration(*numHours) * time.Hour)
-	log.Printf("retrieving records since %s", cutoff.Format(medtronic.TimeLayout))
+	if *all {
+		log.Printf("retrieving %d pages of records", numPages)
+	} else {
+		log.Printf("retrieving records since %s", cutoff.Format(medtronic.TimeLayout))
+	}
 	results := []medtronic.HistoryRecord{}
 loop:
 	for page := 0; page < numPages && pump.Error() == nil; page++ {
@@ -33,7 +38,7 @@ loop:
 		}
 		for _, r := range records {
 			t := r.Time
-			if !t.IsZero() && t.Before(cutoff) {
+			if !*all && !t.IsZero() && t.Before(cutoff) {
 				log.Printf("stopping at timestamp %s", t.Format(medtronic.TimeLayout))
 				break loop
 			}
