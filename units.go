@@ -1,6 +1,7 @@
 package medtronic
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -79,6 +80,10 @@ func (pump *Pump) GlucoseUnits() GlucoseUnitsType {
 
 // Quantities and rates of insulin delivery are represented in milliunits.
 type Insulin int
+
+func (r Insulin) String() string {
+	return fmt.Sprintf("%g", float64(r)/1000)
+}
 
 func milliUnitsPerStroke(newerPump bool) Insulin {
 	if newerPump {
