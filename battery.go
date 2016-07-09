@@ -1,13 +1,22 @@
 package medtronic
 
+import (
+	"fmt"
+)
+
 const (
 	Battery Command = 0x72
 )
 
-type MilliVolts int
+// Battery voltage is represented in milliVolts.
+type Voltage int
+
+func (r Voltage) String() string {
+	return fmt.Sprintf("%g", float64(r)/1000)
+}
 
 type BatteryInfo struct {
-	Voltage    MilliVolts
+	Voltage    Voltage
 	LowBattery bool
 }
 
@@ -22,6 +31,6 @@ func (pump *Pump) Battery() BatteryInfo {
 	}
 	return BatteryInfo{
 		LowBattery: data[1] != 0,
-		Voltage:    MilliVolts(twoByteInt(data[2:4]) * 10),
+		Voltage:    Voltage(twoByteInt(data[2:4]) * 10),
 	}
 }

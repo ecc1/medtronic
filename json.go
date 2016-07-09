@@ -386,16 +386,16 @@ func (r *Insulin) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (r MilliVolts) MarshalJSON() ([]byte, error) {
+func (r Voltage) MarshalJSON() ([]byte, error) {
 	return json.Marshal(float64(r) / 1000)
 }
 
-func (r *MilliVolts) UnmarshalJSON(data []byte) error {
+func (r *Voltage) UnmarshalJSON(data []byte) error {
 	v := 0.0
 	err := json.Unmarshal(data, &v)
 	if err != nil {
 		return err
 	}
-	*r = MilliVolts(1000*v + 0.5)
+	*r = Voltage(1000*v + 0.5)
 	return nil
 }
