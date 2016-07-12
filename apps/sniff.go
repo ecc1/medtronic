@@ -31,7 +31,7 @@ func main() {
 			continue
 		}
 		if verbose {
-			log.Printf(" decoded: % X", data)
+			log.Printf("decoded:  % X", data)
 		} else {
 			log.Printf("% X (RSSI = %d)", data, rssi)
 		}
