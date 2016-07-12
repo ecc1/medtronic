@@ -547,7 +547,7 @@ const (
 	FifoThresholdShift  = 0
 )
 
-// RegSyncConfig2
+// RegPacketConfig2
 const (
 	InterPacketRxDelayShift = 4
 	RestartRx               = 1 << 2
