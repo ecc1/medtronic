@@ -33,7 +33,7 @@ func (r *Radio) InitRF(frequency uint32) {
 	br := bitrateToRegisters(bitrate)
 	bw := channelBwToRegister(channelBw)
 
-	rf.RegDataModul = PacketMode | ModulationTypeOOK | 2<<ModulationShapingShift
+	rf.RegDataModul = PacketMode | ModulationTypeOOK | 0<<ModulationShapingShift
 
 	rf.RegBitrateMsb = br[0]
 	rf.RegBitrateLsb = br[1]
@@ -63,7 +63,7 @@ func (r *Radio) InitRF(frequency uint32) {
 
 	// Make sure enough preamble bytes are sent.
 	rf.RegPreambleMsb = 0x00
-	rf.RegPreambleLsb = 0x10
+	rf.RegPreambleLsb = 0x18
 
 	// Use 4 bytes for Sync word.
 	rf.RegSyncConfig = SyncOn | 3<<SyncSizeShift
@@ -206,11 +206,19 @@ func (r *Radio) setMode(mode uint8) {
 		log.Printf("change from %s to %s", stateName(cur&ModeMask), stateName(mode))
 	}
 	r.hw.WriteRegister(RegOpMode, cur&^ModeMask|mode)
-	for r.Error() == nil && r.mode() != mode {
+	for r.Error() == nil {
+		s := r.mode()
+		if s == mode && r.modeReady() {
+			break
+		}
 		if verbose {
-			log.Printf("  %s", r.State())
+			log.Printf("  %s", stateName(s))
 		}
 	}
+}
+
+func (r *Radio) modeReady() bool {
+	return r.hw.ReadRegister(RegIrqFlags1)&ModeReady != 0
 }
 
 func (r *Radio) Sleep() {
