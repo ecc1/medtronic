@@ -36,9 +36,8 @@ func (r *Radio) Send(data []byte) {
 		log.Printf("sending %d-byte packet in %s state", len(data), r.State())
 	}
 	// Terminate packet with zero byte.
-	packet := make([]byte, len(data), len(data)+1)
+	packet := make([]byte, len(data)+1)
 	copy(packet, data)
-	packet = packet[:cap(packet)]
 	defer r.setMode(StandbyMode)
 	r.transmit(packet)
 	if r.Error() == nil {

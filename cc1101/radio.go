@@ -36,9 +36,8 @@ func (r *Radio) Send(data []byte) {
 	// Terminate packet with zero byte,
 	// and pad with another to ensure final bytes
 	// are transmitted before leaving TX state.
-	packet := make([]byte, len(data), len(data)+2)
+	packet := make([]byte, len(data)+2)
 	copy(packet, data)
-	packet = packet[:cap(packet)]
 	defer r.changeState(SIDLE, STATE_IDLE)
 	r.transmit(packet)
 	if r.Error() == nil {
