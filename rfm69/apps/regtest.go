@@ -44,6 +44,18 @@ func dumpRegs(r *rfm69.Radio) {
 			fmt.Printf("  **** SHOULD BE %02X  %08b\n", r, r)
 		}
 	}
+	testRegs := []byte{
+		rfm69.RegTest,
+		rfm69.RegTestLna,
+		rfm69.RegTestPa1,
+		rfm69.RegTestPa2,
+		rfm69.RegTestDagc,
+		rfm69.RegTestAfc,
+	}
+	for _, reg := range testRegs {
+		v := r.Hardware().ReadRegister(reg)
+		fmt.Printf("%02X  %02X  %08b\n", reg, v, v)
+	}
 }
 
 func readRegs(r *rfm69.Radio) {
