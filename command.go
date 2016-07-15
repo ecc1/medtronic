@@ -88,18 +88,17 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 //   CRC-8
 func commandPacket(cmd Command, params []byte) []byte {
 	initCommandPrefix()
-	n := len(commandPrefix)
 	data := []byte{}
 	if len(params) == 0 {
-		data = make([]byte, n+3)
+		data = make([]byte, 7)
 	} else {
 		data = make([]byte, maxPacketSize)
 	}
 	copy(data, commandPrefix)
-	data[n] = byte(cmd)
-	data[n+1] = byte(len(params))
+	data[4] = byte(cmd)
+	data[5] = byte(len(params))
 	if len(params) != 0 {
-		copy(data[n+2:], params)
+		copy(data[6:], params)
 	}
 	return EncodePacket(data)
 }
