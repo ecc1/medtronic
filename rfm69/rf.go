@@ -238,7 +238,7 @@ func stateName(mode uint8) string {
 	case ReceiverMode:
 		return "Receiver"
 	default:
-		return fmt.Sprintf("Unknown operating mode (%X)", mode)
+		return fmt.Sprintf("Unknown Mode (%X)", mode)
 	}
 }
 

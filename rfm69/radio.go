@@ -38,8 +38,8 @@ func (r *Radio) Send(data []byte) {
 	// Terminate packet with zero byte.
 	packet := make([]byte, len(data)+1)
 	copy(packet, data)
-	defer r.setMode(StandbyMode)
 	r.transmit(packet)
+	r.setMode(SleepMode)
 	if r.Error() == nil {
 		r.stats.Packets.Sent++
 		r.stats.Bytes.Sent += len(data)
@@ -90,6 +90,7 @@ func (r *Radio) finishTx(numBytes int) {
 		}
 		time.Sleep(byteDuration)
 	}
+	r.setMode(StandbyMode)
 	if verbose {
 		log.Printf("TX finished in %s state", r.State())
 	}
@@ -112,7 +113,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 		return nil, 0
 	}
 	r.setMode(ReceiverMode)
-	defer r.setMode(StandbyMode)
+	defer r.setMode(SleepMode)
 	if verbose {
 		log.Printf("waiting for interrupt in %s state", r.State())
 	}
@@ -138,6 +139,7 @@ func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 			continue
 		}
 		// End of packet.
+		r.setMode(StandbyMode)
 		size := r.receiveBuffer.Len()
 		if size == 0 {
 			break

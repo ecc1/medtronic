@@ -93,6 +93,7 @@ func (r *Radio) Reset() {
 func (r *Radio) Init(frequency uint32) {
 	r.Reset()
 	r.InitRF(frequency)
+	r.setMode(SleepMode)
 }
 
 func (r *Radio) Statistics() radio.Statistics {
