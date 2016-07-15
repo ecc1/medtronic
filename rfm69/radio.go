@@ -38,6 +38,11 @@ func (r *Radio) Send(data []byte) {
 	// Terminate packet with zero byte.
 	packet := make([]byte, len(data)+1)
 	copy(packet, data)
+	// Prepare for auto-transmit.
+	// (Automode from/to sleep mode is not reliable.)
+	r.clearFifo()
+	r.setMode(StandbyMode)
+	r.hw.WriteRegister(RegAutoModes, EnterConditionFifoNotEmpty|ExitConditionFifoEmpty|IntermediateModeTx)
 	r.transmit(packet)
 	r.setMode(SleepMode)
 	if r.Error() == nil {
@@ -56,7 +61,6 @@ func (r *Radio) transmit(data []byte) {
 			log.Printf("writing %d bytes to TX FIFO\n", avail)
 		}
 		r.hw.WriteBurst(RegFifo, data[:avail])
-		r.setMode(TransmitterMode)
 		data = data[avail:]
 		if len(data) == 0 {
 			break
@@ -77,22 +81,15 @@ func (r *Radio) transmit(data []byte) {
 
 func (r *Radio) finishTx(numBytes int) {
 	time.Sleep(time.Duration(numBytes) * byteDuration)
+	// Wait for automatic return to standby mode when FIFO is empty.
 	for r.Error() == nil {
-		if r.fifoEmpty() {
-			break
-		}
 		s := r.mode()
-		if s != TransmitterMode {
-			log.Panicf("unexpected %s state while finishing TX", stateName(s))
+		if s == StandbyMode {
+			break
 		}
 		if verbose {
 			log.Printf("waiting for TX to finish in %s state", stateName(s))
 		}
-		time.Sleep(byteDuration)
-	}
-	r.setMode(StandbyMode)
-	if verbose {
-		log.Printf("TX finished in %s state", r.State())
 	}
 }
 
@@ -108,10 +105,15 @@ func (r *Radio) fifoThresholdExceeded() bool {
 	return r.hw.ReadRegister(RegIrqFlags2)&FifoLevel != 0
 }
 
+func (r *Radio) clearFifo() {
+	r.hw.WriteRegister(RegIrqFlags2, FifoOverrun)
+}
+
 func (r *Radio) Receive(timeout time.Duration) ([]byte, int) {
 	if r.Error() != nil {
 		return nil, 0
 	}
+	r.hw.WriteRegister(RegAutoModes, 0)
 	r.setMode(ReceiverMode)
 	defer r.setMode(SleepMode)
 	if verbose {

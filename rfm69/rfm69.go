@@ -535,9 +535,29 @@ const (
 
 // RegAutoModes
 const (
-	EnterConditionShift   = 5
-	ExitConditionShift    = 2
-	IntermediateModeShift = 0
+	EnterConditionShift        = 5
+	EnterConditionNone         = 0 << 5
+	EnterConditionFifoNotEmpty = 1 << 5
+	EnterConditionFifoLevel    = 2 << 5
+	EnterConditionCrcOk        = 3 << 5
+	EnterConditionPayloadReady = 4 << 5
+	EnterConditionSyncAddress  = 5 << 5
+	EnterConditionPacketSent   = 6 << 5
+	EnterConditionFifoEmpty    = 7 << 5
+	ExitConditionShift         = 2
+	ExitConditionNone          = 0 << 2
+	ExitConditionFifoEmpty     = 1 << 2
+	ExitConditionFifoLevel     = 2 << 2
+	ExitConditionCrcOk         = 3 << 2
+	ExitConditionPayloadReady  = 4 << 2
+	ExitConditionSyncAddress   = 5 << 2
+	ExitConditionPacketSent    = 6 << 2
+	ExitConditionTimeout       = 7 << 2
+	IntermediateModeShift      = 0
+	IntermediateModeSleep      = 0 << 0
+	IntermediateModeStandby    = 1 << 0
+	IntermediateModeRx         = 2 << 0
+	IntermediateModeTx         = 3 << 0
 )
 
 // RegFifoThresh
