@@ -8,9 +8,11 @@ const (
 	CarbRatios Command = 0x8A
 )
 
+type Tenths int
+
 type CarbRatio struct {
 	Start     TimeOfDay
-	CarbRatio int // 10x grams/unit or 100x units/exchange
+	CarbRatio Tenths // 10x grams/unit or 100x units/exchange
 	Units     CarbUnitsType
 }
 
@@ -32,11 +34,11 @@ func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) C
 		if start == 0 && len(sched) != 0 {
 			break
 		}
-		value := 0
+		value := Tenths(0)
 		if newerPump {
-			value = twoByteInt(data[i+1 : i+3])
+			value = Tenths(twoByteInt(data[i+1 : i+3]))
 		} else {
-			value = int(data[i+1])
+			value = Tenths(10 * int(data[i+1]))
 		}
 		sched = append(sched, CarbRatio{
 			Start:     start,

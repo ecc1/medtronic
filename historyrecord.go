@@ -106,7 +106,7 @@ type (
 		TargetHigh   Glucose
 		Sensitivity  Glucose // glucose reduction per insulin unit
 		CarbInput    Carbs   // grams or exchanges
-		CarbRatio    int     // 10x grams/unit or 100x units/exchange
+		CarbRatio    Tenths  // 10x grams/unit or 100x units/exchange
 		Unabsorbed   Insulin
 		Correction   Insulin
 		Food         Insulin
@@ -386,7 +386,7 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 		r.BolusWizard = &BolusWizardRecord{
 			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, MgPerDeciLiter),
 			CarbInput:    Carbs(int(body[1]&0xC)<<6 + int(body[0])),
-			CarbRatio:    int(body[2]&0x7)<<8 | int(body[3]),
+			CarbRatio:    Tenths(int(body[2]&0x7)<<8 | int(body[3])),
 			Sensitivity:  byteToGlucose(body[4], MgPerDeciLiter),
 			TargetLow:    byteToGlucose(body[5], MgPerDeciLiter),
 			Correction:   intToInsulin(int(body[9]&0x38)<<5+int(body[6]), true),
@@ -400,7 +400,7 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 		r.BolusWizard = &BolusWizardRecord{
 			GlucoseInput: intToGlucose(bg|int(body[1]&0xF)<<8, MgPerDeciLiter),
 			CarbInput:    Carbs(body[0]),
-			CarbRatio:    int(body[2]),
+			CarbRatio:    Tenths(10 * int(body[2])),
 			Sensitivity:  byteToGlucose(body[3], MgPerDeciLiter),
 			TargetLow:    byteToGlucose(body[4], MgPerDeciLiter),
 			Correction:   intToInsulin(int(body[7])+int(body[5]&0xF), false),

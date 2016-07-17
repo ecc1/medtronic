@@ -142,16 +142,28 @@ func (r *BolusWizardConfig) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+func (r Tenths) MarshalJSON() ([]byte, error) {
+	return json.Marshal(float64(r) / 10)
+}
+
+func (r *Tenths) UnmarshalJSON(data []byte) error {
+	v := 0.0
+	err := json.Unmarshal(data, &v)
+	if err != nil {
+		return err
+	}
+	*r = Tenths(10*v + 0.5)
+	return nil
+}
+
 func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	type Original CarbRatio
 	rep := struct {
-		Start     string
-		CarbRatio float64
+		Start string
 		Original
 	}{
-		Start:     r.Start.String(),
-		CarbRatio: float64(r.CarbRatio) / 10,
-		Original:  Original(r),
+		Start:    r.Start.String(),
+		Original: Original(r),
 	}
 	return json.Marshal(rep)
 }
@@ -159,8 +171,7 @@ func (r CarbRatio) MarshalJSON() ([]byte, error) {
 func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	type Original CarbRatio
 	rep := struct {
-		Start     string
-		CarbRatio float64
+		Start string
 		*Original
 	}{
 		Original: (*Original)(r),
@@ -170,7 +181,6 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	r.Start, err = parseTimeOfDay(rep.Start)
-	r.CarbRatio = int(10*rep.CarbRatio + 0.5)
 	return err
 }
 
