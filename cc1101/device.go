@@ -63,6 +63,11 @@ func Open() radio.Interface {
 	return r
 }
 
+func (r *Radio) Close() {
+	r.changeState(SIDLE, STATE_IDLE)
+	r.hw.Close()
+}
+
 func (r *Radio) Version() uint16 {
 	p := r.hw.ReadRegister(PARTNUM)
 	v := r.hw.ReadRegister(VERSION)

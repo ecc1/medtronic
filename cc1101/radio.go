@@ -12,8 +12,7 @@ const (
 	fifoSize           = 64
 	readFifoUsingBurst = true
 
-	// Approximate time for one byte to be transmitted, based on
-	// the data rate.
+	// Approximate time for one byte to be transmitted, based on the data rate.
 	byteDuration = time.Millisecond
 )
 

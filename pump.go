@@ -67,6 +67,11 @@ func Open() *Pump {
 	return pump
 }
 
+func (pump *Pump) Close() {
+	log.Printf("disconnecting %s radio", pump.Radio.Hardware().Name())
+	pump.Radio.Close()
+}
+
 func getFrequency() uint32 {
 	s := os.Getenv(freqEnvVar)
 	if len(s) == 0 {

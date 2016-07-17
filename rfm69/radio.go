@@ -14,8 +14,7 @@ const (
 	// written in two bursts, but be large enough to avoid fifo underflow.
 	fifoThreshold = 20
 
-	// Approximate time for one byte to be transmitted, based on
-	// the data rate.
+	// Approximate time for one byte to be transmitted, based on the data rate.
 	byteDuration = time.Millisecond
 )
 

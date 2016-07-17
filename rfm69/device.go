@@ -67,6 +67,11 @@ func Open() radio.Interface {
 	return r
 }
 
+func (r *Radio) Close() {
+	r.setMode(SleepMode)
+	r.hw.Close()
+}
+
 func (r *Radio) Version() uint16 {
 	v := r.hw.ReadRegister(RegVersion)
 	return uint16(v>>4)<<8 | uint16(v&0xF)
