@@ -40,5 +40,4 @@ func (pump *Pump) PrintStats() {
 	stats := pump.Radio.Statistics()
 	good := stats.Packets.Received - pump.DecodingErrors - pump.CrcErrors
 	fmt.Printf("\nTX: %6d    RX: %6d    decode errs: %6d    CRC errs: %6d\n", stats.Packets.Sent, good, pump.DecodingErrors, pump.CrcErrors)
-	fmt.Printf("State: %s\n", pump.Radio.State())
 }

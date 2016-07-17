@@ -45,5 +45,4 @@ func catchInterrupt(pump *medtronic.Pump) {
 	signal.Notify(signalChan, os.Interrupt)
 	<-signalChan
 	pump.PrintStats()
-	os.Exit(0)
 }

@@ -64,6 +64,7 @@ func Open() *Pump {
 	freq := getFrequency()
 	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
 	pump.Radio.Init(freq)
+	go pump.closeWhenSignaled()
 	return pump
 }
 
