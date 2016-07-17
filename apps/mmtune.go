@@ -20,6 +20,7 @@ func main() {
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
+	defer pump.Close()
 	f := searchFrequencies(pump)
 	showResults(f)
 	fmt.Println(radio.MegaHertz(f))

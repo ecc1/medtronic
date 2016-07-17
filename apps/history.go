@@ -11,6 +11,7 @@ import (
 
 func main() {
 	pump := medtronic.Open()
+	defer pump.Close()
 	switch len(os.Args) {
 	case 1:
 		result := pump.HistoryPageCount()

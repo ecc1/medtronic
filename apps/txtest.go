@@ -18,6 +18,7 @@ var (
 func main() {
 	flag.Parse()
 	pump := medtronic.Open()
+	defer pump.Close()
 	n := *minPacketSize
 	i := 0
 	for pump.Error() == nil {

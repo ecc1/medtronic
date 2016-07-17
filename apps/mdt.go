@@ -70,6 +70,7 @@ func main() {
 		usage()
 	}
 	pump := medtronic.Open()
+	defer pump.Close()
 	pump.Wakeup()
 	result := prog(pump, args)
 	if pump.Error() != nil {

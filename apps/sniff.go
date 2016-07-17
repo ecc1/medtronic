@@ -18,6 +18,7 @@ func main() {
 		log.SetFlags(log.Ltime | log.Lmicroseconds | log.LUTC)
 	}
 	pump := medtronic.Open()
+	defer pump.Close()
 	go catchInterrupt(pump)
 	for pump.Error() == nil {
 		packet, rssi := pump.Radio.Receive(time.Hour)

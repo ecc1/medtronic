@@ -18,6 +18,7 @@ var (
 func main() {
 	flag.Parse()
 	pump := medtronic.Open()
+	defer pump.Close()
 	pump.Wakeup()
 	newer := pump.Family() >= 23
 	numPages := pump.HistoryPageCount()
