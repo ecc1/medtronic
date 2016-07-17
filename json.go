@@ -347,8 +347,8 @@ func (r *GlucoseUnitsType) UnmarshalJSON(data []byte) error {
 	switch string(data) {
 	case `"mg/dL"`:
 		*r = MgPerDeciLiter
-	case `"mmol/L"`:
-		*r = MmolPerLiter
+	case `"μmol/L"`:
+		*r = MicromolPerLiter
 	default:
 		err = fmt.Errorf("unknown GlucoseUnitsType (%s)", data)
 	}
