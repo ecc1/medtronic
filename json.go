@@ -82,7 +82,7 @@ func (r *BasalRate) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	r.Start, err = time.ParseDuration(rep.Start)
+	r.Start, err = parseTimeOfDay(rep.Start)
 	return err
 }
 
@@ -169,7 +169,7 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	r.Start, err = time.ParseDuration(rep.Start)
+	r.Start, err = parseTimeOfDay(rep.Start)
 	r.CarbRatio = int(10*rep.CarbRatio + 0.5)
 	return err
 }
@@ -198,7 +198,7 @@ func (r *GlucoseTarget) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	r.Start, err = time.ParseDuration(rep.Start)
+	r.Start, err = parseTimeOfDay(rep.Start)
 	return err
 }
 
@@ -226,7 +226,7 @@ func (r *InsulinSensitivity) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	r.Start, err = time.ParseDuration(rep.Start)
+	r.Start, err = parseTimeOfDay(rep.Start)
 	return err
 }
 

@@ -9,7 +9,7 @@ const (
 )
 
 type GlucoseTarget struct {
-	Start time.Duration // offset from 00:00:00
+	Start TimeOfDay
 	Low   Glucose
 	High  Glucose
 	Units GlucoseUnitsType
@@ -20,7 +20,7 @@ type GlucoseTargetSchedule []GlucoseTarget
 func decodeGlucoseTargetSchedule(data []byte, units GlucoseUnitsType) GlucoseTargetSchedule {
 	sched := []GlucoseTarget{}
 	for i := 0; i < len(data); i += 3 {
-		start := scheduleToDuration(data[i])
+		start := halfHoursToTimeOfDay(data[i])
 		if start == 0 && len(sched) != 0 {
 			break
 		}

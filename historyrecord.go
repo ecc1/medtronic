@@ -162,7 +162,7 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 				Programmed: twoByteInsulin(data[1:3], true),
 				Amount:     twoByteInsulin(data[3:5], true),
 				Unabsorbed: twoByteInsulin(data[5:7], true),
-				Duration:   scheduleToDuration(data[7]),
+				Duration:   halfHoursToDuration(data[7]),
 			},
 			Time: decodeTimestamp(data[8:13]),
 			Data: data[:13],
@@ -172,7 +172,7 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 			Bolus: &BolusRecord{
 				Programmed: byteToInsulin(data[1], false),
 				Amount:     byteToInsulin(data[2], false),
-				Duration:   scheduleToDuration(data[3]),
+				Duration:   halfHoursToDuration(data[3]),
 			},
 			Time: decodeTimestamp(data[4:9]),
 			Data: data[:9],
@@ -232,7 +232,7 @@ func decodeDailyTotal(data []byte, newerPump bool) HistoryRecord {
 // Note that this is a different format than the response to BasalRates.
 func decodeBasalRate(data []byte) BasalRate {
 	return BasalRate{
-		Start: scheduleToDuration(data[0]),
+		Start: halfHoursToTimeOfDay(data[0]),
 		Rate:  byteToInsulin(data[1], true),
 		// data[2] unused
 	}
@@ -271,7 +271,7 @@ func decodeClearAlarm(data []byte, newerPump bool) HistoryRecord {
 
 func decodeTempBasalDuration(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	d := scheduleToDuration(data[1])
+	d := halfHoursToDuration(data[1])
 	r.Duration = &d
 	return r
 }
@@ -447,7 +447,7 @@ func decodeChangeReservoirWarning(data []byte, newerPump bool) HistoryRecord {
 		amount := Insulin(1000 * int(v>>2))
 		r.Insulin = &amount
 	} else {
-		d := scheduleToDuration(v >> 2)
+		d := halfHoursToDuration(v >> 2)
 		r.Duration = &d
 	}
 	return r

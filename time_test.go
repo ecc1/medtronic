@@ -1,11 +1,54 @@
 package medtronic
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
 
-func TestSchedule(t *testing.T) {
+func TestTimeOfDay(t *testing.T) {
+	cases := []struct {
+		s   string
+		t   TimeOfDay
+		err error
+	}{
+		{"00:00", 0, nil},
+		{"12:00", durationToTimeOfDay(12 * time.Hour), nil},
+		{"23:59", durationToTimeOfDay(24*time.Hour - 1*time.Minute), nil},
+		{"01:02:03", 0, fmt.Errorf("")},
+		{"24:00", 0, fmt.Errorf("")},
+		{"01:60", 0, fmt.Errorf("")},
+	}
+	for _, c := range cases {
+		if c.err == nil {
+			s := c.t.String()
+			if s != c.s {
+				t.Errorf("%v.String() == %v, want %v", c.t, s, c.s)
+			}
+		}
+		td, err := parseTimeOfDay(c.s)
+		if err == nil {
+			if c.err == nil {
+				if td == c.t {
+					continue
+				} else {
+					t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
+				}
+			} else {
+				t.Errorf("parseTimeOfDay(%s) == %v, want error", c.s, td)
+			}
+		} else {
+			if c.err != nil {
+				continue
+			} else {
+				t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
+			}
+		}
+	}
+
+}
+
+func TestHalfHours(t *testing.T) {
 	cases := []struct {
 		t uint8
 		d time.Duration
@@ -16,9 +59,9 @@ func TestSchedule(t *testing.T) {
 		{4, 2 * time.Hour},
 	}
 	for _, c := range cases {
-		d := scheduleToDuration(c.t)
+		d := halfHoursToDuration(c.t)
 		if d != c.d {
-			t.Errorf("scheduleToDuration(%d) == %v, want %v", c.t, d, c.d)
+			t.Errorf("halfHoursToDuration(%d) == %v, want %v", c.t, d, c.d)
 		}
 	}
 }
@@ -35,12 +78,12 @@ func parseTime(s string) time.Time {
 func TestSinceMidnight(t *testing.T) {
 	cases := []struct {
 		t time.Time
-		d time.Duration
+		d TimeOfDay
 	}{
-		{parseTime("2015-01-01T09:00:00"), 9 * time.Hour},
-		{parseTime("2016-03-15T10:00:00.5"), 10*time.Hour + 500*time.Millisecond},
-		{parseTime("2016-06-15T20:30:00"), 20*time.Hour + 30*time.Minute},
-		{parseTime("2010-11-30T23:59:59.999"), 24*time.Hour - time.Millisecond},
+		{parseTime("2015-01-01T09:00:00"), durationToTimeOfDay(9 * time.Hour)},
+		{parseTime("2016-03-15T10:00:00.5"), durationToTimeOfDay(10*time.Hour + 500*time.Millisecond)},
+		{parseTime("2016-06-15T20:30:00"), durationToTimeOfDay(20*time.Hour + 30*time.Minute)},
+		{parseTime("2010-11-30T23:59:59.999"), durationToTimeOfDay(24*time.Hour - time.Millisecond)},
 	}
 	for _, c := range cases {
 		d := sinceMidnight(c.t)

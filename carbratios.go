@@ -9,8 +9,8 @@ const (
 )
 
 type CarbRatio struct {
-	Start     time.Duration // offset from 00:00:00
-	CarbRatio int           // 10x grams/unit or 100x units/exchange
+	Start     TimeOfDay
+	CarbRatio int // 10x grams/unit or 100x units/exchange
 	Units     CarbUnitsType
 }
 
@@ -28,7 +28,7 @@ func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) C
 	sched := []CarbRatio{}
 	step := carbRatioStep(newerPump)
 	for i := 0; i < len(data); i += step {
-		start := scheduleToDuration(data[i])
+		start := halfHoursToTimeOfDay(data[i])
 		if start == 0 && len(sched) != 0 {
 			break
 		}

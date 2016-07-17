@@ -9,8 +9,8 @@ const (
 )
 
 type InsulinSensitivity struct {
-	Start       time.Duration // offset from 00:00:00
-	Sensitivity Glucose       // glucose reduction per insulin unit
+	Start       TimeOfDay
+	Sensitivity Glucose // glucose reduction per insulin unit
 	Units       GlucoseUnitsType
 }
 
@@ -19,7 +19,7 @@ type InsulinSensitivitySchedule []InsulinSensitivity
 func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) InsulinSensitivitySchedule {
 	sched := []InsulinSensitivity{}
 	for i := 0; i < len(data); i += 2 {
-		start := scheduleToDuration(data[i])
+		start := halfHoursToTimeOfDay(data[i])
 		if start == 0 && len(sched) != 0 {
 			break
 		}
