@@ -17,35 +17,17 @@ var (
 
 func main() {
 	flag.Parse()
+	cutoff := time.Time{}
+	if *all {
+		log.Printf("retrieving entire pump history")
+	} else {
+		cutoff = time.Now().Add(-time.Duration(*numHours) * time.Hour)
+		log.Printf("retrieving pump history since %s", cutoff.Format(medtronic.TimeLayout))
+	}
 	pump := medtronic.Open()
 	defer pump.Close()
 	pump.Wakeup()
-	newer := pump.Family() >= 23
-	numPages := pump.HistoryPageCount()
-	cutoff := time.Now().Add(-time.Duration(*numHours) * time.Hour)
-	if *all {
-		log.Printf("retrieving %d pages of records", numPages)
-	} else {
-		log.Printf("retrieving records since %s", cutoff.Format(medtronic.TimeLayout))
-	}
-	results := []medtronic.HistoryRecord{}
-loop:
-	for page := 0; page < numPages && pump.Error() == nil; page++ {
-		log.Printf("scanning page %d", page)
-		data := pump.HistoryPage(page)
-		records, err := medtronic.DecodeHistoryRecords(data, newer)
-		if err != nil {
-			pump.SetError(err)
-		}
-		for _, r := range records {
-			t := r.Time
-			if !*all && !t.IsZero() && t.Before(cutoff) {
-				log.Printf("stopping at timestamp %s", t.Format(medtronic.TimeLayout))
-				break loop
-			}
-			results = append(results, r)
-		}
-	}
+	results := pump.HistoryRecords(cutoff)
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}

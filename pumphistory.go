@@ -1,0 +1,44 @@
+package medtronic
+
+import (
+	"log"
+	"time"
+)
+
+// HistoryRecords returns the history records since the specified time.
+// Note that the results may include records with a zero timestamp or
+// an earlier timestamp than the cutoff (in the case of DailyTotal records).
+func (pump *Pump) HistoryRecords(since time.Time) []HistoryRecord {
+	newer := pump.Family() >= 23
+	numPages := pump.HistoryPageCount()
+	if pump.Error() != nil {
+		return nil
+	}
+	results := []HistoryRecord{}
+loop:
+	for page := 0; page < numPages && pump.Error() == nil; page++ {
+		log.Printf("scanning page %d", page)
+		data := pump.HistoryPage(page)
+		records, err := DecodeHistoryRecords(data, newer)
+		if err != nil {
+			pump.SetError(err)
+		}
+		for _, r := range records {
+			// Don't use DailyTotal timestamps to decide when to stop,
+			// because they appear out of order (at the end of the day).
+			switch r.Type() {
+			case DailyTotal:
+			case DailyTotal522:
+			case DailyTotal523:
+			default:
+				t := r.Time
+				if !t.IsZero() && t.Before(since) {
+					log.Printf("stopping at timestamp %s", t.Format(TimeLayout))
+					break loop
+				}
+			}
+			results = append(results, r)
+		}
+	}
+	return results
+}
