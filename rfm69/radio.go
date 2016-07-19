@@ -86,9 +86,10 @@ func (r *Radio) finishTx(numBytes int) {
 		if s == StandbyMode {
 			break
 		}
-		if verbose {
+		if verbose || s != TransmitterMode {
 			log.Printf("waiting for TX to finish in %s state", stateName(s))
 		}
+		time.Sleep(byteDuration)
 	}
 }
 
