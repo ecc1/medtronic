@@ -257,7 +257,7 @@ func decodeBasalProfile(data []byte, newerPump bool) HistoryRecord {
 
 func decodeBgCapture(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	bg := intToGlucose(int(data[1])|int(data[6]>>7)<<8, MgPerDeciLiter)
+	bg := intToGlucose(int(data[4]>>7)<<9|int(data[6]>>7)<<8|int(data[1]), MgPerDeciLiter)
 	r.Glucose = &bg
 	return r
 }
