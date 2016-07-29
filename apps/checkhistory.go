@@ -15,7 +15,7 @@ import (
 var (
 	model = flag.Int("m", 523, "pump model")
 
-	timeBlank = strings.Repeat(" ", len(medtronic.TimeLayout))
+	timeBlank = strings.Repeat(" ", len(medtronic.UserTimeLayout))
 )
 
 func main() {
@@ -44,7 +44,7 @@ func validate(r medtronic.HistoryRecord, newerPump bool) {
 	t := r.Time
 	tStr := timeBlank
 	if !t.IsZero() {
-		tStr = t.Format(medtronic.TimeLayout)
+		tStr = t.Format(medtronic.UserTimeLayout)
 	}
 	if err != nil {
 		log.Printf("%s %v: %v\n", tStr, r.Type(), err)

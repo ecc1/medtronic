@@ -187,13 +187,13 @@ func setClock(pump *medtronic.Pump, args []string) interface{} {
 	default:
 		setClockUsage()
 	}
-	log.Printf("setting pump clock to %s", t.Format(medtronic.TimeLayout))
+	log.Printf("setting pump clock to %s", t.Format(medtronic.UserTimeLayout))
 	pump.SetClock(t)
 	return nil
 }
 
 func parseTime(date string) time.Time {
-	t, err := time.ParseInLocation(medtronic.TimeLayout, date, time.Local)
+	t, err := time.ParseInLocation(medtronic.UserTimeLayout, date, time.Local)
 	if err != nil {
 		setClockUsage()
 	}

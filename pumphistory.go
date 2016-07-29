@@ -17,7 +17,6 @@ func (pump *Pump) HistoryRecords(since time.Time) []HistoryRecord {
 	results := []HistoryRecord{}
 loop:
 	for page := 0; page < numPages && pump.Error() == nil; page++ {
-		log.Printf("scanning page %d", page)
 		data := pump.HistoryPage(page)
 		records, err := DecodeHistoryRecords(data, newer)
 		if err != nil {
@@ -33,7 +32,7 @@ loop:
 			default:
 				t := r.Time
 				if !t.IsZero() && t.Before(since) {
-					log.Printf("stopping at timestamp %s", t.Format(TimeLayout))
+					log.Printf("stopping pump history scan at %s", t.Format(UserTimeLayout))
 					break loop
 				}
 			}

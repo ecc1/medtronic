@@ -9,7 +9,7 @@ import (
 func (r HistoryRecord) MarshalJSON() ([]byte, error) {
 	t := ""
 	if !r.Time.IsZero() {
-		t = r.Time.Format(TimeLayout)
+		t = r.Time.Format(JsonTimeLayout)
 	}
 	type Original HistoryRecord
 	rep := struct {
@@ -43,7 +43,7 @@ func (r *HistoryRecord) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if rep.Time != "" {
-		r.Time, err = time.Parse(TimeLayout, rep.Time)
+		r.Time, err = time.Parse(JsonTimeLayout, rep.Time)
 		if err != nil {
 			return err
 		}

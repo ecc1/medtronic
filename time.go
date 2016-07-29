@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	TimeLayout = time.RFC3339
+	JsonTimeLayout = time.RFC3339          // Nightscout-interoperable
+	UserTimeLayout = "2006-01-02 15:04:05" // human-readable
 )
 
 // Convert a multiple of half-hours to a Duration.

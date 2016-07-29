@@ -17,7 +17,7 @@ var (
 	verbose = flag.Bool("v", false, "print record details")
 	model   = flag.Int("m", 523, "pump model")
 
-	timeBlank = strings.Repeat(" ", len(medtronic.TimeLayout))
+	timeBlank = strings.Repeat(" ", len(medtronic.UserTimeLayout))
 )
 
 func main() {
@@ -73,7 +73,7 @@ func printRecord(r medtronic.HistoryRecord) {
 	t := r.Time
 	tStr := timeBlank
 	if !t.IsZero() {
-		tStr = t.Format(medtronic.TimeLayout)
+		tStr = t.Format(medtronic.UserTimeLayout)
 	}
 	fmt.Printf("%s %v\n", tStr, r.Type())
 }
