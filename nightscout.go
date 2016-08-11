@@ -10,7 +10,7 @@ import (
 func (r HistoryRecord) NightscoutTreatment(r2 *HistoryRecord) *nightscout.Treatment {
 	info := nightscout.Treatment{
 		EventTime: r.Time,
-		EnteredBy: "ecc",
+		EnteredBy: nightscout.Username(),
 	}
 	switch r.Type() {
 	case BgCapture:
