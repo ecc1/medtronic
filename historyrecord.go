@@ -323,8 +323,8 @@ func decodeTempBasalRate(data []byte, newerPump bool) HistoryRecord {
 
 func decodeLowReservoir(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	amount := int(data[1]) * 100
-	r.Value = &amount
+	amount := byteToInsulin(data[1], false)
+	r.Insulin = &amount
 	return r
 }
 
