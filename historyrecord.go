@@ -40,7 +40,12 @@ const (
 	LowReservoir            HistoryRecordType = 0x34
 	SensorStatus            HistoryRecordType = 0x3B
 	EnableMeter             HistoryRecordType = 0x3C
+	MealMarker              HistoryRecordType = 0x40
+	ExerciseMarker          HistoryRecordType = 0x41
+	InsulinMarker           HistoryRecordType = 0x42
+	OtherMarker             HistoryRecordType = 0x43
 	ChangeBolusWizardSetup  HistoryRecordType = 0x4F
+	ChangeGlucoseUnits      HistoryRecordType = 0x56
 	BolusWizardSetup        HistoryRecordType = 0x5A
 	BolusWizard             HistoryRecordType = 0x5B
 	UnabsorbedInsulin       HistoryRecordType = 0x5C
@@ -58,10 +63,12 @@ const (
 	DeleteAlarmClockTime    HistoryRecordType = 0x6A
 	DailyTotal522           HistoryRecordType = 0x6D
 	DailyTotal523           HistoryRecordType = 0x6E
+	ChangeCarbUnits         HistoryRecordType = 0x6F
 	BasalProfileStart       HistoryRecordType = 0x7B
 	ConnectOtherDevices     HistoryRecordType = 0x7C
 	ChangeOtherDevice       HistoryRecordType = 0x81
 	DeleteOtherDevice       HistoryRecordType = 0x82
+	EnableCaptureEvent      HistoryRecordType = 0x83
 )
 
 type (
@@ -72,6 +79,7 @@ type (
 		Enabled           *bool                    `json:",omitempty"`
 		Glucose           *Glucose                 `json:",omitempty"`
 		Insulin           *Insulin                 `json:",omitempty"`
+		Carbs             *Carbs                   `json:",omitempty"`
 		TempBasalType     *TempBasalType           `json:",omitempty"`
 		Value             *int                     `json:",omitempty"`
 		BasalProfile      BasalRateSchedule        `json:",omitempty"`
@@ -328,9 +336,26 @@ func decodeLowReservoir(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
-func decodeEnableMeter(data []byte, newerPump bool) HistoryRecord {
-	r := decodeEnable(data, newerPump)
-	r.Data = data[:21]
+func decodeMealMarker(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	r.Data = data[:9]
+	carbs := Carbs(int(data[1])<<8 | int(data[7]))
+	r.Carbs = &carbs
+	// data[8] = carb units type (1 or 2)
+	return r
+}
+
+func decodeExerciseMarker(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	r.Data = data[:8]
+	return r
+}
+
+func decodeInsulinMarker(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	r.Data = data[:8]
+	amount := intToInsulin(int(data[4]&0x60)<<3|int(data[1]), false)
+	r.Insulin = &amount
 	return r
 }
 
@@ -385,11 +410,11 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 	if newerPump {
 		r.BolusWizard = &BolusWizardRecord{
 			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, MgPerDeciLiter),
-			CarbInput:    Carbs(int(body[1]&0xC)<<6 + int(body[0])),
+			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
 			CarbRatio:    Tenths(int(body[2]&0x7)<<8 | int(body[3])),
 			Sensitivity:  byteToGlucose(body[4], MgPerDeciLiter),
 			TargetLow:    byteToGlucose(body[5], MgPerDeciLiter),
-			Correction:   intToInsulin(int(body[9]&0x38)<<5+int(body[6]), true),
+			Correction:   intToInsulin(int(body[9]&0x38)<<5|int(body[6]), true),
 			Food:         twoByteInsulin(body[7:9], true),
 			Unabsorbed:   twoByteInsulin(body[10:12], true),
 			Bolus:        twoByteInsulin(body[12:14], true),
@@ -519,8 +544,13 @@ var decode = map[HistoryRecordType]func([]byte, bool) HistoryRecord{
 	TempBasalRate:           decodeTempBasalRate,
 	LowReservoir:            decodeLowReservoir,
 	SensorStatus:            decodeEnable,
-	EnableMeter:             decodeEnableMeter,
+	EnableMeter:             decodeEnableRemote,
+	MealMarker:              decodeMealMarker,
+	ExerciseMarker:          decodeExerciseMarker,
+	InsulinMarker:           decodeInsulinMarker,
+	OtherMarker:             decodeBase,
 	ChangeBolusWizardSetup:  decodeChangeBolusWizardSetup,
+	ChangeGlucoseUnits:      decodeOtherDevice,
 	BolusWizardSetup:        decodeBolusWizardSetup,
 	BolusWizard:             decodeBolusWizard,
 	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
@@ -538,10 +568,12 @@ var decode = map[HistoryRecordType]func([]byte, bool) HistoryRecord{
 	DeleteAlarmClockTime:    decodeBase,
 	DailyTotal522:           decodeDailyTotal522,
 	DailyTotal523:           decodeDailyTotal523,
+	ChangeCarbUnits:         decodeValue,
 	BasalProfileStart:       decodeBasalProfileStart,
 	ConnectOtherDevices:     decodeEnable,
 	ChangeOtherDevice:       decodeOtherDevice,
 	DeleteOtherDevice:       decodeOtherDevice,
+	EnableCaptureEvent:      decodeEnable,
 }
 
 func DecodeHistoryRecord(data []byte, newerPump bool) (HistoryRecord, error) {
