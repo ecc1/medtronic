@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	interruptPin       = 14 // Intel Edison GPIO for receive interrupts
+	interruptPin       = 46 // Intel Edison GPIO for receive interrupts
 	writeUsingTransfer = false
 )
 
