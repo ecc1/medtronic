@@ -83,7 +83,10 @@ func (sched BasalRateSchedule) NightscoutSchedule() nightscout.Schedule {
 	n := len(sched)
 	tv := make(nightscout.Schedule, n)
 	for i, r := range sched {
-		tv[i] = nightscout.TimeValue{r.Start.String(), r.Rate}
+		tv[i] = nightscout.TimeValue{
+			Time:  r.Start.String(),
+			Value: r.Rate,
+		}
 	}
 	return tv
 }
@@ -92,7 +95,10 @@ func (sched CarbRatioSchedule) NightscoutSchedule() nightscout.Schedule {
 	n := len(sched)
 	tv := make(nightscout.Schedule, n)
 	for i, r := range sched {
-		tv[i] = nightscout.TimeValue{r.Start.String(), r.CarbRatio}
+		tv[i] = nightscout.TimeValue{
+			Time:  r.Start.String(),
+			Value: r.CarbRatio,
+		}
 	}
 	return tv
 }
@@ -101,7 +107,10 @@ func (sched InsulinSensitivitySchedule) NightscoutSchedule() nightscout.Schedule
 	n := len(sched)
 	tv := make(nightscout.Schedule, n)
 	for i, r := range sched {
-		tv[i] = nightscout.TimeValue{r.Start.String(), r.Sensitivity}
+		tv[i] = nightscout.TimeValue{
+			Time:  r.Start.String(),
+			Value: r.Sensitivity,
+		}
 	}
 	return tv
 }
@@ -111,8 +120,15 @@ func (sched GlucoseTargetSchedule) NightscoutSchedule() (nightscout.Schedule, ni
 	low := make(nightscout.Schedule, n)
 	high := make(nightscout.Schedule, n)
 	for i, r := range sched {
-		low[i] = nightscout.TimeValue{r.Start.String(), r.Low}
-		high[i] = nightscout.TimeValue{r.Start.String(), r.High}
+		t := r.Start.String()
+		low[i] = nightscout.TimeValue{
+			Time:  t,
+			Value: r.Low,
+		}
+		high[i] = nightscout.TimeValue{
+			Time:  t,
+			Value: r.High,
+		}
 	}
 	return low, high
 }
