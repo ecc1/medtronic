@@ -18,7 +18,7 @@ func (r HistoryRecord) MarshalJSON() ([]byte, error) {
 		Duration string `json:",omitempty"`
 		Original
 	}{
-		Type:     r.Type().String(),
+		Type:     fmt.Sprintf("%v", r.Type()),
 		Time:     t,
 		Original: Original(r),
 	}

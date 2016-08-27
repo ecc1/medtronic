@@ -56,12 +56,12 @@ func (r HistoryRecord) NightscoutTreatment(r2 *HistoryRecord) *nightscout.Treatm
 }
 
 func nextEvent(r HistoryRecord, r2 *HistoryRecord, t HistoryRecordType) bool {
-	if r2 == nil || r2.Type() != t {
-		next := "nothing"
-		if r2 != nil {
-			next = r2.Type().String()
-		}
-		log.Printf("expected %v to be followed by %v at %v but found %s", r.Type(), t, r.Time, next)
+	if r2 == nil {
+		log.Printf("expected %v to be followed by %v at %v", r.Type(), t, r.Time)
+		return false
+	}
+	if r2.Type() != t {
+		log.Printf("expected %v to be followed by %v at %v but found %v", r.Type(), t, r.Time, r2.Type())
 		return false
 	}
 	return true
