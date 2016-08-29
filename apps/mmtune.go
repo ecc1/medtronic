@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	"github.com/ecc1/medtronic"
-	"github.com/ecc1/medtronic/radio"
+	"github.com/ecc1/radio"
 )
 
 const (
