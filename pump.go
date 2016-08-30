@@ -7,9 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ecc1/cc1101"
 	"github.com/ecc1/radio"
-	"github.com/ecc1/rfm69"
 )
 
 const (
@@ -32,7 +30,7 @@ type Pump struct {
 	err     error
 }
 
-var radios = [](func() radio.Interface){cc1101.Open, rfm69.Open}
+var radios [](func() radio.Interface)
 
 func Open() *Pump {
 	pump := &Pump{
