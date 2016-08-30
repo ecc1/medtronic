@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/ecc1/medtronic"
+	"github.com/ecc1/medtronic/packet"
 )
 
 const (
@@ -33,21 +34,21 @@ var (
 	input  = json.NewDecoder(os.Stdin)
 	output = json.NewEncoder(os.Stdout)
 
-	pump = medtronic.Open()
+	radio = medtronic.Open().Radio
 )
 
 func main() {
-	if pump.Error() != nil {
-		log.Fatal(pump.Error())
+	if radio.Error() != nil {
+		log.Fatal(radio.Error())
 	}
 	for {
 		cmd := readCommand()
 		result := cmd.perform()
 		err := output.Encode(result)
-		pump.SetError(err)
-		if pump.Error() != nil {
-			log.Println(pump.Error())
-			pump.SetError(nil)
+		radio.SetError(err)
+		if radio.Error() != nil {
+			log.Print(radio.Error())
+			radio.SetError(nil)
 		}
 	}
 }
@@ -86,25 +87,25 @@ func (cmd SpiLinkCommand) perform() SpiLinkResult {
 		result.Error = true
 	}
 	if verbose {
-		log.Printf("returning %d-byte result", len(result.Data)/2)
+		log.Printf("returning %d-byte result", len(result.Data))
 	}
 	return result
 }
 
 func send(data []byte, repeat int) SpiLinkResult {
-	packet := medtronic.EncodePacket(data)
+	p := packet.Encode(data)
 	if repeat == 0 {
 		repeat = 1
 	}
 	if verbose {
 		if repeat == 1 {
-			log.Printf("sending %d-byte packet", len(packet))
+			log.Printf("sending %d-byte packet", len(p))
 		} else {
-			log.Printf("sending %d-byte packet %d times", len(packet), repeat)
+			log.Printf("sending %d-byte packet %d times", len(p), repeat)
 		}
 	}
 	for i := 0; i < repeat; i++ {
-		pump.Radio.Send(packet)
+		radio.Send(p)
 	}
 	return SpiLinkResult{}
 }
@@ -114,18 +115,18 @@ func receive(timeout time.Duration) SpiLinkResult {
 		log.Printf("receiving with timeout = %v", timeout)
 	}
 	result := SpiLinkResult{}
-	packet, rssi := pump.Radio.Receive(timeout)
-	data, err := medtronic.Decode6b4b(packet)
-	pump.SetError(err)
+	p, rssi := radio.Receive(timeout)
+	data, err := packet.Decode6b4b(p)
+	radio.SetError(err)
 	result.Data = data
-	if pump.Error() != nil {
-		log.Printf("%v", pump.Error())
-		pump.SetError(nil)
+	if radio.Error() != nil {
+		log.Print(radio.Error())
+		radio.SetError(nil)
 		result.Error = true
 		return result
 	}
 	if verbose {
-		log.Printf("received %d-byte packet (RSSI = %d)", len(packet), rssi)
+		log.Printf("received %d-byte packet (RSSI = %d)", len(p), rssi)
 	}
 	return result
 }

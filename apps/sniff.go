@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/ecc1/medtronic"
+	"github.com/ecc1/medtronic/packet"
 )
 
 const (
@@ -21,14 +22,18 @@ func main() {
 	defer pump.Close()
 	go catchInterrupt(pump)
 	for pump.Error() == nil {
-		packet, rssi := pump.Radio.Receive(time.Hour)
-		if verbose {
-			log.Printf("raw data: % X (RSSI = %d)", packet, rssi)
-		}
-		data := pump.DecodePacket(packet)
+		p, rssi := pump.Radio.Receive(time.Hour)
 		if pump.Error() != nil {
-			log.Printf("%v", pump.Error())
+			log.Print(pump.Error())
 			pump.SetError(nil)
+			continue
+		}
+		if verbose {
+			log.Printf("raw data: % X (RSSI = %d)", p, rssi)
+		}
+		data, err := packet.Decode(p)
+		if err != nil {
+			log.Print(err)
 			continue
 		}
 		if verbose {

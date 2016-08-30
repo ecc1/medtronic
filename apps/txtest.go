@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ecc1/medtronic"
+	"github.com/ecc1/medtronic/packet"
 )
 
 var (
@@ -29,7 +30,7 @@ func main() {
 		for i, _ := range data {
 			data[i] = byte(i + 1)
 		}
-		packet := medtronic.EncodePacket(data)
+		packet := packet.Encode(data)
 		log.Printf("data:   % X", data)
 		log.Printf("packet: % X", packet)
 		pump.Radio.Send(packet)
