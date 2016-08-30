@@ -1,4 +1,4 @@
-package medtronic
+package packet
 
 //go:generate crcgen -size 16 -poly 0x1021
 

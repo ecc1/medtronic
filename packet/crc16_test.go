@@ -1,4 +1,4 @@
-package medtronic
+package packet
 
 import (
 	"testing"

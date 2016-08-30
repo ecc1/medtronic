@@ -30,9 +30,6 @@ type Pump struct {
 	retries int
 	rssi    int
 	err     error
-
-	DecodingErrors int
-	CrcErrors      int
 }
 
 var radios = [](func() radio.Interface){cc1101.Open, rfm69.Open}
@@ -123,4 +120,9 @@ func (pump *Pump) Error() error {
 func (pump *Pump) SetError(err error) {
 	pump.Radio.SetError(err)
 	pump.err = err
+}
+
+func (pump *Pump) PrintStats() {
+	stats := pump.Radio.Statistics()
+	fmt.Printf("\nTX: %6d    RX: %6d\n", stats.Packets.Sent, stats.Packets.Received)
 }

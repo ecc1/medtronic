@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"github.com/ecc1/medtronic/packet"
 )
 
 const (
@@ -101,7 +103,7 @@ func commandPacket(cmd Command, params []byte) []byte {
 	if len(params) != 0 {
 		copy(data[6:], params)
 	}
-	return EncodePacket(data)
+	return packet.Encode(data)
 }
 
 // Commands with parameters require an initial exchange with no parameters,
@@ -210,7 +212,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 	}
 	dataCrc := twoByteUint(results[historyPageSize-2:])
 	results = results[:historyPageSize-2]
-	calcCrc := Crc16(results)
+	calcCrc := packet.Crc16(results)
 	if dataCrc != calcCrc {
 		pump.SetError(fmt.Errorf("CRC should be %02X, not %02X", calcCrc, dataCrc))
 		return nil
@@ -222,17 +224,16 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 	if pump.Error() != nil {
 		return nil
 	}
-	packet := commandPacket(cmd, params)
+	p := commandPacket(cmd, params)
 	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
-		pump.Radio.Send(packet)
+		pump.Radio.Send(p)
 		response, rssi := pump.Radio.Receive(pump.Timeout())
 		if len(response) == 0 {
 			pump.SetError(nil)
 			continue
 		}
-		data := pump.DecodePacket(response)
-		if pump.Error() != nil {
-			pump.SetError(nil)
+		data, err := packet.Decode(response)
+		if err != nil {
 			continue
 		}
 		if pump.unexpected(cmd, resp, data) {
