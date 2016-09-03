@@ -39,7 +39,6 @@ func (pump *Pump) Settings() SettingsInfo {
 	}
 	info := SettingsInfo{
 		AutoOff:         time.Duration(data[1]) * time.Hour,
-		MaxBolus:        byteToInsulin(data[6], false),
 		SelectedPattern: int(data[12]),
 		RfEnabled:       data[13] == 1,
 		TempBasalType:   TempBasalType(data[14]),
@@ -54,9 +53,11 @@ func (pump *Pump) Settings() SettingsInfo {
 		pump.BadResponse(Settings, data)
 	}
 	if newer {
+		info.MaxBolus = byteToInsulin(data[7], false)
 		info.MaxBasal = twoByteInsulin(data[8:10], true)
 	} else {
-		info.MaxBasal = twoByteInsulin(data[7:9], false)
+		info.MaxBolus = byteToInsulin(data[6], false)
+		info.MaxBasal = twoByteInsulin(data[7:9], true)
 	}
 	return info
 }
