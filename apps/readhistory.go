@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -11,11 +10,13 @@ import (
 	"strings"
 
 	"github.com/ecc1/medtronic"
+	"github.com/ecc1/nightscout"
 )
 
 var (
 	verbose = flag.Bool("v", false, "print record details")
 	model   = flag.Int("m", 523, "pump model")
+	nsFlag  = flag.Bool("t", false, "format as Nightscout treatments")
 
 	timeBlank = strings.Repeat(" ", len(medtronic.UserTimeLayout))
 )
@@ -33,14 +34,13 @@ func main() {
 		records, err := medtronic.DecodeHistoryRecords(data, newer)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
+			*verbose = true
 		}
-		if *verbose || err != nil {
-			b, err := json.MarshalIndent(records, "", "  ")
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				fmt.Println(string(b))
-			}
+		if *verbose {
+			fmt.Println(nightscout.Json(records))
+		} else if *nsFlag {
+			medtronic.ReverseHistoryRecords(records)
+			fmt.Println(nightscout.Json(medtronic.Treatments(records)))
 		} else {
 			for _, r := range records {
 				printRecord(r)

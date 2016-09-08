@@ -1,18 +1,19 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/ecc1/medtronic"
+	"github.com/ecc1/nightscout"
 )
 
 var (
 	all      = flag.Bool("a", false, "get entire pump history")
 	numHours = flag.Int("n", 6, "number of `hours` of history to get")
+	nsFlag   = flag.Bool("t", false, "format as Nightscout treatments")
 )
 
 func main() {
@@ -31,9 +32,10 @@ func main() {
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
-	b, err := json.MarshalIndent(results, "", "  ")
-	if err != nil {
-		log.Fatal(err)
+	if *nsFlag {
+		medtronic.ReverseHistoryRecords(results)
+		fmt.Println(nightscout.Json(medtronic.Treatments(results)))
+	} else {
+		fmt.Println(nightscout.Json(results))
 	}
-	fmt.Println(string(b))
 }
