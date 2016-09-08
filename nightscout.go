@@ -7,52 +7,66 @@ import (
 	"github.com/ecc1/nightscout"
 )
 
-func (r HistoryRecord) NightscoutTreatment(r2 *HistoryRecord) *nightscout.Treatment {
-	info := nightscout.Treatment{
-		EventTime: r.Time,
-		EnteredBy: nightscout.Username(),
-	}
-	switch r.Type() {
-	case BgCapture:
-		info.EventType = "BG Check"
-		g := r.Glucose.NightscoutGlucose()
-		info.Glucose = &g
-	case TempBasalRate:
-		if !nextEvent(r, r2, TempBasalDuration) {
-			return nil
+func Treatments(records []HistoryRecord) []nightscout.Treatment {
+	treatments := []nightscout.Treatment{}
+	user := nightscout.Username()
+	insulin0 := Insulin(0).NightscoutInsulin()
+	duration0 := 0
+	for i, r := range records {
+		info := nightscout.Treatment{
+			CreatedAt: r.Time,
+			EnteredBy: user,
 		}
-		if *r2.Duration == 0 {
-			info.EventType = "Temp Basal End"
-		} else {
-			info.EventType = "Temp Basal Start"
-			ins := r.Insulin.NightscoutInsulin()
-			info.Absolute = &ins
-			min := int(*r2.Duration / time.Minute)
+		var r2 *HistoryRecord
+		if i+1 < len(records) {
+			r2 = &records[i+1]
+		}
+		switch r.Type() {
+		case BgCapture:
+			info.EventType = "BG Check"
+			g := r.Glucose.NightscoutGlucose()
+			info.Glucose = &g
+			info.Units = "mg/dl"
+		case TempBasalRate:
+			if !nextEvent(r, r2, TempBasalDuration) {
+				continue
+			}
+			info.EventType = "Temp Basal"
+			if *r2.Duration == 0 {
+				info.Absolute = &insulin0
+				info.Duration = &duration0
+			} else {
+				ins := r.Insulin.NightscoutInsulin()
+				info.Absolute = &ins
+				min := int(*r2.Duration / time.Minute)
+				info.Duration = &min
+			}
+		case Bolus:
+			info.EventType = "Meal Bolus"
+			ins := r.Bolus.Amount.NightscoutInsulin()
+			info.Insulin = &ins
+			min := int(r.Bolus.Duration / time.Minute)
 			info.Duration = &min
+		case Rewind:
+			if !nextEvent(r, r2, Prime) {
+				continue
+			}
+			info.EventType = "Site Change"
+		case ResumePump:
+			info.EventType = "Temp Basal"
+			info.Absolute = &insulin0
+			info.Duration = &duration0
+		case SuspendPump:
+			info.EventType = "Temp Basal"
+			info.Absolute = &insulin0
+			min := 24 * 60
+			info.Duration = &min
+		default:
+			continue
 		}
-	case Bolus:
-		info.EventType = "Meal Bolus"
-		ins := r.Bolus.Amount.NightscoutInsulin()
-		info.Insulin = &ins
-		min := int(r.Bolus.Duration / time.Minute)
-		info.Duration = &min
-	case Rewind:
-		if !nextEvent(r, r2, Prime) {
-			return nil
-		}
-		info.EventType = "Site Change"
-	case ResumePump:
-		info.EventType = "Temp Basal End"
-	case SuspendPump:
-		info.EventType = "Temp Basal Start"
-		zero := Insulin(0).NightscoutInsulin()
-		info.Absolute = &zero
-		min := 24 * 60
-		info.Duration = &min
-	default:
-		return nil
+		treatments = append(treatments, info)
 	}
-	return &info
+	return treatments
 }
 
 func nextEvent(r HistoryRecord, r2 *HistoryRecord, t HistoryRecordType) bool {
