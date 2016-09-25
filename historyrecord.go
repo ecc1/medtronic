@@ -318,7 +318,7 @@ func decodeTempBasalRate(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	tempBasalType := TempBasalType(data[7] >> 3)
 	if tempBasalType == Absolute {
-		rate := byteToInsulin(data[1], true)
+		rate := intToInsulin(int(data[7]&0x7)<<8|int(data[1]), true)
 		r.Insulin = &rate
 	} else {
 		rate := int(data[1])
