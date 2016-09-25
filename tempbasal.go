@@ -39,7 +39,7 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 	d := time.Duration(twoByteInt(data[5:7])) * time.Minute
 	tempType := TempBasalType(data[1])
 	info := TempBasalInfo{Duration: d, Type: tempType}
-	switch TempBasalType(data[1]) {
+	switch tempType {
 	case Absolute:
 		rate := twoByteInsulin(data[3:5], true)
 		info.Rate = &rate
