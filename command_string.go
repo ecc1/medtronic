@@ -4,7 +4,7 @@ package medtronic
 
 import "fmt"
 
-const _Command_name = "AckNakSetClockSetAbsoluteTempBasalSuspendWakeupSetPercentTempBasalClockPumpIdBatteryReservoirHistoryPageCarbUnitsGlucoseUnitsCarbRatiosInsulinSensitivitiesModelBasalRatesBasalPatternABasalPatternBTempBasalHistoryPageCountGlucoseTargetsSettingsStatus"
+const _Command_name = "AckNakSetClockSetAbsoluteTempBasalSuspendWakeupSetPercentTempBasalClockPumpIdBatteryReservoirHistoryPageCarbUnitsGlucoseUnitsCarbRatiosInsulinSensitivitiesModelBasalRatesBasalPatternABasalPatternBTempBasalLastHistoryPageGlucoseTargetsSettingsStatus"
 
 var _Command_map = map[Command]string{
 	6:   _Command_name[0:3],
@@ -28,10 +28,10 @@ var _Command_map = map[Command]string{
 	147: _Command_name[170:183],
 	148: _Command_name[183:196],
 	152: _Command_name[196:205],
-	157: _Command_name[205:221],
-	159: _Command_name[221:235],
-	192: _Command_name[235:243],
-	206: _Command_name[243:249],
+	157: _Command_name[205:220],
+	159: _Command_name[220:234],
+	192: _Command_name[234:242],
+	206: _Command_name[242:248],
 }
 
 func (i Command) String() string {
