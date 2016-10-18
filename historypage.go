@@ -1,17 +1,17 @@
 package medtronic
 
 const (
-	HistoryPageCount Command = 0x9D
-	HistoryPage      Command = 0x80
+	LastHistoryPage Command = 0x9D
+	HistoryPage     Command = 0x80
 )
 
-func (pump *Pump) HistoryPageCount() int {
-	data := pump.Execute(HistoryPageCount)
+func (pump *Pump) LastHistoryPage() int {
+	data := pump.Execute(LastHistoryPage)
 	if pump.Error() != nil {
 		return 0
 	}
 	if len(data) < 5 || data[0] != 4 {
-		pump.BadResponse(HistoryPageCount, data)
+		pump.BadResponse(LastHistoryPage, data)
 		return 0
 	}
 	page := fourByteInt(data[1:5])

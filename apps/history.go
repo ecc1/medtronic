@@ -14,7 +14,7 @@ func main() {
 	defer pump.Close()
 	switch len(os.Args) {
 	case 1:
-		result := pump.HistoryPageCount()
+		result := pump.LastHistoryPage()
 		if pump.Error() != nil {
 			log.Fatal(pump.Error())
 		}

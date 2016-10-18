@@ -144,7 +144,7 @@ func glucoseUnits(pump *medtronic.Pump, _ []string) interface{} {
 }
 
 func history(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.HistoryPageCount()
+	return pump.LastHistoryPage()
 }
 
 func model(pump *medtronic.Pump, _ []string) interface{} {
