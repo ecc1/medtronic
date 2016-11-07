@@ -84,11 +84,21 @@ func TestSinceMidnight(t *testing.T) {
 		{parseTime("2016-03-15T10:00:00.5"), durationToTimeOfDay(10*time.Hour + 500*time.Millisecond)},
 		{parseTime("2016-06-15T20:30:00"), durationToTimeOfDay(20*time.Hour + 30*time.Minute)},
 		{parseTime("2010-11-30T23:59:59.999"), durationToTimeOfDay(24*time.Hour - time.Millisecond)},
+		// DST changes
+		{parseTime("2016-03-13T01:00:00"), durationToTimeOfDay(1 * time.Hour)},
+		{parseTime("2016-03-13T03:00:00"), durationToTimeOfDay(3 * time.Hour)},
+		{parseTime("2016-03-13T12:00:00"), durationToTimeOfDay(12 * time.Hour)},
+		{parseTime("2016-11-06T01:00:00"), durationToTimeOfDay(1 * time.Hour)},
+		{parseTime("2016-11-06T02:00:00"), durationToTimeOfDay(2 * time.Hour)},
+		{parseTime("2016-11-06T03:00:00"), durationToTimeOfDay(3 * time.Hour)},
+		{parseTime("2016-11-06T23:00:00"), durationToTimeOfDay(23 * time.Hour)},
+		{parseTime("2016-11-06T23:30:00"), durationToTimeOfDay(23*time.Hour + 30*time.Minute)},
 	}
 	for _, c := range cases {
 		d := sinceMidnight(c.t)
 		if d != c.d {
-			t.Errorf("sinceMidnight(%v) == %v, want %v", c.t, d, c.d)
+			// Print TimeOfDay as underlying time.Duration.
+			t.Errorf("sinceMidnight(%v) == %v, want %v", c.t, time.Duration(d), time.Duration(c.d))
 		}
 	}
 }

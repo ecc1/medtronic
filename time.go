@@ -57,9 +57,11 @@ func halfHoursToTimeOfDay(t uint8) TimeOfDay {
 
 // Convert a time to a time of day.
 func sinceMidnight(t time.Time) TimeOfDay {
-	year, month, day := t.Date()
-	midnight := time.Date(year, month, day, 0, 0, 0, 0, t.Location())
-	return durationToTimeOfDay(t.Sub(midnight))
+	hour, min, sec := t.Clock()
+	h, m, s := time.Duration(hour), time.Duration(min), time.Duration(sec)
+	n := time.Duration(t.Nanosecond())
+	d := h*time.Hour + m*time.Minute + s*time.Second + n*time.Nanosecond
+	return durationToTimeOfDay(d)
 }
 
 // Decode a 5-byte timestamp from a pump history record.
