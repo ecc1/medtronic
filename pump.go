@@ -55,7 +55,8 @@ func Open() *Pump {
 		pump.SetError(fmt.Errorf("no radio hardware detected"))
 		return pump
 	}
-	log.Printf("connected to %s radio", pump.Radio.Hardware().Name())
+	hw := pump.Radio.Hardware()
+	log.Printf("connected to %s radio on %s", hw.Name(), hw.Device())
 	freq := getFrequency()
 	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
 	pump.Radio.Init(freq)
@@ -64,7 +65,8 @@ func Open() *Pump {
 }
 
 func (pump *Pump) Close() {
-	log.Printf("disconnecting %s radio", pump.Radio.Hardware().Name())
+	hw := pump.Radio.Hardware()
+	log.Printf("disconnecting %s radio on %s", hw.Name(), hw.Device())
 	pump.Radio.Close()
 }
 
