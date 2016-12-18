@@ -14,11 +14,11 @@ func (pump *Pump) LastHistoryPage() int {
 		pump.BadResponse(LastHistoryPage, data)
 		return 0
 	}
-	page := fourByteInt(data[1:5])
-	if page < 0 || page > 36 {
-		page = 36
+	page := fourByteUint(data[1:5])
+	if page > 35 {
+		page = 35
 	}
-	return page
+	return int(page)
 }
 
 func (pump *Pump) HistoryPage(page int) []byte {
