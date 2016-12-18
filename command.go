@@ -273,15 +273,3 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 	pump.BadResponse(cmd, data)
 	return true
 }
-
-func twoByteInt(data []byte) int {
-	return int(data[0])<<8 | int(data[1])
-}
-
-func twoByteUint(data []byte) uint16 {
-	return uint16(data[0])<<8 | uint16(data[1])
-}
-
-func fourByteInt(data []byte) int {
-	return twoByteInt(data[0:2])<<16 | twoByteInt(data[2:4])
-}
