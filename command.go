@@ -147,7 +147,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 	expected := byte(1)
 	for {
 		if len(data) != fragmentLength {
-			pump.SetError(fmt.Errorf("unexpected history fragment length (%d)", len(data)))
+			pump.SetError(fmt.Errorf("history page %d: unexpected fragment length (%d)", page, len(data)))
 			return nil
 		}
 		done := data[0]&0x80 != 0
@@ -158,7 +158,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 			results = append(results, payload...)
 			if done {
 				if seqNum != numFragments {
-					pump.SetError(fmt.Errorf("unexpected final sequence number for history page (%d)", seqNum))
+					pump.SetError(fmt.Errorf("history page %d: unexpected final sequence number (%d)", page, seqNum))
 					return nil
 				}
 				break
@@ -168,7 +168,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 			// Skip duplicate responses.
 		} else {
 			// Missed fragment.
-			pump.SetError(fmt.Errorf("received fragment %d instead of %d in history page", seqNum, expected))
+			pump.SetError(fmt.Errorf("history page %d: received fragment %d instead of %d", page, seqNum, expected))
 			return nil
 		}
 		next := []byte{}
@@ -187,11 +187,11 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 		for count := 0; count < maxNaks; count++ {
 			next = pump.perform(Nak, cmd, nil)
 			if pump.Error() == nil {
-				format := "received fragment %d after %d NAK"
+				format := "history page %d: received fragment %d after %d NAK"
 				if count != 0 {
 					format += "s"
 				}
-				log.Printf(format, next[0]&^0x80, count+1)
+				log.Printf(format, page, next[0]&^0x80, count+1)
 				break
 			}
 			_, noResponse := pump.Error().(NoResponseError)
@@ -201,20 +201,20 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 			pump.SetError(nil)
 		}
 		if next == nil {
-			pump.SetError(fmt.Errorf("lost fragment %d in history page", expected))
+			pump.SetError(fmt.Errorf("history page %d: lost fragment %d", page, expected))
 			return nil
 		}
 		data = next
 	}
 	if len(results) != historyPageSize {
-		pump.SetError(fmt.Errorf("unexpected history page size (%d)", len(results)))
+		pump.SetError(fmt.Errorf("history page %d: unexpected size (%d)", page, len(results)))
 		return nil
 	}
 	dataCrc := twoByteUint(results[historyPageSize-2:])
 	results = results[:historyPageSize-2]
 	calcCrc := packet.Crc16(results)
 	if dataCrc != calcCrc {
-		pump.SetError(fmt.Errorf("CRC should be %02X, not %02X", calcCrc, dataCrc))
+		pump.SetError(fmt.Errorf("history page %d: CRC should be %02X, not %02X", page, calcCrc, dataCrc))
 		return nil
 	}
 	return results
