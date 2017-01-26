@@ -50,7 +50,7 @@ func main() {
 }
 
 func readBytes(r io.Reader) []byte {
-	data := []byte{}
+	var data []byte
 	s := ""
 	for {
 		n, err := fmt.Fscan(r, &s)

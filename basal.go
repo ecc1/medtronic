@@ -22,7 +22,7 @@ func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 	if pump.Error() != nil {
 		return BasalRateSchedule{}
 	}
-	sched := []BasalRate{}
+	var sched []BasalRate
 	for i := 1; i < len(data); i += 3 {
 		r := data[i]
 		t := data[i+2]

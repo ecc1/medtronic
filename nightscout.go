@@ -8,7 +8,7 @@ import (
 )
 
 func Treatments(records []HistoryRecord) []nightscout.Treatment {
-	treatments := []nightscout.Treatment{}
+	var treatments []nightscout.Treatment
 	user := nightscout.Username()
 	insulin0 := Insulin(0).NightscoutInsulin()
 	duration0 := 0

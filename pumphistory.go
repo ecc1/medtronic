@@ -14,7 +14,7 @@ func (pump *Pump) HistoryRecords(since time.Time) []HistoryRecord {
 	if pump.Error() != nil {
 		return nil
 	}
-	results := []HistoryRecord{}
+	var results []HistoryRecord
 loop:
 	for page := 0; page <= lastPage && pump.Error() == nil; page++ {
 		data := pump.HistoryPage(page)

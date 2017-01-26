@@ -27,7 +27,7 @@ func carbRatioStep(newerPump bool) int {
 }
 
 func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) CarbRatioSchedule {
-	sched := []CarbRatio{}
+	var sched []CarbRatio
 	step := carbRatioStep(newerPump)
 	for i := 0; i < len(data); i += step {
 		start := halfHoursToTimeOfDay(data[i])

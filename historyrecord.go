@@ -294,7 +294,7 @@ func decodeBasalRate(data []byte) BasalRate {
 func decodeBasalProfile(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	body := data[7:]
-	sched := []BasalRate{}
+	var sched []BasalRate
 	for i := 0; i < 144; i += 3 {
 		b := decodeBasalRate(body[i : i+3])
 		// Don't stop if the 00:00 rate happens to be zero.
@@ -518,7 +518,7 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 func decodeUnabsorbedInsulin(data []byte, newerPump bool) HistoryRecord {
 	n := int(data[1]) - 2
 	body := data[2:]
-	unabsorbed := []UnabsorbedBolus{}
+	var unabsorbed []UnabsorbedBolus
 	for i := 0; i < n; i += 3 {
 		amount := byteToInsulin(body[i], true)
 		curve := body[i+2]
@@ -665,7 +665,7 @@ func unknownRecord(data []byte) error {
 // Decode records in a page of data and return them in reverse chronological order
 // (most recent first) to match the order of the history pages themselves.
 func DecodeHistoryRecords(data []byte, newerPump bool) ([]HistoryRecord, error) {
-	results := []HistoryRecord{}
+	var results []HistoryRecord
 	r := HistoryRecord{}
 	err := error(nil)
 	for !allZero(data) {

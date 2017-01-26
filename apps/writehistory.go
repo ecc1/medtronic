@@ -20,7 +20,7 @@ var (
 func main() {
 	flag.Parse()
 	newer := *model%100 > 22
-	records := []medtronic.HistoryRecord{}
+	var records []medtronic.HistoryRecord
 	for _, file := range flag.Args() {
 		f, err := os.Open(file)
 		if err != nil {
@@ -47,7 +47,7 @@ func main() {
 }
 
 func readBytes(r io.Reader) []byte {
-	data := []byte{}
+	var data []byte
 	s := ""
 	for {
 		n, err := fmt.Fscan(r, &s)
@@ -72,7 +72,7 @@ func pruneRecords(records []medtronic.HistoryRecord) []medtronic.HistoryRecord {
 	for _, r := range records {
 		examples[r.Type()] = append(examples[r.Type()], r)
 	}
-	subset := []medtronic.HistoryRecord{}
+	var subset []medtronic.HistoryRecord
 	for _, x := range examples {
 		subset = append(subset, chooseExample(x))
 	}

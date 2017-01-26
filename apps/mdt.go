@@ -122,7 +122,7 @@ func execute(pump *medtronic.Pump, args []string) interface{} {
 		eprintf("%v\n", err)
 		executeUsage()
 	}
-	params := []byte{}
+	var params []byte
 	for _, s := range args[1:] {
 		b, err := strconv.ParseInt(s, 0, 8)
 		if err != nil {

@@ -27,7 +27,7 @@ func main() {
 			log.Fatal(err)
 		}
 		d := json.NewDecoder(f)
-		records := []medtronic.HistoryRecord{}
+		var records []medtronic.HistoryRecord
 		err = d.Decode(&records)
 		if err != nil {
 			log.Fatal(err)

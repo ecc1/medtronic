@@ -18,7 +18,7 @@ type GlucoseTarget struct {
 type GlucoseTargetSchedule []GlucoseTarget
 
 func decodeGlucoseTargetSchedule(data []byte, units GlucoseUnitsType) GlucoseTargetSchedule {
-	sched := []GlucoseTarget{}
+	var sched []GlucoseTarget
 	for i := 0; i < len(data); i += 3 {
 		start := halfHoursToTimeOfDay(data[i])
 		if start == 0 && len(sched) != 0 {

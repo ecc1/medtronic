@@ -22,12 +22,12 @@ func main() {
 	flag.Parse()
 	newer := *model%100 > 22
 	d := json.NewDecoder(os.Stdin)
-	maps := []interface{}{}
+	var maps []interface{}
 	err := d.Decode(&maps)
 	if err != nil {
 		log.Fatal(err)
 	}
-	records := []medtronic.HistoryRecord{}
+	var records []medtronic.HistoryRecord
 	for _, j := range maps {
 		m := j.(map[string]interface{})
 		base64data := m["Data"].(string)

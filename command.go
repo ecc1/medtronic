@@ -91,7 +91,7 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 //   CRC-8
 func commandPacket(cmd Command, params []byte) []byte {
 	initCommandPrefix()
-	data := []byte{}
+	var data []byte
 	if len(params) == 0 {
 		data = make([]byte, 7)
 	} else {
@@ -137,7 +137,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 	if pump.Error() != nil {
 		return nil
 	}
-	results := []byte{}
+	var results []byte
 	retries := pump.Retries()
 	pump.SetRetries(1)
 	defer pump.SetRetries(retries)
@@ -171,7 +171,7 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 			pump.SetError(fmt.Errorf("history page %d: received fragment %d instead of %d", page, seqNum, expected))
 			return nil
 		}
-		next := []byte{}
+		var next []byte
 		// Acknowledge the current fragment.
 		next = pump.perform(Ack, cmd, nil)
 		if pump.Error() == nil {
