@@ -22,7 +22,7 @@ func Treatments(records []HistoryRecord) []nightscout.Treatment {
 			r2 = &records[i+1]
 		}
 		switch r.Type() {
-		case BgCapture:
+		case BGCapture:
 			info.EventType = "BG Check"
 			g := r.Glucose.NightscoutGlucose()
 			info.Glucose = &g

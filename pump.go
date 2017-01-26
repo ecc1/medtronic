@@ -105,7 +105,7 @@ func (pump *Pump) SetRetries(n int) {
 	pump.retries = n
 }
 
-func (pump *Pump) Rssi() int {
+func (pump *Pump) RSSI() int {
 	return pump.rssi
 }
 

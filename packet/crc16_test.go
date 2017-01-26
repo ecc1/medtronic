@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestCrc16(t *testing.T) {
+func TestCRC16(t *testing.T) {
 	cases := []struct {
 		msg []byte
 		sum uint16
@@ -13,9 +13,9 @@ func TestCrc16(t *testing.T) {
 		{[]byte{0x02, 0x09, 0x00, 0x05, 0x0D, 0x02, 0x03}, 0x71DA},
 	}
 	for _, c := range cases {
-		sum := Crc16(c.msg)
+		sum := CRC16(c.msg)
 		if sum != c.sum {
-			t.Errorf("Crc16(% X) == %X, want %X", c.msg, sum, c.sum)
+			t.Errorf("CRC16(% X) == %X, want %X", c.msg, sum, c.sum)
 		}
 	}
 }

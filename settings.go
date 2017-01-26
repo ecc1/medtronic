@@ -14,7 +14,7 @@ type SettingsInfo struct {
 	InsulinConcentration int // 50 or 100
 	MaxBolus             Insulin
 	MaxBasal             Insulin
-	RfEnabled            bool
+	RFEnabled            bool
 	TempBasalType        TempBasalType
 	SelectedPattern      int
 }
@@ -40,7 +40,7 @@ func (pump *Pump) Settings() SettingsInfo {
 	info := SettingsInfo{
 		AutoOff:         time.Duration(data[1]) * time.Hour,
 		SelectedPattern: int(data[12]),
-		RfEnabled:       data[13] == 1,
+		RFEnabled:       data[13] == 1,
 		TempBasalType:   TempBasalType(data[14]),
 		InsulinAction:   time.Duration(data[18]) * time.Hour,
 	}

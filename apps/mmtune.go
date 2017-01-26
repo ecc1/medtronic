@@ -77,7 +77,7 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) int {
 			pump.SetError(nil)
 			continue
 		}
-		sum += pump.Rssi()
+		sum += pump.RSSI()
 		count++
 	}
 	if count != 0 {

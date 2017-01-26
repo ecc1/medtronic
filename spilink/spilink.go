@@ -16,16 +16,16 @@ const (
 )
 
 type (
-	SpiLinkCommand struct {
+	SPILinkCommand struct {
 		Command string
 		Data    []byte // base64-encoded by json.Marshal
 		Repeat  int
 		Timeout int // microseconds
 	}
 
-	SpiLinkResult struct {
+	SPILinkResult struct {
 		Data  []byte // base64-encoded by json.Marshal
-		Rssi  int
+		RSSI  int
 		Error bool
 	}
 )
@@ -53,8 +53,8 @@ func main() {
 	}
 }
 
-func readCommand() SpiLinkCommand {
-	cmd := SpiLinkCommand{}
+func readCommand() SPILinkCommand {
+	cmd := SPILinkCommand{}
 	err := input.Decode(&cmd)
 	if err == io.EOF {
 		if verbose {
@@ -68,12 +68,12 @@ func readCommand() SpiLinkCommand {
 	return cmd
 }
 
-func (cmd SpiLinkCommand) perform() SpiLinkResult {
+func (cmd SPILinkCommand) perform() SPILinkResult {
 	if verbose {
 		log.Printf("received %s command", cmd.Command)
 	}
 	timeout := time.Duration(cmd.Timeout) * time.Microsecond
-	result := SpiLinkResult{}
+	result := SPILinkResult{}
 	switch cmd.Command {
 	case "send_packet":
 		result = send(cmd.Data, cmd.Repeat)
@@ -92,7 +92,7 @@ func (cmd SpiLinkCommand) perform() SpiLinkResult {
 	return result
 }
 
-func send(data []byte, repeat int) SpiLinkResult {
+func send(data []byte, repeat int) SPILinkResult {
 	p := packet.Encode(data)
 	if repeat == 0 {
 		repeat = 1
@@ -107,14 +107,14 @@ func send(data []byte, repeat int) SpiLinkResult {
 	for i := 0; i < repeat; i++ {
 		radio.Send(p)
 	}
-	return SpiLinkResult{}
+	return SPILinkResult{}
 }
 
-func receive(timeout time.Duration) SpiLinkResult {
+func receive(timeout time.Duration) SPILinkResult {
 	if verbose {
 		log.Printf("receiving with timeout = %v", timeout)
 	}
-	result := SpiLinkResult{}
+	result := SPILinkResult{}
 	p, rssi := radio.Receive(timeout)
 	data, err := packet.Decode6b4b(p)
 	radio.SetError(err)

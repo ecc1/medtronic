@@ -166,7 +166,7 @@ func resume(pump *medtronic.Pump, _ []string) interface{} {
 }
 
 func rssi(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Rssi()
+	return pump.RSSI()
 }
 
 func sensitivities(pump *medtronic.Pump, _ []string) interface{} {

@@ -210,11 +210,11 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 		pump.SetError(fmt.Errorf("history page %d: unexpected size (%d)", page, len(results)))
 		return nil
 	}
-	dataCrc := twoByteUint(results[historyPageSize-2:])
+	dataCRC := twoByteUint(results[historyPageSize-2:])
 	results = results[:historyPageSize-2]
-	calcCrc := packet.Crc16(results)
-	if dataCrc != calcCrc {
-		pump.SetError(fmt.Errorf("history page %d: CRC should be %02X, not %02X", page, calcCrc, dataCrc))
+	calcCRC := packet.CRC16(results)
+	if dataCRC != calcCRC {
+		pump.SetError(fmt.Errorf("history page %d: CRC should be %02X, not %02X", page, calcCRC, dataCRC))
 		return nil
 	}
 	return results

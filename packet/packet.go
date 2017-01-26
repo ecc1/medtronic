@@ -15,11 +15,11 @@ func Decode(p []byte) ([]byte, error) {
 		return data, err
 	}
 	last := len(data) - 1
-	pktCrc := data[last]
+	pktCRC := data[last]
 	data = data[:last] // without CRC
-	calcCrc := Crc8(data)
-	if pktCrc != calcCrc {
-		err = fmt.Errorf("CRC should be %X, not %X", calcCrc, pktCrc)
+	calcCRC := CRC8(data)
+	if pktCRC != calcCRC {
+		err = fmt.Errorf("CRC should be %X, not %X", calcCRC, pktCRC)
 	}
 	return data, err
 }
@@ -29,6 +29,6 @@ func Decode(p []byte) ([]byte, error) {
 // The caller must provide space for the CRC byte.
 func Encode(data []byte) []byte {
 	n := len(data) - 1
-	data[n] = Crc8(data[:n])
+	data[n] = CRC8(data[:n])
 	return Encode4b6b(data)
 }

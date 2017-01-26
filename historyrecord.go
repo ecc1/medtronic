@@ -16,7 +16,7 @@ const (
 	DailyTotal              HistoryRecordType = 0x07
 	BasalProfileBefore      HistoryRecordType = 0x08
 	BasalProfileAfter       HistoryRecordType = 0x09
-	BgCapture               HistoryRecordType = 0x0A
+	BGCapture               HistoryRecordType = 0x0A
 	SensorAlarm             HistoryRecordType = 0x0B
 	ClearAlarm              HistoryRecordType = 0x0C
 	ChangeBasalPattern      HistoryRecordType = 0x14
@@ -35,7 +35,7 @@ const (
 	EnableRemote            HistoryRecordType = 0x26
 	MaxBasal                HistoryRecordType = 0x2C
 	EnableBolusWizard       HistoryRecordType = 0x2D
-	ChangeBgReminder        HistoryRecordType = 0x31
+	ChangeBGReminder        HistoryRecordType = 0x31
 	SetAlarmClockTime       HistoryRecordType = 0x32
 	TempBasalRate           HistoryRecordType = 0x33
 	LowReservoir            HistoryRecordType = 0x34
@@ -53,7 +53,7 @@ const (
 	UnabsorbedInsulin       HistoryRecordType = 0x5C
 	EnableVariableBolus     HistoryRecordType = 0x5E
 	ChangeEasyBolus         HistoryRecordType = 0x5F
-	EnableBgReminder        HistoryRecordType = 0x60
+	EnableBGReminder        HistoryRecordType = 0x60
 	EnableAlarmClock        HistoryRecordType = 0x61
 	ChangeTempBasalType     HistoryRecordType = 0x62
 	ChangeAlarmType         HistoryRecordType = 0x63
@@ -170,7 +170,7 @@ var (
 	decodeSuspendPump          = decodeBase
 	decodeResumePump           = decodeBase
 	decodeRewind               = decodeBase
-	decodeChangeBgReminder     = decodeBase
+	decodeChangeBGReminder     = decodeBase
 	decodeSetAlarmClockTime    = decodeBase
 	decodeAlarmClock           = decodeBase
 	decodeOtherMarker          = decodeBase
@@ -313,7 +313,7 @@ var (
 	decodeBasalProfileAfter  = decodeBasalProfile
 )
 
-func decodeBgCapture(data []byte, newerPump bool) HistoryRecord {
+func decodeBGCapture(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	bg := intToGlucose(int(data[4]>>7)<<9|int(data[6]>>7)<<8|int(data[1]), MgPerDeciLiter)
 	r.Glucose = &bg
@@ -356,7 +356,7 @@ var (
 	decodeEnableBolusWizard   = decodeEnable
 	decodeSensorStatus        = decodeEnable
 	decodeEnableVariableBolus = decodeEnable
-	decodeEnableBgReminder    = decodeEnable
+	decodeEnableBGReminder    = decodeEnable
 	decodeEnableAlarmClock    = decodeEnable
 	decodeEnableBolusReminder = decodeEnable
 	decodeConnectOtherDevices = decodeEnable
@@ -585,7 +585,7 @@ var decode = map[HistoryRecordType]decoder{
 	DailyTotal:              decodeDailyTotal,
 	BasalProfileBefore:      decodeBasalProfileBefore,
 	BasalProfileAfter:       decodeBasalProfileAfter,
-	BgCapture:               decodeBgCapture,
+	BGCapture:               decodeBGCapture,
 	SensorAlarm:             decodeSensorAlarm,
 	ClearAlarm:              decodeClearAlarm,
 	ChangeBasalPattern:      decodeChangeBasalPattern,
@@ -604,7 +604,7 @@ var decode = map[HistoryRecordType]decoder{
 	EnableRemote:            decodeEnableRemote,
 	MaxBasal:                decodeMaxBasal,
 	EnableBolusWizard:       decodeEnableBolusWizard,
-	ChangeBgReminder:        decodeChangeBgReminder,
+	ChangeBGReminder:        decodeChangeBGReminder,
 	SetAlarmClockTime:       decodeSetAlarmClockTime,
 	TempBasalRate:           decodeTempBasalRate,
 	LowReservoir:            decodeLowReservoir,
@@ -622,7 +622,7 @@ var decode = map[HistoryRecordType]decoder{
 	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
 	EnableVariableBolus:     decodeEnableVariableBolus,
 	ChangeEasyBolus:         decodeChangeEasyBolus,
-	EnableBgReminder:        decodeEnableBgReminder,
+	EnableBGReminder:        decodeEnableBGReminder,
 	EnableAlarmClock:        decodeEnableAlarmClock,
 	ChangeTempBasalType:     decodeChangeTempBasalType,
 	ChangeAlarmType:         decodeChangeAlarmType,

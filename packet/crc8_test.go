@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestCrc8(t *testing.T) {
+func TestCRC8(t *testing.T) {
 	cases := []struct {
 		msg []byte
 		sum byte
@@ -15,9 +15,9 @@ func TestCrc8(t *testing.T) {
 		{[]byte{0x01, 0x07, 0x00, 0x10, 0x04}, 0x44},
 	}
 	for _, c := range cases {
-		sum := Crc8(c.msg)
+		sum := CRC8(c.msg)
 		if sum != c.sum {
-			t.Errorf("crc8(%X) == %X, want %X", c.msg, sum, c.sum)
+			t.Errorf("CRC8(%X) == %X, want %X", c.msg, sum, c.sum)
 		}
 	}
 }
