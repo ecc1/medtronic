@@ -76,15 +76,16 @@ func main() {
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
-	if result != nil {
-		b, err := json.MarshalIndent(result, "", "  ")
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println(result)
-		} else {
-			fmt.Println(string(b))
-		}
+	if result == nil {
+		return
 	}
+	b, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println(result)
+		return
+	}
+	fmt.Println(string(b))
 }
 
 func eprintf(format string, arg ...interface{}) {
