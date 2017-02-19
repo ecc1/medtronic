@@ -29,15 +29,15 @@ type Glucose int
 type GlucoseUnitsType byte
 
 const (
-	MgPerDeciLiter   GlucoseUnitsType = 1
-	MicromolPerLiter GlucoseUnitsType = 2
+	MgPerDeciLiter GlucoseUnitsType = 1
+	MMolPerLiter   GlucoseUnitsType = 2
 )
 
 func (u GlucoseUnitsType) String() string {
 	switch u {
 	case MgPerDeciLiter:
 		return "mg/dL"
-	case MicromolPerLiter:
+	case MMolPerLiter:
 		return "μmol/L"
 	default:
 		log.Panicf("unknown glucose unit %d", u)
@@ -58,7 +58,7 @@ func (pump *Pump) whichUnits(cmd Command) byte {
 }
 
 func intToGlucose(n int, t GlucoseUnitsType) Glucose {
-	if t == MicromolPerLiter {
+	if t == MMolPerLiter {
 		// Convert 10x mmol/L to μmol/L
 		return Glucose(n) * 100
 	} else {
