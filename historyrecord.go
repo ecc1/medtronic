@@ -443,20 +443,20 @@ func decodeChangeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
 
 func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 	const numEntries = 8
-	conf := BolusWizardConfig{}
+	r := BolusWizardConfig{}
 	carbUnits := CarbUnitsType(data[0] & 0x3)
 	bgUnits := GlucoseUnitsType((data[0] >> 2) & 0x3)
 	step := carbRatioStep(newerPump)
-	conf.Ratios = decodeCarbRatioSchedule(data[2:2+numEntries*step], carbUnits, newerPump)
+	r.Ratios = decodeCarbRatioSchedule(data[2:2+numEntries*step], carbUnits, newerPump)
 	data = data[2+numEntries*step:]
-	conf.Sensitivities = decodeInsulinSensitivitySchedule(data[:numEntries*2], bgUnits)
+	r.Sensitivities = decodeInsulinSensitivitySchedule(data[:numEntries*2], bgUnits)
 	if newerPump {
 		data = data[numEntries*2+2:]
 	} else {
 		data = data[numEntries*2:]
 	}
-	conf.Targets = decodeGlucoseTargetSchedule(data[:numEntries*3], bgUnits)
-	return conf
+	r.Targets = decodeGlucoseTargetSchedule(data[:numEntries*3], bgUnits)
+	return r
 }
 
 func decodeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
