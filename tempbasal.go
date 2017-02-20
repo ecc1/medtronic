@@ -27,14 +27,9 @@ type TempBasalInfo struct {
 	Percent  *uint8   `json:",omitempty"`
 }
 
-func (pump *Pump) TempBasal() TempBasalInfo {
-	data := pump.Execute(TempBasal)
-	if pump.Error() != nil {
-		return TempBasalInfo{}
-	}
+func decodeTempBasal(data []byte) (TempBasalInfo, error) {
 	if len(data) < 7 || data[0] != 6 {
-		pump.BadResponse(TempBasal, data)
-		return TempBasalInfo{}
+		return TempBasalInfo{}, BadResponseError{Command: TempBasal, Data: data}
 	}
 	d := time.Duration(twoByteInt(data[5:7])) * time.Minute
 	tempType := TempBasalType(data[1])
@@ -47,8 +42,18 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 		percent := data[2]
 		info.Percent = &percent
 	default:
-		pump.BadResponse(TempBasal, data)
+		return info, BadResponseError{Command: TempBasal, Data: data}
 	}
+	return info, nil
+}
+
+func (pump *Pump) TempBasal() TempBasalInfo {
+	data := pump.Execute(TempBasal)
+	if pump.Error() != nil {
+		return TempBasalInfo{}
+	}
+	info, err := decodeTempBasal(data)
+	pump.SetError(err)
 	return info
 }
 
