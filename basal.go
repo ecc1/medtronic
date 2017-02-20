@@ -17,11 +17,7 @@ type BasalRate struct {
 
 type BasalRateSchedule []BasalRate
 
-func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
-	data := pump.Execute(cmd)
-	if pump.Error() != nil {
-		return BasalRateSchedule{}
-	}
+func decodeBasalRateSchedule(cmd Command, data []byte) BasalRateSchedule {
 	var sched []BasalRate
 	for i := 1; i < len(data); i += 3 {
 		r := data[i]
@@ -35,6 +31,14 @@ func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 		sched = append(sched, BasalRate{Start: start, Rate: rate})
 	}
 	return sched
+}
+
+func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
+	data := pump.Execute(cmd)
+	if pump.Error() != nil {
+		return BasalRateSchedule{}
+	}
+	return decodeBasalRateSchedule(cmd, data)
 }
 
 func (pump *Pump) BasalRates() BasalRateSchedule {
