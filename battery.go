@@ -20,6 +20,13 @@ type BatteryInfo struct {
 	LowBattery bool
 }
 
+func decodeBatteryInfo(data []byte) BatteryInfo {
+	return BatteryInfo{
+		LowBattery: data[1] != 0,
+		Voltage:    Voltage(twoByteInt(data[2:4]) * 10),
+	}
+}
+
 func (pump *Pump) Battery() BatteryInfo {
 	data := pump.Execute(Battery)
 	if pump.Error() != nil {
@@ -29,8 +36,5 @@ func (pump *Pump) Battery() BatteryInfo {
 		pump.BadResponse(Battery, data)
 		return BatteryInfo{}
 	}
-	return BatteryInfo{
-		LowBattery: data[1] != 0,
-		Voltage:    Voltage(twoByteInt(data[2:4]) * 10),
-	}
+	return decodeBatteryInfo(data)
 }
