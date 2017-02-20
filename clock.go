@@ -9,6 +9,16 @@ const (
 	SetClock Command = 0x40
 )
 
+func decodeClock(data []byte) time.Time {
+	hour := int(data[1])
+	min := int(data[2])
+	sec := int(data[3])
+	year := twoByteInt(data[4:6])
+	month := time.Month(data[6])
+	day := int(data[7])
+	return time.Date(year, month, day, hour, min, sec, 0, time.Local)
+}
+
 func (pump *Pump) Clock() time.Time {
 	data := pump.Execute(Clock)
 	if pump.Error() != nil {
@@ -18,13 +28,7 @@ func (pump *Pump) Clock() time.Time {
 		pump.BadResponse(Clock, data)
 		return time.Time{}
 	}
-	hour := int(data[1])
-	min := int(data[2])
-	sec := int(data[3])
-	year := twoByteInt(data[4:6])
-	month := time.Month(data[6])
-	day := int(data[7])
-	return time.Date(year, month, day, hour, min, sec, 0, time.Local)
+	return decodeClock(data)
 }
 
 func (pump *Pump) SetClock(t time.Time) {
