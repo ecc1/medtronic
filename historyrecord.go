@@ -74,6 +74,71 @@ const (
 	EnableCaptureEvent      HistoryRecordType = 0x83
 )
 
+var decode = map[HistoryRecordType]decoder{
+	Bolus:                   decodeBolus,
+	Prime:                   decodePrime,
+	Alarm:                   decodeAlarm,
+	DailyTotal:              decodeDailyTotal,
+	BasalProfileBefore:      decodeBasalProfileBefore,
+	BasalProfileAfter:       decodeBasalProfileAfter,
+	BGCapture:               decodeBGCapture,
+	SensorAlarm:             decodeSensorAlarm,
+	ClearAlarm:              decodeClearAlarm,
+	ChangeBasalPattern:      decodeChangeBasalPattern,
+	TempBasalDuration:       decodeTempBasalDuration,
+	ChangeTime:              decodeChangeTime,
+	NewTime:                 decodeNewTime,
+	LowBattery:              decodeLowBattery,
+	BatteryChange:           decodeBatteryChange,
+	SetAutoOff:              decodeSetAutoOff,
+	SuspendPump:             decodeSuspendPump,
+	ResumePump:              decodeResumePump,
+	SelfTest:                decodeSelfTest,
+	Rewind:                  decodeRewind,
+	EnableChildBlock:        decodeEnableChildBlock,
+	MaxBolus:                decodeMaxBolus,
+	EnableRemote:            decodeEnableRemote,
+	MaxBasal:                decodeMaxBasal,
+	EnableBolusWizard:       decodeEnableBolusWizard,
+	ChangeBGReminder:        decodeChangeBGReminder,
+	SetAlarmClockTime:       decodeSetAlarmClockTime,
+	TempBasalRate:           decodeTempBasalRate,
+	LowReservoir:            decodeLowReservoir,
+	AlarmClock:              decodeAlarmClock,
+	SensorStatus:            decodeSensorStatus,
+	EnableMeter:             decodeEnableMeter,
+	MealMarker:              decodeMealMarker,
+	ExerciseMarker:          decodeExerciseMarker,
+	InsulinMarker:           decodeInsulinMarker,
+	OtherMarker:             decodeOtherMarker,
+	ChangeBolusWizardSetup:  decodeChangeBolusWizardSetup,
+	ChangeGlucoseUnits:      decodeChangeGlucoseUnits,
+	BolusWizardSetup:        decodeBolusWizardSetup,
+	BolusWizard:             decodeBolusWizard,
+	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
+	EnableVariableBolus:     decodeEnableVariableBolus,
+	ChangeEasyBolus:         decodeChangeEasyBolus,
+	EnableBGReminder:        decodeEnableBGReminder,
+	EnableAlarmClock:        decodeEnableAlarmClock,
+	ChangeTempBasalType:     decodeChangeTempBasalType,
+	ChangeAlarmType:         decodeChangeAlarmType,
+	ChangeTimeFormat:        decodeChangeTimeFormat,
+	ChangeReservoirWarning:  decodeChangeReservoirWarning,
+	EnableBolusReminder:     decodeEnableBolusReminder,
+	SetBolusReminderTime:    decodeSetBolusReminderTime,
+	DeleteBolusReminderTime: decodeDeleteBolusReminderTime,
+	DeleteAlarmClockTime:    decodeDeleteAlarmClockTime,
+	DailyTotal522:           decodeDailyTotal522,
+	DailyTotal523:           decodeDailyTotal523,
+	ChangeCarbUnits:         decodeChangeCarbUnits,
+	BasalProfileStart:       decodeBasalProfileStart,
+	ConnectOtherDevices:     decodeConnectOtherDevices,
+	ChangeOtherDevice:       decodeChangeOtherDevice,
+	ChangeMarriage:          decodeChangeMarriage,
+	DeleteOtherDevice:       decodeDeleteOtherDevice,
+	EnableCaptureEvent:      decodeEnableCaptureEvent,
+}
+
 type (
 	decoder func([]byte, bool) HistoryRecord
 
@@ -161,37 +226,29 @@ func decodeBase(data []byte, newerPump bool) HistoryRecord {
 	}
 }
 
-var (
-	decodeChangeTime           = decodeBase
-	decodeNewTime              = decodeBase
-	decodeLowBattery           = decodeBase
-	decodeSelfTest             = decodeBase
-	decodeBatteryChange        = decodeBase
-	decodeSuspendPump          = decodeBase
-	decodeResumePump           = decodeBase
-	decodeRewind               = decodeBase
-	decodeChangeBGReminder     = decodeBase
-	decodeSetAlarmClockTime    = decodeBase
-	decodeAlarmClock           = decodeBase
-	decodeOtherMarker          = decodeBase
-	decodeChangeEasyBolus      = decodeBase
-	decodeDeleteAlarmClockTime = decodeBase
-)
+func decodeEnable(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	enabled := false
+	if data[1] != 0 {
+		enabled = true
+	}
+	r.Enabled = &enabled
+	return r
+}
 
-func decodeBaseExt(length int) decoder {
-	return func(data []byte, newerPump bool) HistoryRecord {
-		r := decodeBase(data, newerPump)
-		r.Data = data[:length]
-		return r
+func extendDecoder(orig decoder) func(int) decoder {
+	return func(length int) decoder {
+		return func(data []byte, newerPump bool) HistoryRecord {
+			r := orig(data, newerPump)
+			r.Data = data[:length]
+			return r
+		}
 	}
 }
 
-var (
-	decodeChangeGlucoseUnits = decodeBaseExt(12)
-	decodeChangeOtherDevice  = decodeBaseExt(37)
-	decodeChangeMarriage     = decodeBaseExt(12)
-	decodeDeleteOtherDevice  = decodeBaseExt(12)
-)
+var decodeBaseExt = extendDecoder(decodeBase)
+
+var decodeEnableExt = extendDecoder(decodeEnable)
 
 func decodeValue(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -200,13 +257,12 @@ func decodeValue(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
-var (
-	decodeBasalPattern       = decodeValue
-	decodeChangeBasalPattern = decodeValue
-	decodeChangeAlarmType    = decodeValue
-	decodeChangeTimeFormat   = decodeValue
-	decodeChangeCarbUnits    = decodeValue
-)
+func decodeInsulin(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	i := byteToInsulin(data[1], true)
+	r.Insulin = &i
+	return r
+}
 
 func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 	if newerPump {
@@ -248,16 +304,6 @@ func decodeAlarm(data []byte, newerPump bool) HistoryRecord {
 	r := HistoryRecord{
 		Time: decodeTimestamp(data[4:9]),
 		Data: data[:9],
-	}
-	alarm := int(data[1])
-	r.Value = &alarm
-	return r
-}
-
-func decodeSensorAlarm(data []byte, newerPump bool) HistoryRecord {
-	r := HistoryRecord{
-		Time: decodeTimestamp(data[3:8]),
-		Data: data[:8],
 	}
 	alarm := int(data[1])
 	r.Value = &alarm
@@ -308,15 +354,24 @@ func decodeBasalProfile(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
-var (
-	decodeBasalProfileBefore = decodeBasalProfile
-	decodeBasalProfileAfter  = decodeBasalProfile
-)
+var decodeBasalProfileBefore = decodeBasalProfile
+
+var decodeBasalProfileAfter = decodeBasalProfile
 
 func decodeBGCapture(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	bg := intToGlucose(int(data[4]>>7)<<9|int(data[6]>>7)<<8|int(data[1]), MgPerDeciLiter)
 	r.Glucose = &bg
+	return r
+}
+
+func decodeSensorAlarm(data []byte, newerPump bool) HistoryRecord {
+	r := HistoryRecord{
+		Time: decodeTimestamp(data[3:8]),
+		Data: data[:8],
+	}
+	alarm := int(data[1])
+	r.Value = &alarm
 	return r
 }
 
@@ -327,12 +382,22 @@ func decodeClearAlarm(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
+var decodeChangeBasalPattern = decodeValue
+
 func decodeTempBasalDuration(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	d := halfHoursToDuration(data[1])
 	r.Duration = &d
 	return r
 }
+
+var decodeChangeTime = decodeBase
+
+var decodeNewTime = decodeBase
+
+var decodeLowBattery = decodeBase
+
+var decodeBatteryChange = decodeBase
 
 func decodeSetAutoOff(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -341,54 +406,27 @@ func decodeSetAutoOff(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
-func decodeEnable(data []byte, newerPump bool) HistoryRecord {
-	r := decodeBase(data, newerPump)
-	enabled := false
-	if data[1] != 0 {
-		enabled = true
-	}
-	r.Enabled = &enabled
-	return r
-}
+var decodeSuspendPump = decodeBase
 
-var (
-	decodeEnableChildBlock    = decodeEnable
-	decodeEnableBolusWizard   = decodeEnable
-	decodeSensorStatus        = decodeEnable
-	decodeEnableVariableBolus = decodeEnable
-	decodeEnableBGReminder    = decodeEnable
-	decodeEnableAlarmClock    = decodeEnable
-	decodeEnableBolusReminder = decodeEnable
-	decodeConnectOtherDevices = decodeEnable
-	decodeEnableCaptureEvent  = decodeEnable
-)
+var decodeResumePump = decodeBase
 
-func decodeEnableExt(length int) decoder {
-	return func(data []byte, newerPump bool) HistoryRecord {
-		r := decodeEnable(data, newerPump)
-		r.Data = data[:length]
-		return r
-	}
-}
+var decodeSelfTest = decodeBase
 
-var (
-	decodeEnableRemote            = decodeEnableExt(21)
-	decodeEnableMeter             = decodeEnableExt(21)
-	decodeSetBolusReminderTime    = decodeEnableExt(9)
-	decodeDeleteBolusReminderTime = decodeEnableExt(9)
-)
+var decodeRewind = decodeBase
 
-func decodeMax(data []byte, newerPump bool) HistoryRecord {
-	r := decodeBase(data, newerPump)
-	max := byteToInsulin(data[1], true)
-	r.Insulin = &max
-	return r
-}
+var decodeEnableChildBlock = decodeEnable
 
-var (
-	decodeMaxBolus = decodeMax
-	decodeMaxBasal = decodeMax
-)
+var decodeMaxBolus = decodeInsulin
+
+var decodeEnableRemote = decodeEnableExt(21)
+
+var decodeMaxBasal = decodeInsulin
+
+var decodeEnableBolusWizard = decodeEnable
+
+var decodeChangeBGReminder = decodeBase
+
+var decodeSetAlarmClockTime = decodeBase
 
 func decodeTempBasalRate(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -411,6 +449,12 @@ func decodeLowReservoir(data []byte, newerPump bool) HistoryRecord {
 	r.Insulin = &amount
 	return r
 }
+
+var decodeAlarmClock = decodeBase
+
+var decodeSensorStatus = decodeEnable
+
+var decodeEnableMeter = decodeEnableExt(21)
 
 func decodeMealMarker(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -435,11 +479,11 @@ func decodeInsulinMarker(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
-func decodeChangeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
-	r := decodeBase(data, newerPump)
-	r.Data = data[:39]
-	return r
-}
+var decodeOtherMarker = decodeBase
+
+var decodeChangeBolusWizardSetup = decodeBaseExt(39)
+
+var decodeChangeGlucoseUnits = decodeBaseExt(12)
 
 func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 	const numEntries = 8
@@ -534,12 +578,24 @@ func decodeUnabsorbedInsulin(data []byte, newerPump bool) HistoryRecord {
 	}
 }
 
+var decodeEnableVariableBolus = decodeEnable
+
+var decodeChangeEasyBolus = decodeBase
+
+var decodeEnableBGReminder = decodeEnable
+
+var decodeEnableAlarmClock = decodeEnable
+
 func decodeChangeTempBasalType(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	tempBasalType := TempBasalType(data[1])
 	r.TempBasalType = &tempBasalType
 	return r
 }
+
+var decodeChangeAlarmType = decodeValue
+
+var decodeChangeTimeFormat = decodeValue
 
 func decodeChangeReservoirWarning(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -553,6 +609,14 @@ func decodeChangeReservoirWarning(data []byte, newerPump bool) HistoryRecord {
 	}
 	return r
 }
+
+var decodeEnableBolusReminder = decodeEnable
+
+var decodeSetBolusReminderTime = decodeEnableExt(9)
+
+var decodeDeleteBolusReminderTime = decodeEnableExt(9)
+
+var decodeDeleteAlarmClockTime = decodeBase
 
 func decodeDailyTotal522(data []byte, newerPump bool) HistoryRecord {
 	return HistoryRecord{
@@ -568,6 +632,8 @@ func decodeDailyTotal523(data []byte, newerPump bool) HistoryRecord {
 	}
 }
 
+var decodeChangeCarbUnits = decodeValue
+
 func decodeBasalProfileStart(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	r.BasalProfileStart = &BasalProfileStartRecord{
@@ -578,78 +644,25 @@ func decodeBasalProfileStart(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
-var decode = map[HistoryRecordType]decoder{
-	Bolus:                   decodeBolus,
-	Prime:                   decodePrime,
-	Alarm:                   decodeAlarm,
-	DailyTotal:              decodeDailyTotal,
-	BasalProfileBefore:      decodeBasalProfileBefore,
-	BasalProfileAfter:       decodeBasalProfileAfter,
-	BGCapture:               decodeBGCapture,
-	SensorAlarm:             decodeSensorAlarm,
-	ClearAlarm:              decodeClearAlarm,
-	ChangeBasalPattern:      decodeChangeBasalPattern,
-	TempBasalDuration:       decodeTempBasalDuration,
-	ChangeTime:              decodeChangeTime,
-	NewTime:                 decodeNewTime,
-	LowBattery:              decodeLowBattery,
-	BatteryChange:           decodeBatteryChange,
-	SetAutoOff:              decodeSetAutoOff,
-	SuspendPump:             decodeSuspendPump,
-	ResumePump:              decodeResumePump,
-	SelfTest:                decodeSelfTest,
-	Rewind:                  decodeRewind,
-	EnableChildBlock:        decodeEnableChildBlock,
-	MaxBolus:                decodeMaxBolus,
-	EnableRemote:            decodeEnableRemote,
-	MaxBasal:                decodeMaxBasal,
-	EnableBolusWizard:       decodeEnableBolusWizard,
-	ChangeBGReminder:        decodeChangeBGReminder,
-	SetAlarmClockTime:       decodeSetAlarmClockTime,
-	TempBasalRate:           decodeTempBasalRate,
-	LowReservoir:            decodeLowReservoir,
-	AlarmClock:              decodeAlarmClock,
-	SensorStatus:            decodeSensorStatus,
-	EnableMeter:             decodeEnableMeter,
-	MealMarker:              decodeMealMarker,
-	ExerciseMarker:          decodeExerciseMarker,
-	InsulinMarker:           decodeInsulinMarker,
-	OtherMarker:             decodeOtherMarker,
-	ChangeBolusWizardSetup:  decodeChangeBolusWizardSetup,
-	ChangeGlucoseUnits:      decodeChangeGlucoseUnits,
-	BolusWizardSetup:        decodeBolusWizardSetup,
-	BolusWizard:             decodeBolusWizard,
-	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
-	EnableVariableBolus:     decodeEnableVariableBolus,
-	ChangeEasyBolus:         decodeChangeEasyBolus,
-	EnableBGReminder:        decodeEnableBGReminder,
-	EnableAlarmClock:        decodeEnableAlarmClock,
-	ChangeTempBasalType:     decodeChangeTempBasalType,
-	ChangeAlarmType:         decodeChangeAlarmType,
-	ChangeTimeFormat:        decodeChangeTimeFormat,
-	ChangeReservoirWarning:  decodeChangeReservoirWarning,
-	EnableBolusReminder:     decodeEnableBolusReminder,
-	SetBolusReminderTime:    decodeSetBolusReminderTime,
-	DeleteBolusReminderTime: decodeDeleteBolusReminderTime,
-	DeleteAlarmClockTime:    decodeDeleteAlarmClockTime,
-	DailyTotal522:           decodeDailyTotal522,
-	DailyTotal523:           decodeDailyTotal523,
-	ChangeCarbUnits:         decodeChangeCarbUnits,
-	BasalProfileStart:       decodeBasalProfileStart,
-	ConnectOtherDevices:     decodeConnectOtherDevices,
-	ChangeOtherDevice:       decodeChangeOtherDevice,
-	ChangeMarriage:          decodeChangeMarriage,
-	DeleteOtherDevice:       decodeDeleteOtherDevice,
-	EnableCaptureEvent:      decodeEnableCaptureEvent,
-}
+var decodeConnectOtherDevices = decodeEnable
+
+var decodeChangeOtherDevice = decodeBaseExt(37)
+
+var decodeChangeMarriage = decodeBaseExt(12)
+
+var decodeDeleteOtherDevice = decodeBaseExt(12)
+
+var decodeEnableCaptureEvent = decodeEnable
 
 func DecodeHistoryRecord(data []byte, newerPump bool) (HistoryRecord, error) {
+	if len(data) == 0 {
+		return HistoryRecord{}, fmt.Errorf("empty history record")
+	}
 	decoder := decode[HistoryRecordType(data[0])]
-	if decoder != nil {
-		return decoder(data, newerPump), nil
-	} else {
+	if decoder == nil {
 		return HistoryRecord{}, unknownRecord(data)
 	}
+	return decoder(data, newerPump), nil
 }
 
 func (e UnknownRecordTypeError) Error() string {
