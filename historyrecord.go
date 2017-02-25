@@ -30,6 +30,7 @@ const (
 	ResumePump              HistoryRecordType = 0x1F
 	SelfTest                HistoryRecordType = 0x20
 	Rewind                  HistoryRecordType = 0x21
+	ClearSettings           HistoryRecordType = 0x22
 	EnableChildBlock        HistoryRecordType = 0x23
 	MaxBolus                HistoryRecordType = 0x24
 	EnableRemote            HistoryRecordType = 0x26
@@ -40,8 +41,10 @@ const (
 	TempBasalRate           HistoryRecordType = 0x33
 	LowReservoir            HistoryRecordType = 0x34
 	AlarmClock              HistoryRecordType = 0x35
+	ChangeMeterID           HistoryRecordType = 0x36
 	SensorStatus            HistoryRecordType = 0x3B
 	EnableMeter             HistoryRecordType = 0x3C
+	BGReceived              HistoryRecordType = 0x3F
 	MealMarker              HistoryRecordType = 0x40
 	ExerciseMarker          HistoryRecordType = 0x41
 	InsulinMarker           HistoryRecordType = 0x42
@@ -51,6 +54,7 @@ const (
 	BolusWizardSetup        HistoryRecordType = 0x5A
 	BolusWizard             HistoryRecordType = 0x5B
 	UnabsorbedInsulin       HistoryRecordType = 0x5C
+	SaveSettings            HistoryRecordType = 0x5D
 	EnableVariableBolus     HistoryRecordType = 0x5E
 	ChangeEasyBolus         HistoryRecordType = 0x5F
 	EnableBGReminder        HistoryRecordType = 0x60
@@ -62,7 +66,9 @@ const (
 	EnableBolusReminder     HistoryRecordType = 0x66
 	SetBolusReminderTime    HistoryRecordType = 0x67
 	DeleteBolusReminderTime HistoryRecordType = 0x68
+	BolusReminder           HistoryRecordType = 0x69
 	DeleteAlarmClockTime    HistoryRecordType = 0x6A
+	DailyTotal515           HistoryRecordType = 0x6C
 	DailyTotal522           HistoryRecordType = 0x6D
 	DailyTotal523           HistoryRecordType = 0x6E
 	ChangeCarbUnits         HistoryRecordType = 0x6F
@@ -128,6 +134,7 @@ var decode = map[HistoryRecordType]decoder{
 	SetBolusReminderTime:    decodeSetBolusReminderTime,
 	DeleteBolusReminderTime: decodeDeleteBolusReminderTime,
 	DeleteAlarmClockTime:    decodeDeleteAlarmClockTime,
+	DailyTotal515:           decodeDailyTotal515,
 	DailyTotal522:           decodeDailyTotal522,
 	DailyTotal523:           decodeDailyTotal523,
 	ChangeCarbUnits:         decodeChangeCarbUnits,
@@ -236,6 +243,13 @@ func decodeEnable(data []byte, newerPump bool) HistoryRecord {
 	return r
 }
 
+func decodeDailyTotalDate(data []byte, newerPump bool) HistoryRecord {
+	return HistoryRecord{
+		Time: decodeDate(data[1:3]),
+		Data: data[:3],
+	}
+}
+
 func extendDecoder(orig decoder) func(int) decoder {
 	return func(length int) decoder {
 		return func(data []byte, newerPump bool) HistoryRecord {
@@ -246,9 +260,11 @@ func extendDecoder(orig decoder) func(int) decoder {
 	}
 }
 
-var decodeBaseExt = extendDecoder(decodeBase)
+var decodeBaseN = extendDecoder(decodeBase)
 
-var decodeEnableExt = extendDecoder(decodeEnable)
+var decodeEnableN = extendDecoder(decodeEnable)
+
+var decodeDailyTotalN = extendDecoder(decodeDailyTotalDate)
 
 func decodeValue(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -418,7 +434,7 @@ var decodeEnableChildBlock = decodeEnable
 
 var decodeMaxBolus = decodeInsulin
 
-var decodeEnableRemote = decodeEnableExt(21)
+var decodeEnableRemote = decodeEnableN(21)
 
 var decodeMaxBasal = decodeInsulin
 
@@ -454,7 +470,7 @@ var decodeAlarmClock = decodeBase
 
 var decodeSensorStatus = decodeEnable
 
-var decodeEnableMeter = decodeEnableExt(21)
+var decodeEnableMeter = decodeEnableN(21)
 
 func decodeMealMarker(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
@@ -481,9 +497,9 @@ func decodeInsulinMarker(data []byte, newerPump bool) HistoryRecord {
 
 var decodeOtherMarker = decodeBase
 
-var decodeChangeBolusWizardSetup = decodeBaseExt(39)
+var decodeChangeBolusWizardSetup = decodeBaseN(39)
 
-var decodeChangeGlucoseUnits = decodeBaseExt(12)
+var decodeChangeGlucoseUnits = decodeBaseN(12)
 
 func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 	const numEntries = 8
@@ -612,25 +628,17 @@ func decodeChangeReservoirWarning(data []byte, newerPump bool) HistoryRecord {
 
 var decodeEnableBolusReminder = decodeEnable
 
-var decodeSetBolusReminderTime = decodeEnableExt(9)
+var decodeSetBolusReminderTime = decodeEnableN(9)
 
-var decodeDeleteBolusReminderTime = decodeEnableExt(9)
+var decodeDeleteBolusReminderTime = decodeEnableN(9)
 
 var decodeDeleteAlarmClockTime = decodeBase
 
-func decodeDailyTotal522(data []byte, newerPump bool) HistoryRecord {
-	return HistoryRecord{
-		Time: decodeDate(data[1:3]),
-		Data: data[:44],
-	}
-}
+var decodeDailyTotal515 = decodeDailyTotalN(38)
 
-func decodeDailyTotal523(data []byte, newerPump bool) HistoryRecord {
-	return HistoryRecord{
-		Time: decodeDate(data[1:3]),
-		Data: data[:52],
-	}
-}
+var decodeDailyTotal522 = decodeDailyTotalN(44)
+
+var decodeDailyTotal523 = decodeDailyTotalN(52)
 
 var decodeChangeCarbUnits = decodeValue
 
@@ -646,11 +654,11 @@ func decodeBasalProfileStart(data []byte, newerPump bool) HistoryRecord {
 
 var decodeConnectOtherDevices = decodeEnable
 
-var decodeChangeOtherDevice = decodeBaseExt(37)
+var decodeChangeOtherDevice = decodeBaseN(37)
 
-var decodeChangeMarriage = decodeBaseExt(12)
+var decodeChangeMarriage = decodeBaseN(12)
 
-var decodeDeleteOtherDevice = decodeBaseExt(12)
+var decodeDeleteOtherDevice = decodeBaseN(12)
 
 var decodeEnableCaptureEvent = decodeEnable
 
