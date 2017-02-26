@@ -12,7 +12,7 @@ type Tenths int
 
 type CarbRatio struct {
 	Start TimeOfDay
-	Ratio Tenths // 10x grams/unit or 100x units/exchange
+	Ratio Tenths // 10x grams/unit or 1000x units/exchange
 	Units CarbUnitsType
 }
 

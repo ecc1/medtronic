@@ -186,15 +186,17 @@ type (
 	}
 
 	BolusWizardRecord struct {
+		GlucoseUnits GlucoseUnitsType
 		GlucoseInput Glucose
 		TargetLow    Glucose
 		TargetHigh   Glucose
 		Sensitivity  Glucose // glucose reduction per insulin unit
-		CarbInput    Carbs   // grams or exchanges
-		CarbRatio    Tenths  // 10x grams/unit or 100x units/exchange
-		Unabsorbed   Insulin
+		CarbUnits    CarbUnitsType
+		CarbInput    Carbs  // grams or exchanges
+		CarbRatio    Tenths // 10x grams/unit or 1000x units/exchange
 		Correction   Insulin
 		Food         Insulin
+		Unabsorbed   Insulin
 		Bolus        Insulin
 	}
 
@@ -543,32 +545,38 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	bg := int(data[1])
 	body := data[7:]
+	bgU := GlucoseUnitsType((body[1] >> 6) & 0x3)
+	carbU := CarbUnitsType((body[1] >> 4) & 0x3)
 	if newerPump {
 		r.BolusWizard = &BolusWizardRecord{
-			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, MgPerDeciLiter),
+			GlucoseUnits: bgU,
+			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, bgU),
+			TargetLow:    byteToGlucose(body[5], bgU),
+			TargetHigh:   byteToGlucose(body[14], bgU),
+			Sensitivity:  byteToGlucose(body[4], bgU),
+			CarbUnits:    carbU,
 			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
 			CarbRatio:    Tenths(int(body[2]&0x7)<<8 | int(body[3])),
-			Sensitivity:  byteToGlucose(body[4], MgPerDeciLiter),
-			TargetLow:    byteToGlucose(body[5], MgPerDeciLiter),
 			Correction:   intToInsulin(int(body[9]&0x38)<<5|int(body[6]), true),
 			Food:         twoByteInsulin(body[7:9], true),
 			Unabsorbed:   twoByteInsulin(body[10:12], true),
 			Bolus:        twoByteInsulin(body[12:14], true),
-			TargetHigh:   byteToGlucose(body[14], MgPerDeciLiter),
 		}
 		r.Data = data[:22]
 	} else {
 		r.BolusWizard = &BolusWizardRecord{
-			GlucoseInput: intToGlucose(bg|int(body[1]&0xF)<<8, MgPerDeciLiter),
+			GlucoseUnits: bgU,
+			GlucoseInput: intToGlucose(bg|int(body[1]&0xF)<<8, bgU),
+			TargetLow:    byteToGlucose(body[4], bgU),
+			TargetHigh:   byteToGlucose(body[12], bgU),
+			Sensitivity:  byteToGlucose(body[3], bgU),
+			CarbUnits:    carbU,
 			CarbInput:    Carbs(body[0]),
 			CarbRatio:    Tenths(10 * int(body[2])),
-			Sensitivity:  byteToGlucose(body[3], MgPerDeciLiter),
-			TargetLow:    byteToGlucose(body[4], MgPerDeciLiter),
 			Correction:   intToInsulin(int(body[7])+int(body[5]&0xF), false),
 			Food:         byteToInsulin(body[6], false),
 			Unabsorbed:   byteToInsulin(body[9], false),
 			Bolus:        byteToInsulin(body[11], false),
-			TargetHigh:   byteToGlucose(body[12], MgPerDeciLiter),
 		}
 		r.Data = data[:20]
 	}

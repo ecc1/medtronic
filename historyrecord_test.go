@@ -410,12 +410,12 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			       "Ratios": [
 				 {
 				   "Start": "00:00",
-				   "CarbRatio": 15,
+				   "Ratio": 15,
 				   "Units": "Grams"
 				 },
 				 {
 				   "Start": "04:00",
-				   "CarbRatio": 20,
+				   "Ratio": 20,
 				   "Units": "Grams"
 				 }
 			       ],
@@ -457,17 +457,17 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			       "Ratios": [
 				 {
 				   "Start": "00:00",
-				   "CarbRatio": 10,
+				   "Ratio": 10,
 				   "Units": "Exchanges"
 				 },
 				 {
 				   "Start": "01:00",
-				   "CarbRatio": 15,
+				   "Ratio": 15,
 				   "Units": "Exchanges"
 				 },
 				 {
 				   "Start": "02:00",
-				   "CarbRatio": 12,
+				   "Ratio": 12,
 				   "Units": "Exchanges"
 				 }
 			       ],
@@ -513,7 +513,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			       "Ratios": [
 				 {
 				   "Start": "00:00",
-				   "CarbRatio": 6,
+				   "Ratio": 6,
 				   "Units": "Grams"
 				 }
 			       ],
@@ -538,7 +538,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			       "Ratios": [
 				 {
 				   "Start": "00:00",
-				   "CarbRatio": 6,
+				   "Ratio": 6,
 				   "Units": "Grams"
 				 }
 			       ],
@@ -568,10 +568,12 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			   "Type": "BolusWizard",
 			   "Time": "2016-07-04T14:25:46-04:00",
 			   "BolusWizard": {
+			     "GlucoseUnits": "mg/dL",
 			     "GlucoseInput": 110,
 			     "TargetLow": 99,
 			     "TargetHigh": 101,
 			     "Sensitivity": 45,
+			     "CarbUnits": "Grams",
 			     "CarbInput": 5,
 			     "CarbRatio": 12,
 			     "Unabsorbed": 0.7,
@@ -588,10 +590,12 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			   "Type": "BolusWizard",
 			   "Time": "2016-07-07T09:59:43-04:00",
 			   "BolusWizard": {
+			     "GlucoseUnits": "mg/dL",
 			     "GlucoseInput": 131,
 			     "TargetLow": 100,
 			     "TargetHigh": 100,
 			     "Sensitivity": 35,
+			     "CarbUnits": "Grams",
 			     "CarbInput": 40,
 			     "CarbRatio": 6,
 			     "Unabsorbed": 0,
@@ -600,6 +604,182 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			     "Bolus": 7.4
 			   },
 			   "Data": "W4Nr+wlnEChQADwjZCABCAAAAAEoZA=="
+			 }`,
+			true,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-25T12:41:11-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "mg/dL",
+			     "GlucoseInput": 114,
+			     "TargetLow": 100,
+			     "TargetHigh": 100,
+			     "Sensitivity": 50,
+			     "CarbUnits": "Grams",
+			     "CarbInput": 10,
+			     "CarbRatio": 8,
+			     "Unabsorbed": 1.3,
+			     "Correction": 0.2,
+			     "Food": 1.2,
+			     "Bolus": 1.2
+			   },
+			   "Data": "W3ILqQwZEQpQCDJkAgwAAA0ADGQ="
+			 }`,
+			false,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-25T12:35:38-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "μmol/L",
+			     "GlucoseInput": 6000,
+			     "TargetLow": 5600,
+			     "TargetHigh": 5600,
+			     "Sensitivity": 2800,
+			     "CarbUnits": "Grams",
+			     "CarbInput": 10,
+			     "CarbRatio": 8,
+			     "Unabsorbed": 0,
+			     "Correction": 0.1,
+			     "Food": 1.2,
+			     "Bolus": 1.3
+			   },
+			   "Data": "WzwmowwZEQqQCBw4AQwAAAAADTg="
+			 }`,
+			false,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-25T13:09:48-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "mg/dL",
+			     "GlucoseInput": 60,
+			     "TargetLow": 100,
+			     "TargetHigh": 100,
+			     "Sensitivity": 50,
+			     "CarbUnits": "Grams",
+			     "CarbInput": 10,
+			     "CarbRatio": 8,
+			     "Unabsorbed": 3.6,
+			     "Correction": 24.8,
+			     "Food": 1.2,
+			     "Bolus": 0.4
+			   },
+			   "Data": "WzwwiQ0ZEQpQCDJk+AzwACQABGQ="
+			 }`,
+			false,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-25T13:03:10-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "μmol/L",
+			     "GlucoseInput": 6000,
+			     "TargetLow": 5600,
+			     "TargetHigh": 5600,
+			     "Sensitivity": 2800,
+			     "CarbUnits": "Grams",
+			     "CarbInput": 10,
+			     "CarbRatio": 8,
+			     "Unabsorbed": 2.4,
+			     "Correction": 0.1,
+			     "Food": 1.2,
+			     "Bolus": 1.2
+			   },
+			   "Data": "WzwKgw0ZEQqQCBw4AQwAABgADDg="
+			 }`,
+			false,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-26T16:10:51-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "mg/dL",
+			     "GlucoseInput": 150,
+			     "TargetLow": 90,
+			     "TargetHigh": 120,
+			     "Sensitivity": 35,
+			     "CarbUnits": "Grams",
+			     "CarbInput": 20,
+			     "CarbRatio": 6,
+			     "Unabsorbed": 0,
+			     "Correction": 0.8,
+			     "Food": 3.3,
+			     "Bolus": 4.1
+			   },
+			   "Data": "W5YzihB6ERRQADwjWiAAhAAAAACkeA=="
+			 }`,
+			true,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-26T17:27:03-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "mg/dL",
+			     "GlucoseInput": 150,
+			     "TargetLow": 90,
+			     "TargetHigh": 120,
+			     "Sensitivity": 35,
+			     "CarbUnits": "Exchanges",
+			     "CarbInput": 30,
+			     "CarbRatio": 45.2,
+			     "Unabsorbed": 13.1,
+			     "Correction": 0.8,
+			     "Food": 7.5,
+			     "Bolus": 7.5
+			   },
+			   "Data": "W5YDmxF6ER5gCcQjWiABLAACDAEseA=="
+			 }`,
+			true,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-26T17:13:16-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "μmol/L",
+			     "GlucoseInput": 8300,
+			     "TargetLow": 5000,
+			     "TargetHigh": 6700,
+			     "Sensitivity": 1900,
+			     "CarbUnits": "Grams",
+			     "CarbInput": 20,
+			     "CarbRatio": 6,
+			     "Unabsorbed": 2.9,
+			     "Correction": 0.8,
+			     "Food": 3.3,
+			     "Bolus": 3.3
+			   },
+			   "Data": "W1MQjRF6ERSQADwTMiAAhAAAdACEQw=="
+			 }`,
+			true,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
+			   "Time": "2017-02-26T17:18:47-05:00",
+			   "BolusWizard": {
+			     "GlucoseUnits": "μmol/L",
+			     "GlucoseInput": 8300,
+			     "TargetLow": 5000,
+			     "TargetHigh": 6700,
+			     "Sensitivity": 1900,
+			     "CarbUnits": "Exchanges",
+			     "CarbInput": 30,
+			     "CarbRatio": 45.2,
+			     "Unabsorbed": 6,
+			     "Correction": 0.8,
+			     "Food": 7.5,
+			     "Bolus": 7.5
+			   },
+			   "Data": "W1MvkhF6ER6gCcQTMiABLAAA8AEsQw=="
 			 }`,
 			true,
 		},
@@ -1310,10 +1490,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-06T21:16:34-04:00",
 			     "Data": "W4JiEBUGEABRALRVUHwAAAAADABweA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 386,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 85,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 0,
 			       "CarbRatio": 18,
 			       "Unabsorbed": 0.3,
@@ -1373,10 +1555,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-06T21:16:32-04:00",
 			     "Data": "W4JgEBUGEABRALRVUHwAAAAADABweA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 386,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 85,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 0,
 			       "CarbRatio": 18,
 			       "Unabsorbed": 0.3,
@@ -1571,10 +1755,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-06T18:25:03-04:00",
 			     "Data": "WwBDGRJmEDxQAHhLUAAAyAAAAADIeA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 0,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 75,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 60,
 			       "CarbRatio": 12,
 			       "Unabsorbed": 0,
@@ -1644,10 +1830,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-06T11:54:39-04:00",
 			     "Data": "W/pnNgtmEEdQALRLUEQAnAAACADYeA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 250,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 75,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 71,
 			       "CarbRatio": 18,
 			       "Unabsorbed": 0.2,
@@ -1690,10 +1878,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-06T09:19:42-04:00",
 			     "Data": "WwBqEwlmEBRQAG5LUAAASAAAAABIeA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 0,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 75,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 20,
 			       "CarbRatio": 11,
 			       "Unabsorbed": 0,
@@ -1764,10 +1954,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-06T01:09:11-04:00",
 			     "Data": "W8pLCQEGEABQAMhQUCgAAAAAAAAoeA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 202,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 80,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 0,
 			       "CarbRatio": 20,
 			       "Unabsorbed": 0,
@@ -1855,10 +2047,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-05T22:02:50-04:00",
 			     "Data": "WzNyAhZlEABRALRVUFgAAAAAQgAWeA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 307,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 85,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 0,
 			       "CarbRatio": 18,
 			       "Unabsorbed": 1.65,
@@ -1911,10 +2105,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-04-05T20:59:04-04:00",
 			     "Data": "WwBEOxRlEA5QAHhLUAAALgAAAAAueA==",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 0,
 			       "TargetLow": 80,
 			       "TargetHigh": 120,
 			       "Sensitivity": 75,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 14,
 			       "CarbRatio": 12,
 			       "Unabsorbed": 0,
@@ -2160,10 +2356,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-09-24T20:45:19-04:00",
 			     "Data": "WwCTbRQYEAZQCCF4AAcAAAAAB3g=",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 0,
 			       "TargetLow": 120,
 			       "TargetHigh": 120,
 			       "Sensitivity": 33,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 6,
 			       "CarbRatio": 8,
 			       "Unabsorbed": 0,
@@ -2271,10 +2469,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-09-24T14:46:51-04:00",
 			     "Data": "WwCzbg4YEAJQCCF4AAIAAAAAAng=",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 0,
 			       "TargetLow": 120,
 			       "TargetHigh": 120,
 			       "Sensitivity": 33,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 2,
 			       "CarbRatio": 8,
 			       "Unabsorbed": 0,
@@ -2382,10 +2582,12 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Time": "2016-09-24T01:23:54-04:00",
 			     "Data": "WwC2VwEYEAFQCCF4AAEAAAAAAXg=",
 			     "BolusWizard": {
+			       "GlucoseUnits": "mg/dL",
 			       "GlucoseInput": 0,
 			       "TargetLow": 120,
 			       "TargetHigh": 120,
 			       "Sensitivity": 33,
+			       "CarbUnits": "Grams",
 			       "CarbInput": 1,
 			       "CarbRatio": 8,
 			       "Unabsorbed": 0,
