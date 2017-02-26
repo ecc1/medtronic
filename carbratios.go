@@ -11,9 +11,9 @@ const (
 type Tenths int
 
 type CarbRatio struct {
-	Start     TimeOfDay
-	CarbRatio Tenths // 10x grams/unit or 100x units/exchange
-	Units     CarbUnitsType
+	Start TimeOfDay
+	Ratio Tenths // 10x grams/unit or 100x units/exchange
+	Units CarbUnitsType
 }
 
 type CarbRatioSchedule []CarbRatio
@@ -41,9 +41,9 @@ func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) C
 			value = Tenths(10 * int(data[i+1]))
 		}
 		sched = append(sched, CarbRatio{
-			Start:     start,
-			CarbRatio: value,
-			Units:     units,
+			Start: start,
+			Ratio: value,
+			Units: units,
 		})
 	}
 	return sched

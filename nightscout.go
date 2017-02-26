@@ -111,7 +111,7 @@ func (sched CarbRatioSchedule) NightscoutSchedule() nightscout.Schedule {
 	for i, r := range sched {
 		tv[i] = nightscout.TimeValue{
 			Time:  r.Start.String(),
-			Value: r.CarbRatio,
+			Value: r.Ratio,
 		}
 	}
 	return tv
