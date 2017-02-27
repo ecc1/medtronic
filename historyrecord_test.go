@@ -170,6 +170,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			   "Type": "BgCapture",
 			   "Time": "2016-07-04T14:25:37-04:00",
 			   "Glucose": 110,
+			   "GlucoseUnits": "mg/dL",
 			   "Data": "Cm5l2S4EEA=="
 			 }`,
 			false,
@@ -179,10 +180,22 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			   "Type": "BgCapture",
 			   "Time": "2016-05-19T03:49:06-04:00",
 			   "Glucose": 500,
+			   "GlucoseUnits": "mg/dL",
 			   "Data": "CvRGcSMTkA=="
 			 }`,
 			false,
 		},
+		{
+			`{
+			   "Type": "BGCapture",
+			   "Time": "2017-02-26T17:12:08-05:00",
+			   "Glucose": 83,
+			   "GlucoseUnits": "μmol/L",
+			   "Data": "ClMIjFEaEQ=="
+			 }`,
+			true,
+		},
+
 		{
 			`{
 			   "Type": "SensorAlarm",
@@ -1573,7 +1586,8 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Type": "BGCapture",
 			     "Time": "2016-04-06T21:16:27-04:00",
 			     "Data": "CoJbEDUGkA==",
-			     "Glucose": 386
+			     "Glucose": 386,
+			     "GlucoseUnits": "mg/dL"
 			   },
 			   {
 			     "Type": "BasalProfileStart",
@@ -1848,7 +1862,8 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Type": "BGCapture",
 			     "Time": "2016-04-06T11:54:01-04:00",
 			     "Data": "CvpBNisGEA==",
-			     "Glucose": 250
+			     "Glucose": 250,
+			     "GlucoseUnits": "mg/dL"
 			   },
 			   {
 			     "Type": "BasalProfileStart",
@@ -1972,7 +1987,8 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Type": "BGCapture",
 			     "Time": "2016-04-06T01:09:08-04:00",
 			     "Data": "CspICSEGEA==",
-			     "Glucose": 202
+			     "Glucose": 202,
+			     "GlucoseUnits": "mg/dL"
 			   },
 			   {
 			     "Type": "BasalProfileStart",
@@ -2065,7 +2081,8 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			     "Type": "BGCapture",
 			     "Time": "2016-04-05T22:02:33-04:00",
 			     "Data": "CjNhAjYFkA==",
-			     "Glucose": 307
+			     "Glucose": 307,
+			     "GlucoseUnits": "mg/dL"
 			   },
 			   {
 			     "Type": "Bolus",

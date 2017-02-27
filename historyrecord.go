@@ -155,6 +155,7 @@ type (
 		Duration          *time.Duration           `json:",omitempty"`
 		Enabled           *bool                    `json:",omitempty"`
 		Glucose           *Glucose                 `json:",omitempty"`
+		GlucoseUnits      *GlucoseUnitsType        `json:",omitempty"`
 		Insulin           *Insulin                 `json:",omitempty"`
 		Carbs             *Carbs                   `json:",omitempty"`
 		TempBasalType     *TempBasalType           `json:",omitempty"`
@@ -378,7 +379,9 @@ var decodeBasalProfileAfter = decodeBasalProfile
 
 func decodeBGCapture(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
+	bgU := GlucoseUnitsType((data[4] >> 5) & 0x3)
 	bg := intToGlucose(int(data[4]>>7)<<9|int(data[6]>>7)<<8|int(data[1]), MgPerDeciLiter)
+	r.GlucoseUnits = &bgU
 	r.Glucose = &bg
 	return r
 }
