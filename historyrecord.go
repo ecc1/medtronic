@@ -556,7 +556,7 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 			Sensitivity:  byteToGlucose(body[4], bgU),
 			CarbUnits:    carbU,
 			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
-			CarbRatio:    Tenths(int(body[2]&0x7)<<8 | int(body[3])),
+			CarbRatio:    Tenths(int(body[2]&0xF)<<8 | int(body[3])),
 			Correction:   intToInsulin(int(body[9]&0x38)<<5|int(body[6]), true),
 			Food:         twoByteInsulin(body[7:9], true),
 			Unabsorbed:   twoByteInsulin(body[10:12], true),
