@@ -113,6 +113,7 @@ var decode = map[HistoryRecordType]decoder{
 	AlarmClock:              decodeAlarmClock,
 	SensorStatus:            decodeSensorStatus,
 	EnableMeter:             decodeEnableMeter,
+	BGReceived:              decodeBGReceived,
 	MealMarker:              decodeMealMarker,
 	ExerciseMarker:          decodeExerciseMarker,
 	InsulinMarker:           decodeInsulinMarker,
@@ -158,6 +159,7 @@ type (
 		GlucoseUnits      *GlucoseUnitsType        `json:",omitempty"`
 		Insulin           *Insulin                 `json:",omitempty"`
 		Carbs             *Carbs                   `json:",omitempty"`
+		CarbUnits         *CarbUnitsType           `json:",omitempty"`
 		TempBasalType     *TempBasalType           `json:",omitempty"`
 		Value             *int                     `json:",omitempty"`
 		BasalProfile      BasalRateSchedule        `json:",omitempty"`
@@ -477,12 +479,15 @@ var decodeSensorStatus = decodeEnable
 
 var decodeEnableMeter = decodeEnableN(21)
 
+var decodeBGReceived = decodeBaseN(10)
+
 func decodeMealMarker(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
 	r.Data = data[:9]
 	carbs := Carbs(int(data[1])<<8 | int(data[7]))
 	r.Carbs = &carbs
-	// data[8] = carb units type (1 or 2)
+	carbU := CarbUnitsType(data[8] & 0x3)
+	r.CarbUnits = &carbU
 	return r
 }
 

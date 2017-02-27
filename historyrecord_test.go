@@ -407,6 +407,25 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		},
 		{
 			`{
+			   "Type": "BGReceived",
+			   "Time": "2016-07-10T20:37:26-04:00",
+			   "Data": "PxRa5XRqEM4mkg=="
+			 }`,
+			true,
+		},
+
+		{
+			`{
+			   "Type": "MealMarker",
+			   "Time": "2016-07-11T05:09:29-04:00",
+			   "Carbs": 12,
+			   "CarbUnits": "Grams",
+			   "Data": "QABdyQULEAwB"
+			 }`,
+			true,
+		},
+		{
+			`{
 			   "Type": "ChangeBolusWizardSetup",
 			   "Time": "2016-07-04T14:06:42-04:00",
 			   "Data": "TwBqxg4EEEARAG8nFh4APBQAHjwg9PdBUQBuIxYKAB4eAB48EtaH"
