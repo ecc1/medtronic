@@ -2,7 +2,6 @@ package medtronic
 
 import (
 	"fmt"
-	"time"
 )
 
 type HistoryRecordType byte
@@ -152,8 +151,8 @@ type (
 
 	HistoryRecord struct {
 		Data              []byte                   `json:",omitempty"`
-		Time              time.Time                `json:",omitempty"`
-		Duration          *time.Duration           `json:",omitempty"`
+		Time              Time                     `json:",omitempty"`
+		Duration          *Duration                `json:",omitempty"`
 		Enabled           *bool                    `json:",omitempty"`
 		Glucose           *Glucose                 `json:",omitempty"`
 		GlucoseUnits      *GlucoseUnitsType        `json:",omitempty"`
@@ -185,7 +184,7 @@ type (
 		Programmed Insulin
 		Amount     Insulin
 		Unabsorbed Insulin
-		Duration   time.Duration // non-zero for square wave bolus
+		Duration   Duration // non-zero for square wave bolus
 	}
 
 	BolusWizardRecord struct {
@@ -207,7 +206,7 @@ type (
 		Ratios        CarbRatioSchedule
 		Sensitivities InsulinSensitivitySchedule
 		Targets       GlucoseTargetSchedule
-		InsulinAction time.Duration
+		InsulinAction Duration
 	}
 
 	BolusWizardSetupRecord struct {
@@ -217,7 +216,7 @@ type (
 
 	UnabsorbedBolus struct {
 		Bolus Insulin
-		Age   time.Duration
+		Age   Duration
 	}
 
 	UnabsorbedBolusHistory []UnabsorbedBolus
@@ -233,7 +232,7 @@ func (r HistoryRecord) Type() HistoryRecordType {
 
 func decodeBase(data []byte, newerPump bool) HistoryRecord {
 	return HistoryRecord{
-		Time: decodeTimestamp(data[2:7]),
+		Time: decodeTime(data[2:7]),
 		Data: data[:7],
 	}
 }
@@ -294,7 +293,7 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 				Unabsorbed: twoByteInsulin(data[5:7], true),
 				Duration:   halfHoursToDuration(data[7]),
 			},
-			Time: decodeTimestamp(data[8:13]),
+			Time: decodeTime(data[8:13]),
 			Data: data[:13],
 		}
 	} else {
@@ -304,7 +303,7 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 				Amount:     byteToInsulin(data[2], false),
 				Duration:   halfHoursToDuration(data[3]),
 			},
-			Time: decodeTimestamp(data[4:9]),
+			Time: decodeTime(data[4:9]),
 			Data: data[:9],
 		}
 	}
@@ -316,14 +315,14 @@ func decodePrime(data []byte, newerPump bool) HistoryRecord {
 			Fixed:  byteToInsulin(data[2], false),
 			Manual: byteToInsulin(data[4], false),
 		},
-		Time: decodeTimestamp(data[5:10]),
+		Time: decodeTime(data[5:10]),
 		Data: data[:10],
 	}
 }
 
 func decodeAlarm(data []byte, newerPump bool) HistoryRecord {
 	r := HistoryRecord{
-		Time: decodeTimestamp(data[4:9]),
+		Time: decodeTime(data[4:9]),
 		Data: data[:9],
 	}
 	alarm := int(data[1])
@@ -390,7 +389,7 @@ func decodeBGCapture(data []byte, newerPump bool) HistoryRecord {
 
 func decodeSensorAlarm(data []byte, newerPump bool) HistoryRecord {
 	r := HistoryRecord{
-		Time: decodeTimestamp(data[3:8]),
+		Time: decodeTime(data[3:8]),
 		Data: data[:8],
 	}
 	alarm := int(data[1])
@@ -424,7 +423,7 @@ var decodeBatteryChange = decodeBase
 
 func decodeSetAutoOff(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	d := time.Duration(data[1]) * time.Hour
+	d := hoursToDuration(data[1])
 	r.Duration = &d
 	return r
 }
@@ -543,8 +542,8 @@ func decodeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
 		Before: decodeBolusWizardConfig(body[:half], newerPump),
 		After:  decodeBolusWizardConfig(body[half:], newerPump),
 	}
-	setup.Before.InsulinAction = time.Duration(data[n]&0xF) * time.Hour
-	setup.After.InsulinAction = time.Duration(data[n]>>4) * time.Hour
+	setup.Before.InsulinAction = hoursToDuration(data[n] & 0xF)
+	setup.After.InsulinAction = hoursToDuration(data[n] >> 4)
 	r.BolusWizardSetup = setup
 	return r
 }
@@ -598,7 +597,7 @@ func decodeUnabsorbedInsulin(data []byte, newerPump bool) HistoryRecord {
 	for i := 0; i < n; i += 3 {
 		amount := byteToInsulin(body[i], true)
 		curve := body[i+2]
-		age := time.Duration(body[i+1]+(curve&0x30)<<4) * time.Minute
+		age := minutesToDuration(body[i+1] + (curve&0x30)<<4)
 		unabsorbed = append(unabsorbed, UnabsorbedBolus{
 			Bolus: amount,
 			Age:   age,

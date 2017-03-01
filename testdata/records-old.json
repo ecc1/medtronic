@@ -1,0 +1,417 @@
+[
+  {
+    "Type": "Bolus",
+    "Data": "AQUFAG7ZTgQQ",
+    "Time": "2016-07-04T14:25:46-04:00",
+    "Bolus": {
+      "Programmed": 0.5,
+      "Amount": 0.5,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Data": "AQEBAUjbbgQQ",
+    "Time": "2016-07-04T14:27:08-04:00",
+    "Bolus": {
+      "Programmed": 0.1,
+      "Amount": 0.1,
+      "Unabsorbed": 0,
+      "Duration": "30m0s"
+    }
+  },
+  {
+    "Type": "DailyTotal",
+    "Data": "BwAAAcxhkA==",
+    "Time": "2016-07-01T00:00:00-04:00",
+    "Insulin": 11.5
+  },
+  {
+    "Type": "BasalProfileBefore",
+    "Data": "CARQsRAPEAAoAAYgAA4sABQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+    "Time": "2016-06-15T16:49:16-04:00",
+    "BasalProfile": [
+      {
+        "Start": "00:00",
+        "Rate": 1
+      },
+      {
+        "Start": "03:00",
+        "Rate": 0.8
+      },
+      {
+        "Start": "07:00",
+        "Rate": 1.1
+      },
+      {
+        "Start": "10:00",
+        "Rate": 1.2
+      }
+    ]
+  },
+  {
+    "Type": "BGCapture",
+    "Data": "Cm5l2S4EEA==",
+    "Time": "2016-07-04T14:25:37-04:00",
+    "Glucose": 110,
+    "GlucoseUnits": "mg/dL"
+  },
+  {
+    "Type": "BGCapture",
+    "Data": "CvRGcSMTkA==",
+    "Time": "2016-05-19T03:49:06-04:00",
+    "Glucose": 500,
+    "GlucoseUnits": "mg/dL"
+  },
+  {
+    "Type": "SensorAlarm",
+    "Data": "C3EAdOEupBA=",
+    "Time": "2016-07-04T14:33:52-04:00",
+    "Value": 113
+  },
+  {
+    "Type": "ClearAlarm",
+    "Data": "DDcfQAABBQ==",
+    "Time": "2005-01-01T00:00:31-05:00",
+    "Value": 55
+  },
+  {
+    "Type": "ChangeBasalPattern",
+    "Data": "FAJSyw4EEA==",
+    "Time": "2016-07-04T14:11:18-04:00",
+    "Value": 2
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Data": "FgNErxZOEA==",
+    "Time": "2016-06-14T22:47:04-04:00",
+    "Duration": "1h30m0s"
+  },
+  {
+    "Type": "NewTime",
+    "Data": "GABtqhRLEA==",
+    "Time": "2016-06-11T20:42:45-04:00"
+  },
+  {
+    "Type": "SetAutoOff",
+    "Data": "Gw1c9Q0CEA==",
+    "Time": "2016-07-02T13:53:28-04:00",
+    "Duration": "13h0m0s"
+  },
+  {
+    "Type": "ResumePump",
+    "Data": "HwBv4RBDEA==",
+    "Time": "2016-07-03T16:33:47-04:00"
+  },
+  {
+    "Type": "SelfTest",
+    "Data": "IABY0g4EEA==",
+    "Time": "2016-07-04T14:18:24-04:00"
+  },
+  {
+    "Type": "Rewind",
+    "Data": "IQBsyw4EEA==",
+    "Time": "2016-07-04T14:11:44-04:00"
+  },
+  {
+    "Type": "EnableChildBlock",
+    "Data": "IwFu0Q4EEA==",
+    "Time": "2016-07-04T14:17:46-04:00",
+    "Enabled": true
+  },
+  {
+    "Type": "MaxBolus",
+    "Data": "JHh0+w0EEA==",
+    "Time": "2016-07-04T13:59:52-04:00",
+    "Insulin": 3
+  },
+  {
+    "Type": "EnableRemote",
+    "Data": "JgFgrw4FECcB4kAAAAAoAAAAAAAA",
+    "Time": "2016-06-05T14:47:32-04:00",
+    "Enabled": true
+  },
+  {
+    "Type": "MaxBasal",
+    "Data": "LGRkyA4EEA==",
+    "Time": "2016-07-04T14:08:36-04:00",
+    "Insulin": 2.5
+  },
+  {
+    "Type": "SetAlarmClockTime",
+    "Data": "Mhdfzw4EEA==",
+    "Time": "2016-07-04T14:15:31-04:00"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Data": "MzJttBIEEAA=",
+    "Time": "2016-06-04T18:52:45-04:00",
+    "Insulin": 1.25,
+    "TempBasalType": "Absolute"
+  },
+  {
+    "Type": "ChangeBolusWizardSetup",
+    "Data": "TwBqxg4EEEARAG8nFh4APBQAHjwg9PdBUQBuIxYKAB4eAB48EtaH",
+    "Time": "2016-07-04T14:06:42-04:00"
+  },
+  {
+    "Type": "BolusWizardSetup",
+    "Data": "Wg9Dww4EECUyAA8IFAAAAAAAAAAAAAAAAAAyDCgAAAAAAAAAAAAAAAAAX2kSWm4iUHgAAAAAAAAAAAAAAAAAAAA6IgAKAg8EDAAAAAAAAAAAAAAAHgQZAAAAAAAAAAAAAAAAADc5Ajg4AAAAAAAAAAAAAAAAAAAAAAAANA==",
+    "Time": "2016-07-04T14:03:03-04:00",
+    "BolusWizardSetup": {
+      "Before": {
+        "Ratios": [
+          {
+            "Start": "00:00",
+            "Ratio": 15,
+            "Units": "Grams"
+          },
+          {
+            "Start": "04:00",
+            "Ratio": 20,
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 50,
+            "Units": "mg/dL"
+          },
+          {
+            "Start": "06:00",
+            "Sensitivity": 40,
+            "Units": "mg/dL"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 95,
+            "High": 105,
+            "Units": "mg/dL"
+          },
+          {
+            "Start": "09:00",
+            "Low": 90,
+            "High": 110,
+            "Units": "mg/dL"
+          },
+          {
+            "Start": "17:00",
+            "Low": 80,
+            "High": 120,
+            "Units": "mg/dL"
+          }
+        ],
+        "InsulinAction": "4h0m0s"
+      },
+      "After": {
+        "Ratios": [
+          {
+            "Start": "00:00",
+            "Ratio": 1,
+            "Units": "Exchanges"
+          },
+          {
+            "Start": "01:00",
+            "Ratio": 1.5,
+            "Units": "Exchanges"
+          },
+          {
+            "Start": "02:00",
+            "Ratio": 1.2,
+            "Units": "Exchanges"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 3000,
+            "Units": "μmol/L"
+          },
+          {
+            "Start": "02:00",
+            "Sensitivity": 2500,
+            "Units": "μmol/L"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 5500,
+            "High": 5700,
+            "Units": "μmol/L"
+          },
+          {
+            "Start": "01:00",
+            "Low": 5600,
+            "High": 5600,
+            "Units": "μmol/L"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      }
+    }
+  },
+  {
+    "Type": "BolusWizard",
+    "Data": "W25u2Q4EEAVQDC1jAgQAAAcABGU=",
+    "Time": "2016-07-04T14:25:46-04:00",
+    "BolusWizard": {
+      "GlucoseUnits": "mg/dL",
+      "GlucoseInput": 110,
+      "TargetLow": 99,
+      "TargetHigh": 101,
+      "Sensitivity": 45,
+      "CarbUnits": "Grams",
+      "CarbInput": 5,
+      "CarbRatio": 12,
+      "Correction": 0.2,
+      "Food": 0.4,
+      "Unabsorbed": 0.7,
+      "Bolus": 0.4
+    }
+  },
+  {
+    "Type": "BolusWizard",
+    "Time": "2017-02-25T12:41:11-05:00",
+    "Data": "W3ILqQwZEQpQCDJkAgwAAA0ADGQ=",
+    "BolusWizard": {
+      "GlucoseUnits": "mg/dL",
+      "GlucoseInput": 114,
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 50,
+      "CarbUnits": "Grams",
+      "CarbInput": 10,
+      "CarbRatio": 8,
+      "Unabsorbed": 1.3,
+      "Correction": 0.2,
+      "Food": 1.2,
+      "Bolus": 1.2
+    }
+  },
+  {
+    "Type": "BolusWizard",
+    "Data": "WzwmowwZEQqQCBw4AQwAAAAADTg=",
+    "Time": "2017-02-25T12:35:38-05:00",
+    "BolusWizard": {
+      "GlucoseUnits": "μmol/L",
+      "GlucoseInput": 6000,
+      "TargetLow": 5600,
+      "TargetHigh": 5600,
+      "Sensitivity": 2800,
+      "CarbUnits": "Grams",
+      "CarbInput": 10,
+      "CarbRatio": 8,
+      "Unabsorbed": 0,
+      "Correction": 0.1,
+      "Food": 1.2,
+      "Bolus": 1.3
+    }
+  },
+  {
+    "Type": "BolusWizard",
+    "Time": "2017-02-25T13:09:48-05:00",
+    "Data": "WzwwiQ0ZEQpQCDJk+AzwACQABGQ=",
+    "BolusWizard": {
+      "GlucoseUnits": "mg/dL",
+      "GlucoseInput": 60,
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 50,
+      "CarbUnits": "Grams",
+      "CarbInput": 10,
+      "CarbRatio": 8,
+      "Unabsorbed": 3.6,
+      "Correction": 24.8,
+      "Food": 1.2,
+      "Bolus": 0.4
+    }
+  },
+  {
+    "Type": "BolusWizard",
+    "Time": "2017-02-25T13:03:10-05:00",
+    "Data": "WzwKgw0ZEQqQCBw4AQwAABgADDg=",
+    "BolusWizard": {
+      "GlucoseUnits": "μmol/L",
+      "GlucoseInput": 6000,
+      "TargetLow": 5600,
+      "TargetHigh": 5600,
+      "Sensitivity": 2800,
+      "CarbUnits": "Grams",
+      "CarbInput": 10,
+      "CarbRatio": 8,
+      "Unabsorbed": 2.4,
+      "Correction": 0.1,
+      "Food": 1.2,
+      "Bolus": 1.2
+    }
+  },
+  {
+    "Type": "BolusWizard",
+    "Data": "W7w3gxQcEQBgGSNkGQAAAAAAGWQ=",
+    "Time": "2017-02-28T20:03:55-05:00",
+    "BolusWizard": {
+      "GlucoseUnits": "mg/dL",
+      "GlucoseInput": 188,
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 35,
+      "CarbUnits": "Exchanges",
+      "CarbInput": 0,
+      "CarbRatio": 2.5,
+      "Correction": 0.9,
+      "Food": 0,
+      "Unabsorbed": 0,
+      "Bolus": 2.5
+    }
+  },
+  {
+    "Type": "EnableVariableBolus",
+    "Data": "XgBAwA4EEA==",
+    "Time": "2016-07-04T14:00:00-04:00",
+    "Enabled": false
+  },
+  {
+    "Type": "ChangeEasyBolus",
+    "Data": "XxRWwA4EEA==",
+    "Time": "2016-07-04T14:00:22-04:00"
+  },
+  {
+    "Type": "ChangeTempBasalType",
+    "Data": "YgBKtBIEEA==",
+    "Time": "2016-06-04T18:52:10-04:00",
+    "TempBasalType": "Absolute"
+  },
+  {
+    "Type": "ChangeTempBasalType",
+    "Data": "YgFtkg0bEA==",
+    "Time": "2016-06-27T13:18:45-04:00",
+    "TempBasalType": "Percent"
+  },
+  {
+    "Type": "ChangeAlarmType",
+    "Data": "YwRlzQ4EEA==",
+    "Time": "2016-07-04T14:13:37-04:00",
+    "Value": 4
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Data": "ZAAsQQABBQ==",
+    "Time": "2005-01-01T00:01:44-05:00",
+    "Value": 0
+  },
+  {
+    "Type": "DeleteAlarmClockTime",
+    "Data": "agFozw4EEA==",
+    "Time": "2016-07-04T14:15:40-04:00"
+  },
+  {
+    "Type": "DailyTotal522",
+    "Data": "bWOQBQwA6AAAAAAB2AHYZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAOgAAAA=",
+    "Time": "2016-07-03T00:00:00-04:00"
+  }
+]
