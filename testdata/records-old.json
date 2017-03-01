@@ -256,6 +256,75 @@
     }
   },
   {
+    "Type": "BolusWizardSetup",
+    "Time": "2017-03-01T17:06:28-05:00",
+    "Data": "Wg8cxhEBERUhAAYAAAAAAAAAAAAAAAAAAAAjAAAAAAAAAAAAAAAAAAAAeHgMZGQAAAAAAAAAAAAAAAAAAAAAAAAVIQAGAAAAAAAAAAAAAAAAAABAkAAAAAAAAAAAAAAAAAAAAHh4DGRkAAAAAAAAAAAAAAAAAAAAAAAARA==",
+    "BolusWizardSetup": {
+      "Before": {
+        "Ratios": [
+          {
+            "Ratio": 6,
+            "Start": "00:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 35,
+            "Units": "mg/dL"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 120,
+            "High": 120,
+            "Units": "mg/dL"
+          },
+          {
+            "Start": "06:00",
+            "Low": 100,
+            "High": 100,
+            "Units": "mg/dL"
+          }
+        ],
+        "InsulinAction": "4h0m0s"
+      },
+      "After": {
+        "Ratios": [
+          {
+            "Ratio": 6,
+            "Start": "00:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 400,
+            "Units": "mg/dL"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 120,
+            "High": 120,
+            "Units": "mg/dL"
+          },
+          {
+            "Start": "06:00",
+            "Low": 100,
+            "High": 100,
+            "Units": "mg/dL"
+          }
+        ],
+        "InsulinAction": "4h0m0s"
+      }
+    }
+  },
+  {
     "Type": "BolusWizard",
     "Data": "W25u2Q4EEAVQDC1jAgQAAAcABGU=",
     "Time": "2016-07-04T14:25:46-04:00",

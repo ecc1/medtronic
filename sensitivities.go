@@ -19,13 +19,15 @@ type InsulinSensitivitySchedule []InsulinSensitivity
 func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) InsulinSensitivitySchedule {
 	var sched []InsulinSensitivity
 	for i := 0; i < len(data); i += 2 {
-		start := halfHoursToTimeOfDay(data[i])
+		n := data[i]
+		start := halfHoursToTimeOfDay(n & 0x1F)
 		if start == 0 && len(sched) != 0 {
 			break
 		}
+		s := int((n>>6)&0x1)<<8 | int(data[i+1])
 		sched = append(sched, InsulinSensitivity{
 			Start:       start,
-			Sensitivity: byteToGlucose(data[i+1], units),
+			Sensitivity: intToGlucose(s, units),
 			Units:       units,
 		})
 	}
