@@ -489,17 +489,17 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			       "Ratios": [
 				 {
 				   "Start": "00:00",
-				   "Ratio": 10,
+				   "Ratio": 1,
 				   "Units": "Exchanges"
 				 },
 				 {
 				   "Start": "01:00",
-				   "Ratio": 15,
+				   "Ratio": 1.5,
 				   "Units": "Exchanges"
 				 },
 				 {
 				   "Start": "02:00",
-				   "Ratio": 12,
+				   "Ratio": 1.2,
 				   "Units": "Exchanges"
 				 }
 			       ],
@@ -534,6 +534,66 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			   "Data": "Wg9Dww4EECUyAA8IFAAAAAAAAAAAAAAAAAAyDCgAAAAAAAAAAAAAAAAAX2kSWm4iUHgAAAAAAAAAAAAAAAAAAAA6IgAKAg8EDAAAAAAAAAAAAAAAHgQZAAAAAAAAAAAAAAAAADc5Ajg4AAAAAAAAAAAAAAAAAAAAAAAANA=="
 			 }`,
 			false,
+		},
+		{
+			`{
+			   "Type": "BolusWizardSetup",
+			   "Time": "2017-02-26T17:17:16-05:00",
+			   "Data": "Wg8QkREaERkRAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwAAAAAAAAAAAAAAAAAAADJDAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhEACcQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAMkMAAAAAAAAAAAAAAAAAAAAAAAAAAAAz",
+			   "BolusWizardSetup": {
+			     "Before": {
+			       "InsulinAction": "3h0m0s",
+			       "Ratios": [
+				 {
+				   "Start": "00:00",
+				   "Ratio": 6,
+				   "Units": "Grams"
+				 }
+			       ],
+			       "Sensitivities": [
+				 {
+				   "Start": "00:00",
+				   "Sensitivity": 0,
+				   "Units": "μmol/L"
+				 }
+			       ],
+			       "Targets": [
+				 {
+				   "Start": "00:00",
+				   "Low": 5000,
+				   "High": 6700,
+				   "Units": "μmol/L"
+				 }
+			       ]
+			     },
+			     "After": {
+			       "InsulinAction": "3h0m0s",
+			       "Ratios": [
+				 {
+				   "Start": "00:00",
+				   "Ratio": 2.5,
+				   "Units": "Exchanges"
+				 }
+			       ],
+			       "Sensitivities": [
+				 {
+				   "Start": "00:00",
+				   "Sensitivity": 0,
+				   "Units": "μmol/L"
+				 }
+			       ],
+			       "Targets": [
+				 {
+				   "Start": "00:00",
+				   "Low": 5000,
+				   "High": 6700,
+				   "Units": "μmol/L"
+				 }
+			       ]
+			     }
+			   }
+			 }`,
+			true,
 		},
 		{
 			`{
@@ -752,6 +812,28 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		{
 			`{
 			   "Type": "BolusWizard",
+			   "Time": "2017-02-28T20:03:55-05:00",
+			   "Data": "W7w3gxQcEQBgGSNkGQAAAAAAGWQ=",
+			   "BolusWizard": {
+			     "CarbRatio": 2.5,
+			     "GlucoseUnits": "mg/dL",
+			     "GlucoseInput": 188,
+			     "TargetLow": 100,
+			     "TargetHigh": 100,
+			     "Sensitivity": 35,
+			     "CarbUnits": "Exchanges",
+			     "CarbInput": 0,
+			     "Correction": 0.9,
+			     "Food": 0,
+			     "Unabsorbed": 0,
+			     "Bolus": 2.5
+			   }
+			 }`,
+			false,
+		},
+		{
+			`{
+			   "Type": "BolusWizard",
 			   "Time": "2017-02-26T17:27:03-05:00",
 			   "BolusWizard": {
 			     "GlucoseUnits": "mg/dL",
@@ -761,7 +843,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			     "Sensitivity": 35,
 			     "CarbUnits": "Exchanges",
 			     "CarbInput": 30,
-			     "CarbRatio": 250,
+			     "CarbRatio": 2.5,
 			     "Unabsorbed": 13.1,
 			     "Correction": 0.8,
 			     "Food": 7.5,
@@ -805,7 +887,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 			     "Sensitivity": 1900,
 			     "CarbUnits": "Exchanges",
 			     "CarbInput": 30,
-			     "CarbRatio": 250,
+			     "CarbRatio": 2.5,
 			     "Unabsorbed": 6,
 			     "Correction": 0.8,
 			     "Food": 7.5,

@@ -1,6 +1,7 @@
 package medtronic
 
 import (
+	"log"
 	"time"
 )
 
@@ -8,12 +9,33 @@ const (
 	CarbRatios Command = 0x8A
 )
 
-type Tenths int
-
 type CarbRatio struct {
 	Start TimeOfDay
-	Ratio Tenths // 10x grams/unit or 1000x units/exchange
+	Ratio Ratio
 	Units CarbUnitsType
+}
+
+// Newer pumps store carb ratios as 10x grams/unit or 1000x units/exchange.
+// Older pumps store carb ratios as grams/unit or 10x units/exchange.
+
+// Higher-resolution representation: 10x grams/unit or 1000x units/exchange.
+type Ratio int
+
+func intToRatio(n int, u CarbUnitsType, newerPump bool) Ratio {
+	if newerPump {
+		// Use representation as-is.
+		return Ratio(n)
+	}
+	// Convert to higher-resolution representation.
+	switch u {
+	case Grams:
+		return Ratio(10 * n)
+	case Exchanges:
+		return Ratio(100 * n)
+	default:
+		log.Panicf("unknown carb unit %d", u)
+	}
+	panic("unreachable")
 }
 
 type CarbRatioSchedule []CarbRatio
@@ -34,15 +56,15 @@ func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) C
 		if start == 0 && len(sched) != 0 {
 			break
 		}
-		value := Tenths(0)
+		value := 0
 		if newerPump {
-			value = Tenths(twoByteInt(data[i+1 : i+3]))
+			value = twoByteInt(data[i+1 : i+3])
 		} else {
-			value = Tenths(10 * int(data[i+1]))
+			value = int(data[i+1])
 		}
 		sched = append(sched, CarbRatio{
 			Start: start,
-			Ratio: value,
+			Ratio: intToRatio(value, units, newerPump),
 			Units: units,
 		})
 	}

@@ -142,28 +142,65 @@ func (r *BolusWizardConfig) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-func (r Tenths) MarshalJSON() ([]byte, error) {
-	return json.Marshal(float64(r) / 10)
+func (r BolusWizardRecord) MarshalJSON() ([]byte, error) {
+	type Original BolusWizardRecord
+	rep := struct {
+		CarbRatio float64
+		Original
+	}{
+		Original: Original(r),
+	}
+	switch r.CarbUnits {
+	case Grams:
+		rep.CarbRatio = float64(r.CarbRatio) / 10
+	case Exchanges:
+		rep.CarbRatio = float64(r.CarbRatio) / 1000
+	default:
+		return nil, fmt.Errorf("unknown carb unit %d", r.CarbUnits)
+	}
+	return json.Marshal(rep)
 }
 
-func (r *Tenths) UnmarshalJSON(data []byte) error {
-	v := 0.0
-	err := json.Unmarshal(data, &v)
+func (r *BolusWizardRecord) UnmarshalJSON(data []byte) error {
+	type Original BolusWizardRecord
+	rep := struct {
+		CarbRatio float64
+		*Original
+	}{
+		Original: (*Original)(r),
+	}
+	err := json.Unmarshal(data, &rep)
 	if err != nil {
 		return err
 	}
-	*r = Tenths(10*v + 0.5)
-	return nil
+	switch r.CarbUnits {
+	case Grams:
+		r.CarbRatio = Ratio(10*rep.CarbRatio + 0.5)
+	case Exchanges:
+		r.CarbRatio = Ratio(1000*rep.CarbRatio + 0.5)
+	default:
+		err = fmt.Errorf("unknown carb unit %d", r.CarbUnits)
+	}
+	return err
 }
 
 func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	type Original CarbRatio
 	rep := struct {
 		Start string
+		Ratio float64
 		Original
 	}{
 		Start:    r.Start.String(),
 		Original: Original(r),
+	}
+	switch r.Units {
+	case Grams:
+		rep.Ratio = float64(r.Ratio) / 10
+	case Exchanges:
+		rep.Ratio = float64(r.Ratio) / 1000
+	default:
+		return nil, fmt.Errorf("unknown carb unit %d", r.Units)
 	}
 	return json.Marshal(rep)
 }
@@ -172,6 +209,7 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	type Original CarbRatio
 	rep := struct {
 		Start string
+		Ratio float64
 		*Original
 	}{
 		Original: (*Original)(r),
@@ -181,7 +219,23 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	r.Start, err = parseTimeOfDay(rep.Start)
+	switch r.Units {
+	case Grams:
+		r.Ratio = Ratio(10*rep.Ratio + 0.5)
+	case Exchanges:
+		r.Ratio = Ratio(1000*rep.Ratio + 0.5)
+	default:
+		err = fmt.Errorf("unknown carb unit %d", r.Units)
+	}
 	return err
+}
+
+func (r Ratio) MarshalJSON() ([]byte, error) {
+	return nil, fmt.Errorf("cannot marshal carb ratio without units")
+}
+
+func (r *Ratio) UnmarshalJSON([]byte) error {
+	return fmt.Errorf("cannot unmarshal carb ratio without units")
 }
 
 func (r GlucoseTarget) MarshalJSON() ([]byte, error) {
