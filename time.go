@@ -12,13 +12,29 @@ const (
 	UserTimeLayout = "2006-01-02 15:04:05" // human-readable
 )
 
-// Convert a multiple of half-hours to a Duration.
-func halfHoursToDuration(t uint8) time.Duration {
-	return time.Duration(t) * 30 * time.Minute
+type (
+	// Allow custom JSON marshaling for Time and Duration values.
+	Time     time.Time
+	Duration time.Duration
+
+	// TimeOfDay represents a value between 0 and 24 hours.
+	TimeOfDay time.Duration
+)
+
+// Convert n hours to a Duration.
+func hoursToDuration(n uint8) Duration {
+	return Duration(time.Duration(n) * time.Hour)
 }
 
-// TimeOfDay represents a value between 0 and 24 hours.
-type TimeOfDay time.Duration
+// Convert n half-hours to a Duration.
+func halfHoursToDuration(n uint8) Duration {
+	return Duration(time.Duration(n) * 30 * time.Minute)
+}
+
+// Convert n minutes to a Duration.
+func minutesToDuration(n uint8) Duration {
+	return Duration(time.Duration(n) * time.Minute)
+}
 
 // Convert a duration to a time of day.
 func durationToTimeOfDay(d time.Duration) TimeOfDay {
@@ -50,9 +66,9 @@ func parseTimeOfDay(s string) (TimeOfDay, error) {
 	return 0, fmt.Errorf("parseTimeOfDay: %q must be of the form HH:MM", s)
 }
 
-// Convert a multiple of half-hours to a time of day.
-func halfHoursToTimeOfDay(t uint8) TimeOfDay {
-	return durationToTimeOfDay(halfHoursToDuration(t))
+// Convert n half-hours to a time of day.
+func halfHoursToTimeOfDay(n uint8) TimeOfDay {
+	return durationToTimeOfDay(time.Duration(n) * 30 * time.Minute)
 }
 
 // Convert a time to a time of day.
@@ -65,7 +81,7 @@ func sinceMidnight(t time.Time) TimeOfDay {
 }
 
 // Decode a 5-byte timestamp from a pump history record.
-func decodeTimestamp(data []byte) time.Time {
+func decodeTime(data []byte) Time {
 	sec := int(data[0] & 0x3F)
 	min := int(data[1] & 0x3F)
 	hour := int(data[2] & 0x1F)
@@ -73,13 +89,13 @@ func decodeTimestamp(data []byte) time.Time {
 	// The 4-bit month value is encoded in the high 2 bits of the first 2 bytes.
 	month := time.Month(int(data[0]>>6)<<2 | int(data[1]>>6))
 	year := 2000 + int(data[4]&0x7F)
-	return time.Date(year, month, day, hour, min, sec, 0, time.Local)
+	return Time(time.Date(year, month, day, hour, min, sec, 0, time.Local))
 }
 
 // Decode a 2-byte date from a pump history record.
-func decodeDate(data []byte) time.Time {
+func decodeDate(data []byte) Time {
 	day := int(data[0] & 0x1F)
 	month := time.Month(int(data[0]>>5)<<1 + int(data[1]>>7))
 	year := 2000 + int(data[1]&0x7F)
-	return time.Date(year, month, day, 0, 0, 0, 0, time.Local)
+	return Time(time.Date(year, month, day, 0, 0, 0, 0, time.Local))
 }

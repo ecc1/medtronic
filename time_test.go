@@ -60,7 +60,7 @@ func TestHalfHours(t *testing.T) {
 	}
 	for _, c := range cases {
 		d := halfHoursToDuration(c.t)
-		if d != c.d {
+		if d != Duration(c.d) {
 			t.Errorf("halfHoursToDuration(%d) == %v, want %v", c.t, d, c.d)
 		}
 	}
@@ -103,7 +103,7 @@ func TestSinceMidnight(t *testing.T) {
 	}
 }
 
-func TestDecodeTimestamp(t *testing.T) {
+func TestDecodeTime(t *testing.T) {
 	cases := []struct {
 		b []byte
 		t time.Time
@@ -114,9 +114,9 @@ func TestDecodeTimestamp(t *testing.T) {
 		{[]byte{0x40, 0x94, 0x12, 0x0F, 0x10}, parseTime("2016-06-15T18:20:00")},
 	}
 	for _, c := range cases {
-		ts := decodeTimestamp(c.b)
+		ts := time.Time(decodeTime(c.b))
 		if !ts.Equal(c.t) {
-			t.Errorf("decodeTimestamp(% X) == %v, want %v", c.b, ts, c.t)
+			t.Errorf("decodeTime(% X) == %v, want %v", c.b, ts, c.t)
 		}
 	}
 }
@@ -130,7 +130,7 @@ func TestDecodeDate(t *testing.T) {
 		{[]byte{0x78, 0x10}, parseTime("2016-06-24T00:00:00")},
 	}
 	for _, c := range cases {
-		ts := decodeDate(c.b)
+		ts := time.Time(decodeDate(c.b))
 		if !ts.Equal(c.t) {
 			t.Errorf("decodeDate(% X) == %v, want %v", c.b, ts, c.t)
 		}

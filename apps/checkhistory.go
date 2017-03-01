@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/ecc1/medtronic"
 )
@@ -41,7 +42,7 @@ func main() {
 
 func validate(r medtronic.HistoryRecord, newerPump bool) {
 	rr, err := medtronic.DecodeHistoryRecord(r.Data, newerPump)
-	t := r.Time
+	t := time.Time(r.Time)
 	tStr := timeBlank
 	if !t.IsZero() {
 		tStr = t.Format(medtronic.UserTimeLayout)

@@ -30,7 +30,7 @@ loop:
 			case DailyTotal522:
 			case DailyTotal523:
 			default:
-				t := r.Time
+				t := time.Time(r.Time)
 				if !t.IsZero() && t.Before(since) {
 					log.Printf("stopping pump history scan at %s", t.Format(UserTimeLayout))
 					break loop

@@ -7,23 +7,18 @@ import (
 )
 
 func (r HistoryRecord) MarshalJSON() ([]byte, error) {
-	t := ""
-	if !r.Time.IsZero() {
-		t = r.Time.Format(JsonTimeLayout)
-	}
 	type Original HistoryRecord
 	rep := struct {
-		Type     string
-		Time     string `json:",omitempty"`
-		Duration string `json:",omitempty"`
+		Type string
+		Time string `json:",omitempty"`
 		Original
 	}{
 		Type:     fmt.Sprintf("%v", r.Type()),
-		Time:     t,
 		Original: Original(r),
 	}
-	if r.Duration != nil {
-		rep.Duration = r.Duration.String()
+	t := time.Time(r.Time)
+	if !t.IsZero() {
+		rep.Time = t.Format(JsonTimeLayout)
 	}
 	return json.Marshal(rep)
 }
@@ -31,9 +26,8 @@ func (r HistoryRecord) MarshalJSON() ([]byte, error) {
 func (r *HistoryRecord) UnmarshalJSON(data []byte) error {
 	type Original HistoryRecord
 	rep := struct {
-		Type     string
-		Time     string `json:",omitempty"`
-		Duration string `json:",omitempty"`
+		Type string
+		Time string
 		*Original
 	}{
 		Original: (*Original)(r),
@@ -43,102 +37,10 @@ func (r *HistoryRecord) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if rep.Time != "" {
-		r.Time, err = time.Parse(JsonTimeLayout, rep.Time)
-		if err != nil {
-			return err
-		}
+		var t time.Time
+		t, err = time.Parse(JsonTimeLayout, rep.Time)
+		r.Time = Time(t)
 	}
-	if rep.Duration != "" {
-		d, err := time.ParseDuration(rep.Duration)
-		r.Duration = &d
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (r BasalRate) MarshalJSON() ([]byte, error) {
-	type Original BasalRate
-	rep := struct {
-		Start string
-		Original
-	}{
-		Start:    r.Start.String(),
-		Original: Original(r),
-	}
-	return json.Marshal(rep)
-}
-
-func (r *BasalRate) UnmarshalJSON(data []byte) error {
-	type Original BasalRate
-	rep := struct {
-		Start string
-		*Original
-	}{
-		Original: (*Original)(r),
-	}
-	err := json.Unmarshal(data, &rep)
-	if err != nil {
-		return err
-	}
-	r.Start, err = parseTimeOfDay(rep.Start)
-	return err
-}
-
-func (r BolusRecord) MarshalJSON() ([]byte, error) {
-	type Original BolusRecord
-	rep := struct {
-		Duration string
-		Original
-	}{
-		Duration: r.Duration.String(),
-		Original: Original(r),
-	}
-	return json.Marshal(rep)
-}
-
-func (r *BolusRecord) UnmarshalJSON(data []byte) error {
-	type Original BolusRecord
-	rep := struct {
-		Duration string
-		*Original
-	}{
-		Original: (*Original)(r),
-	}
-	err := json.Unmarshal(data, &rep)
-	if err != nil {
-		return err
-	}
-	r.Duration, err = time.ParseDuration(rep.Duration)
-	return err
-}
-
-func (r BolusWizardConfig) MarshalJSON() ([]byte, error) {
-	type Original BolusWizardConfig
-	rep := struct {
-		InsulinAction string
-		Original
-	}{
-		InsulinAction: r.InsulinAction.String(),
-		Original:      Original(r),
-	}
-	return json.Marshal(rep)
-}
-
-func (r *BolusWizardConfig) UnmarshalJSON(data []byte) error {
-	type Original BolusWizardConfig
-	rep := struct {
-		InsulinAction string
-		*Original
-	}{
-		Original: (*Original)(r),
-	}
-	err := json.Unmarshal(data, &rep)
-	if err != nil {
-		return err
-	}
-	r.InsulinAction, err = time.ParseDuration(rep.InsulinAction)
 	return err
 }
 
@@ -156,7 +58,7 @@ func (r BolusWizardRecord) MarshalJSON() ([]byte, error) {
 	case Exchanges:
 		rep.CarbRatio = float64(r.CarbRatio) / 1000
 	default:
-		return nil, fmt.Errorf("unknown carb unit %d", r.CarbUnits)
+		return nil, fmt.Errorf("unknown carb unit %d marshaling BolusWizardRecord", r.CarbUnits)
 	}
 	return json.Marshal(rep)
 }
@@ -179,7 +81,7 @@ func (r *BolusWizardRecord) UnmarshalJSON(data []byte) error {
 	case Exchanges:
 		r.CarbRatio = Ratio(1000*rep.CarbRatio + 0.5)
 	default:
-		err = fmt.Errorf("unknown carb unit %d", r.CarbUnits)
+		err = fmt.Errorf("unknown carb unit %d unmarshaling BolusWizardRecord", r.CarbUnits)
 	}
 	return err
 }
@@ -187,11 +89,9 @@ func (r *BolusWizardRecord) UnmarshalJSON(data []byte) error {
 func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	type Original CarbRatio
 	rep := struct {
-		Start string
 		Ratio float64
 		Original
 	}{
-		Start:    r.Start.String(),
 		Original: Original(r),
 	}
 	switch r.Units {
@@ -200,7 +100,7 @@ func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	case Exchanges:
 		rep.Ratio = float64(r.Ratio) / 1000
 	default:
-		return nil, fmt.Errorf("unknown carb unit %d", r.Units)
+		return nil, fmt.Errorf("unknown carb unit %d marshaling CarbRatio", r.Units)
 	}
 	return json.Marshal(rep)
 }
@@ -208,7 +108,6 @@ func (r CarbRatio) MarshalJSON() ([]byte, error) {
 func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	type Original CarbRatio
 	rep := struct {
-		Start string
 		Ratio float64
 		*Original
 	}{
@@ -218,14 +117,13 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	r.Start, err = parseTimeOfDay(rep.Start)
 	switch r.Units {
 	case Grams:
 		r.Ratio = Ratio(10*rep.Ratio + 0.5)
 	case Exchanges:
 		r.Ratio = Ratio(1000*rep.Ratio + 0.5)
 	default:
-		err = fmt.Errorf("unknown carb unit %d", r.Units)
+		err = fmt.Errorf("unknown carb unit %d unmarshaling CarbRatio", r.Units)
 	}
 	return err
 }
@@ -236,90 +134,6 @@ func (r Ratio) MarshalJSON() ([]byte, error) {
 
 func (r *Ratio) UnmarshalJSON([]byte) error {
 	return fmt.Errorf("cannot unmarshal carb ratio without units")
-}
-
-func (r GlucoseTarget) MarshalJSON() ([]byte, error) {
-	type Original GlucoseTarget
-	rep := struct {
-		Start string
-		Original
-	}{
-		Start:    r.Start.String(),
-		Original: Original(r),
-	}
-	return json.Marshal(rep)
-}
-
-func (r *GlucoseTarget) UnmarshalJSON(data []byte) error {
-	type Original GlucoseTarget
-	rep := struct {
-		Start string
-		*Original
-	}{
-		Original: (*Original)(r),
-	}
-	err := json.Unmarshal(data, &rep)
-	if err != nil {
-		return err
-	}
-	r.Start, err = parseTimeOfDay(rep.Start)
-	return err
-}
-
-func (r InsulinSensitivity) MarshalJSON() ([]byte, error) {
-	type Original InsulinSensitivity
-	rep := struct {
-		Start string
-		Original
-	}{
-		Start:    r.Start.String(),
-		Original: Original(r),
-	}
-	return json.Marshal(rep)
-}
-
-func (r *InsulinSensitivity) UnmarshalJSON(data []byte) error {
-	type Original InsulinSensitivity
-	rep := struct {
-		Start string
-		*Original
-	}{
-		Original: (*Original)(r),
-	}
-	err := json.Unmarshal(data, &rep)
-	if err != nil {
-		return err
-	}
-	r.Start, err = parseTimeOfDay(rep.Start)
-	return err
-}
-
-func (r UnabsorbedBolus) MarshalJSON() ([]byte, error) {
-	type Original UnabsorbedBolus
-	rep := struct {
-		Age string
-		Original
-	}{
-		Age:      r.Age.String(),
-		Original: Original(r),
-	}
-	return json.Marshal(rep)
-}
-
-func (r *UnabsorbedBolus) UnmarshalJSON(data []byte) error {
-	type Original UnabsorbedBolus
-	rep := struct {
-		Age string
-		*Original
-	}{
-		Original: (*Original)(r),
-	}
-	err := json.Unmarshal(data, &rep)
-	if err != nil {
-		return err
-	}
-	r.Age, err = time.ParseDuration(rep.Age)
-	return err
 }
 
 func (r SettingsInfo) MarshalJSON() ([]byte, error) {
@@ -462,4 +276,41 @@ func (r *Voltage) UnmarshalJSON(data []byte) error {
 	}
 	*r = Voltage(1000*v + 0.5)
 	return nil
+}
+
+func (r Time) MarshalJSON() ([]byte, error) {
+	return nil, fmt.Errorf("marshaling Time value")
+}
+
+func (r *Time) UnmarshalJSON(data []byte) error {
+	return fmt.Errorf("unmarshaling Time value")
+}
+
+func (r Duration) MarshalJSON() ([]byte, error) {
+	return json.Marshal(time.Duration(r).String())
+}
+
+func (r *Duration) UnmarshalJSON(data []byte) error {
+	v := ""
+	err := json.Unmarshal(data, &v)
+	if err != nil {
+		return err
+	}
+	d, err := time.ParseDuration(v)
+	*r = Duration(d)
+	return err
+}
+
+func (r TimeOfDay) MarshalJSON() ([]byte, error) {
+	return json.Marshal(r.String())
+}
+
+func (r *TimeOfDay) UnmarshalJSON(data []byte) error {
+	v := ""
+	err := json.Unmarshal(data, &v)
+	if err != nil {
+		return err
+	}
+	*r, err = parseTimeOfDay(v)
+	return err
 }

@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ecc1/medtronic"
 	"github.com/ecc1/nightscout"
@@ -70,7 +71,7 @@ func readBytes(r io.Reader) []byte {
 }
 
 func printRecord(r medtronic.HistoryRecord) {
-	t := r.Time
+	t := time.Time(r.Time)
 	tStr := timeBlank
 	if !t.IsZero() {
 		tStr = t.Format(medtronic.UserTimeLayout)

@@ -14,7 +14,7 @@ func Treatments(records []HistoryRecord) []nightscout.Treatment {
 	duration0 := 0
 	for i, r := range records {
 		info := nightscout.Treatment{
-			CreatedAt: r.Time,
+			CreatedAt: time.Time(r.Time),
 			EnteredBy: user,
 		}
 		var r2 *HistoryRecord
@@ -38,14 +38,14 @@ func Treatments(records []HistoryRecord) []nightscout.Treatment {
 			} else {
 				ins := r.Insulin.NightscoutInsulin()
 				info.Absolute = &ins
-				min := int(*r2.Duration / time.Minute)
+				min := int(*r2.Duration / Duration(time.Minute))
 				info.Duration = &min
 			}
 		case Bolus:
 			info.EventType = "Meal Bolus"
 			ins := r.Bolus.Amount.NightscoutInsulin()
 			info.Insulin = &ins
-			min := int(r.Bolus.Duration / time.Minute)
+			min := int(r.Bolus.Duration / Duration(time.Minute))
 			info.Duration = &min
 		case Rewind:
 			if !nextEvent(r, r2, Prime) {
