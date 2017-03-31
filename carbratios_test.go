@@ -26,7 +26,7 @@ func TestCarbRatios(t *testing.T) {
 	for _, c := range cases {
 		s := decodeCarbRatioSchedule(c.data, c.units, c.newer)
 		if !reflect.DeepEqual(s, c.sched) {
-			t.Errorf("decodeCarbRatioSchedule(%X, %v, %v) == %v, want %v", c.data, c.units, c.newer, s, c.sched)
+			t.Errorf("decodeCarbRatioSchedule(% X, %v, %v) == %v, want %v", c.data, c.units, c.newer, s, c.sched)
 		}
 	}
 }

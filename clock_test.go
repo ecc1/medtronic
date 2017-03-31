@@ -22,7 +22,7 @@ func TestClock(t *testing.T) {
 	for _, c := range cases {
 		tt := decodeClock(c.data)
 		if !tt.Equal(c.t) {
-			t.Errorf("decodeClock(%X) == %v, want %v", c.data, tt, c.t)
+			t.Errorf("decodeClock(% X) == %v, want %v", c.data, tt, c.t)
 		}
 	}
 }

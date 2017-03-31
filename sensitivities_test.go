@@ -23,7 +23,7 @@ func TestInsulinSensitivitys(t *testing.T) {
 	for _, c := range cases {
 		s := decodeInsulinSensitivitySchedule(c.data, c.units)
 		if !reflect.DeepEqual(s, c.sched) {
-			t.Errorf("decodeInsulinSensitivitySchedule(%X, %v) == %v, want %v", c.data, c.units, s, c.sched)
+			t.Errorf("decodeInsulinSensitivitySchedule(% X, %v) == %v, want %v", c.data, c.units, s, c.sched)
 		}
 	}
 }

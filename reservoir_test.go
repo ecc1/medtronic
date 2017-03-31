@@ -24,11 +24,11 @@ func TestReservoir(t *testing.T) {
 	for _, c := range cases {
 		i, err := decodeReservoir(c.data, c.newer)
 		if err != nil {
-			t.Errorf("decodeReservoir(%X, %v) returned %v, want %v", c.data, c.newer, err, c.i)
+			t.Errorf("decodeReservoir(% X, %v) returned %v, want %v", c.data, c.newer, err, c.i)
 			continue
 		}
 		if i != c.i {
-			t.Errorf("decodeReservoir(%X, %v) == %v, want %v", c.data, c.newer, i, c.i)
+			t.Errorf("decodeReservoir(% X, %v) == %v, want %v", c.data, c.newer, i, c.i)
 		}
 	}
 }

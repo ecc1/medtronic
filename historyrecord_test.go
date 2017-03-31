@@ -33,7 +33,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		for i, r1 := range records {
 			r2, err := DecodeHistoryRecord(r1.Data, c.newer)
 			if err != nil {
-				t.Errorf("DecodeHistoryRecord(%X, %v) returned %v", r1.Data, c.newer, err)
+				t.Errorf("DecodeHistoryRecord(% X, %v) returned %v", r1.Data, c.newer, err)
 				continue
 			}
 			decoded[i] = r2
@@ -67,7 +67,7 @@ func TestDecodeHistoryRecords(t *testing.T) {
 		}
 		decoded, err := DecodeHistoryRecords(data, c.newer)
 		if err != nil {
-			t.Errorf("DecodeHistoryRecords(%X, %v) returned %v", data, c.newer, err)
+			t.Errorf("DecodeHistoryRecords(% X, %v) returned %v", data, c.newer, err)
 			continue
 		}
 		if !equalHistoryRecords(t, decoded, records, c.jsonFile) {
