@@ -12,7 +12,7 @@ import (
 
 const (
 	pumpEnvVar      = "MEDTRONIC_PUMP_ID"
-	PumpDevice      = 0xA7
+	CarelinkDevice  = 0xA7
 	maxPacketSize   = 71 // including CRC byte
 	historyPageSize = 1024
 )
@@ -33,7 +33,7 @@ func initCommandPrefix() {
 		log.Fatalf("%s environment variable must be 6 digits", pumpEnvVar)
 	}
 	commandPrefix = []byte{
-		PumpDevice,
+		CarelinkDevice,
 		(id[0]-'0')<<4 | (id[1] - '0'),
 		(id[2]-'0')<<4 | (id[3] - '0'),
 		(id[4]-'0')<<4 | (id[5] - '0'),
