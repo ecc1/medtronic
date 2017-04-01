@@ -107,11 +107,14 @@ func (sched BasalRateSchedule) NightscoutSchedule() nightscout.Schedule {
 
 func (sched CarbRatioSchedule) NightscoutSchedule() nightscout.Schedule {
 	n := len(sched)
+	if n != 0 && sched[0].Units != Grams {
+		panic("carb units must be grams")
+	}
 	tv := make(nightscout.Schedule, n)
 	for i, r := range sched {
 		tv[i] = nightscout.TimeValue{
 			Time:  r.Start.String(),
-			Value: r.Ratio,
+			Value: float64(r.Ratio) / 10, // Grams
 		}
 	}
 	return tv

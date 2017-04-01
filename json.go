@@ -129,11 +129,11 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 }
 
 func (r Ratio) MarshalJSON() ([]byte, error) {
-	return nil, fmt.Errorf("cannot marshal carb ratio without units")
+	panic("cannot marshal carb ratio without units")
 }
 
 func (r *Ratio) UnmarshalJSON([]byte) error {
-	return fmt.Errorf("cannot unmarshal carb ratio without units")
+	panic("cannot unmarshal carb ratio without units")
 }
 
 func (r SettingsInfo) MarshalJSON() ([]byte, error) {
