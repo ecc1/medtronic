@@ -18,11 +18,11 @@ const (
 )
 
 var (
-	commandPrefix []byte
+	carelinkPrefix []byte
 )
 
-func initCommandPrefix() {
-	if len(commandPrefix) != 0 {
+func initCarelinkPrefix() {
+	if len(carelinkPrefix) != 0 {
 		return
 	}
 	id := os.Getenv(pumpEnvVar)
@@ -32,8 +32,15 @@ func initCommandPrefix() {
 	if len(id) != 6 {
 		log.Fatalf("%s environment variable must be 6 digits", pumpEnvVar)
 	}
-	commandPrefix = []byte{
-		CarelinkDevice,
+	carelinkPrefix = append([]byte{CarelinkDevice}, MarshalDeviceID(id)...)
+}
+
+// DevideID returns the 3-byte Medtronic encoding of a 6-digit string.
+func MarshalDeviceID(id string) []byte {
+	if len(id) != 6 {
+		panic("device ID must be 6 digits")
+	}
+	return []byte{
 		(id[0]-'0')<<4 | (id[1] - '0'),
 		(id[2]-'0')<<4 | (id[3] - '0'),
 		(id[4]-'0')<<4 | (id[5] - '0'),
@@ -74,7 +81,7 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 	pump.SetError(BadResponseError{Command: cmd, Data: data})
 }
 
-// commandPacket constructs a packet
+// carelinkPacket constructs a packet
 // with the specified command code and parameters.
 // A command packet with no parameters is 7 bytes long:
 //   device type (0xA7)
@@ -89,15 +96,15 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 //   length of parameters
 //   64 bytes of parameters plus padding
 //   CRC-8
-func commandPacket(cmd Command, params []byte) []byte {
-	initCommandPrefix()
+func carelinkPacket(cmd Command, params []byte) []byte {
+	initCarelinkPrefix()
 	var data []byte
 	if len(params) == 0 {
 		data = make([]byte, 7)
 	} else {
 		data = make([]byte, maxPacketSize)
 	}
-	copy(data, commandPrefix)
+	copy(data, carelinkPrefix)
 	data[4] = byte(cmd)
 	data[5] = byte(len(params))
 	if len(params) != 0 {
@@ -224,7 +231,7 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 	if pump.Error() != nil {
 		return nil
 	}
-	p := commandPacket(cmd, params)
+	p := carelinkPacket(cmd, params)
 	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
 		pump.Radio.Send(p)
 		response, rssi := pump.Radio.Receive(pump.Timeout())
@@ -251,8 +258,8 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 		pump.BadResponse(cmd, data)
 		return true
 	}
-	n := len(commandPrefix)
-	if !bytes.Equal(data[:n], commandPrefix) {
+	n := len(carelinkPrefix)
+	if !bytes.Equal(data[:n], carelinkPrefix) {
 		pump.BadResponse(cmd, data)
 		return true
 	}
