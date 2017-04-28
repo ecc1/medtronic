@@ -1,9 +1,7 @@
+// +build cc1101
+
 package medtronic
 
-import (
-	"github.com/ecc1/cc1101"
-)
+import "github.com/ecc1/cc1101"
 
-func init() {
-	radios = append(radios, cc1101.Open)
-}
+var radioInterface = cc1101.Open

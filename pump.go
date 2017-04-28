@@ -30,29 +30,13 @@ type Pump struct {
 	err     error
 }
 
-var radios [](func() radio.Interface)
-
 func Open() *Pump {
 	pump := &Pump{
+		Radio:   radioInterface(),
 		timeout: defaultTimeout,
 		retries: defaultRetries,
 	}
-	found := false
-	for _, openRadio := range radios {
-		pump.Radio = openRadio()
-		if pump.Error() == nil {
-			found = true
-			break
-		}
-		_, wrongVersion := pump.Error().(radio.HardwareVersionError)
-		if !wrongVersion {
-			log.Print(pump.Error())
-			break
-		}
-		pump.SetError(nil)
-	}
-	if !found {
-		pump.SetError(fmt.Errorf("no radio hardware detected"))
+	if pump.Error() != nil {
 		return pump
 	}
 	hw := pump.Radio.Hardware()
