@@ -12,9 +12,9 @@ import (
 
 const (
 	pumpEnvVar      = "MEDTRONIC_PUMP_ID"
-	CarelinkDevice  = 0xA7
-	maxPacketSize   = 71 // including CRC byte
-	historyPageSize = 1024
+	carelinkDevice  = 0xA7
+	maxPacketSize   = 71   // including CRC byte
+	historyPageSize = 1024 // including CRC16
 )
 
 var (
@@ -32,11 +32,10 @@ func initCarelinkPrefix() {
 	if len(id) != 6 {
 		log.Fatalf("%s environment variable must be 6 digits", pumpEnvVar)
 	}
-	carelinkPrefix = append([]byte{CarelinkDevice}, MarshalDeviceID(id)...)
+	carelinkPrefix = append([]byte{carelinkDevice}, marshalDeviceID(id)...)
 }
 
-// DevideID returns the 3-byte Medtronic encoding of a 6-digit string.
-func MarshalDeviceID(id string) []byte {
+func marshalDeviceID(id string) []byte {
 	if len(id) != 6 {
 		panic("device ID must be 6 digits")
 	}
@@ -47,27 +46,37 @@ func MarshalDeviceID(id string) []byte {
 	}
 }
 
+// Command represents a pump command.
 type Command byte
 
 //go:generate stringer -type Command
 
 const (
-	Ack Command = 0x06
-	Nak Command = 0x15
+	ack Command = 0x06
+	nak Command = 0x15
 )
 
+// NoResponseError indicates that no response to a command was received.
 type NoResponseError Command
 
 func (e NoResponseError) Error() string {
 	return fmt.Sprintf("no response to %v", Command(e))
 }
 
+// NoResponse checks whether the pump has a NoResponseError.
+func (pump *Pump) NoResponse() bool {
+	_, ok := pump.Error().(NoResponseError)
+	return ok
+}
+
+// InvalidCommandError indicates that the pump rejected a command as invalid.
 type InvalidCommandError Command
 
 func (e InvalidCommandError) Error() string {
 	return fmt.Sprintf("invalid %v command", Command(e))
 }
 
+// BadResponseError indicates an unexpected response to a command.
 type BadResponseError struct {
 	Command Command
 	Data    []byte
@@ -77,6 +86,7 @@ func (e BadResponseError) Error() string {
 	return fmt.Sprintf("unexpected response to %v: % X", e.Command, e.Data)
 }
 
+// BadResponse sets the pump's error state to a BadResponseError.
 func (pump *Pump) BadResponse(cmd Command, data []byte) {
 	pump.SetError(BadResponseError{Command: cmd, Data: data})
 }
@@ -113,12 +123,13 @@ func carelinkPacket(cmd Command, params []byte) []byte {
 	return packet.Encode(data)
 }
 
+// Execute sends a command and parameters to the pump and returns its response.
 // Commands with parameters require an initial exchange with no parameters,
 // followed by an exchange with the actual arguments.
 func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 	if len(params) != 0 {
-		pump.perform(cmd, Ack, nil)
-		return pump.perform(cmd, Ack, params)
+		pump.perform(cmd, ack, nil)
+		return pump.perform(cmd, ack, params)
 	}
 	return pump.perform(cmd, cmd, nil)
 }
@@ -126,8 +137,8 @@ func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 // History pages are returned as a series of 65-byte fragments:
 //   sequence number (1 to 16)
 //   64 bytes of payload
-// The caller must send an Ack to receive the next fragment
-// or a Nak to have the current one retransmitted.
+// The caller must send an ACK to receive the next fragment
+// or a NAK to have the current one retransmitted.
 // The 0x80 bit is set in the sequence number of the final fragment.
 // The page consists of the concatenated payloads.
 // The final 2 bytes are the CRC-16 of the preceding data.
@@ -135,96 +146,111 @@ func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 const (
 	numFragments    = 16
 	fragmentLength  = 65
-	maxNaks         = 10
+	doneBit         = 1 << 7
+	maxNAKs         = 10
 	downloadTimeout = 150 * time.Millisecond
 )
 
+// Download requests the given history page from the pump.
 func (pump *Pump) Download(cmd Command, page int) []byte {
+	timeout := pump.Timeout()
+	pump.SetTimeout(downloadTimeout)
+	defer pump.SetTimeout(timeout)
+	results := make([]byte, 0, historyPageSize)
 	data := pump.Execute(cmd, byte(page))
 	if pump.Error() != nil {
 		return nil
 	}
-	var results []byte
 	retries := pump.Retries()
 	pump.SetRetries(1)
 	defer pump.SetRetries(retries)
-	timeout := pump.Timeout()
-	pump.SetTimeout(downloadTimeout)
-	defer pump.SetTimeout(timeout)
-	expected := byte(1)
+	seq := 1
 	for {
-		if len(data) != fragmentLength {
-			pump.SetError(fmt.Errorf("history page %d: unexpected fragment length (%d)", page, len(data)))
+		payload, n := pump.checkFragment(page, data, seq)
+		if pump.Error() != nil {
 			return nil
 		}
-		done := data[0]&0x80 != 0
-		seqNum := data[0] &^ 0x80
-		payload := data[1:]
-		if seqNum == expected {
-			// Got the next fragment as expected.
+		if n == seq {
 			results = append(results, payload...)
-			if done {
-				if seqNum != numFragments {
-					pump.SetError(fmt.Errorf("history page %d: unexpected final sequence number (%d)", page, seqNum))
-					return nil
-				}
-				break
-			}
-			expected = seqNum + 1
-		} else if seqNum < expected {
-			// Skip duplicate responses.
-		} else {
-			// Missed fragment.
-			pump.SetError(fmt.Errorf("history page %d: received fragment %d instead of %d", page, seqNum, expected))
-			return nil
+			seq++
 		}
-		var next []byte
-		// Acknowledge the current fragment.
-		next = pump.perform(Ack, cmd, nil)
-		if pump.Error() == nil {
-			data = next
-			continue
+		if n == numFragments {
+			return pump.checkPageCRC(page, results)
 		}
-		_, noResponse := pump.Error().(NoResponseError)
-		if !noResponse {
-			return nil
-		}
-		// No response to ACK. Send NAK to request retransmission.
-		pump.SetError(nil)
-		for count := 0; count < maxNaks; count++ {
-			next = pump.perform(Nak, cmd, nil)
-			if pump.Error() == nil {
-				format := "history page %d: received fragment %d after %d NAK"
-				if count != 0 {
-					format += "s"
-				}
-				log.Printf(format, page, next[0]&^0x80, count+1)
-				break
-			}
-			_, noResponse := pump.Error().(NoResponseError)
-			if !noResponse {
+		// Acknowledge the current fragment and receive the next.
+		next := pump.perform(ack, cmd, nil)
+		if pump.Error() != nil {
+			if !pump.NoResponse() {
 				return nil
 			}
-			pump.SetError(nil)
-		}
-		if next == nil {
-			pump.SetError(fmt.Errorf("history page %d: lost fragment %d", page, expected))
-			return nil
+			next = pump.handleNoResponse(cmd, page, seq)
 		}
 		data = next
 	}
-	if len(results) != historyPageSize {
-		pump.SetError(fmt.Errorf("history page %d: unexpected size (%d)", page, len(results)))
+}
+
+// checkFragment verifies that a fragment has the expected sequence number
+// and returns the payload.
+func (pump *Pump) checkFragment(page int, data []byte, expected int) ([]byte, int) {
+	if len(data) != fragmentLength {
+		pump.SetError(fmt.Errorf("history page %d: unexpected fragment length (%d)", page, len(data)))
+		return nil, 0
+	}
+	seqNum := int(data[0] &^ doneBit)
+	if seqNum > expected {
+		// Missed fragment.
+		pump.SetError(fmt.Errorf("history page %d: received fragment %d instead of %d", page, seqNum, expected))
+		return nil, 0
+	}
+	if seqNum < expected {
+		// Skip duplicate responses.
+		return nil, seqNum
+	}
+	// This is the next fragment.
+	done := data[0]&doneBit != 0
+	if (done && seqNum != numFragments) || (!done && seqNum == numFragments) {
+		pump.SetError(fmt.Errorf("history page %d: unexpected final sequence number (%d)", page, seqNum))
+		return nil, seqNum
+	}
+	return data[1:], seqNum
+}
+
+// handleNoResponse sends NAKs to request retransmission of the expected fragment.
+func (pump *Pump) handleNoResponse(cmd Command, page int, expected int) []byte {
+	for count := 0; count < maxNAKs; count++ {
+		pump.SetError(nil)
+		data := pump.perform(nak, cmd, nil)
+		if pump.Error() == nil {
+			seqNum := int(data[0] &^ doneBit)
+			format := "history page %d: received fragment %d after %d NAK"
+			if count != 0 {
+				format += "s"
+			}
+			log.Printf(format, page, seqNum, count+1)
+			return data
+		}
+		if !pump.NoResponse() {
+			return nil
+		}
+	}
+	pump.SetError(fmt.Errorf("history page %d: lost fragment %d", page, expected))
+	return nil
+}
+
+// checkPageCRC verifies the history page CRC and returns the page data with the CRC removed.
+func (pump *Pump) checkPageCRC(page int, data []byte) []byte {
+	if len(data) != historyPageSize {
+		pump.SetError(fmt.Errorf("history page %d: unexpected size (%d)", page, len(data)))
 		return nil
 	}
-	dataCRC := twoByteUint(results[historyPageSize-2:])
-	results = results[:historyPageSize-2]
-	calcCRC := packet.CRC16(results)
+	dataCRC := twoByteUint(data[historyPageSize-2:])
+	data = data[:historyPageSize-2]
+	calcCRC := packet.CRC16(data)
 	if dataCRC != calcCRC {
 		pump.SetError(fmt.Errorf("history page %d: CRC should be %02X, not %02X", page, calcCRC, dataCRC))
 		return nil
 	}
-	return results
+	return data
 }
 
 func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
@@ -268,12 +294,12 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 		return false
 	case resp:
 		return false
-	case Ack:
-		if cmd != Wakeup {
+	case ack:
+		if cmd != wakeup {
 			break
 		}
 		return false
-	case Nak:
+	case nak:
 		pump.SetError(InvalidCommandError(cmd))
 		return true
 	}
