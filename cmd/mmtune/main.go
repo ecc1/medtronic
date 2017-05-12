@@ -49,14 +49,14 @@ func searchFrequencies(pump *medtronic.Pump) uint32 {
 	}
 }
 
+// Result represents the RSSI at a given frequency.
 type Result struct {
 	frequency uint32
 	rssi      int
 }
 
-type Results []Result
-
 // Results implements sort.Interface based on frequency.
+type Results []Result
 
 func (r Results) Len() int           { return len(r) }
 func (r Results) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }

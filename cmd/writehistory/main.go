@@ -27,7 +27,7 @@ func main() {
 			log.Fatal(err)
 		}
 		data := readBytes(f)
-		f.Close()
+		f.Close() // nolint
 		v, err := medtronic.DecodeHistoryRecords(data, newer)
 		if err != nil {
 			log.Fatal(err)
@@ -39,11 +39,12 @@ func main() {
 		records = pruneRecords(records)
 	}
 	log.Printf("marshaling %d records", len(records))
-	b, err := json.MarshalIndent(records, "", "  ")
+	e := json.NewEncoder(os.Stdout)
+	e.SetIndent("", "  ")
+	err := e.Encode(records)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(b))
 }
 
 func readBytes(r io.Reader) []byte {

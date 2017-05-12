@@ -27,7 +27,7 @@ func main() {
 			return
 		}
 		data := make([]byte, n+1) // leave space for CRC
-		for i, _ := range data {
+		for i := range data {
 			data[i] = byte(i + 1)
 		}
 		packet := packet.Encode(data)

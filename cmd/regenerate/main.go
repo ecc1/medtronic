@@ -7,7 +7,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -31,6 +30,7 @@ func main() {
 	for _, j := range maps {
 		m := j.(map[string]interface{})
 		base64data := m["Data"].(string)
+		// nolint
 		data, err := base64.StdEncoding.DecodeString(base64data)
 		if err != nil {
 			log.Fatal(err)
@@ -41,9 +41,10 @@ func main() {
 		}
 		records = append(records, r)
 	}
-	b, err := json.MarshalIndent(records, "", "  ")
+	e := json.NewEncoder(os.Stdout)
+	e.SetIndent("", "  ")
+	err = e.Encode(records)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(b))
 }

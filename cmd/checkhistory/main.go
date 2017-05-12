@@ -33,7 +33,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		f.Close()
+		f.Close() // nolint
 		for _, r := range records {
 			validate(r, newer)
 		}

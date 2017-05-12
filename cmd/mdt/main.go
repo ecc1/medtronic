@@ -24,7 +24,7 @@ var command = map[string]prog{
 	"glucoseunits":  glucoseUnits,
 	"history":       history,
 	"model":         model,
-	"pumpid":        pumpId,
+	"pumpid":        pumpID,
 	"reservoir":     reservoir,
 	"resume":        resume,
 	"rssi":          rssi,
@@ -46,7 +46,7 @@ func usage() {
 	eprintf("Commands:")
 	keys := make([]string, len(command))
 	i := 0
-	for k, _ := range command {
+	for k := range command {
 		keys[i] = k
 		i++
 	}
@@ -89,7 +89,7 @@ func main() {
 }
 
 func eprintf(format string, arg ...interface{}) {
-	fmt.Fprintf(os.Stderr, format, arg...)
+	fmt.Fprintf(os.Stderr, format, arg...) // nolint
 }
 
 // TODO: with argument to schedule progs, get schedule at that time
@@ -152,8 +152,8 @@ func model(pump *medtronic.Pump, _ []string) interface{} {
 	return pump.Model()
 }
 
-func pumpId(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.PumpId()
+func pumpID(pump *medtronic.Pump, _ []string) interface{} {
+	return pump.PumpID()
 }
 
 func reservoir(pump *medtronic.Pump, _ []string) interface{} {
