@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	Settings Command = 0xC0
+	settings Command = 0xC0
 )
 
 type SettingsInfo struct {
@@ -22,42 +22,44 @@ type SettingsInfo struct {
 func (pump *Pump) Settings() SettingsInfo {
 	// Format of response depends on the pump family.
 	newer := pump.Family() >= 23
-	data := pump.Execute(Settings)
+	data := pump.Execute(settings)
 	if pump.Error() != nil {
 		return SettingsInfo{}
 	}
-	if newer {
+	var info SettingsInfo
+	switch newer {
+	case true:
 		if len(data) < 26 || data[0] != 25 {
-			pump.BadResponse(Settings, data)
-			return SettingsInfo{}
+			pump.BadResponse(settings, data)
+			return info
 		}
-	} else {
-		if len(data) < 22 || data[0] != 21 {
-			pump.BadResponse(Settings, data)
-			return SettingsInfo{}
-		}
-	}
-	info := SettingsInfo{
-		AutoOff:         time.Duration(data[1]) * time.Hour,
-		SelectedPattern: int(data[12]),
-		RFEnabled:       data[13] == 1,
-		TempBasalType:   TempBasalType(data[14]),
-		InsulinAction:   time.Duration(data[18]) * time.Hour,
-	}
-	switch data[10] {
-	case 0:
-		info.InsulinConcentration = 100
-	case 1:
-		info.InsulinConcentration = 50
-	default:
-		pump.BadResponse(Settings, data)
-	}
-	if newer {
 		info.MaxBolus = byteToInsulin(data[7], false)
 		info.MaxBasal = twoByteInsulin(data[8:10], true)
-	} else {
+	case false:
+		if len(data) < 22 || data[0] != 21 {
+			pump.BadResponse(settings, data)
+			return info
+		}
 		info.MaxBolus = byteToInsulin(data[6], false)
 		info.MaxBasal = twoByteInsulin(data[7:9], true)
 	}
+	info.AutoOff = time.Duration(data[1]) * time.Hour
+	info.SelectedPattern = int(data[12])
+	info.RFEnabled = data[13] == 1
+	info.TempBasalType = TempBasalType(data[14])
+	info.InsulinAction = time.Duration(data[18]) * time.Hour
+	info.InsulinConcentration = pump.insulinConcentration(data)
 	return info
+}
+
+func (pump *Pump) insulinConcentration(data []byte) int {
+	switch data[10] {
+	case 0:
+		return 100
+	case 1:
+		return 50
+	default:
+		pump.BadResponse(settings, data)
+		return 0
+	}
 }
