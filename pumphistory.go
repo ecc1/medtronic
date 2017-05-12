@@ -15,29 +15,38 @@ func (pump *Pump) HistoryRecords(since time.Time) []HistoryRecord {
 		return nil
 	}
 	var results []HistoryRecord
-loop:
 	for page := 0; page <= lastPage && pump.Error() == nil; page++ {
 		data := pump.HistoryPage(page)
 		records, err := DecodeHistoryRecords(data, newer)
 		if err != nil {
 			pump.SetError(err)
 		}
-		for _, r := range records {
-			// Don't use DailyTotal timestamps to decide when to stop,
-			// because they appear out of order (at the end of the day).
-			switch r.Type() {
-			case DailyTotal:
-			case DailyTotal522:
-			case DailyTotal523:
-			default:
-				t := time.Time(r.Time)
-				if !t.IsZero() && t.Before(since) {
-					log.Printf("stopping pump history scan at %s", t.Format(UserTimeLayout))
-					break loop
-				}
-			}
-			results = append(results, r)
+		i := findOlder(records, since)
+		results = append(results, records[:i]...)
+		if i < len(records) {
+			break
 		}
 	}
 	return results
+}
+
+// findOlder finds the first record that is older than the given time and returns its index,
+// or len(records) if all the records occur more recently.
+func findOlder(records []HistoryRecord, cutoff time.Time) int {
+	for i, r := range records {
+		// Don't use DailyTotal timestamps to decide when to stop,
+		// because they appear out of order (at the end of the day).
+		switch r.Type() {
+		case DailyTotal:
+		case DailyTotal522:
+		case DailyTotal523:
+		default:
+			t := time.Time(r.Time)
+			if !t.IsZero() && t.Before(cutoff) {
+				log.Printf("stopping pump history scan at %s", t.Format(UserTimeLayout))
+				return i
+			}
+		}
+	}
+	return len(records)
 }

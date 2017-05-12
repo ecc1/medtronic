@@ -5,9 +5,10 @@ import (
 )
 
 const (
-	GlucoseTargets Command = 0x9F
+	glucoseTargets Command = 0x9F
 )
 
+// GlucoseTarget represents an entry in a glucose target schedule.
 type GlucoseTarget struct {
 	Start TimeOfDay
 	Low   Glucose
@@ -15,6 +16,7 @@ type GlucoseTarget struct {
 	Units GlucoseUnitsType
 }
 
+// GlucoseTargetSchedule represents a glucose target schedule.
 type GlucoseTargetSchedule []GlucoseTarget
 
 func decodeGlucoseTargetSchedule(data []byte, units GlucoseUnitsType) GlucoseTargetSchedule {
@@ -34,13 +36,14 @@ func decodeGlucoseTargetSchedule(data []byte, units GlucoseUnitsType) GlucoseTar
 	return sched
 }
 
+// GlucoseTargets returns the pump's glucose target schedule.
 func (pump *Pump) GlucoseTargets() GlucoseTargetSchedule {
-	data := pump.Execute(GlucoseTargets)
+	data := pump.Execute(glucoseTargets)
 	if pump.Error() != nil {
 		return GlucoseTargetSchedule{}
 	}
 	if len(data) < 2 || (data[0]-1)%3 != 0 {
-		pump.BadResponse(GlucoseTargets, data)
+		pump.BadResponse(glucoseTargets, data)
 		return GlucoseTargetSchedule{}
 	}
 	n := data[0] - 1
@@ -48,6 +51,7 @@ func (pump *Pump) GlucoseTargets() GlucoseTargetSchedule {
 	return decodeGlucoseTargetSchedule(data[2:2+n], units)
 }
 
+// GlucoseTargetAt returns the glucose target in effect at the given time.
 func (s GlucoseTargetSchedule) GlucoseTargetAt(t time.Time) GlucoseTarget {
 	d := sinceMidnight(t)
 	last := GlucoseTarget{}

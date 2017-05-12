@@ -8,6 +8,7 @@ const (
 	settings Command = 0xC0
 )
 
+// SettingsInfo represents the pump's settings.
 type SettingsInfo struct {
 	AutoOff              time.Duration
 	InsulinAction        time.Duration
@@ -19,6 +20,7 @@ type SettingsInfo struct {
 	SelectedPattern      int
 }
 
+// Settings returns the pump's settings.
 func (pump *Pump) Settings() SettingsInfo {
 	// Format of response depends on the pump family.
 	newer := pump.Family() >= 23

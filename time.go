@@ -8,15 +8,17 @@ import (
 )
 
 const (
-	JsonTimeLayout = time.RFC3339          // Nightscout-interoperable
-	UserTimeLayout = "2006-01-02 15:04:05" // human-readable
+	// JSONTimeLayout specifies the format for JSON time values.
+	JSONTimeLayout = time.RFC3339
+	// UserTimeLayout specifies a consistent, human-readable format for local time.
+	UserTimeLayout = "2006-01-02 15:04:05"
 )
 
 type (
-	// Allow custom JSON marshaling for Time and Duration values.
-	Time     time.Time
+	// Time allows custom JSON marshaling for time.Time values.
+	Time time.Time
+	// Duration allows custom JSON marshaling for time.Duration values.
 	Duration time.Duration
-
 	// TimeOfDay represents a value between 0 and 24 hours.
 	TimeOfDay time.Duration
 )

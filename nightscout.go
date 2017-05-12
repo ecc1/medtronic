@@ -107,18 +107,22 @@ func nextEvent(r HistoryRecord, r2 *HistoryRecord, t HistoryRecordType) bool {
 	return true
 }
 
+// NightscoutGlucose converts a Glucose value to a nightscout.Glucose value.
 func (r Glucose) NightscoutGlucose() nightscout.Glucose {
 	return nightscout.Glucose(r)
 }
 
+// NightscoutInsulin converts an Insulin value to a nightscout.Insulin value.
 func (r Insulin) NightscoutInsulin() nightscout.Insulin {
 	return nightscout.Insulin(float64(r) / 1000)
 }
 
+// NightscoutVoltage converts a Voltage value to a nightscout.Voltage value.
 func (r Voltage) NightscoutVoltage() nightscout.Voltage {
 	return nightscout.Voltage(float64(r) / 1000)
 }
 
+// NightscoutSchedule converts a BasalRateSchedule to a nightscout.Schedule.
 func (sched BasalRateSchedule) NightscoutSchedule() nightscout.Schedule {
 	n := len(sched)
 	tv := make(nightscout.Schedule, n)
@@ -131,6 +135,7 @@ func (sched BasalRateSchedule) NightscoutSchedule() nightscout.Schedule {
 	return tv
 }
 
+// NightscoutSchedule converts a CarbRatioSchedule to a nightscout.Schedule.
 func (sched CarbRatioSchedule) NightscoutSchedule() nightscout.Schedule {
 	n := len(sched)
 	if n != 0 && sched[0].Units != Grams {
@@ -146,6 +151,7 @@ func (sched CarbRatioSchedule) NightscoutSchedule() nightscout.Schedule {
 	return tv
 }
 
+// NightscoutSchedule converts an InsulinSensitivitySchedule to a nightscout.Schedule.
 func (sched InsulinSensitivitySchedule) NightscoutSchedule() nightscout.Schedule {
 	n := len(sched)
 	tv := make(nightscout.Schedule, n)
@@ -158,6 +164,7 @@ func (sched InsulinSensitivitySchedule) NightscoutSchedule() nightscout.Schedule
 	return tv
 }
 
+// NightscoutSchedule converts a GlucoseTargetSchedule to a nightscout.Schedule.
 func (sched GlucoseTargetSchedule) NightscoutSchedule() (nightscout.Schedule, nightscout.Schedule) {
 	n := len(sched)
 	low := make(nightscout.Schedule, n)

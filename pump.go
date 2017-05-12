@@ -17,6 +17,7 @@ const (
 	defaultRetries   = 3
 )
 
+// Pump represents a Medtronic insulin pump.
 type Pump struct {
 	Radio radio.Interface
 
@@ -30,6 +31,7 @@ type Pump struct {
 	err     error
 }
 
+// Open opens radio communication with a pump.
 func Open() *Pump {
 	pump := &Pump{
 		Radio:   radioInterface(),
@@ -48,6 +50,7 @@ func Open() *Pump {
 	return pump
 }
 
+// Close closes communication with the pump.
 func (pump *Pump) Close() {
 	hw := pump.Radio.Hardware()
 	log.Printf("disconnecting %s radio on %s", hw.Name(), hw.Device())
@@ -73,26 +76,32 @@ func getFrequency() uint32 {
 	panic("unreachable")
 }
 
+// Timeout returns the timeout used for pump communications.
 func (pump *Pump) Timeout() time.Duration {
 	return pump.timeout
 }
 
+// SetTimeout sets the timeout used for pump communications.
 func (pump *Pump) SetTimeout(t time.Duration) {
 	pump.timeout = t
 }
 
+// Retries returns the number of retries used for pump communications.
 func (pump *Pump) Retries() int {
 	return pump.retries
 }
 
+// SetRetries sets the number of retries used for pump communications.
 func (pump *Pump) SetRetries(n int) {
 	pump.retries = n
 }
 
+// RSSI returns the RSSI received with the most recent packet from the pump.
 func (pump *Pump) RSSI() int {
 	return pump.rssi
 }
 
+// Error returns the error state of the pump.
 func (pump *Pump) Error() error {
 	err := pump.Radio.Error()
 	if err != nil {
@@ -101,11 +110,13 @@ func (pump *Pump) Error() error {
 	return pump.err
 }
 
+// SetError sets the error state of the pump.
 func (pump *Pump) SetError(err error) {
 	pump.Radio.SetError(err)
 	pump.err = err
 }
 
+// PrintStats prints pump communication statistics.
 func (pump *Pump) PrintStats() {
 	stats := pump.Radio.Statistics()
 	fmt.Printf("\nTX: %6d    RX: %6d\n", stats.Packets.Sent, stats.Packets.Received)

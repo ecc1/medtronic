@@ -6,24 +6,24 @@ import (
 )
 
 const (
-	Model Command = 0x8D
+	model Command = 0x8D
 )
 
 // Model requests the model number from the pump and returns it,
 // caching the pump family as a side effect.
 // Use Family to avoid contacting the pump more than once.
 func (pump *Pump) Model() string {
-	data := pump.Execute(Model)
+	data := pump.Execute(model)
 	if pump.Error() != nil {
 		return ""
 	}
 	if len(data) < 2 {
-		pump.BadResponse(Model, data)
+		pump.BadResponse(model, data)
 		return ""
 	}
 	n := int(data[1])
 	if len(data) < 2+n {
-		pump.BadResponse(Model, data)
+		pump.BadResponse(model, data)
 		return ""
 	}
 	model := string(data[2 : 2+n])

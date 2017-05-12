@@ -8,13 +8,14 @@ import (
 	"github.com/ecc1/medtronic/packet"
 )
 
+// nolint
 const (
 	rfRemoteEnvVar = "MEDTRONIC_REMOTE_ID"
-	RFRemoteDevice = 0xA6
+	rfRemoteDevice = 0xA6
 
-	RFRemoteS   Command = 0x81
-	RFRemoteACT Command = 0x86
-	RFRemoteB   Command = 0x88
+	rfRemoteS   Command = 0x81
+	rfRemoteACT Command = 0x86
+	rfRemoteB   Command = 0x88
 )
 
 var (
@@ -32,7 +33,7 @@ func initRFRemotePrefix() {
 	if len(id) != 6 {
 		log.Fatalf("%s environment variable must be 6 digits", rfRemoteEnvVar)
 	}
-	rfRemotePrefix = append([]byte{RFRemoteDevice}, MarshalDeviceID(id)...)
+	rfRemotePrefix = append([]byte{rfRemoteDevice}, marshalDeviceID(id)...)
 }
 
 // rfRemotePacket constructs a packet with the specified command code:
@@ -50,6 +51,7 @@ func rfRemotePacket(cmd Command, seq uint8) []byte {
 	return packet.Encode(data)
 }
 
+// RFRemote sends an RF remote command with the given sequence number to the pump.
 func (pump *Pump) RFRemote(cmd Command, seq uint8) {
 	if pump.Error() != nil {
 		return

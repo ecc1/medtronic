@@ -4,10 +4,12 @@ import (
 	"fmt"
 )
 
+// HistoryRecordType represents a history record type.
 type HistoryRecordType byte
 
 //go:generate stringer -type HistoryRecordType
 
+// Events stored in the pump's history pages.
 const (
 	Bolus                   HistoryRecordType = 0x01
 	Prime                   HistoryRecordType = 0x03
@@ -146,6 +148,7 @@ var decode = map[HistoryRecordType]decoder{
 	EnableCaptureEvent:      decodeEnableCaptureEvent,
 }
 
+// nolint
 type (
 	decoder func([]byte, bool) HistoryRecord
 
@@ -188,14 +191,14 @@ type (
 	}
 
 	BolusWizardRecord struct {
-		GlucoseUnits GlucoseUnitsType
 		GlucoseInput Glucose
+		CarbInput    Carbs
+		GlucoseUnits GlucoseUnitsType
+		CarbUnits    CarbUnitsType
 		TargetLow    Glucose
 		TargetHigh   Glucose
 		Sensitivity  Glucose // glucose reduction per insulin unit
-		CarbUnits    CarbUnitsType
-		CarbInput    Carbs
-		CarbRatio    Ratio // 10x grams/unit or 1000x units/exchange
+		CarbRatio    Ratio   // 10x grams/unit or 1000x units/exchange
 		Correction   Insulin
 		Food         Insulin
 		Unabsorbed   Insulin
@@ -226,6 +229,7 @@ type (
 	}
 )
 
+// Type returns the history record type.
 func (r HistoryRecord) Type() HistoryRecordType {
 	return HistoryRecordType(r.Data[0])
 }
@@ -285,7 +289,8 @@ func decodeInsulin(data []byte, newerPump bool) HistoryRecord {
 }
 
 func decodeBolus(data []byte, newerPump bool) HistoryRecord {
-	if newerPump {
+	switch newerPump {
+	case true:
 		return HistoryRecord{
 			Bolus: &BolusRecord{
 				Programmed: twoByteInsulin(data[1:3], true),
@@ -296,7 +301,7 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 			Time: decodeTime(data[8:13]),
 			Data: data[:13],
 		}
-	} else {
+	case false:
 		return HistoryRecord{
 			Bolus: &BolusRecord{
 				Programmed: byteToInsulin(data[1], false),
@@ -307,6 +312,7 @@ func decodeBolus(data []byte, newerPump bool) HistoryRecord {
 			Data: data[:9],
 		}
 	}
+	panic("unreachable")
 }
 
 func decodePrime(data []byte, newerPump bool) HistoryRecord {
@@ -333,19 +339,21 @@ func decodeAlarm(data []byte, newerPump bool) HistoryRecord {
 func decodeDailyTotal(data []byte, newerPump bool) HistoryRecord {
 	t := decodeDate(data[5:7])
 	total := twoByteInsulin(data[3:5], true)
-	if newerPump {
+	switch newerPump {
+	case true:
 		return HistoryRecord{
 			Time:    t,
 			Insulin: &total,
 			Data:    data[:10],
 		}
-	} else {
+	case false:
 		return HistoryRecord{
 			Time:    t,
 			Insulin: &total,
 			Data:    data[:7],
 		}
 	}
+	panic("unreachable")
 }
 
 // Note that this is a different format than the response to BasalRates.
@@ -519,9 +527,10 @@ func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 	r.Ratios = decodeCarbRatioSchedule(data[2:2+numEntries*step], carbUnits, newerPump)
 	data = data[2+numEntries*step:]
 	r.Sensitivities = decodeInsulinSensitivitySchedule(data[:numEntries*2], bgUnits)
-	if newerPump {
+	switch newerPump {
+	case true:
 		data = data[numEntries*2+2:]
-	} else {
+	case false:
 		data = data[numEntries*2:]
 	}
 	r.Targets = decodeGlucoseTargetSchedule(data[:numEntries*3], bgUnits)
@@ -530,9 +539,10 @@ func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 
 func decodeBolusWizardSetup(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)
-	if newerPump {
+	switch newerPump {
+	case true:
 		r.Data = data[:144]
-	} else {
+	case false:
 		r.Data = data[:124]
 	}
 	n := len(r.Data) - 1
@@ -554,15 +564,16 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 	body := data[7:]
 	bgU := GlucoseUnitsType((body[1] >> 6) & 0x3)
 	carbU := CarbUnitsType((body[1] >> 4) & 0x3)
-	if newerPump {
+	switch newerPump {
+	case true:
 		r.BolusWizard = &BolusWizardRecord{
-			GlucoseUnits: bgU,
 			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, bgU),
+			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
+			GlucoseUnits: bgU,
+			CarbUnits:    carbU,
 			TargetLow:    byteToGlucose(body[5], bgU),
 			TargetHigh:   byteToGlucose(body[14], bgU),
 			Sensitivity:  byteToGlucose(body[4], bgU),
-			CarbUnits:    carbU,
-			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
 			CarbRatio:    intToRatio(int(body[2]&0xF)<<8|int(body[3]), carbU, true),
 			Correction:   intToInsulin(int(body[9]&0x38)<<5|int(body[6]), true),
 			Food:         twoByteInsulin(body[7:9], true),
@@ -570,15 +581,15 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 			Bolus:        twoByteInsulin(body[12:14], true),
 		}
 		r.Data = data[:22]
-	} else {
+	case false:
 		r.BolusWizard = &BolusWizardRecord{
-			GlucoseUnits: bgU,
 			GlucoseInput: intToGlucose(bg|int(body[1]&0xF)<<8, bgU),
+			CarbInput:    Carbs(body[0]),
+			GlucoseUnits: bgU,
+			CarbUnits:    carbU,
 			TargetLow:    byteToGlucose(body[4], bgU),
 			TargetHigh:   byteToGlucose(body[12], bgU),
 			Sensitivity:  byteToGlucose(body[3], bgU),
-			CarbUnits:    carbU,
-			CarbInput:    Carbs(body[0]),
 			CarbRatio:    intToRatio(int(body[2]), carbU, false),
 			Correction:   intToInsulin(int(body[7])+int(body[5]&0xF), false),
 			Food:         byteToInsulin(body[6], false),
@@ -677,6 +688,7 @@ var decodeDeleteOtherDevice = decodeBaseN(12)
 
 var decodeEnableCaptureEvent = decodeEnable
 
+// DecodeHistoryRecord decodes a history record based on its type.
 func DecodeHistoryRecord(data []byte, newerPump bool) (HistoryRecord, error) {
 	if len(data) == 0 {
 		return HistoryRecord{}, fmt.Errorf("empty history record")
@@ -698,8 +710,9 @@ func unknownRecord(data []byte) error {
 	}
 }
 
-// Decode records in a page of data and return them in reverse chronological order
-// (most recent first) to match the order of the history pages themselves.
+// DecodeHistoryRecords decodes the records in a page of data
+// and returns them in reverse chronological order (most recent first),
+// to match the order of the history pages themselves.
 func DecodeHistoryRecords(data []byte, newerPump bool) ([]HistoryRecord, error) {
 	var results []HistoryRecord
 	r := HistoryRecord{}
@@ -726,6 +739,7 @@ func allZero(data []byte) bool {
 	return true
 }
 
+// ReverseHistoryRecords reverses a slice of history records.
 func ReverseHistoryRecords(a []HistoryRecord) {
 	for i, j := 0, len(a)-1; i < len(a)/2; i, j = i+1, j-1 {
 		a[i], a[j] = a[j], a[i]

@@ -5,15 +5,17 @@ import (
 )
 
 const (
-	InsulinSensitivities Command = 0x8B
+	insulinSensitivities Command = 0x8B
 )
 
+// InsulinSensitivity represents an entry in an insulin sensitivity schedule.
 type InsulinSensitivity struct {
 	Start       TimeOfDay
 	Sensitivity Glucose // glucose reduction per insulin unit
 	Units       GlucoseUnitsType
 }
 
+// InsulinSensitivitySchedule represents an insulin sensitivity schedule.
 type InsulinSensitivitySchedule []InsulinSensitivity
 
 func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) InsulinSensitivitySchedule {
@@ -34,13 +36,14 @@ func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) Insul
 	return sched
 }
 
+// InsulinSensitivities returns the pump's insulin sensitivity schedule.
 func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
-	data := pump.Execute(InsulinSensitivities)
+	data := pump.Execute(insulinSensitivities)
 	if pump.Error() != nil {
 		return InsulinSensitivitySchedule{}
 	}
 	if len(data) < 2 || (data[0]-1)%2 != 0 {
-		pump.BadResponse(InsulinSensitivities, data)
+		pump.BadResponse(insulinSensitivities, data)
 		return InsulinSensitivitySchedule{}
 	}
 	n := int(data[0]) - 1
@@ -48,6 +51,7 @@ func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
 	return decodeInsulinSensitivitySchedule(data[2:2+n], units)
 }
 
+// InsulinSensitivityAt returns the insulin sensitivity in effect at the given time.
 func (s InsulinSensitivitySchedule) InsulinSensitivityAt(t time.Time) InsulinSensitivity {
 	d := sinceMidnight(t)
 	last := InsulinSensitivity{}

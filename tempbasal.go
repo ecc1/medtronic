@@ -6,20 +6,24 @@ import (
 )
 
 const (
-	TempBasal            Command = 0x98
-	SetAbsoluteTempBasal Command = 0x4C
-	SetPercentTempBasal  Command = 0x69
+	tempBasal            Command = 0x98
+	setAbsoluteTempBasal Command = 0x4C
+	setPercentTempBasal  Command = 0x69
 )
 
+// TempBasalType represents the temp basal type.
 type TempBasalType byte
 
 //go:generate stringer -type TempBasalType
 
 const (
+	// Absolute represents the pump's use of absolute rates for temporary basals.
 	Absolute TempBasalType = 0
-	Percent  TempBasalType = 1
+	// Percent represents the pump's use of percentage rates for temporary basals.
+	Percent TempBasalType = 1
 )
 
+// TempBasalInfo represents a temporary basal setting.
 type TempBasalInfo struct {
 	Duration time.Duration
 	Type     TempBasalType
@@ -29,7 +33,7 @@ type TempBasalInfo struct {
 
 func decodeTempBasal(data []byte) (TempBasalInfo, error) {
 	if len(data) < 7 || data[0] != 6 {
-		return TempBasalInfo{}, BadResponseError{Command: TempBasal, Data: data}
+		return TempBasalInfo{}, BadResponseError{Command: tempBasal, Data: data}
 	}
 	d := time.Duration(twoByteInt(data[5:7])) * time.Minute
 	tempType := TempBasalType(data[1])
@@ -42,13 +46,15 @@ func decodeTempBasal(data []byte) (TempBasalInfo, error) {
 		percent := data[2]
 		info.Percent = &percent
 	default:
-		return info, BadResponseError{Command: TempBasal, Data: data}
+		return info, BadResponseError{Command: tempBasal, Data: data}
 	}
 	return info, nil
 }
 
+// TempBasal returns the pump's current temporary basal setting.
+// If none is in effect, it will have a Duration of 0.
 func (pump *Pump) TempBasal() TempBasalInfo {
-	data := pump.Execute(TempBasal)
+	data := pump.Execute(tempBasal)
 	if pump.Error() != nil {
 		return TempBasalInfo{}
 	}
@@ -57,21 +63,23 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 	return info
 }
 
+// SetAbsoluteTempBasal sets a temporary basal with the given absolute rate and duration.
 func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 	d := pump.halfHours(duration)
 	if rate%25 != 0 {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", rate))
 	}
 	v := int(rate / 25)
-	pump.Execute(SetAbsoluteTempBasal, byte(v>>8), byte(v&0xFF), d)
+	pump.Execute(setAbsoluteTempBasal, byte(v>>8), byte(v&0xFF), d)
 }
 
+// SetPercentTempBasal sets a temporary basal with the given percent rate and duration.
 func (pump *Pump) SetPercentTempBasal(duration time.Duration, percent int) {
 	d := pump.halfHours(duration)
 	if percent < 0 || 100 < percent {
 		pump.SetError(fmt.Errorf("percent temporary basal rate (%d) is not between 0 and 100", percent))
 	}
-	pump.Execute(SetPercentTempBasal, byte(percent), d)
+	pump.Execute(setPercentTempBasal, byte(percent), d)
 }
 
 func (pump *Pump) halfHours(duration time.Duration) uint8 {

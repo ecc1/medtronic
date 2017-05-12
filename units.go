@@ -5,32 +5,38 @@ import (
 	"log"
 )
 
-// Carbs values are represented as either grams or 10x exchanges.
+// Carbs represents a carb value as either grams or 10x exchanges.
 type Carbs int
 
 const (
-	CarbUnits    Command = 0x88
-	GlucoseUnits Command = 0x89
+	carbUnits    Command = 0x88
+	glucoseUnits Command = 0x89
 )
 
+// CarbUnitsType represents the pump's carb unit type (grams or exchanges).
 type CarbUnitsType byte
 
 //go:generate stringer -type CarbUnitsType
 
 const (
-	Grams     CarbUnitsType = 1
+	// Grams represents the pump's use of grams for carb units.
+	Grams CarbUnitsType = 1
+	// Exchanges represents the pump's use of exchanges for carb units.
 	Exchanges CarbUnitsType = 2
 )
 
-// Glucose values are represented as either mg/dL or μmol/L,
+// Glucose represents a glucose value as either mg/dL or μmol/L,
 // so all conversions must include a GlucoseUnitsType parameter.
 type Glucose int
 
+// GlucoseUnitsType represents the pump's glucose unit type (mg/dL or mmol/L).
 type GlucoseUnitsType byte
 
 const (
+	// MgPerDeciLiter represents the pump's use of mg/dL for glucose units.
 	MgPerDeciLiter GlucoseUnitsType = 1
-	MMolPerLiter   GlucoseUnitsType = 2
+	// MMolPerLiter represents the pump's use of mmol/L for glucose units.
+	MMolPerLiter GlucoseUnitsType = 2
 )
 
 func (u GlucoseUnitsType) String() string {
@@ -58,27 +64,33 @@ func (pump *Pump) whichUnits(cmd Command) byte {
 }
 
 func intToGlucose(n int, t GlucoseUnitsType) Glucose {
-	if t == MMolPerLiter {
+	switch t {
+	case MgPerDeciLiter:
+		return Glucose(n)
+	case MMolPerLiter:
 		// Convert 10x mmol/L to μmol/L
 		return Glucose(n) * 100
-	} else {
-		return Glucose(n)
+	default:
+		log.Panicf("unknown glucose unit %d", t)
 	}
+	panic("unreachable")
 }
 
 func byteToGlucose(n byte, t GlucoseUnitsType) Glucose {
 	return intToGlucose(int(n), t)
 }
 
+// CarbUnits returns the pump's carb units.
 func (pump *Pump) CarbUnits() CarbUnitsType {
-	return CarbUnitsType(pump.whichUnits(CarbUnits))
+	return CarbUnitsType(pump.whichUnits(carbUnits))
 }
 
+// GlucoseUnits returns the pump's glucose units.
 func (pump *Pump) GlucoseUnits() GlucoseUnitsType {
-	return GlucoseUnitsType(pump.whichUnits(GlucoseUnits))
+	return GlucoseUnitsType(pump.whichUnits(glucoseUnits))
 }
 
-// Quantities and rates of insulin delivery are represented in milliunits.
+// Insulin represents quantities and rates of insulin delivery, in milliunits.
 type Insulin int
 
 func (r Insulin) String() string {
@@ -86,11 +98,13 @@ func (r Insulin) String() string {
 }
 
 func milliUnitsPerStroke(newerPump bool) Insulin {
-	if newerPump {
+	switch newerPump {
+	case true:
 		return 25
-	} else {
+	case false:
 		return 100
 	}
+	panic("unreachable")
 }
 
 func intToInsulin(strokes int, newerPump bool) Insulin {

@@ -5,16 +5,17 @@ import (
 )
 
 const (
-	Battery Command = 0x72
+	battery Command = 0x72
 )
 
-// Battery voltage is represented in milliVolts.
+// Voltage represents the battery voltage in milliVolts.
 type Voltage int
 
 func (r Voltage) String() string {
 	return fmt.Sprintf("%g", float64(r)/1000)
 }
 
+// BatteryInfo represents the pump's battery voltage and low-battery state.
 type BatteryInfo struct {
 	Voltage    Voltage
 	LowBattery bool
@@ -27,13 +28,14 @@ func decodeBatteryInfo(data []byte) BatteryInfo {
 	}
 }
 
+// Battery returns the pump's battery information.
 func (pump *Pump) Battery() BatteryInfo {
-	data := pump.Execute(Battery)
+	data := pump.Execute(battery)
 	if pump.Error() != nil {
 		return BatteryInfo{}
 	}
 	if len(data) < 4 || data[0] != 3 {
-		pump.BadResponse(Battery, data)
+		pump.BadResponse(battery, data)
 		return BatteryInfo{}
 	}
 	return decodeBatteryInfo(data)

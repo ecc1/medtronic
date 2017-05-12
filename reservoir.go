@@ -1,28 +1,30 @@
 package medtronic
 
 const (
-	Reservoir Command = 0x73
+	reservoir Command = 0x73
 )
 
 func decodeReservoir(data []byte, newerPump bool) (Insulin, error) {
-	if newerPump {
+	switch newerPump {
+	case true:
 		if len(data) < 5 || data[0] != 4 {
-			return 0, BadResponseError{Command: Reservoir, Data: data}
+			return 0, BadResponseError{Command: reservoir, Data: data}
 		}
 		return twoByteInsulin(data[3:5], true), nil
-	} else {
+	case false:
 		if len(data) < 3 || data[0] != 2 {
-			return 0, BadResponseError{Command: Reservoir, Data: data}
+			return 0, BadResponseError{Command: reservoir, Data: data}
 		}
 		return twoByteInsulin(data[1:3], false), nil
 	}
+	panic("unreachable")
 }
 
 // Reservoir returns the amount of insulin remaining.
 func (pump *Pump) Reservoir() Insulin {
 	// Format of response depends on the pump family.
 	newer := pump.Family() >= 23
-	data := pump.Execute(Reservoir)
+	data := pump.Execute(reservoir)
 	if pump.Error() != nil {
 		return 0
 	}

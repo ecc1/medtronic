@@ -1,22 +1,24 @@
 package medtronic
 
 const (
-	Status Command = 0xCE
+	status Command = 0xCE
 )
 
+// StatusInfo represents the pump's status.
 type StatusInfo struct {
 	Normal    bool
 	Bolusing  bool
 	Suspended bool
 }
 
+// Status returns the pump's status.
 func (pump *Pump) Status() StatusInfo {
-	data := pump.Execute(Status)
+	data := pump.Execute(status)
 	if pump.Error() != nil {
 		return StatusInfo{}
 	}
 	if len(data) < 4 || data[0] != 3 {
-		pump.BadResponse(Status, data)
+		pump.BadResponse(status, data)
 		return StatusInfo{}
 	}
 	// Observed values for data[1]:

@@ -100,10 +100,10 @@ func readHistoryRecords(file string) ([]HistoryRecord, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
 	d := json.NewDecoder(f)
 	var records []HistoryRecord
 	err = d.Decode(&records)
+	f.Close() // nolint
 	if err != nil {
 		err = fmt.Errorf("%s: %v", file, err)
 	}
@@ -135,6 +135,7 @@ func (r HistoryRecord) String() string {
 	return string(b)
 }
 
+// nolint: errcheck
 func compareJSON(data interface{}, jsonFile string) (bool, string) {
 	// Write data in JSON format to temporary file.
 	tmpfile, err := ioutil.TempFile("", "json")
@@ -151,17 +152,20 @@ func compareJSON(data interface{}, jsonFile string) (bool, string) {
 	}
 	// Write JSON in canonical form for comparison.
 	canon1 := canonicalJSON(jsonFile)
-	defer os.Remove(canon1)
 	canon2 := canonicalJSON(tmpfile.Name())
-	defer os.Remove(canon2)
 	// Find differences.
 	cmd := exec.Command("diff", "-u", "--label", jsonFile, "--label", "decoded", canon1, canon2)
 	diffs, err := cmd.Output()
+	os.Remove(canon1)
+	os.Remove(canon2)
 	return err == nil, string(diffs)
 }
 
-// Create a temporary file equivalent JSON in canonical form
-// and return the temporary file name.
+// canonicalJSON reads the given file and creates a temporary file
+// containing equivalent JSON in canonical form
+// (using the "jq" command, which must be on the user's PATH).
+// It returns the temporary file name; it is the caller's responsibility
+// to remove it when done.
 func canonicalJSON(file string) string {
 	canon, err := exec.Command("jq", "-S", ".", file).Output()
 	if err != nil {
@@ -171,8 +175,8 @@ func canonicalJSON(file string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tmpfile.Write(canon)
-	tmpfile.Close()
+	tmpfile.Write(canon) // nolint
+	tmpfile.Close()      // nolint
 	return tmpfile.Name()
 }
 
@@ -213,10 +217,10 @@ func readTreatments(file string) ([]nightscout.Treatment, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
 	d := json.NewDecoder(f)
 	var records []nightscout.Treatment
 	err = d.Decode(&records)
+	f.Close() // nolint
 	if err != nil {
 		err = fmt.Errorf("%s: %v", file, err)
 	}

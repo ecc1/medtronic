@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// MarshalJSON marshals HistoryRecord values.
 func (r HistoryRecord) MarshalJSON() ([]byte, error) {
 	type Original HistoryRecord
 	rep := struct {
@@ -18,11 +19,12 @@ func (r HistoryRecord) MarshalJSON() ([]byte, error) {
 	}
 	t := time.Time(r.Time)
 	if !t.IsZero() {
-		rep.Time = t.Format(JsonTimeLayout)
+		rep.Time = t.Format(JSONTimeLayout)
 	}
 	return json.Marshal(rep)
 }
 
+// UnmarshalJSON unmarshals HistoryRecord values.
 func (r *HistoryRecord) UnmarshalJSON(data []byte) error {
 	type Original HistoryRecord
 	rep := struct {
@@ -38,12 +40,13 @@ func (r *HistoryRecord) UnmarshalJSON(data []byte) error {
 	}
 	if rep.Time != "" {
 		var t time.Time
-		t, err = time.Parse(JsonTimeLayout, rep.Time)
+		t, err = time.Parse(JSONTimeLayout, rep.Time)
 		r.Time = Time(t)
 	}
 	return err
 }
 
+// MarshalJSON marshals BolusWizardRecord values.
 func (r BolusWizardRecord) MarshalJSON() ([]byte, error) {
 	type Original BolusWizardRecord
 	rep := struct {
@@ -63,6 +66,7 @@ func (r BolusWizardRecord) MarshalJSON() ([]byte, error) {
 	return json.Marshal(rep)
 }
 
+// UnmarshalJSON unmarshals BolusWizardRecord values.
 func (r *BolusWizardRecord) UnmarshalJSON(data []byte) error {
 	type Original BolusWizardRecord
 	rep := struct {
@@ -86,6 +90,7 @@ func (r *BolusWizardRecord) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals CarbRatio values.
 func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	type Original CarbRatio
 	rep := struct {
@@ -105,6 +110,7 @@ func (r CarbRatio) MarshalJSON() ([]byte, error) {
 	return json.Marshal(rep)
 }
 
+// UnmarshalJSON unmarshals CarbRatio values.
 func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	type Original CarbRatio
 	rep := struct {
@@ -128,14 +134,17 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON panics because Ratios must be marshaled together with carb units.
 func (r Ratio) MarshalJSON() ([]byte, error) {
 	panic("cannot marshal carb ratio without units")
 }
 
+// UnmarshalJSON panics because Ratios must be unmarshaled together with carb units.
 func (r *Ratio) UnmarshalJSON([]byte) error {
 	panic("cannot unmarshal carb ratio without units")
 }
 
+// MarshalJSON marshals SettingsInfo values.
 func (r SettingsInfo) MarshalJSON() ([]byte, error) {
 	type Original SettingsInfo
 	rep := struct {
@@ -150,6 +159,7 @@ func (r SettingsInfo) MarshalJSON() ([]byte, error) {
 	return json.Marshal(rep)
 }
 
+// UnmarshalJSON unmarshals SettingsInfo values.
 func (r *SettingsInfo) UnmarshalJSON(data []byte) error {
 	type Original SettingsInfo
 	rep := struct {
@@ -171,6 +181,7 @@ func (r *SettingsInfo) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals TempBasalInfo values.
 func (r TempBasalInfo) MarshalJSON() ([]byte, error) {
 	type Original TempBasalInfo
 	rep := struct {
@@ -183,6 +194,7 @@ func (r TempBasalInfo) MarshalJSON() ([]byte, error) {
 	return json.Marshal(rep)
 }
 
+// UnmarshalJSON unmarshals TempBasalInfo values.
 func (r *TempBasalInfo) UnmarshalJSON(data []byte) error {
 	type Original TempBasalInfo
 	rep := struct {
@@ -199,10 +211,12 @@ func (r *TempBasalInfo) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals CarbUnitsType values.
 func (r CarbUnitsType) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf(`"%v"`, r)), nil
 }
 
+// UnmarshalJSON unmarshals CarbUnitsType values.
 func (r *CarbUnitsType) UnmarshalJSON(data []byte) error {
 	err := error(nil)
 	switch string(data) {
@@ -216,10 +230,12 @@ func (r *CarbUnitsType) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals GlucoseUnitsType values.
 func (r GlucoseUnitsType) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf(`"%v"`, r)), nil
 }
 
+// UnmarshalJSON unmarshals GlucoseUnitsType values.
 func (r *GlucoseUnitsType) UnmarshalJSON(data []byte) error {
 	err := error(nil)
 	switch string(data) {
@@ -233,10 +249,12 @@ func (r *GlucoseUnitsType) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals TempBasalType values.
 func (r TempBasalType) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf(`"%v"`, r)), nil
 }
 
+// UnmarshalJSON unmarshals TempBasalType values.
 func (r *TempBasalType) UnmarshalJSON(data []byte) error {
 	err := error(nil)
 	switch string(data) {
@@ -250,10 +268,12 @@ func (r *TempBasalType) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals Insulin values.
 func (r Insulin) MarshalJSON() ([]byte, error) {
 	return json.Marshal(float64(r) / 1000)
 }
 
+// UnmarshalJSON unmarshals Insulin values.
 func (r *Insulin) UnmarshalJSON(data []byte) error {
 	v := 0.0
 	err := json.Unmarshal(data, &v)
@@ -264,10 +284,12 @@ func (r *Insulin) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON marshals Voltage values.
 func (r Voltage) MarshalJSON() ([]byte, error) {
 	return json.Marshal(float64(r) / 1000)
 }
 
+// UnmarshalJSON unmarshals Voltage values.
 func (r *Voltage) UnmarshalJSON(data []byte) error {
 	v := 0.0
 	err := json.Unmarshal(data, &v)
@@ -278,18 +300,22 @@ func (r *Voltage) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// MarshalJSON marshals Time values.
 func (r Time) MarshalJSON() ([]byte, error) {
 	return nil, fmt.Errorf("marshaling Time value")
 }
 
+// UnmarshalJSON unmarshals Time values.
 func (r *Time) UnmarshalJSON(data []byte) error {
 	return fmt.Errorf("unmarshaling Time value")
 }
 
+// MarshalJSON marshals Duration values.
 func (r Duration) MarshalJSON() ([]byte, error) {
 	return json.Marshal(time.Duration(r).String())
 }
 
+// UnmarshalJSON unmarshals Duration values.
 func (r *Duration) UnmarshalJSON(data []byte) error {
 	v := ""
 	err := json.Unmarshal(data, &v)
@@ -301,10 +327,12 @@ func (r *Duration) UnmarshalJSON(data []byte) error {
 	return err
 }
 
+// MarshalJSON marshals TimeOfDay values.
 func (r TimeOfDay) MarshalJSON() ([]byte, error) {
 	return json.Marshal(r.String())
 }
 
+// UnmarshalJSON unmarshals TimeOfDay values.
 func (r *TimeOfDay) UnmarshalJSON(data []byte) error {
 	v := ""
 	err := json.Unmarshal(data, &v)

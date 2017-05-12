@@ -1,13 +1,14 @@
 package medtronic
 
 const (
-	Suspend Command = 0x4D
+	suspend Command = 0x4D
 )
 
-func (pump *Pump) Suspend(suspend bool) {
-	if suspend {
-		pump.Execute(Suspend, 1)
+// Suspend suspends or resumes the pump.
+func (pump *Pump) Suspend(yes bool) {
+	if yes {
+		pump.Execute(suspend, 1)
 	} else {
-		pump.Execute(Suspend, 0)
+		pump.Execute(suspend, 0)
 	}
 }

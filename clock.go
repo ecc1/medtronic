@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	Clock    Command = 0x70
-	SetClock Command = 0x40
+	clock    Command = 0x70
+	setClock Command = 0x40
 )
 
 func decodeClock(data []byte) time.Time {
@@ -19,20 +19,22 @@ func decodeClock(data []byte) time.Time {
 	return time.Date(year, month, day, hour, min, sec, 0, time.Local)
 }
 
+// Clock returns the time according to the pump's clock.
 func (pump *Pump) Clock() time.Time {
-	data := pump.Execute(Clock)
+	data := pump.Execute(clock)
 	if pump.Error() != nil {
 		return time.Time{}
 	}
 	if len(data) < 8 && data[0] != 7 {
-		pump.BadResponse(Clock, data)
+		pump.BadResponse(clock, data)
 		return time.Time{}
 	}
 	return decodeClock(data)
 }
 
+// SetClock sets the pump's clock to the given time.
 func (pump *Pump) SetClock(t time.Time) {
-	pump.Execute(SetClock,
+	pump.Execute(setClock,
 		byte(t.Hour()),
 		byte(t.Minute()),
 		byte(t.Second()),
