@@ -7,75 +7,101 @@ import (
 	"github.com/ecc1/nightscout"
 )
 
+var (
+	eventType = map[HistoryRecordType]string{
+		Bolus:         "Meal Bolus",
+		BGCapture:     "BG Check",
+		SuspendPump:   "Temp Basal",
+		ResumePump:    "Temp Basal",
+		Rewind:        "Site Change",
+		TempBasalRate: "Temp Basal",
+	}
+)
+
+// Treatments converts certain pump history records
+// into records that can be uploaded as Nightscout treatments.
+// History records must be in chronological order.
 func Treatments(records []HistoryRecord) []nightscout.Treatment {
 	var treatments []nightscout.Treatment
 	user := nightscout.Username()
-	insulin0 := Insulin(0).NightscoutInsulin()
-	duration0 := 0
 	for i, r := range records {
-		info := nightscout.Treatment{
-			CreatedAt: time.Time(r.Time),
-			EnteredBy: user,
-		}
 		var r2 *HistoryRecord
 		if i+1 < len(records) {
 			r2 = &records[i+1]
 		}
-		switch r.Type() {
-		case BGCapture:
-			info.EventType = "BG Check"
-			g := r.Glucose.NightscoutGlucose()
-			info.Glucose = &g
-			info.Units = "mg/dl"
-		case TempBasalRate:
-			if !nextEvent(r, r2, TempBasalDuration) {
-				continue
-			}
-			info.EventType = "Temp Basal"
-			if *r2.Duration == 0 {
-				info.Absolute = &insulin0
-				info.Duration = &duration0
-			} else {
-				ins := r.Insulin.NightscoutInsulin()
-				info.Absolute = &ins
-				min := int(*r2.Duration / Duration(time.Minute))
-				info.Duration = &min
-			}
-		case Bolus:
-			info.EventType = "Meal Bolus"
-			ins := r.Bolus.Amount.NightscoutInsulin()
-			info.Insulin = &ins
-			min := int(r.Bolus.Duration / Duration(time.Minute))
-			info.Duration = &min
-		case Rewind:
-			if !nextEvent(r, r2, Prime) {
-				continue
-			}
-			info.EventType = "Site Change"
-		case ResumePump:
-			info.EventType = "Temp Basal"
-			info.Absolute = &insulin0
-			info.Duration = &duration0
-		case SuspendPump:
-			info.EventType = "Temp Basal"
-			info.Absolute = &insulin0
-			min := 24 * 60
-			info.Duration = &min
-		default:
-			continue
+		info := nightscout.Treatment{
+			CreatedAt: time.Time(r.Time),
+			EnteredBy: user,
 		}
-		treatments = append(treatments, info)
+		if getRecordInfo(r, r2, &info) {
+			treatments = append(treatments, info)
+		}
 	}
 	return treatments
 }
 
+func getRecordInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatment) bool {
+	t := r.Type()
+	info.EventType = eventType[t]
+	switch t {
+	case BGCapture:
+		g := r.Glucose.NightscoutGlucose()
+		info.Glucose = &g
+		info.Units = "mg/dl"
+	case TempBasalRate:
+		return tempBasalInfo(r, r2, info)
+	case Bolus:
+		ins := r.Bolus.Amount.NightscoutInsulin()
+		info.Insulin = &ins
+		min := int(r.Bolus.Duration / Duration(time.Minute))
+		info.Duration = &min
+	case Rewind:
+		if !nextEvent(r, r2, Prime) {
+			return false
+		}
+	case ResumePump:
+		insulin0 := Insulin(0).NightscoutInsulin()
+		info.Absolute = &insulin0
+		duration0 := 0
+		info.Duration = &duration0
+	case SuspendPump:
+		insulin0 := Insulin(0).NightscoutInsulin()
+		info.Absolute = &insulin0
+		min := 24 * 60
+		info.Duration = &min
+	default:
+		return false
+	}
+	return true
+}
+
+func tempBasalInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatment) bool {
+	if !nextEvent(r, r2, TempBasalDuration) {
+		return false
+	}
+	if *r2.Duration == 0 {
+		insulin0 := Insulin(0).NightscoutInsulin()
+		info.Absolute = &insulin0
+		duration0 := 0
+		info.Duration = &duration0
+	} else {
+		ins := r.Insulin.NightscoutInsulin()
+		info.Absolute = &ins
+		min := int(*r2.Duration / Duration(time.Minute))
+		info.Duration = &min
+	}
+	return true
+}
+
 func nextEvent(r HistoryRecord, r2 *HistoryRecord, t HistoryRecordType) bool {
 	if r2 == nil {
-		log.Printf("expected %v to be followed by %v at %v", r.Type(), t, r.Time)
+		ts := time.Time(r.Time).Format(UserTimeLayout)
+		log.Printf("expected %v to be followed by %v at %s", r.Type(), t, ts)
 		return false
 	}
 	if r2.Type() != t {
-		log.Printf("expected %v to be followed by %v at %v but found %v", r.Type(), t, r.Time, r2.Type())
+		ts := time.Time(r.Time).Format(UserTimeLayout)
+		log.Printf("expected %v to be followed by %v at %s but found %v", r.Type(), t, ts, r2.Type())
 		return false
 	}
 	return true
