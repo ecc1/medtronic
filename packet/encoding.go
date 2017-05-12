@@ -4,6 +4,7 @@ import (
 	"errors"
 )
 
+// Encode4b6b returns the 4b/6b encoding of the given data.
 func Encode4b6b(src []byte) []byte {
 	// 2 input bytes produce 3 output bytes.
 	// Odd final input byte, if any, produces 2 output bytes.
@@ -14,8 +15,7 @@ func Encode4b6b(src []byte) []byte {
 		a := encode4b[hi(4, x)]
 		b := encode4b[lo(4, x)]
 		dst[j] = a<<2 | hi(4, b)
-		c := byte(0)
-		d := byte(0)
+		var c, d byte
 		if i+1 < n {
 			y := src[i+1]
 			c = encode4b[hi(4, y)]
@@ -27,27 +27,29 @@ func Encode4b6b(src []byte) []byte {
 	return dst
 }
 
-var DecodingFailure = errors.New("4b/6b decoding failure")
+// ErrDecoding indicates a 6b/4b decoding failure.
+var ErrDecoding = errors.New("6b/4b decoding failure")
 
+// Decode6b4b returns the 6b/4b decoding of the given data.
 func Decode6b4b(src []byte) ([]byte, error) {
 	n := len(src)
 	// Check for valid packet length.
 	if n%3 == 1 {
-		return nil, DecodingFailure
+		return nil, ErrDecoding
 	}
 	// 3 input bytes produce 2 output bytes.
 	// Final 2 input bytes, if any, produce 1 output byte.
 	dst := make([]byte, 2*(n/3)+(n%3)/2)
 	for i, j := 0, 0; i < n; i, j = i+3, j+2 {
 		if i+1 >= n {
-			return dst, DecodingFailure // shouldn't happen
+			return dst, ErrDecoding // shouldn't happen
 		}
 		x := src[i]
 		y := src[i+1]
 		a := decode6b[hi(6, x)]
 		b := decode6b[lo(2, x)<<4|hi(4, y)]
 		if a == 0xFF || b == 0xFF {
-			return dst, DecodingFailure
+			return dst, ErrDecoding
 		}
 		dst[j] = a<<4 | b
 		if i+2 < n {
@@ -55,7 +57,7 @@ func Decode6b4b(src []byte) ([]byte, error) {
 			c := decode6b[lo(4, y)<<2|hi(2, z)]
 			d := decode6b[lo(6, z)]
 			if c == 0xFF || d == 0xFF {
-				return dst, DecodingFailure
+				return dst, ErrDecoding
 			}
 			dst[j+1] = c<<4 | d
 		}

@@ -2,7 +2,7 @@ package packet
 
 //go:generate crcgen -size 8 -poly 0x9B
 
-// Compute CRC-8 using WCDMA polynomial.
+// CRC8 computes the 8-bit CRC of the given data using the WCDMA polynomial.
 func CRC8(msg []byte) byte {
 	res := byte(0)
 	for _, b := range msg {

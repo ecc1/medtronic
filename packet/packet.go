@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// DecodePacket performs 4b/6b decoding and CRC verification.
+// Decode performs 6b/4b decoding and CRC verification.
 // It returns the decoded data, excluding the CRC byte.
 func Decode(p []byte) ([]byte, error) {
 	data, err := Decode6b4b(p)
@@ -24,7 +24,7 @@ func Decode(p []byte) ([]byte, error) {
 	return data, err
 }
 
-// EncodePacket calculates and stores the final CRC byte
+// Encode calculates and stores the final CRC byte
 // and returns the 4b/6b-encoded result.
 // The caller must provide space for the CRC byte.
 func Encode(data []byte) []byte {
