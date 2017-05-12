@@ -1,0 +1,613 @@
+[
+  {
+    "Data": "M2JKYxBLEQA=",
+    "Insulin": 2.45,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T16:35:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKYxBLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T16:35:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M2tKaBBLEQA=",
+    "Insulin": 2.675,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T16:40:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKaBBLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T16:40:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBKbRBLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T16:45:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKbRBLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T16:45:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "Mw5KdxBLEQA=",
+    "Insulin": 0.35,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T16:55:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKdxBLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T16:55:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xSQBFLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:00:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSQBFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:00:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MzBZRRFLEQA=",
+    "Insulin": 1.2,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:05:25-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFZRRFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:05:25-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xSShFLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:10:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSShFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:10:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBRXhFLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:30:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRXhFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:30:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xKaBFLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:40:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKaBFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:40:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M3JKchFLEQA=",
+    "Insulin": 2.85,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:50:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKchFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:50:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xKdxFLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T17:55:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKdxFLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T17:55:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4tKShJLEQA=",
+    "Insulin": 3.475,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:10:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKShJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:10:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xKTxJLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:15:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKTxJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:15:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4JKVBJLEQA=",
+    "Insulin": 3.25,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:20:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKVBJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:20:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M3hKWRJLEQA=",
+    "Insulin": 3,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:25:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKWRJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:25:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M0NKXhJLEQA=",
+    "Insulin": 1.675,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:30:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKXhJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:30:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "Mx5KYxJLEQA=",
+    "Insulin": 0.75,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:35:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKYxJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:35:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MzlCaBJLEQA=",
+    "Insulin": 1.425,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:40:02-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFCaBJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:40:02-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBCbRJLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:45:02-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFCbRJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:45:02-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwVCchJLEQA=",
+    "Insulin": 0.125,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:50:02-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFCchJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:50:02-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xDdxJLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T18:55:03-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFDdxJLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T18:55:03-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M3FRRRNLEQA=",
+    "Insulin": 2.825,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:05:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRRRNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:05:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBRShNLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:10:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRShNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:10:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MxNSTxNLEQA=",
+    "Insulin": 0.475,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:15:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSTxNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:15:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwRSVBNLEQA=",
+    "Insulin": 0.1,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:20:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSVBNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:20:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBSWRNLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:25:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSWRNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:25:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MxFSXhNLEQA=",
+    "Insulin": 0.425,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:30:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSXhNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:30:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MypRYxNLEQA=",
+    "Insulin": 1.05,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:35:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRYxNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:35:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBRaBNLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:40:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRaBNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:40:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwtSbRNLEQA=",
+    "Insulin": 0.275,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:45:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSbRNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:45:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MzZSchNLEQA=",
+    "Insulin": 1.35,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:50:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSchNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:50:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwVRdxNLEQA=",
+    "Insulin": 0.125,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T19:55:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRdxNLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T19:55:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBKQBRLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:00:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKQBRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:00:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "Mw1MWRRLEQA=",
+    "Insulin": 0.325,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:25:12-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFMWRRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:25:12-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "Mx9KXhRLEQA=",
+    "Insulin": 0.775,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:30:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKXhRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:30:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwlJYxRLEQA=",
+    "Insulin": 0.225,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:35:09-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFJYxRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:35:09-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBKaBRLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:40:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKaBRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:40:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M0dKchRLEQA=",
+    "Insulin": 1.775,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:50:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKchRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:50:10-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M11JdxRLEQA=",
+    "Insulin": 2.325,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T20:55:09-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFJdxRLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T20:55:09-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBLQBVLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:00:11-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFLQBVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:00:11-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "Mz1RTxVLEQA=",
+    "Insulin": 1.525,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:15:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRTxVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:15:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwZRVBVLEQA=",
+    "Insulin": 0.15,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:20:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRVBVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:20:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MzFRWRVLEQA=",
+    "Insulin": 1.225,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:25:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRWRVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:25:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MxFRXhVLEQA=",
+    "Insulin": 0.425,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:30:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRXhVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:30:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "MwBSYxVLEQA=",
+    "Insulin": 0,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:35:18-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFSYxVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:35:18-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xRchVLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T21:50:17-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFRchVLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T21:50:17-04:00",
+    "Type": "TempBasalDuration"
+  },
+  {
+    "Data": "M4xKTxZLEQA=",
+    "Insulin": 3.5,
+    "TempBasalType": "Absolute",
+    "Time": "2017-05-11T22:15:10-04:00",
+    "Type": "TempBasalRate"
+  },
+  {
+    "Data": "FgFKTxZLEQ==",
+    "Duration": "30m0s",
+    "Time": "2017-05-11T22:15:10-04:00",
+    "Type": "TempBasalDuration"
+  }
+]

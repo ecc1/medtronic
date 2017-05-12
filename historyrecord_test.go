@@ -3,6 +3,7 @@ package medtronic
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -10,6 +11,8 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/ecc1/nightscout"
 )
 
 func TestDecodeHistoryRecord(t *testing.T) {
@@ -24,7 +27,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		{"testdata/old1.json", false},
 	}
 	for _, c := range cases {
-		records, err := readJSON(c.jsonFile)
+		records, err := readHistoryRecords(c.jsonFile)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue
@@ -60,7 +63,7 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			t.Errorf("%v", err)
 			continue
 		}
-		records, err := readJSON(c.jsonFile)
+		records, err := readHistoryRecords(c.jsonFile)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue
@@ -92,7 +95,7 @@ func equalHistoryRecords(t *testing.T, got []HistoryRecord, want []HistoryRecord
 	return true
 }
 
-func readJSON(file string) ([]HistoryRecord, error) {
+func readHistoryRecords(file string) ([]HistoryRecord, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, err
@@ -101,6 +104,9 @@ func readJSON(file string) ([]HistoryRecord, error) {
 	d := json.NewDecoder(f)
 	var records []HistoryRecord
 	err = d.Decode(&records)
+	if err != nil {
+		err = fmt.Errorf("%s: %v", file, err)
+	}
 	return records, err
 }
 
@@ -129,20 +135,20 @@ func (r HistoryRecord) String() string {
 	return string(b)
 }
 
-func compareJSON(records []HistoryRecord, jsonFile string) (bool, string) {
-	// Write JSON for records to temporary file.
+func compareJSON(data interface{}, jsonFile string) (bool, string) {
+	// Write data in JSON format to temporary file.
 	tmpfile, err := ioutil.TempFile("", "json")
 	if err != nil {
 		return false, err.Error()
 	}
 	defer os.Remove(tmpfile.Name())
-	b, err := json.MarshalIndent(records, "", "  ")
+	e := json.NewEncoder(tmpfile)
+	e.SetIndent("", "  ")
+	err = e.Encode(data)
+	tmpfile.Close()
 	if err != nil {
 		return false, err.Error()
 	}
-	tmpfile.Write(b)
-	tmpfile.Write([]byte{'\n'})
-	tmpfile.Close()
 	// Write JSON in canonical form for comparison.
 	canon1 := canonicalJSON(jsonFile)
 	defer os.Remove(canon1)
@@ -168,4 +174,51 @@ func canonicalJSON(file string) string {
 	tmpfile.Write(canon)
 	tmpfile.Close()
 	return tmpfile.Name()
+}
+
+func TestTreatments(t *testing.T) {
+	cases := []struct {
+		recordFile    string
+		treatmentFile string
+	}{
+		{"testdata/pump-records.json", "testdata/pump-treatments.json"},
+	}
+	for _, c := range cases {
+		records, err := readHistoryRecords(c.recordFile)
+		if err != nil {
+			t.Errorf("%v", err)
+			continue
+		}
+		want, err := readTreatments(c.treatmentFile)
+		if err != nil {
+			t.Errorf("%v", err)
+			continue
+		}
+		got := Treatments(records)
+		for i, r1 := range want {
+			r2 := got[i]
+			if !reflect.DeepEqual(r1, r2) {
+				t.Errorf("got %v, want %v", r2, r1)
+			}
+		}
+		eq, msg := compareJSON(got, c.treatmentFile)
+		if !eq {
+			t.Errorf("JSON is different:\n%s\n", msg)
+		}
+	}
+}
+
+func readTreatments(file string) ([]nightscout.Treatment, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	d := json.NewDecoder(f)
+	var records []nightscout.Treatment
+	err = d.Decode(&records)
+	if err != nil {
+		err = fmt.Errorf("%s: %v", file, err)
+	}
+	return records, err
 }
