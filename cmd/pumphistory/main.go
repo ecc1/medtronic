@@ -34,8 +34,8 @@ func main() {
 	}
 	if *nsFlag {
 		medtronic.ReverseHistoryRecords(results)
-		fmt.Println(nightscout.Json(medtronic.Treatments(results)))
+		fmt.Println(nightscout.JSON(medtronic.Treatments(results)))
 	} else {
-		fmt.Println(nightscout.Json(results))
+		fmt.Println(nightscout.JSON(results))
 	}
 }

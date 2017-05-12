@@ -38,10 +38,10 @@ func main() {
 			*verbose = true
 		}
 		if *verbose {
-			fmt.Println(nightscout.Json(records))
+			fmt.Println(nightscout.JSON(records))
 		} else if *nsFlag {
 			medtronic.ReverseHistoryRecords(records)
-			fmt.Println(nightscout.Json(medtronic.Treatments(records)))
+			fmt.Println(nightscout.JSON(medtronic.Treatments(records)))
 		} else {
 			for _, r := range records {
 				printRecord(r)
