@@ -16,6 +16,7 @@ const (
 )
 
 type (
+	// SPILinkCommand represents a command sent by the client.
 	SPILinkCommand struct {
 		Command string
 		Data    []byte // base64-encoded by json.Marshal
@@ -23,6 +24,7 @@ type (
 		Timeout int // microseconds
 	}
 
+	// SPILinkResult represents a result returned to the client.
 	SPILinkResult struct {
 		Data  []byte // base64-encoded by json.Marshal
 		RSSI  int
