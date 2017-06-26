@@ -57,23 +57,32 @@ func (pump *Pump) Close() {
 	pump.Radio.Close()
 }
 
+// ParseFrequency interprets the given string as a frequency
+// and returns its value in Hertz.
+func ParseFrequency(s string) (uint32, error) {
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return 0, err
+	}
+	if 860.0 <= f && f <= 920.0 {
+		return uint32(f * 1000000.0), nil
+	}
+	if 860000000.0 <= f && f <= 920000000.0 {
+		return uint32(f), nil
+	}
+	return 0, fmt.Errorf("invalid frequency %s", s)
+}
+
 func getFrequency() uint32 {
 	s := os.Getenv(freqEnvVar)
 	if len(s) == 0 {
 		return uint32(defaultFrequency)
 	}
-	f, err := strconv.ParseFloat(s, 64)
+	f, err := ParseFrequency(s)
 	if err != nil {
 		log.Fatalf("%s: %v", freqEnvVar, err)
 	}
-	if 860.0 <= f && f <= 920.0 {
-		return uint32(f * 1000000.0)
-	}
-	if 860000000.0 <= f && f <= 920000000.0 {
-		return uint32(f)
-	}
-	log.Fatalf("%s (%s): invalid pump frequency", freqEnvVar, s)
-	panic("unreachable")
+	return f
 }
 
 // Timeout returns the timeout used for pump communications.
