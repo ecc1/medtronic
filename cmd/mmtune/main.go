@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"sort"
 
 	"github.com/ecc1/medtronic"
@@ -12,41 +13,47 @@ import (
 const (
 	startFreq = uint32(916000000)
 	endFreq   = uint32(917000000)
-	precision = uint32(10000)
+	deltaHz   = uint32(100000)
 )
 
 func main() {
+	if len(os.Args) > 2 {
+		log.Fatalf("Usage: %s [frequency]", os.Args[0])
+	}
 	pump := medtronic.Open()
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
 	defer pump.Close()
-	f := searchFrequencies(pump)
-	showResults(f)
-	fmt.Println(radio.MegaHertz(f))
+	pump.Wakeup()
+	switch len(os.Args) {
+	case 1:
+		f := searchFrequencies(pump)
+		showResults(f)
+		fmt.Println(radio.MegaHertz(f))
+	case 2:
+		f, err := medtronic.ParseFrequency(os.Args[1])
+		if err != nil {
+			log.Fatal(err)
+		}
+		rssi := tryFrequency(pump, f)
+		fmt.Printf("%s  %4d\n", radio.MegaHertz(f), rssi)
+	}
 }
 
-// Use ternary search to find frequency with maximum RSSI.
+// Find frequency with maximum RSSI.
 func searchFrequencies(pump *medtronic.Pump) uint32 {
 	pump.SetRetries(1)
-	lower := startFreq
-	upper := endFreq
-	for {
-		delta := upper - lower
-		if delta < precision {
-			return (lower + upper) / 2
-		}
-		delta /= 3
-		lowerThird := lower + delta
-		r1 := tryFrequency(pump, lowerThird)
-		upperThird := upper - delta
-		r2 := tryFrequency(pump, upperThird)
-		if r1 < r2 {
-			lower = lowerThird
-		} else {
-			upper = upperThird
+	maxRSSI := -128
+	bestFreq := startFreq
+	for f := startFreq; f <= endFreq; f += deltaHz {
+		rssi := tryFrequency(pump, f)
+		if rssi > maxRSSI {
+			maxRSSI = rssi
+			bestFreq = f
 		}
 	}
+	return bestFreq
 }
 
 // Result represents the RSSI at a given frequency.
