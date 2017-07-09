@@ -18,6 +18,7 @@ var command = map[string]prog{
 	"basal":         basal,
 	"battery":       battery,
 	"bolus":         bolus,
+	"button":        button,
 	"carbratios":    carbRatios,
 	"carbunits":     carbUnits,
 	"clock":         clock,
@@ -119,6 +120,40 @@ func bolus(pump *medtronic.Pump, args []string) interface{} {
 
 func bolusUsage() {
 	eprintf("Usage: bolus amount\n")
+	os.Exit(1)
+}
+
+func button(pump *medtronic.Pump, args []string) interface{} {
+	for _, s := range args {
+		b := parseButton(s)
+		log.Printf("pressing %v", b)
+		pump.Button(b)
+		if pump.Error() != nil {
+			log.Fatal(pump.Error())
+		}
+	}
+	return nil
+}
+
+var buttonName = map[string]medtronic.PumpButton{
+	"b":    medtronic.BolusButton,
+	"esc":  medtronic.EscButton,
+	"act":  medtronic.ActButton,
+	"up":   medtronic.UpButton,
+	"down": medtronic.DownButton,
+}
+
+func parseButton(s string) medtronic.PumpButton {
+	b, found := buttonName[s]
+	if !found {
+		eprintf("unknown pump button (%s)\n", s)
+		buttonUsage()
+	}
+	return b
+}
+
+func buttonUsage() {
+	eprintf("Usage: button (b|esc|act|up|down) ...\n")
 	os.Exit(1)
 }
 
