@@ -17,6 +17,7 @@ type prog func(*medtronic.Pump, []string) interface{}
 var command = map[string]prog{
 	"basal":         basal,
 	"battery":       battery,
+	"bolus":         bolus,
 	"carbratios":    carbRatios,
 	"carbunits":     carbUnits,
 	"clock":         clock,
@@ -100,6 +101,25 @@ func basal(pump *medtronic.Pump, _ []string) interface{} {
 
 func battery(pump *medtronic.Pump, _ []string) interface{} {
 	return pump.Battery()
+}
+
+func bolus(pump *medtronic.Pump, args []string) interface{} {
+	if len(args) != 1 {
+		bolusUsage()
+	}
+	f, err := strconv.ParseFloat(args[0], 64)
+	if err != nil {
+		bolusUsage()
+	}
+	amount := medtronic.Insulin(1000.0*f + 0.5)
+	log.Printf("performing bolus of %v units", amount)
+	pump.Bolus(amount)
+	return nil
+}
+
+func bolusUsage() {
+	eprintf("Usage: bolus amount\n")
+	os.Exit(1)
 }
 
 func carbRatios(pump *medtronic.Pump, _ []string) interface{} {
