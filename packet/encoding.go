@@ -15,14 +15,16 @@ func Encode4b6b(src []byte) []byte {
 		a := encode4b[hi(4, x)]
 		b := encode4b[lo(4, x)]
 		dst[j] = a<<2 | hi(4, b)
-		var c, d byte
 		if i+1 < n {
 			y := src[i+1]
-			c = encode4b[hi(4, y)]
-			d = encode4b[lo(4, y)]
+			c := encode4b[hi(4, y)]
+			d := encode4b[lo(4, y)]
+			dst[j+1] = lo(4, b)<<4 | hi(6, c)
 			dst[j+2] = lo(2, c)<<6 | d
+		} else {
+			// Fill final nibble with 5 to match pump behavior.
+			dst[j+1] = lo(4, b)<<4 | 0x5
 		}
-		dst[j+1] = lo(4, b)<<4 | hi(6, c)
 	}
 	return dst
 }
