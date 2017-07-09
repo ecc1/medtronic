@@ -70,10 +70,25 @@ func (pump *Pump) NoResponse() bool {
 }
 
 // InvalidCommandError indicates that the pump rejected a command as invalid.
-type InvalidCommandError Command
+type InvalidCommandError struct {
+	Command   Command
+	PumpError PumpError
+}
+
+// PumpError represents an error response from the pump.
+type PumpError byte
+
+//go:generate stringer -type PumpError
+
+// Pump error codes.
+const (
+	CommandRefused     PumpError = 0x08
+	MaxSettingExceeded PumpError = 0x09
+	BolusInProgress    PumpError = 0x0C
+)
 
 func (e InvalidCommandError) Error() string {
-	return fmt.Sprintf("invalid %v command", Command(e))
+	return fmt.Sprintf("%v error: %v", e.Command, e.PumpError)
 }
 
 // BadResponseError indicates an unexpected response to a command.
@@ -280,7 +295,7 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 }
 
 func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
-	if len(data) < 5 {
+	if len(data) < 6 {
 		pump.BadResponse(cmd, data)
 		return true
 	}
@@ -295,14 +310,19 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 	case resp:
 		return false
 	case ack:
-		if cmd != wakeup {
-			break
+		if cmd == wakeup {
+			return false
 		}
-		return false
+		pump.BadResponse(cmd, data)
+		return true
 	case nak:
-		pump.SetError(InvalidCommandError(cmd))
+		pump.SetError(InvalidCommandError{
+			Command:   cmd,
+			PumpError: PumpError(data[n+1]),
+		})
+		return true
+	default:
+		pump.BadResponse(cmd, data)
 		return true
 	}
-	pump.BadResponse(cmd, data)
-	return true
 }
