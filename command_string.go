@@ -4,7 +4,7 @@ package medtronic
 
 import "fmt"
 
-const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagerfRemoteSrfRemoteACTrfRemoteBglucoseUnitscarbRatiosinsulinSensitivitiesmodelbasalRatesbasalPatternAbasalPatternBtempBasallastHistoryPageglucoseTargetssettingsstatus"
+const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagerfRemoteSrfRemoteACTrfRemoteBglucoseUnitscarbRatiosinsulinSensitivitiesmodelbasalRatesbasalPatternAbasalPatternBtempBasallastHistoryPageglucoseTargetssettingsstatus"
 
 var _Command_map = map[Command]string{
 	6:   _Command_name[0:3],
@@ -13,28 +13,29 @@ var _Command_map = map[Command]string{
 	66:  _Command_name[14:19],
 	76:  _Command_name[19:39],
 	77:  _Command_name[39:46],
-	93:  _Command_name[46:52],
-	105: _Command_name[52:71],
-	112: _Command_name[71:76],
-	113: _Command_name[76:82],
-	114: _Command_name[82:89],
-	115: _Command_name[89:98],
-	128: _Command_name[98:109],
-	129: _Command_name[109:118],
-	134: _Command_name[118:129],
-	136: _Command_name[129:138],
-	137: _Command_name[138:150],
-	138: _Command_name[150:160],
-	139: _Command_name[160:180],
-	141: _Command_name[180:185],
-	146: _Command_name[185:195],
-	147: _Command_name[195:208],
-	148: _Command_name[208:221],
-	152: _Command_name[221:230],
-	157: _Command_name[230:245],
-	159: _Command_name[245:259],
-	192: _Command_name[259:267],
-	206: _Command_name[267:273],
+	91:  _Command_name[46:52],
+	93:  _Command_name[52:58],
+	105: _Command_name[58:77],
+	112: _Command_name[77:82],
+	113: _Command_name[82:88],
+	114: _Command_name[88:95],
+	115: _Command_name[95:104],
+	128: _Command_name[104:115],
+	129: _Command_name[115:124],
+	134: _Command_name[124:135],
+	136: _Command_name[135:144],
+	137: _Command_name[144:156],
+	138: _Command_name[156:166],
+	139: _Command_name[166:186],
+	141: _Command_name[186:191],
+	146: _Command_name[191:201],
+	147: _Command_name[201:214],
+	148: _Command_name[214:227],
+	152: _Command_name[227:236],
+	157: _Command_name[236:251],
+	159: _Command_name[251:265],
+	192: _Command_name[265:273],
+	206: _Command_name[273:279],
 }
 
 func (i Command) String() string {
