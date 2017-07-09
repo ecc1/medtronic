@@ -24,11 +24,8 @@ func Decode(p []byte) ([]byte, error) {
 	return data, err
 }
 
-// Encode calculates and stores the final CRC byte
-// and returns the 4b/6b-encoded result.
-// The caller must provide space for the CRC byte.
+// Encode appends the CRC to the data and returns the 4b/6b-encoded result.
+// This may modify data's underlying array.
 func Encode(data []byte) []byte {
-	n := len(data) - 1
-	data[n] = CRC8(data[:n])
-	return Encode4b6b(data)
+	return Encode4b6b(append(data, CRC8(data)))
 }

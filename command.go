@@ -13,7 +13,7 @@ import (
 const (
 	pumpEnvVar      = "MEDTRONIC_PUMP_ID"
 	carelinkDevice  = 0xA7
-	maxPacketSize   = 71   // including CRC byte
+	maxPacketSize   = 70   // excluding CRC byte
 	historyPageSize = 1024 // including CRC16
 )
 
@@ -110,7 +110,7 @@ func carelinkPacket(cmd Command, params []byte) []byte {
 	initCarelinkPrefix()
 	var data []byte
 	if len(params) == 0 {
-		data = make([]byte, 7)
+		data = make([]byte, 6)
 	} else {
 		data = make([]byte, maxPacketSize)
 	}

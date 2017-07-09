@@ -44,7 +44,7 @@ func initRFRemotePrefix() {
 //   CRC-8
 func rfRemotePacket(cmd Command, seq uint8) []byte {
 	initRFRemotePrefix()
-	data := make([]byte, 7)
+	data := make([]byte, 6)
 	copy(data, rfRemotePrefix)
 	data[4] = byte(cmd)
 	data[5] = seq
