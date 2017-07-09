@@ -21,20 +21,20 @@ func main() {
 	pump := medtronic.Open()
 	defer pump.Close()
 	n := *minPacketSize
-	i := 0
+	pkts := 0
+	data := make([]byte, *maxPacketSize)
 	for pump.Error() == nil {
-		if *count != 0 && i == *count {
+		if *count != 0 && pkts == *count {
 			return
 		}
-		data := make([]byte, n+1) // leave space for CRC
-		for i := range data {
+		for i := 0; i < n; i++ {
 			data[i] = byte(i + 1)
 		}
-		packet := packet.Encode(data)
-		log.Printf("data:   % X", data)
+		packet := packet.Encode(data[:n])
+		log.Printf("data:   % X", data[:n])
 		log.Printf("packet: % X", packet)
 		pump.Radio.Send(packet)
-		i++
+		pkts++
 		n++
 		if n > *maxPacketSize {
 			n = *minPacketSize
