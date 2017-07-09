@@ -2,6 +2,8 @@ package packet
 
 import (
 	"bytes"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -10,8 +12,11 @@ func TestPacketEncoding(t *testing.T) {
 		decoded []byte
 		encoded []byte
 	}{
-		{[]byte{0x00, 0x00}, []byte{0x55, 0x55, 0x55}},
-		{[]byte{0xA7, 0x12, 0x34, 0x56, 0x8D, 0x00, 0xA6, 0x00}, []byte{0xA9, 0x6C, 0x72, 0x8F, 0x49, 0x66, 0x68, 0xD5, 0x55, 0xAA, 0x63, 0x4E}},
+		{parseBytes("A7 12 89 86 5D 00"), parseBytes("A9 6C 72 69 96 A6 94 D5 55 2C E5")},
+		{parseBytes("A7 12 89 86 06 00"), parseBytes("A9 6C 72 69 96 A6 56 65 55 C6 55")},
+		{parseBytes("A7 12 89 86 15 09"), parseBytes("A9 6C 72 69 96 A6 C6 55 59 96 65")},
+		{parseBytes("A7 12 89 86 8D 00"), parseBytes("A9 6C 72 69 96 A6 68 D5 55 2D 55")},
+		{parseBytes("A7 12 89 86 8D 09 03 37 32 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"), parseBytes("A9 6C 72 69 96 A6 68 D5 59 56 38 D6 8F 28 F2 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 8D 95")},
 	}
 	for _, c := range cases {
 		result := Encode(c.decoded)
@@ -23,9 +28,21 @@ func TestPacketEncoding(t *testing.T) {
 			t.Errorf("Decode(% X) == %v, want % X", c.encoded, err, c.decoded)
 			continue
 		}
-		d := c.decoded[:len(c.decoded)-1]
-		if !bytes.Equal(result, d) {
-			t.Errorf("Decode(% X) == % X, want % X", c.encoded, result, d)
+		if !bytes.Equal(result, c.decoded) {
+			t.Errorf("Decode(% X) == % X, want % X", c.encoded, result, c.decoded)
 		}
 	}
+}
+
+func parseBytes(hex string) []byte {
+	fields := strings.Fields(hex)
+	data := make([]byte, len(fields))
+	for i, s := range fields {
+		b, err := strconv.ParseUint(string(s), 16, 8)
+		if err != nil {
+			panic(err)
+		}
+		data[i] = byte(b)
+	}
+	return data
 }

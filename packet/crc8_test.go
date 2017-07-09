@@ -9,10 +9,12 @@ func TestCRC8(t *testing.T) {
 		msg []byte
 		sum byte
 	}{
-		{[]byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 0x98},
-		{[]byte("0123456789"), 0xFD},
-		{[]byte{0xFF, 0xFF, 0xFF, 0xFF}, 0xA3},
-		{[]byte{0x01, 0x07, 0x00, 0x10, 0x04}, 0x44},
+		{parseBytes("00 01 02 03 04 05 06 07 08 09"), 0x98},
+		{parseBytes("A7 12 89 86 5D 00"), 0xBE},
+		{parseBytes("A7 12 89 86 06 00"), 0x15},
+		{parseBytes("A7 12 89 86 15 09"), 0x56},
+		{parseBytes("A7 12 89 86 8D 00"), 0xB0},
+		{parseBytes("A7 12 89 86 8D 09 03 37 32 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"), 0x39},
 	}
 	for _, c := range cases {
 		sum := CRC8(c.msg)

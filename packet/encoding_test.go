@@ -10,14 +10,14 @@ func Test4b6bEncoding(t *testing.T) {
 		decoded []byte
 		encoded []byte
 	}{
-		{[]byte{}, []byte{}},
-		{[]byte{0x00}, []byte{0x55, 0x50}},
-		{[]byte{0x01}, []byte{0x57, 0x10}},
-		{[]byte{0xFF}, []byte{0x71, 0xC0}},
-		{[]byte{0x10, 0x20}, []byte{0xC5, 0x5C, 0x95}},
-		{[]byte{0x33, 0x44, 0x55}, []byte{0x8E, 0x3D, 0x34, 0x96, 0x50}},
-		{[]byte{0x87, 0x65, 0x43, 0x21}, []byte{0x69, 0x69, 0xA5, 0xD2, 0x3C, 0xB1}},
-		{[]byte{0xA7, 0x12, 0x34, 0x56, 0x8D, 0x00, 0xA6}, []byte{0xA9, 0x6C, 0x72, 0x8F, 0x49, 0x66, 0x68, 0xD5, 0x55, 0xAA, 0x60}},
+		{parseBytes(""), parseBytes("")},
+		{parseBytes("00"), parseBytes("55 55")},
+		{parseBytes("00 00"), parseBytes("55 55 55")},
+		{parseBytes("A7 12 89 86 5D 00 BE"), parseBytes("A9 6C 72 69 96 A6 94 D5 55 2C E5")},
+		{parseBytes("A7 12 89 86 06 00 15"), parseBytes("A9 6C 72 69 96 A6 56 65 55 C6 55")},
+		{parseBytes("A7 12 89 86 15 09 56"), parseBytes("A9 6C 72 69 96 A6 C6 55 59 96 65")},
+		{parseBytes("A7 12 89 86 8D 00 B0"), parseBytes("A9 6C 72 69 96 A6 68 D5 55 2D 55")},
+		{parseBytes("A7 12 89 86 8D 09 03 37 32 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 39"), parseBytes("A9 6C 72 69 96 A6 68 D5 59 56 38 D6 8F 28 F2 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 8D 95")},
 	}
 	for _, c := range cases {
 		result := Encode4b6b(c.decoded)
