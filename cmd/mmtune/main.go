@@ -13,12 +13,16 @@ import (
 const (
 	startFreq = uint32(916000000)
 	endFreq   = uint32(917000000)
-	deltaHz   = uint32(100000)
+	deltaHz   = uint32(50000)
 )
+
+func usage() {
+	log.Fatalf("Usage: %s [frequency]", os.Args[0])
+}
 
 func main() {
 	if len(os.Args) > 2 {
-		log.Fatalf("Usage: %s [frequency]", os.Args[0])
+		usage()
 	}
 	pump := medtronic.Open()
 	if pump.Error() != nil {
@@ -34,7 +38,7 @@ func main() {
 	case 2:
 		f, err := medtronic.ParseFrequency(os.Args[1])
 		if err != nil {
-			log.Fatal(err)
+			usage()
 		}
 		rssi := tryFrequency(pump, f)
 		fmt.Printf("%s  %4d\n", radio.MegaHertz(f), rssi)
