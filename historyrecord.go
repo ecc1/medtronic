@@ -102,6 +102,7 @@ var decode = map[HistoryRecordType]decoder{
 	ResumePump:              decodeResumePump,
 	SelfTest:                decodeSelfTest,
 	Rewind:                  decodeRewind,
+	ClearSettings:           decodeClearSettings,
 	EnableChildBlock:        decodeEnableChildBlock,
 	MaxBolus:                decodeMaxBolus,
 	EnableRemote:            decodeEnableRemote,
@@ -112,6 +113,7 @@ var decode = map[HistoryRecordType]decoder{
 	TempBasalRate:           decodeTempBasalRate,
 	LowReservoir:            decodeLowReservoir,
 	AlarmClock:              decodeAlarmClock,
+	ChangeMeterID:           decodeChangeMeterID,
 	SensorStatus:            decodeSensorStatus,
 	EnableMeter:             decodeEnableMeter,
 	BGReceived:              decodeBGReceived,
@@ -124,6 +126,7 @@ var decode = map[HistoryRecordType]decoder{
 	BolusWizardSetup:        decodeBolusWizardSetup,
 	BolusWizard:             decodeBolusWizard,
 	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
+	SaveSettings:            decodeSaveSettings,
 	EnableVariableBolus:     decodeEnableVariableBolus,
 	ChangeEasyBolus:         decodeChangeEasyBolus,
 	EnableBGReminder:        decodeEnableBGReminder,
@@ -135,6 +138,7 @@ var decode = map[HistoryRecordType]decoder{
 	EnableBolusReminder:     decodeEnableBolusReminder,
 	SetBolusReminderTime:    decodeSetBolusReminderTime,
 	DeleteBolusReminderTime: decodeDeleteBolusReminderTime,
+	BolusReminder:           decodeBolusReminder,
 	DeleteAlarmClockTime:    decodeDeleteAlarmClockTime,
 	DailyTotal515:           decodeDailyTotal515,
 	DailyTotal522:           decodeDailyTotal522,
@@ -444,6 +448,8 @@ var decodeSelfTest = decodeBase
 
 var decodeRewind = decodeBase
 
+var decodeClearSettings = decodeBase
+
 var decodeEnableChildBlock = decodeEnable
 
 var decodeMaxBolus = decodeInsulin
@@ -481,6 +487,8 @@ func decodeLowReservoir(data []byte, newerPump bool) HistoryRecord {
 }
 
 var decodeAlarmClock = decodeBase
+
+var decodeChangeMeterID = decodeBaseN(21)
 
 var decodeSensorStatus = decodeEnable
 
@@ -620,6 +628,8 @@ func decodeUnabsorbedInsulin(data []byte, newerPump bool) HistoryRecord {
 	}
 }
 
+var decodeSaveSettings = decodeBase
+
 var decodeEnableVariableBolus = decodeEnable
 
 var decodeChangeEasyBolus = decodeBase
@@ -657,6 +667,8 @@ var decodeEnableBolusReminder = decodeEnable
 var decodeSetBolusReminderTime = decodeEnableN(9)
 
 var decodeDeleteBolusReminderTime = decodeEnableN(9)
+
+var decodeBolusReminder = decodeBaseN(9)
 
 var decodeDeleteAlarmClockTime = decodeBase
 
