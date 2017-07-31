@@ -2,17 +2,15 @@ package medtronic
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
-	"reflect"
 	"strconv"
 	"testing"
-
-	"github.com/ecc1/nightscout"
 )
 
 func TestDecodeHistoryRecord(t *testing.T) {
@@ -25,29 +23,51 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		{"testdata/new1.json", true},
 		{"testdata/new2.json", true},
 		{"testdata/old1.json", false},
+		{"testdata/pump-records.json", false},
 	}
 	for _, c := range cases {
-		records, err := readHistoryRecords(c.jsonFile)
+		records, err := decodeFromData(c.jsonFile, c.newer)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue
 		}
-		decoded := make([]HistoryRecord, len(records))
-		for i, r1 := range records {
-			r2, err := DecodeHistoryRecord(r1.Data, c.newer)
-			if err != nil {
-				t.Errorf("DecodeHistoryRecord(% X, %v) returned %v", r1.Data, c.newer, err)
-				continue
-			}
-			decoded[i] = r2
-		}
-		if !equalHistoryRecords(t, decoded, records, c.jsonFile) {
-			continue
-		}
+		checkHistory(t, records, c.jsonFile)
 	}
 }
 
-func TestDecodeHistoryRecords(t *testing.T) {
+func decodeFromData(file string, newer bool) (History, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close() // nolint
+	d := json.NewDecoder(f)
+	var maps []interface{}
+	err = d.Decode(&maps)
+	if err != nil {
+		return nil, err
+	}
+	var records History
+	for _, v := range maps {
+		m := v.(map[string]interface{})
+		base64data, ok := m["Data"].(string)
+		if !ok {
+			return records, fmt.Errorf("no data in %+v", v)
+		}
+		data, err := base64.StdEncoding.DecodeString(base64data)
+		if err != nil {
+			return records, err
+		}
+		r, err := DecodeHistoryRecord(data, newer)
+		if err != nil {
+			return records, err
+		}
+		records = append(records, r)
+	}
+	return records, nil
+}
+
+func TestDecodeHistory(t *testing.T) {
 	cases := []struct {
 		pageFile string
 		jsonFile string
@@ -63,51 +83,20 @@ func TestDecodeHistoryRecords(t *testing.T) {
 			t.Errorf("%v", err)
 			continue
 		}
-		records, err := readHistoryRecords(c.jsonFile)
+		decoded, err := DecodeHistory(data, c.newer)
 		if err != nil {
-			t.Errorf("%v", err)
+			t.Errorf("DecodeHistory(% X, %v) returned %v", data, c.newer, err)
 			continue
 		}
-		decoded, err := DecodeHistoryRecords(data, c.newer)
-		if err != nil {
-			t.Errorf("DecodeHistoryRecords(% X, %v) returned %v", data, c.newer, err)
-			continue
-		}
-		if !equalHistoryRecords(t, decoded, records, c.jsonFile) {
-			continue
-		}
+		checkHistory(t, decoded, c.jsonFile)
 	}
 }
 
-func equalHistoryRecords(t *testing.T, got []HistoryRecord, want []HistoryRecord, jsonFile string) bool {
-	for i, r1 := range want {
-		r2 := got[i]
-		if !reflect.DeepEqual(r1, r2) {
-			t.Errorf("got %v, want %v", r2, r1)
-			return false
-		}
-	}
-	eq, msg := compareJSON(got, jsonFile)
+func checkHistory(t *testing.T, decoded History, jsonFile string) {
+	eq, msg := compareJSON(decoded, jsonFile)
 	if !eq {
 		t.Errorf("JSON is different:\n%s\n", msg)
-		return false
 	}
-	return true
-}
-
-func readHistoryRecords(file string) ([]HistoryRecord, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	d := json.NewDecoder(f)
-	var records []HistoryRecord
-	err = d.Decode(&records)
-	f.Close() // nolint
-	if err != nil {
-		err = fmt.Errorf("%s: %v", file, err)
-	}
-	return records, err
 }
 
 func readBytes(file string) ([]byte, error) {
@@ -188,41 +177,15 @@ func TestTreatments(t *testing.T) {
 		{"testdata/pump-records.json", "testdata/pump-treatments.json"},
 	}
 	for _, c := range cases {
-		records, err := readHistoryRecords(c.recordFile)
+		records, err := decodeFromData(c.recordFile, false)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue
 		}
-		want, err := readTreatments(c.treatmentFile)
-		if err != nil {
-			t.Errorf("%v", err)
-			continue
-		}
-		got := Treatments(records)
-		for i, r1 := range want {
-			r2 := got[i]
-			if !reflect.DeepEqual(r1, r2) {
-				t.Errorf("got %v, want %v", r2, r1)
-			}
-		}
-		eq, msg := compareJSON(got, c.treatmentFile)
+		treatments := Treatments(records)
+		eq, msg := compareJSON(treatments, c.treatmentFile)
 		if !eq {
 			t.Errorf("JSON is different:\n%s\n", msg)
 		}
 	}
-}
-
-func readTreatments(file string) ([]nightscout.Treatment, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	d := json.NewDecoder(f)
-	var records []nightscout.Treatment
-	err = d.Decode(&records)
-	f.Close() // nolint
-	if err != nil {
-		err = fmt.Errorf("%s: %v", file, err)
-	}
-	return records, err
 }

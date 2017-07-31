@@ -2,151 +2,173 @@
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:52:46-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGudBcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:52:46-04:00",
     "Data": "M1CudBcYEAU=",
-    "Insulin": 34,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 34
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:52:38-04:00",
-    "Duration": "0s",
+    "Info": "0s",
     "Data": "FgCmdBcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:52:38-04:00",
     "Data": "MwCmdBcYEAA=",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:52:26-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGadBcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:52:26-04:00",
     "Data": "MyCadBcYEAM=",
-    "Insulin": 20,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 20
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:52:09-04:00",
-    "Duration": "0s",
+    "Info": "0s",
     "Data": "FgCJdBcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:52:09-04:00",
     "Data": "MwCJdBcYEAA=",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:52:01-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGBdBcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:52:01-04:00",
     "Data": "M5CBdBcYEAE=",
-    "Insulin": 10,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 10
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:51:49-04:00",
-    "Duration": "0s",
+    "Info": "0s",
     "Data": "FgCxcxcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:51:49-04:00",
     "Data": "MwCxcxcYEAA=",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:45:55-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgG3bRcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:45:55-04:00",
     "Data": "M8i3bRcYEAA=",
-    "Insulin": 5,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 5
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:45:38-04:00",
-    "Duration": "0s",
+    "Info": "0s",
     "Data": "FgCmbRcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:45:38-04:00",
     "Data": "MwCmbRcYEAA=",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:43:24-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGYaxcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:43:24-04:00",
     "Data": "M5CYaxcYEAE=",
-    "Insulin": 10,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 10
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:42:51-04:00",
-    "Duration": "0s",
+    "Info": "0s",
     "Data": "FgCzahcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:42:51-04:00",
     "Data": "MwCzahcYEAA=",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T23:35:05-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGFYxcYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T23:35:05-04:00",
     "Data": "M0qFYxcYEAU=",
-    "Insulin": 33.85,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 33.85
+    }
   },
   {
     "Type": "EnableAlarmClock",
     "Time": "2016-09-24T23:33:56-04:00",
     "Data": "YQC4YRcYEA==",
-    "Enabled": false
+    "Info": false
   },
   {
     "Type": "DeleteAlarmClockTime",
@@ -156,21 +178,23 @@
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T22:59:02-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGCexZYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T22:59:02-04:00",
     "Data": "MwCCexZYEAA=",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "Bolus",
     "Time": "2016-09-24T22:03:24-04:00",
     "Data": "ARsbAJhDVhgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 2.7,
       "Amount": 2.7,
@@ -186,7 +210,7 @@
     "Type": "Bolus",
     "Time": "2016-09-24T21:09:13-04:00",
     "Data": "AQ0NAI1JVRgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 1.3,
       "Amount": 1.3,
@@ -197,7 +221,7 @@
     "Type": "Bolus",
     "Time": "2016-09-24T20:45:19-04:00",
     "Data": "AQcHAJNtVBgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 0.7,
       "Amount": 0.7,
@@ -207,7 +231,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XAUCZhQ=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "1h42m0s",
         "Bolus": 0.05
@@ -218,7 +242,7 @@
     "Type": "BolusWizard",
     "Time": "2016-09-24T20:45:19-04:00",
     "Data": "WwCTbRQYEAZQCCF4AAcAAAAAB3g=",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 0,
       "TargetLow": 120,
@@ -247,7 +271,7 @@
     "Type": "Bolus",
     "Time": "2016-09-24T14:46:51-04:00",
     "Data": "AQMBBLNubhgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "2h0m0s",
       "Programmed": 0.3,
       "Amount": 0.1,
@@ -268,7 +292,7 @@
     "Type": "EnableAlarmClock",
     "Time": "2016-09-24T15:00:12-04:00",
     "Data": "YQGMQA8YEA==",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "SetAlarmClockTime",
@@ -279,7 +303,7 @@
     "Type": "EnableAlarmClock",
     "Time": "2016-09-24T14:58:48-04:00",
     "Data": "YQCweg4YEA==",
-    "Enabled": false
+    "Info": false
   },
   {
     "Type": "DeleteAlarmClockTime",
@@ -290,7 +314,7 @@
     "Type": "EnableAlarmClock",
     "Time": "2016-09-24T14:58:16-04:00",
     "Data": "YQGQeg4YEA==",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "SetAlarmClockTime",
@@ -300,7 +324,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XBQCZxQChRQCmRQCrRQCwRQC3xQ=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "1h43m0s",
         "Bolus": 0.05
@@ -331,7 +355,7 @@
     "Type": "BolusWizard",
     "Time": "2016-09-24T14:46:51-04:00",
     "Data": "WwCzbg4YEAJQCCF4AAIAAAAAAng=",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 0,
       "TargetLow": 120,
@@ -349,53 +373,59 @@
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T12:38:05-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGFZgwYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T12:38:05-04:00",
     "Data": "MzSFZgwYEAA=",
-    "Insulin": 1.3,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.3
+    }
   },
   {
     "Type": "ChangeTempBasalType",
     "Time": "2016-09-24T12:37:56-04:00",
     "Data": "YgC4ZQwYEA==",
-    "TempBasalType": "Absolute"
+    "Info": "Absolute"
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T12:37:52-04:00",
-    "Duration": "0s",
+    "Info": "0s",
     "Data": "FgC0ZQwYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T12:37:52-04:00",
     "Data": "MwC0ZQwYEAg=",
-    "TempBasalType": "Percent",
-    "Value": 0
+    "Info": {
+      "Type": "Percent",
+      "Value": 0
+    }
   },
   {
     "Type": "TempBasalDuration",
     "Time": "2016-09-24T12:37:37-04:00",
-    "Duration": "30m0s",
+    "Info": "30m0s",
     "Data": "FgGlZQwYEA=="
   },
   {
     "Type": "TempBasalRate",
     "Time": "2016-09-24T12:37:37-04:00",
     "Data": "M3WlZQwYEAg=",
-    "TempBasalType": "Percent",
-    "Value": 117
+    "Info": {
+      "Type": "Percent",
+      "Value": 117
+    }
   },
   {
     "Type": "Bolus",
     "Time": "2016-09-24T01:30:06-04:00",
     "Data": "AQoKD4ZeYRgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "7h30m0s",
       "Programmed": 1,
       "Amount": 1,
@@ -416,13 +446,13 @@
     "Type": "EnableVariableBolus",
     "Time": "2016-09-24T01:29:43-04:00",
     "Data": "XgGrXQEYEA==",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "Bolus",
     "Time": "2016-09-24T01:28:58-04:00",
     "Data": "AQoKALpcIRgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 1,
       "Amount": 1,
@@ -433,7 +463,7 @@
     "Type": "Bolus",
     "Time": "2016-09-24T01:23:54-04:00",
     "Data": "AQEBALZXIRgQ",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 0.1,
       "Amount": 0.1,
@@ -444,7 +474,7 @@
     "Type": "BolusWizard",
     "Time": "2016-09-24T01:23:54-04:00",
     "Data": "WwC2VwEYEAFQCCF4AAEAAAAAAXg=",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 0,
       "TargetLow": 120,
@@ -468,19 +498,19 @@
     "Type": "EnableBGReminder",
     "Time": "2016-09-24T00:33:34-04:00",
     "Data": "YAGiYQAYEA==",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "EnableBGReminder",
     "Time": "2016-09-24T00:32:32-04:00",
     "Data": "YAGgYAAYEA==",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "EnableBGReminder",
     "Time": "2016-09-24T00:32:29-04:00",
     "Data": "YAGdYAAYEA==",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "DailyTotal522",
@@ -491,7 +521,7 @@
     "Type": "DailyTotal",
     "Time": "2016-09-23T00:00:00-04:00",
     "Data": "BwAAAlCXkA==",
-    "Insulin": 14.8
+    "Info": 14.8
   },
   {
     "Type": "DailyTotal522",
@@ -502,7 +532,7 @@
     "Type": "DailyTotal",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "BwAAADYBhQ==",
-    "Insulin": 1.35
+    "Info": 1.35
   },
   {
     "Type": "NewTime",
@@ -518,19 +548,19 @@
     "Type": "ChangeTimeFormat",
     "Time": "2005-01-01T00:00:13-05:00",
     "Data": "ZAANQAABBQ==",
-    "Value": 0
+    "Info": 0
   },
   {
     "Type": "ClearAlarm",
     "Time": "2005-01-01T00:00:12-05:00",
     "Data": "DAMMQAABBQ==",
-    "Value": 3
+    "Info": 3
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T02:23:13-05:00",
     "Data": "BgMFDQ1XYgEF",
-    "Value": 3
+    "Info": 3
   },
   {
     "Type": "BatteryChange",
@@ -541,19 +571,19 @@
     "Type": "MaxBolus",
     "Time": "2005-01-01T00:19:48-05:00",
     "Data": "JOUwUwABBQ==",
-    "Insulin": 5.725
+    "Info": 5.725
   },
   {
     "Type": "MaxBasal",
     "Time": "2005-01-01T00:18:24-05:00",
     "Data": "LFAYUqABBQ==",
-    "Insulin": 2
+    "Info": 2
   },
   {
     "Type": "Prime",
     "Time": "2005-01-01T00:03:08-05:00",
     "Data": "AwAAABIIQyABBQ==",
-    "Prime": {
+    "Info": {
       "Fixed": 0,
       "Manual": 1.8
     }
@@ -577,78 +607,78 @@
     "Type": "ChangeTimeFormat",
     "Time": "2005-01-01T00:03:25-05:00",
     "Data": "ZAAZQwABBQ==",
-    "Value": 0
+    "Info": 0
   },
   {
     "Type": "ClearAlarm",
     "Time": "2005-01-01T00:00:22-05:00",
     "Data": "DBUWQAABBQ==",
-    "Value": 21
+    "Info": 21
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "BhUE6QBAQKEF",
-    "Value": 21
+    "Info": 21
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "BhEM4wBAIMEF",
-    "Value": 17
+    "Info": 17
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8M1ABAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8MwwBAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8MnwBAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8MjgBAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8MfQBAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8MbABAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8MWwBAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "Bi8YcwBAIMEF",
-    "Value": 47
+    "Info": 47
   },
   {
     "Type": "Alarm",
     "Time": "2005-01-01T00:00:00-05:00",
     "Data": "BhUFDQBAYAEF",
-    "Value": 21
+    "Info": 21
   }
 ]

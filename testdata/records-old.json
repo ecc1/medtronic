@@ -3,7 +3,7 @@
     "Type": "Bolus",
     "Data": "AQUFAG7ZTgQQ",
     "Time": "2016-07-04T14:25:46-04:00",
-    "Bolus": {
+    "Info": {
       "Programmed": 0.5,
       "Amount": 0.5,
       "Unabsorbed": 0,
@@ -14,7 +14,7 @@
     "Type": "Bolus",
     "Data": "AQEBAUjbbgQQ",
     "Time": "2016-07-04T14:27:08-04:00",
-    "Bolus": {
+    "Info": {
       "Programmed": 0.1,
       "Amount": 0.1,
       "Unabsorbed": 0,
@@ -25,13 +25,13 @@
     "Type": "DailyTotal",
     "Data": "BwAAAcxhkA==",
     "Time": "2016-07-01T00:00:00-04:00",
-    "Insulin": 11.5
+    "Info": 11.5
   },
   {
     "Type": "BasalProfileBefore",
     "Data": "CARQsRAPEAAoAAYgAA4sABQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
     "Time": "2016-06-15T16:49:16-04:00",
-    "BasalProfile": [
+    "Info": [
       {
         "Start": "00:00",
         "Rate": 1
@@ -54,39 +54,43 @@
     "Type": "BGCapture",
     "Data": "Cm5l2S4EEA==",
     "Time": "2016-07-04T14:25:37-04:00",
-    "Glucose": 110,
-    "GlucoseUnits": "mg/dL"
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 110
+    }
   },
   {
     "Type": "BGCapture",
     "Data": "CvRGcSMTkA==",
     "Time": "2016-05-19T03:49:06-04:00",
-    "Glucose": 500,
-    "GlucoseUnits": "mg/dL"
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 500
+    }
   },
   {
     "Type": "SensorAlarm",
     "Data": "C3EAdOEupBA=",
     "Time": "2016-07-04T14:33:52-04:00",
-    "Value": 113
+    "Info": 113
   },
   {
     "Type": "ClearAlarm",
     "Data": "DDcfQAABBQ==",
     "Time": "2005-01-01T00:00:31-05:00",
-    "Value": 55
+    "Info": 55
   },
   {
     "Type": "ChangeBasalPattern",
     "Data": "FAJSyw4EEA==",
     "Time": "2016-07-04T14:11:18-04:00",
-    "Value": 2
+    "Info": 2
   },
   {
     "Type": "TempBasalDuration",
     "Data": "FgNErxZOEA==",
     "Time": "2016-06-14T22:47:04-04:00",
-    "Duration": "1h30m0s"
+    "Info": "1h30m0s"
   },
   {
     "Type": "NewTime",
@@ -97,7 +101,7 @@
     "Type": "SetAutoOff",
     "Data": "Gw1c9Q0CEA==",
     "Time": "2016-07-02T13:53:28-04:00",
-    "Duration": "13h0m0s"
+    "Info": "13h0m0s"
   },
   {
     "Type": "ResumePump",
@@ -118,25 +122,25 @@
     "Type": "EnableChildBlock",
     "Data": "IwFu0Q4EEA==",
     "Time": "2016-07-04T14:17:46-04:00",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "MaxBolus",
     "Data": "JHh0+w0EEA==",
     "Time": "2016-07-04T13:59:52-04:00",
-    "Insulin": 3
+    "Info": 3
   },
   {
     "Type": "EnableRemote",
     "Data": "JgFgrw4FECcB4kAAAAAoAAAAAAAA",
     "Time": "2016-06-05T14:47:32-04:00",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "MaxBasal",
     "Data": "LGRkyA4EEA==",
     "Time": "2016-07-04T14:08:36-04:00",
-    "Insulin": 2.5
+    "Info": 2.5
   },
   {
     "Type": "SetAlarmClockTime",
@@ -147,8 +151,10 @@
     "Type": "TempBasalRate",
     "Data": "MzJttBIEEAA=",
     "Time": "2016-06-04T18:52:45-04:00",
-    "Insulin": 1.25,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.25
+    }
   },
   {
     "Type": "ChangeBolusWizardSetup",
@@ -159,7 +165,7 @@
     "Type": "BolusWizardSetup",
     "Data": "Wg9Dww4EECUyAA8IFAAAAAAAAAAAAAAAAAAyDCgAAAAAAAAAAAAAAAAAX2kSWm4iUHgAAAAAAAAAAAAAAAAAAAA6IgAKAg8EDAAAAAAAAAAAAAAAHgQZAAAAAAAAAAAAAAAAADc5Ajg4AAAAAAAAAAAAAAAAAAAAAAAANA==",
     "Time": "2016-07-04T14:03:03-04:00",
-    "BolusWizardSetup": {
+    "Info": {
       "Before": {
         "Ratios": [
           {
@@ -259,7 +265,7 @@
     "Type": "BolusWizardSetup",
     "Time": "2017-03-01T17:06:28-05:00",
     "Data": "Wg8cxhEBERUhAAYAAAAAAAAAAAAAAAAAAAAjAAAAAAAAAAAAAAAAAAAAeHgMZGQAAAAAAAAAAAAAAAAAAAAAAAAVIQAGAAAAAAAAAAAAAAAAAABAkAAAAAAAAAAAAAAAAAAAAHh4DGRkAAAAAAAAAAAAAAAAAAAAAAAARA==",
-    "BolusWizardSetup": {
+    "Info": {
       "Before": {
         "Ratios": [
           {
@@ -328,7 +334,7 @@
     "Type": "BolusWizard",
     "Data": "W25u2Q4EEAVQDC1jAgQAAAcABGU=",
     "Time": "2016-07-04T14:25:46-04:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 110,
       "TargetLow": 99,
@@ -347,7 +353,7 @@
     "Type": "BolusWizard",
     "Time": "2017-02-25T12:41:11-05:00",
     "Data": "W3ILqQwZEQpQCDJkAgwAAA0ADGQ=",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 114,
       "TargetLow": 100,
@@ -366,7 +372,7 @@
     "Type": "BolusWizard",
     "Data": "WzwmowwZEQqQCBw4AQwAAAAADTg=",
     "Time": "2017-02-25T12:35:38-05:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "μmol/L",
       "GlucoseInput": 6000,
       "TargetLow": 5600,
@@ -385,7 +391,7 @@
     "Type": "BolusWizard",
     "Time": "2017-02-25T13:09:48-05:00",
     "Data": "WzwwiQ0ZEQpQCDJk+AzwACQABGQ=",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 60,
       "TargetLow": 100,
@@ -404,7 +410,7 @@
     "Type": "BolusWizard",
     "Time": "2017-02-25T13:03:10-05:00",
     "Data": "WzwKgw0ZEQqQCBw4AQwAABgADDg=",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "μmol/L",
       "GlucoseInput": 6000,
       "TargetLow": 5600,
@@ -423,7 +429,7 @@
     "Type": "BolusWizard",
     "Data": "W7w3gxQcEQBgGSNkGQAAAAAAGWQ=",
     "Time": "2017-02-28T20:03:55-05:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 188,
       "TargetLow": 100,
@@ -442,7 +448,7 @@
     "Type": "EnableVariableBolus",
     "Data": "XgBAwA4EEA==",
     "Time": "2016-07-04T14:00:00-04:00",
-    "Enabled": false
+    "Info": false
   },
   {
     "Type": "ChangeEasyBolus",
@@ -453,25 +459,25 @@
     "Type": "ChangeTempBasalType",
     "Data": "YgBKtBIEEA==",
     "Time": "2016-06-04T18:52:10-04:00",
-    "TempBasalType": "Absolute"
+    "Info": "Absolute"
   },
   {
     "Type": "ChangeTempBasalType",
     "Data": "YgFtkg0bEA==",
     "Time": "2016-06-27T13:18:45-04:00",
-    "TempBasalType": "Percent"
+    "Info": "Percent"
   },
   {
     "Type": "ChangeAlarmType",
     "Data": "YwRlzQ4EEA==",
     "Time": "2016-07-04T14:13:37-04:00",
-    "Value": 4
+    "Info": 4
   },
   {
     "Type": "ChangeTimeFormat",
     "Data": "ZAAsQQABBQ==",
     "Time": "2005-01-01T00:01:44-05:00",
-    "Value": 0
+    "Info": 0
   },
   {
     "Type": "DeleteAlarmClockTime",

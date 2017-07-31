@@ -3,7 +3,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T21:16:34-04:00",
     "Data": "AQBwAHAADABiEFUGEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 2.8,
       "Amount": 2.8,
@@ -13,7 +13,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XCACecAEg8AGjcAGl8AGocBoq8ACudAIw9AIzdAK19A=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "2h1m0s",
         "Bolus": 0.05
@@ -60,7 +60,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-06T21:16:34-04:00",
     "Data": "W4JiEBUGEABRALRVUHwAAAAADABweA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 386,
       "TargetLow": 80,
@@ -78,7 +78,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XCACecAEg8AGjcAGl8AGocBoq8ACudAIw9AIzdAK19A=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "2h1m0s",
         "Bolus": 0.05
@@ -125,7 +125,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-06T21:16:32-04:00",
     "Data": "W4JgEBUGEABRALRVUHwAAAAADABweA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 386,
       "TargetLow": 80,
@@ -144,14 +144,16 @@
     "Type": "BGCapture",
     "Time": "2016-04-06T21:16:27-04:00",
     "Data": "CoJbEDUGkA==",
-    "Glucose": 386,
-    "GlucoseUnits": "mg/dL"
+    "Info": {
+      "Glucose": 386,
+      "Units": "mg/dL"
+    }
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T20:30:00-04:00",
     "Data": "ewhAHhQGECkVAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 8,
       "BasalRate": {
         "Start": "20:30",
@@ -163,7 +165,7 @@
     "Type": "Prime",
     "Time": "2016-04-06T19:27:28-04:00",
     "Data": "AwADAANcGxMGEA==",
-    "Prime": {
+    "Info": {
       "Fixed": 0.3,
       "Manual": 0.3
     }
@@ -172,7 +174,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T19:27:38-04:00",
     "Data": "ewdmGxMGECYQAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 7,
       "BasalRate": {
         "Start": "19:00",
@@ -184,7 +186,7 @@
     "Type": "Prime",
     "Time": "2016-04-06T19:21:42-04:00",
     "Data": "AwAAAENqFTMGEA==",
-    "Prime": {
+    "Info": {
       "Fixed": 0,
       "Manual": 6.7
     }
@@ -213,7 +215,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T19:18:46-04:00",
     "Data": "ewduEhMGECYQAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 7,
       "BasalRate": {
         "Start": "19:00",
@@ -230,7 +232,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T19:00:00-04:00",
     "Data": "ewdAABMGECYQAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 7,
       "BasalRate": {
         "Start": "19:00",
@@ -242,7 +244,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T18:25:03-04:00",
     "Data": "AQBkAGQAAABDGZJmEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 2.5,
       "Amount": 2.5,
@@ -253,7 +255,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T18:26:43-04:00",
     "Data": "AQBkABwAAAZrGrJmEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "3h0m0s",
       "Programmed": 2.5,
       "Amount": 0.7,
@@ -263,7 +265,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XCwCDtAIGNAIItAKLNAINtAIQNAKStAIVNAIXtAKaNAIctAIfNBihtAWkNA=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "14m0s",
         "Bolus": 0.05
@@ -326,7 +328,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-06T18:25:03-04:00",
     "Data": "WwBDGRJmEDxQAHhLUAAAyAAAAADIeA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 0,
       "TargetLow": 80,
@@ -345,7 +347,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T16:00:00-04:00",
     "Data": "ewZAABAGECAOAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 6,
       "BasalRate": {
         "Start": "16:00",
@@ -357,7 +359,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T12:00:00-04:00",
     "Data": "ewVAAAwGEBgKAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 5,
       "BasalRate": {
         "Start": "12:00",
@@ -369,7 +371,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T11:54:39-04:00",
     "Data": "AQBwAHAACABnNotmEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 2.8,
       "Amount": 2.8,
@@ -380,7 +382,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T11:56:29-04:00",
     "Data": "AQBoAGgACARdOKtmEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "2h0m0s",
       "Programmed": 2.6,
       "Amount": 2.6,
@@ -390,7 +392,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XAVIn8A=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "2h39m0s",
         "Bolus": 1.8
@@ -401,7 +403,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-06T11:54:39-04:00",
     "Data": "W/pnNgtmEEdQALRLUEQAnAAACADYeA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 250,
       "TargetLow": 80,
@@ -420,14 +422,16 @@
     "Type": "BGCapture",
     "Time": "2016-04-06T11:54:01-04:00",
     "Data": "CvpBNisGEA==",
-    "Glucose": 250,
-    "GlucoseUnits": "mg/dL"
+    "Info": {
+      "Glucose": 250,
+      "Units": "mg/dL"
+    }
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T10:00:00-04:00",
     "Data": "ewRAAAoGEBQLAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 4,
       "BasalRate": {
         "Start": "10:00",
@@ -439,7 +443,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T09:19:42-04:00",
     "Data": "AQBIAEgAAABqE0lmEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 1.8,
       "Amount": 1.8,
@@ -450,7 +454,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-06T09:19:42-04:00",
     "Data": "WwBqEwlmEBRQAG5LUAAASAAAAABIeA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 0,
       "TargetLow": 80,
@@ -469,7 +473,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T06:00:00-04:00",
     "Data": "ewNAAAYGEAwQAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 3,
       "BasalRate": {
         "Start": "06:00",
@@ -481,7 +485,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T04:00:00-04:00",
     "Data": "ewJAAAQGEAgNAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "04:00",
@@ -493,7 +497,7 @@
     "Type": "Bolus",
     "Time": "2016-04-06T01:09:12-04:00",
     "Data": "AQAoACgAAABMCUEGEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 1,
       "Amount": 1,
@@ -503,7 +507,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XA4WwsAu/sAaEtA4HNA=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "3h14m0s",
         "Bolus": 0.55
@@ -526,7 +530,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-06T01:09:11-04:00",
     "Data": "W8pLCQEGEABQAMhQUCgAAAAAAAAoeA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 202,
       "TargetLow": 80,
@@ -545,14 +549,16 @@
     "Type": "BGCapture",
     "Time": "2016-04-06T01:09:08-04:00",
     "Data": "CspICSEGEA==",
-    "Glucose": 202,
-    "GlucoseUnits": "mg/dL"
+    "Info": {
+      "Glucose": 202,
+      "Units": "mg/dL"
+    }
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T01:00:00-04:00",
     "Data": "ewFAAAEGEAIMAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "01:00",
@@ -569,13 +575,13 @@
     "Type": "DailyTotal",
     "Time": "2016-04-05T00:00:00-04:00",
     "Data": "BwAAAstFEAAAAA==",
-    "Insulin": 17.875
+    "Info": 17.875
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-04-06T00:00:00-04:00",
     "Data": "ewBAAAAGEAAQAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 0,
       "BasalRate": {
         "Start": "00:00",
@@ -587,7 +593,7 @@
     "Type": "Bolus",
     "Time": "2016-04-05T22:02:50-04:00",
     "Data": "AQAWABYAQgByAlZlEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 0.55,
       "Amount": 0.55,
@@ -597,7 +603,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XA4uQ8AaV8A4YcAWl9A=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "1h7m0s",
         "Bolus": 1.15
@@ -620,7 +626,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-05T22:02:50-04:00",
     "Data": "WzNyAhZlEABRALRVUFgAAAAAQgAWeA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 307,
       "TargetLow": 80,
@@ -639,14 +645,16 @@
     "Type": "BGCapture",
     "Time": "2016-04-05T22:02:33-04:00",
     "Data": "CjNhAjYFkA==",
-    "Glucose": 307,
-    "GlucoseUnits": "mg/dL"
+    "Info": {
+      "Glucose": 307,
+      "Units": "mg/dL"
+    }
   },
   {
     "Type": "Bolus",
     "Time": "2016-04-05T20:59:04-04:00",
     "Data": "AQAuAC4ATABEO1RlEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 1.15,
       "Amount": 1.15,
@@ -656,7 +664,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XA4aGMA4IsAWWNAC2tA=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "24m0s",
         "Bolus": 0.65
@@ -679,7 +687,7 @@
     "Type": "BolusWizard",
     "Time": "2016-04-05T20:59:04-04:00",
     "Data": "WwBEOxRlEA5QAHhLUAAALgAAAAAueA==",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 0,
       "TargetLow": 80,
@@ -698,7 +706,7 @@
     "Type": "Bolus",
     "Time": "2016-04-05T20:34:02-04:00",
     "Data": "AQBSAFIAAABCIlRlEA==",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Programmed": 2.05,
       "Amount": 2.05,

@@ -28,7 +28,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-07T08:30:00-05:00",
     "Data": "ewEA3ggHEBEiAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "08:30",
@@ -45,13 +45,13 @@
     "Type": "DailyTotal",
     "Time": "2016-03-06T00:00:00-05:00",
     "Data": "BwAAAr4mkAAAAA==",
-    "Insulin": 17.55
+    "Info": 17.55
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-03-07T00:00:00-05:00",
     "Data": "ewAAwAAHEAAWAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 0,
       "BasalRate": {
         "Start": "00:00",
@@ -63,7 +63,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-06T22:00:00-05:00",
     "Data": "ewIAwBYGECwcAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "22:00",
@@ -75,7 +75,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-06T08:30:00-05:00",
     "Data": "ewEA3ggGEBEiAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "08:30",
@@ -92,13 +92,13 @@
     "Type": "DailyTotal",
     "Time": "2016-03-05T00:00:00-05:00",
     "Data": "BwAAAr4lkAAAAA==",
-    "Insulin": 17.55
+    "Info": 17.55
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-03-06T00:00:00-05:00",
     "Data": "ewAAwAAGEAAWAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 0,
       "BasalRate": {
         "Start": "00:00",
@@ -110,7 +110,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-05T22:00:00-05:00",
     "Data": "ewIAwBYFECwcAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "22:00",
@@ -122,7 +122,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-05T08:30:00-05:00",
     "Data": "ewEA3ggFEBEiAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "08:30",
@@ -139,13 +139,13 @@
     "Type": "DailyTotal",
     "Time": "2016-03-04T00:00:00-05:00",
     "Data": "BwAAAr4kkAAAAA==",
-    "Insulin": 17.55
+    "Info": 17.55
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-03-05T00:00:00-05:00",
     "Data": "ewAAwAAFEAAWAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 0,
       "BasalRate": {
         "Start": "00:00",
@@ -157,7 +157,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-04T22:00:00-05:00",
     "Data": "ewIAwBYEECwcAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "22:00",
@@ -169,7 +169,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-04T08:30:00-05:00",
     "Data": "ewEA3ggEEBEiAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "08:30",
@@ -186,13 +186,13 @@
     "Type": "DailyTotal",
     "Time": "2016-03-03T00:00:00-05:00",
     "Data": "BwAAArgjkAAAAA==",
-    "Insulin": 17.4
+    "Info": 17.4
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-03-04T00:00:00-05:00",
     "Data": "ewAAwAAEEAAWAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 0,
       "BasalRate": {
         "Start": "00:00",
@@ -214,7 +214,7 @@
     "Type": "Prime",
     "Time": "2016-03-03T22:27:28-05:00",
     "Data": "AwABAAEc2xYDEA==",
-    "Prime": {
+    "Info": {
       "Fixed": 0.1,
       "Manual": 0.1
     }
@@ -223,7 +223,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-03T22:27:30-05:00",
     "Data": "ewIe2xYDECwcAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "22:00",
@@ -235,7 +235,7 @@
     "Type": "Prime",
     "Time": "2016-03-03T22:16:15-05:00",
     "Data": "AwAAABAP0DYDEA==",
-    "Prime": {
+    "Info": {
       "Fixed": 0,
       "Manual": 1.6
     }
@@ -249,7 +249,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-03T22:00:00-05:00",
     "Data": "ewIAwBYDECwcAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "22:00",
@@ -271,13 +271,13 @@
     "Type": "LowReservoir",
     "Time": "2016-03-03T18:28:14-05:00",
     "Data": "NGQO3BIDEA==",
-    "Insulin": 10
+    "Info": 10
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-03-03T08:30:00-05:00",
     "Data": "ewEA3ggDEBEiAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "08:30",
@@ -294,13 +294,13 @@
     "Type": "DailyTotal",
     "Time": "2016-03-02T00:00:00-05:00",
     "Data": "BwAAAr4ikAAAAA==",
-    "Insulin": 17.55
+    "Info": 17.55
   },
   {
     "Type": "BasalProfileStart",
     "Time": "2016-03-03T00:00:00-05:00",
     "Data": "ewAAwAADEAAWAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 0,
       "BasalRate": {
         "Start": "00:00",
@@ -312,7 +312,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-02T22:00:00-05:00",
     "Data": "ewIAwBYCECwcAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 2,
       "BasalRate": {
         "Start": "22:00",
@@ -324,7 +324,7 @@
     "Type": "BasalProfileStart",
     "Time": "2016-03-02T08:30:00-05:00",
     "Data": "ewEA3ggCEBEiAA==",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 1,
       "BasalRate": {
         "Start": "08:30",

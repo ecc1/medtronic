@@ -3,7 +3,7 @@
     "Type": "Bolus",
     "Data": "AQBgAGAAAABG80doEA==",
     "Time": "2016-07-08T07:51:06-04:00",
-    "Bolus": {
+    "Info": {
       "Duration": "0s",
       "Unabsorbed": 0,
       "Amount": 2.4,
@@ -14,7 +14,7 @@
     "Type": "Bolus",
     "Data": "AQC4ALgALAJrW655EA==",
     "Time": "2016-05-25T14:27:43-04:00",
-    "Bolus": {
+    "Info": {
       "Programmed": 4.6,
       "Amount": 4.6,
       "Unabsorbed": 1.1,
@@ -25,7 +25,7 @@
     "Type": "Prime",
     "Data": "AwAFAAVF2Q8HEA==",
     "Time": "2016-07-07T15:25:05-04:00",
-    "Prime": {
+    "Info": {
       "Fixed": 0.5,
       "Manual": 0.5
     }
@@ -34,19 +34,19 @@
     "Type": "Alarm",
     "Data": "BgQMW0fTT0cQ",
     "Time": "2016-07-07T15:19:07-04:00",
-    "Value": 4
+    "Info": 4
   },
   {
     "Type": "DailyTotal",
     "Data": "BwAACBxhkAAAAA==",
     "Time": "2016-07-01T00:00:00-04:00",
-    "Insulin": 51.9
+    "Info": 51.9
   },
   {
     "Type": "BasalProfileAfter",
     "Data": "CQV1ZxcWEAAgAAYgAAwsABQwACwwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
     "Time": "2016-05-22T23:39:53-04:00",
-    "BasalProfile": [
+    "Info": [
       {
         "Start": "00:00",
         "Rate": 0.8
@@ -73,8 +73,10 @@
     "Type": "BGCapture",
     "Data": "ClMIjFEaEQ==",
     "Time": "2017-02-26T17:12:08-05:00",
-    "Glucose": 83,
-    "GlucoseUnits": "μmol/L"
+    "Info": {
+      "Units": "μmol/L",
+      "Glucose": 83
+    }
   },
   {
     "Type": "ChangeTime",
@@ -100,32 +102,34 @@
     "Type": "EnableBolusWizard",
     "Data": "LQF77A8FEA==",
     "Time": "2016-07-05T15:44:59-04:00",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "TempBasalRate",
     "Data": "MwBJzQMFEAA=",
     "Time": "2016-07-05T03:13:09-04:00",
-    "Insulin": 0,
-    "TempBasalType": "Absolute"
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
   },
   {
     "Type": "LowReservoir",
     "Data": "NGRNaRAMEA==",
     "Time": "2016-05-12T16:41:13-04:00",
-    "Insulin": 10
+    "Info": 10
   },
   {
     "Type": "SensorStatus",
     "Data": "O4NshRIYEA==",
     "Time": "2016-06-24T18:05:44-04:00",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "EnableMeter",
     "Data": "PAF0qg4QED0SNFYAAAA+AAAAAAAA",
     "Time": "2016-06-16T14:42:52-04:00",
-    "Enabled": true
+    "Info": true
   },
   {
     "Type": "BGReceived",
@@ -136,14 +140,16 @@
     "Type": "MealMarker",
     "Data": "QABdyQULEAwB",
     "Time": "2016-07-11T05:09:29-04:00",
-    "Carbs": 12,
-    "CarbUnits": "Grams"
+    "Info": {
+      "Units": "Grams",
+      "Carbs": 12
+    }
   },
   {
     "Type": "BolusWizardSetup",
     "Time": "2017-02-26T17:17:16-05:00",
     "Data": "Wg8QkREaERkRAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEwAAAAAAAAAAAAAAAAAAADJDAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhEACcQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAAAAAMkMAAAAAAAAAAAAAAAAAAAAAAAAAAAAz",
-    "BolusWizardSetup": {
+    "Info": {
       "Before": {
         "InsulinAction": "3h0m0s",
         "Ratios": [
@@ -199,7 +205,7 @@
   {
     "Type": "BolusWizardSetup",
     "Time": "2016-05-09T12:07:45-04:00",
-    "BolusWizardSetup": {
+    "Info": {
       "Before": {
         "InsulinAction": "4h0m0s",
         "Ratios": [
@@ -256,7 +262,7 @@
   {
     "Type": "BolusWizard",
     "Time": "2016-07-07T09:59:43-04:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 131,
       "TargetLow": 100,
@@ -276,7 +282,7 @@
   {
     "Type": "BolusWizard",
     "Time": "2017-02-26T16:10:51-05:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 150,
       "TargetLow": 90,
@@ -295,7 +301,7 @@
   {
     "Type": "BolusWizard",
     "Time": "2017-02-26T17:27:03-05:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "mg/dL",
       "GlucoseInput": 150,
       "TargetLow": 90,
@@ -314,7 +320,7 @@
   {
     "Type": "BolusWizard",
     "Time": "2017-02-26T17:13:16-05:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "μmol/L",
       "GlucoseInput": 8300,
       "TargetLow": 5000,
@@ -333,7 +339,7 @@
   {
     "Type": "BolusWizard",
     "Time": "2017-02-26T17:18:47-05:00",
-    "BolusWizard": {
+    "Info": {
       "GlucoseUnits": "μmol/L",
       "GlucoseInput": 8300,
       "TargetLow": 5000,
@@ -352,7 +358,7 @@
   {
     "Type": "UnabsorbedInsulin",
     "Data": "XDUuPMAiRsAolsAQ3MAY5sAW8MAW+sAWBNAWDtAWGNAWItAWLNDONtASctAWfNAemtA6pNA=",
-    "UnabsorbedInsulin": [
+    "Info": [
       {
         "Age": "1h0m0s",
         "Bolus": 1.15
@@ -426,43 +432,43 @@
   {
     "Type": "EnableBGReminder",
     "Time": "2016-07-05T15:43:10-04:00",
-    "Enabled": false,
+    "Info": false,
     "Data": "YABK6w8FEA=="
   },
   {
     "Type": "EnableAlarmClock",
     "Time": "2016-07-05T13:09:47-04:00",
-    "Enabled": false,
+    "Info": false,
     "Data": "YQBvyQ0FEA=="
   },
   {
     "Type": "ChangeReservoirWarning",
     "Time": "2016-07-05T13:07:10-04:00",
-    "Insulin": 20,
+    "Info": 20,
     "Data": "ZVBKxw0FEA=="
   },
   {
     "Type": "ChangeReservoirWarning",
     "Time": "2016-07-05T13:07:03-04:00",
-    "Duration": "8h0m0s",
+    "Info": "8h0m0s",
     "Data": "ZUFDxw0FEA=="
   },
   {
     "Type": "EnableBolusReminder",
     "Time": "2016-07-05T15:43:31-04:00",
-    "Enabled": true,
+    "Info": true,
     "Data": "ZgFf6w8FEA=="
   },
   {
     "Type": "SetBolusReminderTime",
     "Time": "2016-07-05T15:43:31-04:00",
-    "Enabled": true,
+    "Info": true,
     "Data": "ZwFf6w8FEAIA"
   },
   {
     "Type": "DeleteBolusReminderTime",
     "Time": "2016-07-05T15:43:38-04:00",
-    "Enabled": true,
+    "Info": true,
     "Data": "aAFm6w8FEAIA"
   },
   {
@@ -473,7 +479,7 @@
   {
     "Type": "BasalProfileStart",
     "Time": "2016-06-24T10:00:00-04:00",
-    "BasalProfileStart": {
+    "Info": {
       "ProfileIndex": 3,
       "BasalRate": {
         "Start": "10:00",
@@ -485,7 +491,7 @@
   {
     "Type": "ConnectOtherDevices",
     "Time": "2016-06-02T11:37:50-04:00",
-    "Enabled": true,
+    "Info": true,
     "Data": "fAFypQsCEA=="
   },
   {
