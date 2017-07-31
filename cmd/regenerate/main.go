@@ -22,15 +22,14 @@ func main() {
 	newer := *model%100 > 22
 	d := json.NewDecoder(os.Stdin)
 	var maps []interface{}
-	err := d.Decode(&maps)
-	if err != nil {
+	if err := d.Decode(&maps); err != nil {
 		log.Fatal(err)
 	}
-	var records []medtronic.HistoryRecord
-	for _, j := range maps {
-		m := j.(map[string]interface{})
+	var records medtronic.History
+	for _, v := range maps {
+		m := v.(map[string]interface{})
 		base64data := m["Data"].(string)
-		// nolint
+		var data []byte
 		data, err := base64.StdEncoding.DecodeString(base64data)
 		if err != nil {
 			log.Fatal(err)
@@ -43,8 +42,7 @@ func main() {
 	}
 	e := json.NewEncoder(os.Stdout)
 	e.SetIndent("", "  ")
-	err = e.Encode(records)
-	if err != nil {
+	if err := e.Encode(records); err != nil {
 		log.Fatal(err)
 	}
 }

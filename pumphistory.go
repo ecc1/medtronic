@@ -5,19 +5,19 @@ import (
 	"time"
 )
 
-// HistoryRecords returns the history records since the specified time.
+// History returns the history records since the specified time.
 // Note that the results may include records with a zero timestamp or
 // an earlier timestamp than the cutoff (in the case of DailyTotal records).
-func (pump *Pump) HistoryRecords(since time.Time) []HistoryRecord {
+func (pump *Pump) History(since time.Time) History {
 	newer := pump.Family() >= 23
 	lastPage := pump.LastHistoryPage()
 	if pump.Error() != nil {
 		return nil
 	}
-	var results []HistoryRecord
+	var results History
 	for page := 0; page <= lastPage && pump.Error() == nil; page++ {
 		data := pump.HistoryPage(page)
-		records, err := DecodeHistoryRecords(data, newer)
+		records, err := DecodeHistory(data, newer)
 		if err != nil {
 			pump.SetError(err)
 		}
@@ -32,7 +32,7 @@ func (pump *Pump) HistoryRecords(since time.Time) []HistoryRecord {
 
 // findOlder finds the first record that is older than the given time and returns its index,
 // or len(records) if all the records occur more recently.
-func findOlder(records []HistoryRecord, cutoff time.Time) int {
+func findOlder(records History, cutoff time.Time) int {
 	for i, r := range records {
 		// Don't use DailyTotal timestamps to decide when to stop,
 		// because they appear out of order (at the end of the day).

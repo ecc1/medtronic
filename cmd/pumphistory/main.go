@@ -28,12 +28,12 @@ func main() {
 	pump := medtronic.Open()
 	defer pump.Close()
 	pump.Wakeup()
-	results := pump.HistoryRecords(cutoff)
+	results := pump.History(cutoff)
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
 	if *nsFlag {
-		medtronic.ReverseHistoryRecords(results)
+		medtronic.ReverseHistory(results)
 		fmt.Println(nightscout.JSON(medtronic.Treatments(results)))
 	} else {
 		fmt.Println(nightscout.JSON(results))

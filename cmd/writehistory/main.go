@@ -28,7 +28,7 @@ func main() {
 		}
 		data := readBytes(f)
 		f.Close() // nolint
-		v, err := medtronic.DecodeHistoryRecords(data, newer)
+		v, err := medtronic.DecodeHistory(data, newer)
 		if err != nil {
 			log.Fatal(err)
 		}

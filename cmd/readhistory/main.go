@@ -32,7 +32,7 @@ func main() {
 		}
 		data := readBytes(f)
 		f.Close() // nolint
-		records, err := medtronic.DecodeHistoryRecords(data, newer)
+		records, err := medtronic.DecodeHistory(data, newer)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			*verbose = true
@@ -40,7 +40,7 @@ func main() {
 		if *verbose {
 			fmt.Println(nightscout.JSON(records))
 		} else if *nsFlag {
-			medtronic.ReverseHistoryRecords(records)
+			medtronic.ReverseHistory(records)
 			fmt.Println(nightscout.JSON(medtronic.Treatments(records)))
 		} else {
 			for _, r := range records {

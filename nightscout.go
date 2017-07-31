@@ -21,7 +21,7 @@ var (
 // Treatments converts certain pump history records
 // into records that can be uploaded as Nightscout treatments.
 // History records must be in chronological order.
-func Treatments(records []HistoryRecord) []nightscout.Treatment {
+func Treatments(records History) []nightscout.Treatment {
 	var treatments []nightscout.Treatment
 	user := nightscout.Username()
 	for i, r := range records {
@@ -45,15 +45,17 @@ func getRecordInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatmen
 	info.EventType = eventType[t]
 	switch t {
 	case BGCapture:
-		g := r.Glucose.NightscoutGlucose()
+		gr := r.Info.(GlucoseRecord)
+		g := gr.Glucose.NightscoutGlucose()
 		info.Glucose = &g
-		info.Units = "mg/dl"
+		info.Units = gr.Units.String()
 	case TempBasalRate:
 		return tempBasalInfo(r, r2, info)
 	case Bolus:
-		ins := r.Bolus.Amount.NightscoutInsulin()
+		b := r.Info.(BolusRecord)
+		ins := b.Amount.NightscoutInsulin()
 		info.Insulin = &ins
-		min := int(r.Bolus.Duration / Duration(time.Minute))
+		min := int(b.Duration / Duration(time.Minute))
 		info.Duration = &min
 	case Rewind:
 		if !nextEvent(r, r2, Prime) {
@@ -79,15 +81,16 @@ func tempBasalInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatmen
 	if !nextEvent(r, r2, TempBasalDuration) {
 		return false
 	}
-	if *r2.Duration == 0 {
+	if r2.Info.(Duration) == 0 {
 		insulin0 := Insulin(0).NightscoutInsulin()
 		info.Absolute = &insulin0
 		duration0 := 0
 		info.Duration = &duration0
 	} else {
-		ins := r.Insulin.NightscoutInsulin()
+		tb := r.Info.(TempBasalRecord)
+		ins := tb.Value.(Insulin).NightscoutInsulin()
 		info.Absolute = &ins
-		min := int(*r2.Duration / Duration(time.Minute))
+		min := int(r2.Info.(Duration) / Duration(time.Minute))
 		info.Duration = &min
 	}
 	return true
