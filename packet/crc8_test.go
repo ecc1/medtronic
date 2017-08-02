@@ -19,7 +19,7 @@ func TestCRC8(t *testing.T) {
 	for _, c := range cases {
 		sum := CRC8(c.msg)
 		if sum != c.sum {
-			t.Errorf("CRC8(% X) == %X, want %X", c.msg, sum, c.sum)
+			t.Errorf("CRC8(% X) == %02X, want %02X", c.msg, sum, c.sum)
 		}
 	}
 }
