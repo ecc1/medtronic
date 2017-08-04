@@ -18,8 +18,9 @@ func Decode(p []byte) ([]byte, error) {
 	pktCRC := data[last]
 	data = data[:last] // without CRC
 	calcCRC := CRC8(data)
-	if pktCRC != calcCRC {
-		err = fmt.Errorf("CRC should be %X, not %X", calcCRC, pktCRC)
+	if calcCRC != pktCRC {
+		err = fmt.Errorf("computed CRC %02X but received %02X", calcCRC, pktCRC)
+
 	}
 	return data, err
 }

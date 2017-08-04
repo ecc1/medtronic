@@ -261,8 +261,8 @@ func (pump *Pump) checkPageCRC(page int, data []byte) []byte {
 	dataCRC := twoByteUint(data[historyPageSize-2:])
 	data = data[:historyPageSize-2]
 	calcCRC := packet.CRC16(data)
-	if dataCRC != calcCRC {
-		pump.SetError(fmt.Errorf("history page %d: CRC should be %02X, not %02X", page, calcCRC, dataCRC))
+	if calcCRC != dataCRC {
+		pump.SetError(fmt.Errorf("history page %d: computed CRC %02X but received %02X", page, calcCRC, dataCRC))
 		return nil
 	}
 	return data
