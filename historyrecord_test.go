@@ -40,7 +40,7 @@ func decodeFromData(file string, newer bool) (History, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close() // nolint
+	defer func() { _ = f.Close() }()
 	d := json.NewDecoder(f)
 	var maps []interface{}
 	err = d.Decode(&maps)
@@ -124,18 +124,17 @@ func (r HistoryRecord) String() string {
 	return string(b)
 }
 
-// nolint: errcheck
 func compareJSON(data interface{}, jsonFile string) (bool, string) {
 	// Write data in JSON format to temporary file.
 	tmpfile, err := ioutil.TempFile("", "json")
 	if err != nil {
 		return false, err.Error()
 	}
-	defer os.Remove(tmpfile.Name())
+	defer func() { _ = os.Remove(tmpfile.Name()) }()
 	e := json.NewEncoder(tmpfile)
 	e.SetIndent("", "  ")
 	err = e.Encode(data)
-	tmpfile.Close()
+	_ = tmpfile.Close()
 	if err != nil {
 		return false, err.Error()
 	}
@@ -145,8 +144,8 @@ func compareJSON(data interface{}, jsonFile string) (bool, string) {
 	// Find differences.
 	cmd := exec.Command("diff", "-u", "--label", jsonFile, "--label", "decoded", canon1, canon2)
 	diffs, err := cmd.Output()
-	os.Remove(canon1)
-	os.Remove(canon2)
+	_ = os.Remove(canon1)
+	_ = os.Remove(canon2)
 	return err == nil, string(diffs)
 }
 
@@ -164,8 +163,8 @@ func canonicalJSON(file string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tmpfile.Write(canon) // nolint
-	tmpfile.Close()      // nolint
+	_, _ = tmpfile.Write(canon)
+	_ = tmpfile.Close()
 	return tmpfile.Name()
 }
 

@@ -31,7 +31,7 @@ func main() {
 			log.Fatal(err)
 		}
 		data := readBytes(f)
-		f.Close() // nolint
+		_ = f.Close()
 		records, err := medtronic.DecodeHistory(data, newer)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)

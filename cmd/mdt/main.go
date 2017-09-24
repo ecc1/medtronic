@@ -91,7 +91,7 @@ func main() {
 }
 
 func eprintf(format string, arg ...interface{}) {
-	fmt.Fprintf(os.Stderr, format, arg...) // nolint
+	fmt.Fprintf(os.Stderr, format, arg...)
 }
 
 // TODO: with argument to schedule progs, get schedule at that time
