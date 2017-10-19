@@ -11,17 +11,20 @@ import (
 )
 
 const (
+	numSteps = 20
+)
+
+var (
 	startFreq = uint32(916000000)
 	endFreq   = uint32(917000000)
-	deltaHz   = uint32(50000)
 )
 
 func usage() {
-	log.Fatalf("Usage: %s [frequency]", os.Args[0])
+	log.Fatalf("Usage: %s [start_frequency [end_frequency]]", os.Args[0])
 }
 
 func main() {
-	if len(os.Args) > 2 {
+	if len(os.Args) > 3 {
 		usage()
 	}
 	pump := medtronic.Open()
@@ -30,19 +33,31 @@ func main() {
 	}
 	defer pump.Close()
 	pump.Wakeup()
+	var err error
 	switch len(os.Args) {
-	case 1:
-		f := searchFrequencies(pump)
-		showResults(f)
-		fmt.Println(radio.MegaHertz(f))
 	case 2:
-		f, err := medtronic.ParseFrequency(os.Args[1])
+		d := endFreq - startFreq
+		startFreq, err = medtronic.ParseFrequency(os.Args[1])
 		if err != nil {
 			usage()
 		}
-		rssi := tryFrequency(pump, f)
-		fmt.Printf("%s  %4d\n", radio.MegaHertz(f), rssi)
+		endFreq = startFreq + d
+	case 3:
+		startFreq, err = medtronic.ParseFrequency(os.Args[1])
+		if err != nil {
+			usage()
+		}
+		endFreq, err = medtronic.ParseFrequency(os.Args[2])
+		if err != nil {
+			usage()
+		}
+		if startFreq > endFreq {
+			usage()
+		}
 	}
+	f := searchFrequencies(pump)
+	showResults(f)
+	fmt.Println(radio.MegaHertz(f))
 }
 
 // Find frequency with maximum RSSI.
@@ -50,6 +65,7 @@ func searchFrequencies(pump *medtronic.Pump) uint32 {
 	pump.SetRetries(1)
 	maxRSSI := -128
 	bestFreq := startFreq
+	deltaHz := (endFreq - startFreq) / numSteps
 	for f := startFreq; f <= endFreq; f += deltaHz {
 		rssi := tryFrequency(pump, f)
 		if rssi > maxRSSI {
