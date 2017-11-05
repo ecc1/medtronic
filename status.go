@@ -6,9 +6,19 @@ const (
 
 // StatusInfo represents the pump's status.
 type StatusInfo struct {
-	Normal    bool
+	Code      byte
 	Bolusing  bool
 	Suspended bool
+}
+
+// Normal returns true if the status code indicates normal pump operation.
+// Observed values:
+//   0: rewinding
+//   1: preparing to prime
+//   2: priming
+//   3: normal
+func (s StatusInfo) Normal() bool {
+	return s.Code == 0x03
 }
 
 // Status returns the pump's status.
@@ -21,13 +31,8 @@ func (pump *Pump) Status() StatusInfo {
 		pump.BadResponse(status, data)
 		return StatusInfo{}
 	}
-	// Observed values for data[1]:
-	//   0: rewinding
-	//   1: preparing to prime
-	//   2: priming
-	//   3: normal
 	return StatusInfo{
-		Normal:    data[1] == 0x03,
+		Code:      data[1],
 		Bolusing:  data[2] == 1,
 		Suspended: data[3] == 1,
 	}
