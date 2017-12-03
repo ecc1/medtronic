@@ -2,7 +2,7 @@
 
 package medtronic
 
-import "fmt"
+import "strconv"
 
 const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagerfRemoteSrfRemoteACTrfRemoteBglucoseUnitscarbRatiosinsulinSensitivitiesmodelbasalRatesbasalPatternAbasalPatternBtempBasallastHistoryPageglucoseTargetssettingsstatus"
 
@@ -42,5 +42,5 @@ func (i Command) String() string {
 	if str, ok := _Command_map[i]; ok {
 		return str
 	}
-	return fmt.Sprintf("Command(%d)", i)
+	return "Command(" + strconv.FormatInt(int64(i), 10) + ")"
 }

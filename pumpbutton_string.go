@@ -2,7 +2,7 @@
 
 package medtronic
 
-import "fmt"
+import "strconv"
 
 const _PumpButton_name = "BolusButtonEscButtonActButtonUpButtonDownButton"
 
@@ -10,7 +10,7 @@ var _PumpButton_index = [...]uint8{0, 11, 20, 29, 37, 47}
 
 func (i PumpButton) String() string {
 	if i >= PumpButton(len(_PumpButton_index)-1) {
-		return fmt.Sprintf("PumpButton(%d)", i)
+		return "PumpButton(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
 	return _PumpButton_name[_PumpButton_index[i]:_PumpButton_index[i+1]]
 }

@@ -2,7 +2,7 @@
 
 package medtronic
 
-import "fmt"
+import "strconv"
 
 const _CarbUnitsType_name = "GramsExchanges"
 
@@ -11,7 +11,7 @@ var _CarbUnitsType_index = [...]uint8{0, 5, 14}
 func (i CarbUnitsType) String() string {
 	i -= 1
 	if i >= CarbUnitsType(len(_CarbUnitsType_index)-1) {
-		return fmt.Sprintf("CarbUnitsType(%d)", i+1)
+		return "CarbUnitsType(" + strconv.FormatInt(int64(i+1), 10) + ")"
 	}
 	return _CarbUnitsType_name[_CarbUnitsType_index[i]:_CarbUnitsType_index[i+1]]
 }

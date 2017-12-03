@@ -2,7 +2,7 @@
 
 package medtronic
 
-import "fmt"
+import "strconv"
 
 const (
 	_PumpError_name_0 = "CommandRefusedMaxSettingExceeded"
@@ -22,6 +22,6 @@ func (i PumpError) String() string {
 	case i == 12:
 		return _PumpError_name_1
 	default:
-		return fmt.Sprintf("PumpError(%d)", i)
+		return "PumpError(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
 }
