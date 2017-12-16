@@ -41,20 +41,20 @@ func Open() *Pump {
 	if pump.Error() != nil {
 		return pump
 	}
-	hw := pump.Radio.Hardware()
-	log.Printf("connected to %s radio on %s", hw.Name(), hw.Device())
+	r := pump.Radio
+	log.Printf("connected to %s radio on %s", r.Name(), r.Device())
 	freq := getFrequency()
 	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
-	pump.Radio.Init(freq)
+	r.Init(freq)
 	go pump.closeWhenSignaled()
 	return pump
 }
 
 // Close closes communication with the pump.
 func (pump *Pump) Close() {
-	hw := pump.Radio.Hardware()
-	log.Printf("disconnecting %s radio on %s", hw.Name(), hw.Device())
-	pump.Radio.Close()
+	r := pump.Radio
+	log.Printf("disconnecting %s radio on %s", r.Name(), r.Device())
+	r.Close()
 }
 
 // ParseFrequency interprets the given string as a frequency
