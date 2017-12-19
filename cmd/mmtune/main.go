@@ -1,31 +1,47 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
-	"os"
 	"sort"
 
 	"github.com/ecc1/medtronic"
 	"github.com/ecc1/radio"
 )
 
-const (
-	numSteps = 20
-)
-
 var (
-	startFreq = uint32(916000000)
-	endFreq   = uint32(917000000)
-)
+	numSteps  = flag.Int("n", 24, "number of frequencies to scan")
+	worldWide = flag.Bool("ww", false, "scan worldwide frequencies (868 MHz band)")
+	sFlag     = flag.String("f", "916.300", "scan from this frequency")
+	eFlag     = flag.String("t", "916.900", "scan to this frequency")
+	showGraph = flag.Bool("g", false, "print graph instead of JSON")
 
-func usage() {
-	log.Fatalf("Usage: %s [start_frequency [end_frequency]]", os.Args[0])
-}
+	startFreq uint32
+	endFreq   uint32
+)
 
 func main() {
-	if len(os.Args) > 3 {
-		usage()
+	flag.Parse()
+	if flag.NArg() != 0 {
+		flag.Usage()
+		return
+	}
+	if *worldWide {
+		*sFlag = "868.150"
+		*eFlag = "868.750"
+	}
+	var err error
+	startFreq, err = medtronic.ParseFrequency(*sFlag)
+	if err != nil {
+		flag.Usage()
+		log.Fatal(err)
+	}
+	endFreq, err = medtronic.ParseFrequency(*eFlag)
+	if err != nil {
+		flag.Usage()
+		log.Fatal(err)
 	}
 	pump := medtronic.Open()
 	if pump.Error() != nil {
@@ -33,31 +49,13 @@ func main() {
 	}
 	defer pump.Close()
 	pump.Wakeup()
-	var err error
-	switch len(os.Args) {
-	case 2:
-		d := endFreq - startFreq
-		startFreq, err = medtronic.ParseFrequency(os.Args[1])
-		if err != nil {
-			usage()
-		}
-		endFreq = startFreq + d
-	case 3:
-		startFreq, err = medtronic.ParseFrequency(os.Args[1])
-		if err != nil {
-			usage()
-		}
-		endFreq, err = medtronic.ParseFrequency(os.Args[2])
-		if err != nil {
-			usage()
-		}
-		if startFreq > endFreq {
-			usage()
-		}
-	}
 	f := searchFrequencies(pump)
-	showResults(f)
-	fmt.Println(radio.MegaHertz(f))
+	sort.Sort(results)
+	if *showGraph {
+		showResults(f)
+	} else {
+		showJSON(f)
+	}
 }
 
 // Find frequency with maximum RSSI.
@@ -65,7 +63,7 @@ func searchFrequencies(pump *medtronic.Pump) uint32 {
 	pump.SetRetries(1)
 	maxRSSI := -128
 	bestFreq := startFreq
-	deltaHz := (endFreq - startFreq) / numSteps
+	deltaHz := (endFreq - startFreq) / uint32(*numSteps)
 	for f := startFreq; f <= endFreq; f += deltaHz {
 		rssi := tryFrequency(pump, f)
 		if rssi > maxRSSI {
@@ -80,6 +78,7 @@ func searchFrequencies(pump *medtronic.Pump) uint32 {
 type Result struct {
 	frequency uint32
 	rssi      int
+	count     int
 }
 
 // Results implements sort.Interface based on frequency.
@@ -110,12 +109,11 @@ func tryFrequency(pump *medtronic.Pump, freq uint32) int {
 	if count != 0 {
 		rssi = (sum + count/2) / count
 	}
-	results = append(results, Result{frequency: freq, rssi: rssi})
+	results = append(results, Result{frequency: freq, rssi: rssi, count: count})
 	return rssi
 }
 
 func showResults(winner uint32) {
-	sort.Sort(results)
 	for _, r := range results {
 		fmt.Printf("%s  %4d ", radio.MegaHertz(r.frequency), r.rssi)
 		n := r.rssi + 128
@@ -128,4 +126,35 @@ func showResults(winner uint32) {
 		fmt.Printf("\n")
 	}
 	fmt.Printf("\n")
+	fmt.Println(radio.MegaHertz(winner))
+}
+
+// JSONResults is used to produce JSON output compatible with openaps.
+type JSONResults struct {
+	ScanDetails []interface{} `json:"scanDetails"`
+	SetFreq     float64       `json:"setFreq"`
+	UsedDefault bool          `json:"usedDefault"`
+}
+
+func showJSON(winner uint32) {
+	j := JSONResults{
+		ScanDetails: make([]interface{}, len(results)),
+		SetFreq:     float64(winner) / 1000000,
+		UsedDefault: winner == startFreq,
+	}
+	// Convert each Result struct into a slice of interfaces
+	// so it will be marshaled as a JSON array.
+	for i, r := range results {
+		j.ScanDetails[i] = []interface{}{
+			radio.MegaHertz(r.frequency),
+			r.count,
+			r.rssi,
+		}
+	}
+	b, err := json.MarshalIndent(j, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(b))
+
 }
