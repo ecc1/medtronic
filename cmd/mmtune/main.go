@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -12,10 +11,10 @@ import (
 )
 
 var (
-	numSteps  = flag.Int("n", 24, "number of frequencies to scan")
+	start     = flag.String("f", "916.300", "scan from this `freq`uency")
+	end       = flag.String("t", "916.900", "scan to this `freq`uency")
+	delta     = flag.Int("k", 50, "`step` size in kHz")
 	worldWide = flag.Bool("ww", false, "scan worldwide frequencies (868 MHz band)")
-	sFlag     = flag.String("f", "916.300", "scan from this frequency")
-	eFlag     = flag.String("t", "916.900", "scan to this frequency")
 	showGraph = flag.Bool("g", false, "print graph instead of JSON")
 
 	startFreq uint32
@@ -29,16 +28,16 @@ func main() {
 		return
 	}
 	if *worldWide {
-		*sFlag = "868.150"
-		*eFlag = "868.750"
+		*start = "868.150"
+		*end = "868.750"
 	}
 	var err error
-	startFreq, err = medtronic.ParseFrequency(*sFlag)
+	startFreq, err = medtronic.ParseFrequency(*start)
 	if err != nil {
 		flag.Usage()
 		log.Fatal(err)
 	}
-	endFreq, err = medtronic.ParseFrequency(*eFlag)
+	endFreq, err = medtronic.ParseFrequency(*end)
 	if err != nil {
 		flag.Usage()
 		log.Fatal(err)
@@ -63,7 +62,7 @@ func searchFrequencies(pump *medtronic.Pump) uint32 {
 	pump.SetRetries(1)
 	maxRSSI := -128
 	bestFreq := startFreq
-	deltaHz := (endFreq - startFreq) / uint32(*numSteps)
+	deltaHz := uint32(*delta) * 1000
 	for f := startFreq; f <= endFreq; f += deltaHz {
 		rssi := tryFrequency(pump, f)
 		if rssi > maxRSSI {
@@ -127,34 +126,4 @@ func showResults(winner uint32) {
 	}
 	fmt.Printf("\n")
 	fmt.Println(radio.MegaHertz(winner))
-}
-
-// JSONResults is used to produce JSON output compatible with openaps.
-type JSONResults struct {
-	ScanDetails []interface{} `json:"scanDetails"`
-	SetFreq     float64       `json:"setFreq"`
-	UsedDefault bool          `json:"usedDefault"`
-}
-
-func showJSON(winner uint32) {
-	j := JSONResults{
-		ScanDetails: make([]interface{}, len(results)),
-		SetFreq:     float64(winner) / 1000000,
-		UsedDefault: winner == startFreq,
-	}
-	// Convert each Result struct into a slice of interfaces
-	// so it will be marshaled as a JSON array.
-	for i, r := range results {
-		j.ScanDetails[i] = []interface{}{
-			radio.MegaHertz(r.frequency),
-			r.count,
-			r.rssi,
-		}
-	}
-	b, err := json.MarshalIndent(j, "", "  ")
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(string(b))
-
 }
