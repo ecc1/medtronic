@@ -488,5 +488,14 @@
     "Type": "DailyTotal522",
     "Data": "bWOQBQwA6AAAAAAB2AHYZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAOgAAAA=",
     "Time": "2016-07-03T00:00:00-04:00"
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2017-12-19T21:22:37-05:00",
+    "Data": "CjvlFlUTEQ==",
+    "Info": {
+      "Units": "μmol/L",
+      "Glucose": 5900
+    }
   }
 ]
