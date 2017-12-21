@@ -30,7 +30,7 @@ func TestGlucoseTargets(t *testing.T) {
 	for _, c := range cases {
 		s := decodeGlucoseTargetSchedule(c.data, c.units)
 		if !reflect.DeepEqual(s, c.sched) {
-			t.Errorf("decodeGlucoseTargetSchedule(% X, %v) == %v, want %v", c.data, c.units, s, c.sched)
+			t.Errorf("decodeGlucoseTargetSchedule(% X, %v) == %+v, want %+v", c.data, c.units, s, c.sched)
 		}
 	}
 }
@@ -52,7 +52,7 @@ func TestGlucoseTargetAt(t *testing.T) {
 	for _, c := range cases {
 		target := c.sched.GlucoseTargetAt(c.at)
 		if !reflect.DeepEqual(target, c.target) {
-			t.Errorf("%v.GlucoseTargetAt(%v) == %v, want %v", c.sched, c.at, target, c.target)
+			t.Errorf("%v.GlucoseTargetAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
 		}
 	}
 }

@@ -22,7 +22,7 @@ func TestBasalRates(t *testing.T) {
 	for _, c := range cases {
 		s := decodeBasalRateSchedule(c.data)
 		if !reflect.DeepEqual(s, c.sched) {
-			t.Errorf("decodeBasalRateSchedule(% X) == %v, want %v", c.data, s, c.sched)
+			t.Errorf("decodeBasalRateSchedule(% X) == %+v, want %+v", c.data, s, c.sched)
 		}
 	}
 }
@@ -44,7 +44,7 @@ func TestBasalRateAt(t *testing.T) {
 	for _, c := range cases {
 		target := c.sched.BasalRateAt(c.at)
 		if !reflect.DeepEqual(target, c.target) {
-			t.Errorf("%v.BasalRateAt(%v) == %v, want %v", c.sched, c.at, target, c.target)
+			t.Errorf("%v.BasalRateAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
 		}
 	}
 }
