@@ -14,7 +14,7 @@ func TestCarbRatios(t *testing.T) {
 		sched CarbRatioSchedule
 	}{
 		{
-			[]byte{0, 6, 18, 8},
+			[]byte{0x00, 0x06, 0x12, 0x08},
 			Grams,
 			false,
 			[]CarbRatio{

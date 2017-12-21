@@ -10,7 +10,7 @@ func TestBattery(t *testing.T) {
 		b    BatteryInfo
 	}{
 		{
-			[]byte{3, 0, 0, 150},
+			[]byte{0x03, 0x00, 0x00, 0x96},
 			BatteryInfo{Voltage: 1500, LowBattery: false},
 		},
 	}

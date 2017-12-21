@@ -12,7 +12,7 @@ func TestBasalRates(t *testing.T) {
 		sched BasalRateSchedule
 	}{
 		{
-			[]byte{6, 40, 0, 0, 48, 0, 18},
+			[]byte{0x06, 0x28, 0x00, 0x00, 0x30, 0x00, 0x12},
 			[]BasalRate{
 				{durationToTimeOfDay(0), 1000},
 				{durationToTimeOfDay(9 * time.Hour), 1200},

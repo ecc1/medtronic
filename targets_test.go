@@ -13,14 +13,14 @@ func TestGlucoseTargets(t *testing.T) {
 		sched GlucoseTargetSchedule
 	}{
 		{
-			[]byte{0, 80, 120},
+			[]byte{0x00, 0x50, 0x78},
 			MgPerDeciLiter,
 			[]GlucoseTarget{
 				{durationToTimeOfDay(0), 80, 120, MgPerDeciLiter},
 			},
 		},
 		{
-			[]byte{0, 44, 67},
+			[]byte{0x00, 0x2C, 0x43},
 			MMolPerLiter,
 			[]GlucoseTarget{
 				{durationToTimeOfDay(0), 4400, 6700, MMolPerLiter},

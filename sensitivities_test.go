@@ -13,7 +13,7 @@ func TestInsulinSensitivitys(t *testing.T) {
 		sched InsulinSensitivitySchedule
 	}{
 		{
-			[]byte{0, 40},
+			[]byte{0x00, 0x28},
 			MgPerDeciLiter,
 			[]InsulinSensitivity{
 				{durationToTimeOfDay(0), 40, MgPerDeciLiter},
