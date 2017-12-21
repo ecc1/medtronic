@@ -20,27 +20,18 @@ type SettingsInfo struct {
 	SelectedPattern      int
 }
 
-// Settings returns the pump's settings.
-func (pump *Pump) Settings() SettingsInfo {
-	// Format of response depends on the pump family.
-	newer := pump.Family() >= 23
-	data := pump.Execute(settings)
-	if pump.Error() != nil {
-		return SettingsInfo{}
-	}
+func decodeSettings(data []byte, newerPump bool) (SettingsInfo, error) {
 	var info SettingsInfo
-	switch newer {
+	switch newerPump {
 	case true:
 		if len(data) < 26 || data[0] != 25 {
-			pump.BadResponse(settings, data)
-			return info
+			return info, BadResponseError{Command: settings, Data: data}
 		}
 		info.MaxBolus = byteToInsulin(data[7], false)
 		info.MaxBasal = twoByteInsulin(data[8:10], true)
 	case false:
 		if len(data) < 22 || data[0] != 21 {
-			pump.BadResponse(settings, data)
-			return info
+			return info, BadResponseError{Command: settings, Data: data}
 		}
 		info.MaxBolus = byteToInsulin(data[6], false)
 		info.MaxBasal = twoByteInsulin(data[7:9], true)
@@ -50,18 +41,31 @@ func (pump *Pump) Settings() SettingsInfo {
 	info.RFEnabled = data[13] == 1
 	info.TempBasalType = TempBasalType(data[14])
 	info.InsulinAction = time.Duration(data[18]) * time.Hour
-	info.InsulinConcentration = pump.insulinConcentration(data)
-	return info
+	var err error
+	info.InsulinConcentration, err = insulinConcentration(data)
+	return info, err
 }
 
-func (pump *Pump) insulinConcentration(data []byte) int {
+// Settings returns the pump's settings.
+func (pump *Pump) Settings() SettingsInfo {
+	// Format of response depends on the pump family.
+	newer := pump.Family() >= 23
+	data := pump.Execute(settings)
+	if pump.Error() != nil {
+		return SettingsInfo{}
+	}
+	i, err := decodeSettings(data, newer)
+	pump.SetError(err)
+	return i
+}
+
+func insulinConcentration(data []byte) (int, error) {
 	switch data[10] {
 	case 0:
-		return 100
+		return 100, nil
 	case 1:
-		return 50
+		return 50, nil
 	default:
-		pump.BadResponse(settings, data)
-		return 0
+		return 0, BadResponseError{Command: settings, Data: data}
 	}
 }
