@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -81,13 +80,7 @@ func main() {
 	if result == nil {
 		return
 	}
-	b, err := json.MarshalIndent(result, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println(result)
-		return
-	}
-	fmt.Println(string(b))
+	showJSON(result)
 }
 
 func eprintf(format string, arg ...interface{}) {
