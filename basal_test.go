@@ -14,8 +14,17 @@ func TestBasalRates(t *testing.T) {
 		{
 			[]byte{0x06, 0x28, 0x00, 0x00, 0x30, 0x00, 0x12},
 			[]BasalRate{
-				{durationToTimeOfDay(0), 1000},
-				{durationToTimeOfDay(9 * time.Hour), 1200},
+				{parseTD("00:00"), 1000},
+				{parseTD("09:00"), 1200},
+			},
+		},
+		{
+			[]byte{0x0C, 0x20, 0x00, 0x00, 0x26, 0x00, 0x0D, 0x2C, 0x00, 0x13, 0x26, 0x00, 0x1C},
+			[]BasalRate{
+				{parseTD("00:00"), 800},
+				{parseTD("06:30"), 950},
+				{parseTD("09:30"), 1100},
+				{parseTD("14:00"), 950},
 			},
 		},
 	}
@@ -35,10 +44,10 @@ func TestBasalRateAt(t *testing.T) {
 	}{
 		{
 			[]BasalRate{
-				{durationToTimeOfDay(0), 1000},
+				{parseTD("00:00"), 1000},
 			},
 			parseTime("2016-11-06T23:00:00"),
-			BasalRate{durationToTimeOfDay(0), 1000},
+			BasalRate{parseTD("00:00"), 1000},
 		},
 	}
 	for _, c := range cases {
@@ -47,4 +56,12 @@ func TestBasalRateAt(t *testing.T) {
 			t.Errorf("%v.BasalRateAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
 		}
 	}
+}
+
+func parseTD(s string) TimeOfDay {
+	t, err := parseTimeOfDay(s)
+	if err != nil {
+		panic(err)
+	}
+	return t
 }

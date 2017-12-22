@@ -18,8 +18,8 @@ func TestCarbRatios(t *testing.T) {
 			Grams,
 			false,
 			[]CarbRatio{
-				{durationToTimeOfDay(0), 60, Grams},
-				{durationToTimeOfDay(9 * time.Hour), 80, Grams},
+				{parseTD("00:00"), 60, Grams},
+				{parseTD("09:00"), 80, Grams},
 			},
 		},
 	}
@@ -39,10 +39,10 @@ func TestCarbRatioAt(t *testing.T) {
 	}{
 		{
 			[]CarbRatio{
-				{durationToTimeOfDay(0), 60, Grams},
+				{parseTD("00:00"), 60, Grams},
 			},
 			parseTime("2016-11-06T23:00:00"),
-			CarbRatio{durationToTimeOfDay(0), 60, Grams},
+			CarbRatio{parseTD("00:00"), 60, Grams},
 		},
 	}
 	for _, c := range cases {
