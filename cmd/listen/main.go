@@ -28,11 +28,12 @@ func main() {
 	if len(p) == 0 {
 		log.Fatal("timeout")
 	}
-	log.Printf("raw data: % X (RSSI = %d)", p, rssi)
+	log.Printf("raw data: % X", p)
 	data, err := packet.Decode(p)
-	if err != nil {
+	if err == nil {
+		log.Printf("decoded:  % X", data)
+	} else {
 		log.Print(err)
-		return
 	}
-	log.Printf("decoded:  % X", data)
+	log.Printf("RSSI %d", rssi)
 }
