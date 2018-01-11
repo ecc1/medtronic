@@ -496,7 +496,16 @@ var decodeSensorStatus = decodeEnable
 
 var decodeEnableMeter = decodeEnableN(21)
 
-var decodeBGReceived = decodeBaseN(10)
+func decodeBGReceived(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	r.Data = data[:10]
+	units := MgPerDeciLiter // are units encoded somehow?
+	r.Info = GlucoseRecord{
+		Units:   units,
+		Glucose: intToGlucose(int(data[1])<<3|int(data[4]>>5), units),
+	}
+	return r
+}
 
 func decodeMealMarker(data []byte, newerPump bool) HistoryRecord {
 	r := decodeBase(data, newerPump)

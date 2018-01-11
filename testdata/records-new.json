@@ -79,6 +79,24 @@
     }
   },
   {
+    "Type": "BGCapture",
+    "Data": "Ck9JniZnEQ==",
+    "Time": "2017-06-07T06:30:09-04:00",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 79
+    }
+  },
+  {
+    "Type": "BGCapture",
+    "Data": "Clh41a8QEA==",
+    "Time": "2016-07-16T15:21:56-04:00",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 600
+    }
+  },
+  {
     "Type": "ChangeTime",
     "Data": "FwBYyA0FEA==",
     "Time": "2016-07-05T13:08:24-04:00"
@@ -134,7 +152,20 @@
   {
     "Type": "BGReceived",
     "Data": "PxRa5XRqEM4mkg==",
-    "Time": "2016-07-10T20:37:26-04:00"
+    "Time": "2016-07-10T20:37:26-04:00",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 163
+    }
+  },
+  {
+    "Type": "BGReceived",
+    "Data": "PwlJnuZnEcI2Rw==",
+    "Time": "2017-06-07T06:30:09-04:00",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 79
+    }
   },
   {
     "Type": "MealMarker",
