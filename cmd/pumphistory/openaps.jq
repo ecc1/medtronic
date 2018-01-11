@@ -4,24 +4,28 @@
 # Usage:
 #   pumphistory | jq -f openaps.jq > history.json
 
-# Convert a Go duration of the form Nm0s to minutes.
-# This will fail (in the tonumber conversion)
-# if the input has an hours or nonzero seconds component.
+# Convert a Go duration to minutes.
 def duration_to_minutes:
-  . | rtrimstr("m0s") | tonumber;
+  if test("^(\\d+h)?\\d+m0s$") then
+    capture("^((?<h>\\d+)h)?(?<m>\\d+)m0s$") |
+    60*(.h // 0 | tonumber) + (.m | tonumber)
+  else
+    ("unexpected duration: " + .) | error
+  end;
 
 # Output a single JSON array.
 [
   # Perform the following on each element of the input array.
   .[] |
-  # Start with the timestamp field, common to all record types.
+  # Start with the timestamp field, common to all record types,
+  # and the type, which is the same as the decocare type in many cases.
   {
     timestamp: .Time,
+    _type: .Type
   } +
   # Add type-specific fields.
   if .Type == "TempBasalDuration" then
     {
-      _type: "TempBasalDuration",
       "duration (min)": .Info | duration_to_minutes
     }
   elif .Type == "TempBasalRate" then
@@ -32,8 +36,28 @@ def duration_to_minutes:
     }
   elif .Type == "Bolus" then
     {
-      _type: "Bolus",
       amount: .Info.Amount
+    }
+  elif .Type == "Prime" then
+    {
+      amount: .Info.Manual,
+      fixed: .Info.Fixed,
+      type: "fixed"
+    }
+  elif .Type == "SuspendPump" then
+    {
+      _type: "PumpSuspend"
+    }
+  elif .Type == "ResumePump" then
+    {
+      _type: "PumpResume"
+    }
+  elif .Type == "BatteryChange" then
+    {
+      _type: "Battery"
+    }
+  elif .Type == "Rewind" then
+    {
     }
   # Add additional cases here as needed.
   else
