@@ -6,9 +6,9 @@
 
 # Convert a Go duration to minutes.
 def duration_to_minutes:
-  if test("^(\\d+h)?\\d+m0s$") then
-    capture("^((?<h>\\d+)h)?(?<m>\\d+)m0s$") |
-    60*(.h // 0 | tonumber) + (.m | tonumber)
+  if test("^(\\d+h)?(\\d+m)?0s$") then
+    capture("^((?<h>\\d+)h)?((?<m>\\d+)m)?0s$") |
+    60*(.h // 0 | tonumber) + (.m // 0 | tonumber)
   else
     ("unexpected duration: " + .) | error
   end;
