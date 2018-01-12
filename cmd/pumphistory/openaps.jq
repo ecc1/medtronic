@@ -36,7 +36,10 @@ def duration_to_minutes:
     }
   elif .Type == "Bolus" then
     {
-      amount: .Info.Amount
+      amount: .Info.Amount,
+      programmed: .Info.Programmed,
+      unabsorbed: .Info.Unabsorbed,
+      duration: .Info.Duration | duration_to_minutes
     }
   elif .Type == "Prime" then
     {
