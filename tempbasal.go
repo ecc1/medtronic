@@ -9,6 +9,8 @@ const (
 	tempBasal            Command = 0x98
 	setAbsoluteTempBasal Command = 0x4C
 	setPercentTempBasal  Command = 0x69
+
+	maxBasal = 34000 // milliUnits
 )
 
 // TempBasalType represents the temp basal type.
@@ -66,6 +68,12 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 // SetAbsoluteTempBasal sets a temporary basal with the given absolute rate and duration.
 func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 	d := pump.halfHours(duration)
+	if rate < 0 {
+		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is negative", rate))
+	}
+	if rate > maxBasal {
+		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is too large", rate))
+	}
 	if rate%25 != 0 {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", rate))
 	}
