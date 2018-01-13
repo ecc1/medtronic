@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,40 +12,60 @@ import (
 	"github.com/ecc1/medtronic"
 )
 
-type prog func(*medtronic.Pump, []string) interface{}
+type (
+	prog func(*medtronic.Pump, []string) interface{}
 
-var command = map[string]prog{
-	"basal":         basal,
-	"battery":       battery,
-	"bolus":         bolus,
-	"button":        button,
-	"carbratios":    carbRatios,
-	"carbunits":     carbUnits,
-	"clock":         clock,
-	"execute":       execute,
-	"glucoseunits":  glucoseUnits,
-	"history":       history,
-	"model":         model,
-	"pumpid":        pumpID,
-	"reservoir":     reservoir,
-	"resume":        resume,
-	"rssi":          rssi,
-	"sensitivities": sensitivities,
-	"setclock":      setClock,
-	"settempbasal":  setTempBasal,
-	"settings":      settings,
-	"status":        status,
-	"suspend":       suspend,
-	"targets":       targets,
-	"tempbasal":     tempBasal,
-	"wakeup":        wakeup,
-}
+	printer func(interface{})
+)
+
+var (
+	formatFlag = flag.String("f", "openaps", "print result in specified `format`")
+
+	format = map[string]printer{
+		"internal": showInternal,
+		"json":     showJSON,
+		"openaps":  showOpenAPS,
+	}
+
+	command = map[string]prog{
+		"basal":         basal,
+		"battery":       battery,
+		"bolus":         bolus,
+		"button":        button,
+		"carbratios":    carbRatios,
+		"carbunits":     carbUnits,
+		"clock":         clock,
+		"execute":       execute,
+		"glucoseunits":  glucoseUnits,
+		"history":       history,
+		"model":         model,
+		"pumpid":        pumpID,
+		"reservoir":     reservoir,
+		"resume":        resume,
+		"rssi":          rssi,
+		"sensitivities": sensitivities,
+		"setclock":      setClock,
+		"settempbasal":  setTempBasal,
+		"settings":      settings,
+		"status":        status,
+		"suspend":       suspend,
+		"targets":       targets,
+		"tempbasal":     tempBasal,
+		"wakeup":        wakeup,
+	}
+)
 
 // TODO: add per-command help
 
 func usage() {
-	eprintf("Usage: %s command [arg ...]\n", os.Args[0])
-	eprintf("Commands:")
+	eprintf("usage: %s [options] command [arg ...]\n", os.Args[0])
+	flag.PrintDefaults()
+	eprintf("output formats:")
+	for k := range format {
+		eprintf(" %s", k)
+	}
+	eprintf("\n")
+	eprintf("commands:")
 	keys := make([]string, len(command))
 	i := 0
 	for k := range command {
@@ -60,11 +81,19 @@ func usage() {
 }
 
 func main() {
-	if len(os.Args) == 1 {
+	flag.Usage = usage
+	flag.Parse()
+	argv := flag.Args()
+	if len(argv) == 0 {
 		usage()
 	}
-	name := os.Args[1]
-	args := os.Args[2:]
+	printFn, known := format[*formatFlag]
+	if !known {
+		eprintf("%s: unknown format\n", *formatFlag)
+		usage()
+	}
+	name := argv[0]
+	args := argv[1:]
 	prog := command[name]
 	if prog == nil {
 		eprintf("%s: unknown command\n", name)
@@ -80,7 +109,7 @@ func main() {
 	if result == nil {
 		return
 	}
-	showJSON(result)
+	printFn(result)
 }
 
 func eprintf(format string, arg ...interface{}) {

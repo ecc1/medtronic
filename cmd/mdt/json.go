@@ -9,20 +9,27 @@ import (
 	"github.com/ecc1/medtronic"
 )
 
+func showInternal(v interface{}) {
+	fmt.Printf("%+v\n", v)
+}
+
 func showJSON(v interface{}) {
-	result := OpenapsJSON(v)
-	b, err := json.MarshalIndent(result, "", "  ")
+	b, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println(result)
+		fmt.Println(v)
 		return
 	}
 	fmt.Println(string(b))
 }
 
+func showOpenAPS(v interface{}) {
+	showJSON(OpenAPSJSON(v))
+}
+
 // OpenapsJSON converts v into a value that the json package
 // will marshal in a format compatible with openaps.
-func OpenapsJSON(v interface{}) interface{} {
+func OpenAPSJSON(v interface{}) interface{} {
 	switch r := v.(type) {
 	case medtronic.BasalRateSchedule:
 		sched := make([]AltBasalRate, len(r))
@@ -67,9 +74,11 @@ func OpenapsJSON(v interface{}) interface{} {
 			}
 		}
 		return struct {
+			First    int            `json:"first"`
 			Units    string         `json:"units"`
 			Schedule []AltCarbRatio `json:"schedule"`
 		}{
+			First:    int(u),
 			Units:    carbU(u),
 			Schedule: sched,
 		}
@@ -98,9 +107,11 @@ func OpenapsJSON(v interface{}) interface{} {
 			}
 		}
 		return struct {
+			First    int                `json:"first"`
 			Units    string             `json:"units"`
 			Schedule []AltGlucoseTarget `json:"targets"`
 		}{
+			First:    int(u),
 			Units:    glucoseU(u),
 			Schedule: sched,
 		}
@@ -126,9 +137,11 @@ func OpenapsJSON(v interface{}) interface{} {
 			}
 		}
 		return struct {
+			First    int                     `json:"first"`
 			Units    string                  `json:"units"`
 			Schedule []AltInsulinSensitivity `json:"sensitivities"`
 		}{
+			First:    int(u),
 			Units:    glucoseU(u),
 			Schedule: sched,
 		}
