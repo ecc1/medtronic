@@ -67,6 +67,7 @@ func OpenAPSJSON(v interface{}) interface{} {
 				ratio /= 100
 			}
 			sched[i] = AltCarbRatio{
+				X:      i,
 				Index:  m / 30,
 				Start:  s.Start.String() + ":00",
 				Offset: m,
@@ -99,6 +100,7 @@ func OpenAPSJSON(v interface{}) interface{} {
 				high /= 1000
 			}
 			sched[i] = AltGlucoseTarget{
+				X:      i,
 				Index:  m / 30,
 				Start:  s.Start.String() + ":00",
 				Offset: m,
@@ -130,6 +132,7 @@ func OpenAPSJSON(v interface{}) interface{} {
 				sens /= 1000
 			}
 			sched[i] = AltInsulinSensitivity{
+				X:           i,
 				Index:       m / 30,
 				Start:       s.Start.String() + ":00",
 				Offset:      m,
@@ -237,6 +240,7 @@ type AltBasalRate struct {
 
 // AltCarbRatio is an openaps-compatible form of CarbRatio.
 type AltCarbRatio struct {
+	X      int     `json:"x"`
 	Index  int     `json:"i"`
 	Start  string  `json:"start"`
 	Offset int     `json:"offset"`
@@ -245,6 +249,7 @@ type AltCarbRatio struct {
 
 // AltGlucoseTarget is an openaps-compatible form of GlucoseTarget.
 type AltGlucoseTarget struct {
+	X      int     `json:"x"`
 	Index  int     `json:"i"`
 	Start  string  `json:"start"`
 	Offset int     `json:"offset"`
@@ -254,6 +259,7 @@ type AltGlucoseTarget struct {
 
 // AltInsulinSensitivity is an openaps-compatible form of InsulinSensitivity.
 type AltInsulinSensitivity struct {
+	X           int     `json:"x"`
 	Index       int     `json:"i"`
 	Start       string  `json:"start"`
 	Offset      int     `json:"offset"`
