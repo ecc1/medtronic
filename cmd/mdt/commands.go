@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -9,9 +10,6 @@ import (
 )
 
 type (
-	// Arguments represents the formal and actual parameters for a command.
-	Arguments map[string]interface{}
-
 	// Prog represents a function to be executed with the given arguments on the pump.
 	Prog func(*medtronic.Pump, Arguments) interface{}
 
@@ -67,9 +65,9 @@ func battery(pump *medtronic.Pump, _ Arguments) interface{} {
 }
 
 func bolus(pump *medtronic.Pump, args Arguments) interface{} {
-	f, err := strconv.ParseFloat(args["units"].(string), 64)
+	f, err := args.Float("units")
 	if err != nil {
-		bolusUsage()
+		bolusUsage(err)
 	}
 	amount := medtronic.Insulin(1000.0*f + 0.5)
 	log.Printf("performing bolus of %v units", amount)
@@ -77,7 +75,8 @@ func bolus(pump *medtronic.Pump, args Arguments) interface{} {
 	return nil
 }
 
-func bolusUsage() {
+func bolusUsage(err error) {
+	log.Printf("bolus: %v", err)
 	log.Fatal("usage: bolus units")
 }
 
@@ -104,13 +103,13 @@ var buttonName = map[string]medtronic.PumpButton{
 func parseButton(s string) medtronic.PumpButton {
 	b, found := buttonName[s]
 	if !found {
-		log.Printf("unknown pump button (%s)", s)
-		buttonUsage()
+		buttonUsage(fmt.Errorf("unknown pump button %q", s))
 	}
 	return b
 }
 
-func buttonUsage() {
+func buttonUsage(err error) {
+	log.Printf("button: %v", err)
 	log.Fatal("usage: button (b|esc|act|up|down) ...\n")
 }
 
@@ -129,22 +128,21 @@ func clock(pump *medtronic.Pump, _ Arguments) interface{} {
 func execute(pump *medtronic.Pump, args Arguments) interface{} {
 	cmd, err := strconv.ParseUint(args["command"].(string), 16, 8)
 	if err != nil {
-		log.Printf("%v", err)
-		executeUsage()
+		executeUsage(err)
 	}
 	var params []byte
 	for _, s := range args["arguments..."].([]string) {
 		b, err := strconv.ParseUint(s, 16, 8)
 		if err != nil {
-			log.Printf("%v", err)
-			executeUsage()
+			executeUsage(err)
 		}
 		params = append(params, byte(b))
 	}
 	return pump.Execute(medtronic.Command(cmd), params...)
 }
 
-func executeUsage() {
+func executeUsage(err error) {
+	log.Printf("execute: %v", err)
 	log.Fatal("usage: execute cmd [param ...]")
 }
 
@@ -199,26 +197,30 @@ func setClock(pump *medtronic.Pump, args Arguments) interface{} {
 func parseTime(date string) time.Time {
 	t, err := time.ParseInLocation(medtronic.UserTimeLayout, date, time.Local)
 	if err != nil {
-		setClockUsage()
+		setClockUsage(err)
 	}
 	return t
 }
 
-func setClockUsage() {
+func setClockUsage(err error) {
+	log.Printf("setclock: %v", err)
 	log.Fatal("usage: setclock YYYY-MM-DD HH:MM:SS (or \"now\")")
 }
 
 func setTempBasal(pump *medtronic.Pump, args Arguments) interface{} {
-	minutes, err := strconv.ParseUint(args["duration"].(string), 10, 8)
+	minutes, err := args.Int("duration")
 	if err != nil {
-		setTempBasalUsage()
+		setTempBasalUsage(err)
 	}
 	duration := time.Duration(minutes) * time.Minute
-	f, err := strconv.ParseFloat(args["rate"].(string), 64)
+	f, err := args.Float("rate")
 	if err != nil {
-		setTempBasalUsage()
+		setTempBasalUsage(err)
 	}
-	temp := args["temp"].(string)
+	temp, err := args.String("temp")
+	if err != nil {
+		setTempBasalUsage(err)
+	}
 	switch temp {
 	case "absolute":
 		rate := medtronic.Insulin(1000.0*f + 0.5)
@@ -229,12 +231,13 @@ func setTempBasal(pump *medtronic.Pump, args Arguments) interface{} {
 		log.Printf("setting temporary basal of %d%% for %d minutes", percent, minutes)
 		pump.SetPercentTempBasal(duration, percent)
 	default:
-		setTempBasalUsage()
+		setTempBasalUsage(fmt.Errorf("unknown temp basal type %q", temp))
 	}
 	return nil
 }
 
-func setTempBasalUsage() {
+func setTempBasalUsage(err error) {
+	log.Printf("settempbasal: %v", err)
 	log.Fatal("usage: settempbasal temp rate duration")
 }
 

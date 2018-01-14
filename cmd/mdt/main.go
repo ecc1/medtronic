@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/ecc1/medtronic"
@@ -24,6 +26,8 @@ var (
 		"json":     showJSON,
 		"openaps":  showOpenAPS,
 	}
+
+	openAPSMode bool
 )
 
 func usage() {
@@ -57,6 +61,7 @@ func main() {
 		log.Printf("%s: unknown format", *formatFlag)
 		usage()
 	}
+	openAPSMode = *formatFlag == "openaps"
 	if flag.NArg() == 0 {
 		usage()
 	}
@@ -80,6 +85,47 @@ func main() {
 	printFn(result)
 }
 
+type (
+	// Arguments represents the formal and actual parameters for a command.
+	Arguments map[string]interface{}
+)
+
+// Float returns the float value associated with the given key.
+func (args Arguments) Float(key string) (float64, error) {
+	if openAPSMode {
+		f, ok := args[key].(float64)
+		if !ok {
+			return f, fmt.Errorf("%q parameter must be a number", key)
+		}
+		return f, nil
+	}
+	return strconv.ParseFloat(args[key].(string), 64)
+}
+
+// Int returns the int value associated with the given key.
+func (args Arguments) Int(key string) (int, error) {
+	if openAPSMode {
+		f, ok := args[key].(float64)
+		if !ok {
+			return int(f), fmt.Errorf("%q parameter must be a number", key)
+		}
+		return int(f), nil
+	}
+	return strconv.Atoi(args[key].(string))
+}
+
+// String returns the string value associated with the given key.
+func (args Arguments) String(key string) (string, error) {
+	if openAPSMode {
+		s, ok := args[key].(string)
+		if !ok {
+			return s, fmt.Errorf("%q parameter must be a string", key)
+		}
+		return s, nil
+	}
+	return args[key].(string), nil
+}
+
 func getArgs(name string, cmd Command) Arguments {
 	params := cmd.Params
 	argv := flag.Args()[1:]
@@ -89,7 +135,7 @@ func getArgs(name string, cmd Command) Arguments {
 		}
 		return nil
 	}
-	if *formatFlag == "openaps" {
+	if openAPSMode {
 		return openAPSArgs(name, params, argv)
 	}
 	return cliArgs(name, params, argv)
@@ -110,7 +156,7 @@ func openAPSArgs(name string, params []string, argv []string) Arguments {
 	if err != nil {
 		log.Fatalf("%s: %v", name, err)
 	}
-	f.Close()
+	_ = f.Close()
 	for _, k := range params {
 		_, present := args[k]
 		if !present {
