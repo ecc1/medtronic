@@ -81,8 +81,8 @@ func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", rate))
 		return
 	}
-	v := int(rate / 25)
-	pump.Execute(setAbsoluteTempBasal, byte(v>>8), byte(v&0xFF), d)
+	r := marshalUint16(uint16(rate / 25))
+	pump.Execute(setAbsoluteTempBasal, r[0], r[1], d)
 }
 
 // SetPercentTempBasal sets a temporary basal with the given percent rate and duration.

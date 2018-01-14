@@ -34,12 +34,12 @@ func (pump *Pump) Clock() time.Time {
 
 // SetClock sets the pump's clock to the given time.
 func (pump *Pump) SetClock(t time.Time) {
+	year := marshalUint16(uint16(t.Year()))
 	pump.Execute(setClock,
 		byte(t.Hour()),
 		byte(t.Minute()),
 		byte(t.Second()),
-		byte(t.Year()>>8),
-		byte(t.Year()&0xFF),
+		year[0], year[1],
 		byte(t.Month()),
 		byte(t.Day()))
 }

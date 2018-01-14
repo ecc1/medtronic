@@ -16,3 +16,7 @@ func fourByteUint(data []byte) uint32 {
 func fourByteInt(data []byte) int {
 	return int(int32(fourByteUint(data)))
 }
+
+func marshalUint16(n uint16) []byte {
+	return []byte{byte(n >> 8), byte(n & 0xFF)}
+}
