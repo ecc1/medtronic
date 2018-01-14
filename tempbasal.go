@@ -10,7 +10,8 @@ const (
 	setAbsoluteTempBasal Command = 0x4C
 	setPercentTempBasal  Command = 0x69
 
-	maxBasal = 34000 // milliUnits
+	maxBasal    = 34000 // milliUnits
+	maxDuration = 24 * time.Hour
 )
 
 // TempBasalType represents the temp basal type.
@@ -70,12 +71,15 @@ func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 	d := pump.halfHours(duration)
 	if rate < 0 {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is negative", rate))
+		return
 	}
 	if rate > maxBasal {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is too large", rate))
+		return
 	}
 	if rate%25 != 0 {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", rate))
+		return
 	}
 	v := int(rate / 25)
 	pump.Execute(setAbsoluteTempBasal, byte(v>>8), byte(v&0xFF), d)
@@ -86,6 +90,7 @@ func (pump *Pump) SetPercentTempBasal(duration time.Duration, percent int) {
 	d := pump.halfHours(duration)
 	if percent < 0 || 100 < percent {
 		pump.SetError(fmt.Errorf("percent temporary basal rate (%d) is not between 0 and 100", percent))
+		return
 	}
 	pump.Execute(setPercentTempBasal, byte(percent), d)
 }
@@ -94,6 +99,15 @@ func (pump *Pump) halfHours(duration time.Duration) uint8 {
 	const halfHour = 30 * time.Minute
 	if duration%halfHour != 0 {
 		pump.SetError(fmt.Errorf("duration (%v) is not a multiple of 30 minutes", duration))
+		return 0
+	}
+	if duration < 0 {
+		pump.SetError(fmt.Errorf("duration (%v) is negative", duration))
+		return 0
+	}
+	if duration > maxDuration {
+		pump.SetError(fmt.Errorf("duration (%v) is too large", duration))
+		return 0
 	}
 	return uint8(duration / halfHour)
 }
