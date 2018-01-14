@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/ecc1/medtronic"
@@ -284,9 +285,6 @@ func convertStatusInfo(r medtronic.StatusInfo) interface{} {
 }
 
 func convertTempBasalInfo(r medtronic.TempBasalInfo) interface{} {
-	if r.Type != medtronic.Absolute {
-		log.Fatalf("temp basal type is %v", r.Type)
-	}
 	return struct {
 		Duration int               `json:"duration"`
 		Rate     medtronic.Insulin `json:"rate"`
@@ -294,6 +292,6 @@ func convertTempBasalInfo(r medtronic.TempBasalInfo) interface{} {
 	}{
 		Duration: minutes(r.Duration),
 		Rate:     *r.Rate,
-		Temp:     "absolute",
+		Temp:     strings.ToLower(r.Type.String()),
 	}
 }
