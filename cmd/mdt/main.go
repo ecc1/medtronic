@@ -1,71 +1,40 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"sort"
-	"strconv"
-	"time"
+	"strings"
 
 	"github.com/ecc1/medtronic"
 )
 
 type (
-	prog func(*medtronic.Pump, []string) interface{}
-
-	printer func(interface{})
+	// Printer represents a function that prints an arbitrary value.
+	Printer func(interface{})
 )
 
 var (
 	formatFlag = flag.String("f", "openaps", "print result in specified `format`")
 
-	format = map[string]printer{
+	format = map[string]Printer{
 		"internal": showInternal,
 		"json":     showJSON,
 		"openaps":  showOpenAPS,
 	}
-
-	command = map[string]prog{
-		"basal":         basal,
-		"battery":       battery,
-		"bolus":         bolus,
-		"button":        button,
-		"carbratios":    carbRatios,
-		"carbunits":     carbUnits,
-		"clock":         clock,
-		"execute":       execute,
-		"glucoseunits":  glucoseUnits,
-		"history":       history,
-		"model":         model,
-		"pumpid":        pumpID,
-		"reservoir":     reservoir,
-		"resume":        resume,
-		"rssi":          rssi,
-		"sensitivities": sensitivities,
-		"setclock":      setClock,
-		"settempbasal":  setTempBasal,
-		"settings":      settings,
-		"status":        status,
-		"suspend":       suspend,
-		"targets":       targets,
-		"tempbasal":     tempBasal,
-		"wakeup":        wakeup,
-	}
 )
 
-// TODO: add per-command help
-
 func usage() {
-	eprintf("usage: %s [options] command [arg ...]\n", os.Args[0])
+	log.Printf("usage: %s [options] command [ arg ...]", os.Args[0])
+	log.Printf("   or: %s [options] command [ args.json ]", os.Args[0])
 	flag.PrintDefaults()
-	eprintf("output formats:")
+	fmts := ""
 	for k := range format {
-		eprintf(" %s", k)
+		fmts += " " + k
 	}
-	eprintf("\n")
-	eprintf("commands:")
+	log.Printf("output formats:%s", fmts)
 	keys := make([]string, len(command))
 	i := 0
 	for k := range command {
@@ -73,36 +42,35 @@ func usage() {
 		i++
 	}
 	sort.Strings(keys)
+	cmds := ""
 	for _, k := range keys {
-		eprintf(" %s", k)
+		cmds += " " + k
 	}
-	eprintf("\n")
-	os.Exit(1)
+	log.Fatalf("commands:%s", cmds)
 }
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-	argv := flag.Args()
-	if len(argv) == 0 {
+	printFn := format[*formatFlag]
+	if printFn == nil {
+		log.Printf("%s: unknown format", *formatFlag)
 		usage()
 	}
-	printFn, known := format[*formatFlag]
-	if !known {
-		eprintf("%s: unknown format\n", *formatFlag)
+	if flag.NArg() == 0 {
 		usage()
 	}
-	name := argv[0]
-	args := argv[1:]
-	prog := command[name]
-	if prog == nil {
-		eprintf("%s: unknown command\n", name)
+	name := flag.Arg(0)
+	cmd, found := command[name]
+	if !found {
+		log.Printf("%s: unknown command", name)
 		usage()
 	}
+	args := getArgs(name, cmd)
 	pump := medtronic.Open()
 	defer pump.Close()
 	pump.Wakeup()
-	result := prog(pump, args)
+	result := cmd.Cmd(pump, args)
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
@@ -112,234 +80,64 @@ func main() {
 	printFn(result)
 }
 
-func eprintf(format string, arg ...interface{}) {
-	fmt.Fprintf(os.Stderr, format, arg...)
-}
-
-// TODO: with argument to schedule progs, get schedule at that time
-
-func basal(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.BasalRates()
-}
-
-func battery(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Battery()
-}
-
-func bolus(pump *medtronic.Pump, args []string) interface{} {
-	if len(args) != 1 {
-		bolusUsage()
+func getArgs(name string, cmd Command) Arguments {
+	params := cmd.Params
+	argv := flag.Args()[1:]
+	if len(params) == 0 {
+		if len(argv) != 0 {
+			log.Fatalf("%s does not take any arguments", name)
+		}
+		return nil
 	}
-	f, err := strconv.ParseFloat(args[0], 64)
+	if *formatFlag == "openaps" {
+		return openAPSArgs(name, params, argv)
+	}
+	return cliArgs(name, params, argv)
+}
+
+// Parse an openaps JSON file for arguments.
+func openAPSArgs(name string, params []string, argv []string) Arguments {
+	if len(argv) != 1 || !strings.HasSuffix(argv[0], ".json") {
+		log.Fatalf("%s: openaps format requires single JSON argument file", name)
+	}
+	file := argv[0]
+	f, err := os.Open(file)
 	if err != nil {
-		bolusUsage()
+		log.Fatalf("%s: %v", name, err)
 	}
-	amount := medtronic.Insulin(1000.0*f + 0.5)
-	log.Printf("performing bolus of %v units", amount)
-	pump.Bolus(amount)
-	return nil
-}
-
-func bolusUsage() {
-	eprintf("Usage: bolus amount\n")
-	os.Exit(1)
-}
-
-func button(pump *medtronic.Pump, args []string) interface{} {
-	for _, s := range args {
-		b := parseButton(s)
-		log.Printf("pressing %v", b)
-		pump.Button(b)
-		if pump.Error() != nil {
-			log.Fatal(pump.Error())
-		}
-	}
-	return nil
-}
-
-var buttonName = map[string]medtronic.PumpButton{
-	"b":    medtronic.BolusButton,
-	"esc":  medtronic.EscButton,
-	"act":  medtronic.ActButton,
-	"up":   medtronic.UpButton,
-	"down": medtronic.DownButton,
-}
-
-func parseButton(s string) medtronic.PumpButton {
-	b, found := buttonName[s]
-	if !found {
-		eprintf("unknown pump button (%s)\n", s)
-		buttonUsage()
-	}
-	return b
-}
-
-func buttonUsage() {
-	eprintf("Usage: button (b|esc|act|up|down) ...\n")
-	os.Exit(1)
-}
-
-func carbRatios(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.CarbRatios()
-}
-
-func carbUnits(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.CarbUnits()
-}
-
-func clock(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Clock()
-}
-
-func execute(pump *medtronic.Pump, args []string) interface{} {
-	if len(args) == 0 {
-		executeUsage()
-	}
-	cmd, err := strconv.ParseUint(args[0], 16, 8)
+	args := make(Arguments)
+	err = json.NewDecoder(f).Decode(&args)
 	if err != nil {
-		eprintf("%v\n", err)
-		executeUsage()
+		log.Fatalf("%s: %v", name, err)
 	}
-	var params []byte
-	for _, s := range args[1:] {
-		b, err := strconv.ParseUint(s, 16, 8)
-		if err != nil {
-			eprintf("%v\n", err)
-			executeUsage()
+	f.Close()
+	for _, k := range params {
+		_, present := args[k]
+		if !present {
+			log.Fatalf("%s: argument file %s is missing %q parameter", name, file, k)
 		}
-		params = append(params, byte(b))
 	}
-	return pump.Execute(medtronic.Command(cmd), params...)
+	return args
 }
 
-func executeUsage() {
-	eprintf("Usage: execute cmd [param ...]\n")
-	os.Exit(1)
-}
-
-func glucoseUnits(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.GlucoseUnits()
-}
-
-func history(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.LastHistoryPage()
-}
-
-func model(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Model()
-}
-
-func pumpID(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.PumpID()
-}
-
-func reservoir(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Reservoir()
-}
-
-func resume(pump *medtronic.Pump, _ []string) interface{} {
-	log.Printf("resuming pump")
-	pump.Suspend(false)
-	return nil
-}
-
-func rssi(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.RSSI()
-}
-
-func sensitivities(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.InsulinSensitivities()
-}
-
-func setClock(pump *medtronic.Pump, args []string) interface{} {
-	t := time.Time{}
-	switch len(args) {
-	case 2:
-		t = parseTime(args[0] + " " + args[1])
-	case 1:
-		if args[0] == "now" {
-			t = time.Now()
-		} else {
-			setClockUsage()
+// Collect command-line arguments.
+func cliArgs(name string, params []string, argv []string) Arguments {
+	args := make(Arguments)
+	for i, k := range params {
+		if i >= len(argv) {
+			// Bind remaining parameters to "".
+			args[k] = ""
+			continue
 		}
-	default:
-		setClockUsage()
-	}
-	log.Printf("setting pump clock to %s", t.Format(medtronic.UserTimeLayout))
-	pump.SetClock(t)
-	return nil
-}
-
-func parseTime(date string) time.Time {
-	t, err := time.ParseInLocation(medtronic.UserTimeLayout, date, time.Local)
-	if err != nil {
-		setClockUsage()
-	}
-	return t
-}
-
-func setClockUsage() {
-	eprintf("Usage: setclock YYYY-MM-DD HH:MM:SS (or \"now\")\n")
-	os.Exit(1)
-}
-
-func setTempBasal(pump *medtronic.Pump, args []string) interface{} {
-	if len(args) != 2 || len(args[1]) == 0 {
-		setTempBasalUsage()
-	}
-	duration, err := time.ParseDuration(args[0])
-	if err != nil {
-		setTempBasalUsage()
-	}
-	rateArg := args[1]
-	n := len(rateArg) - 1
-	if rateArg[n] == '%' {
-		percent, err := strconv.Atoi(rateArg[:n])
-		if err != nil {
-			setTempBasalUsage()
+		if strings.HasSuffix(k, "...") {
+			// Bind all remaining args to this parameter.
+			args[k] = argv[i:]
+			if i != len(params)-1 {
+				panic(k + " is not the final parameter")
+			}
+			continue
 		}
-		log.Printf("setting temporary basal of %d%% for %v", percent, duration)
-		pump.SetPercentTempBasal(duration, percent)
-	} else {
-		f, err := strconv.ParseFloat(rateArg, 64)
-		if err != nil {
-			setTempBasalUsage()
-		}
-		rate := medtronic.Insulin(1000.0*f + 0.5)
-		log.Printf("setting temporary basal of %v units/hour for %v", rate, duration)
-		pump.SetAbsoluteTempBasal(duration, rate)
+		args[k] = argv[i]
 	}
-	return nil
-}
-
-func setTempBasalUsage() {
-	eprintf("Usage: settempbasal duration (units/hr | rate%%)\n")
-	os.Exit(1)
-}
-
-func settings(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Settings()
-}
-
-func status(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.Status()
-}
-
-func suspend(pump *medtronic.Pump, _ []string) interface{} {
-	log.Printf("suspending pump")
-	pump.Suspend(true)
-	return nil
-}
-
-func targets(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.GlucoseTargets()
-}
-
-func tempBasal(pump *medtronic.Pump, _ []string) interface{} {
-	return pump.TempBasal()
-}
-
-func wakeup(pump *medtronic.Pump, _ []string) interface{} {
-	// pump.Wakeup has already been called
-	return nil
+	return args
 }
