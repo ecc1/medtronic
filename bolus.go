@@ -13,19 +13,21 @@ const (
 // Bolus delivers the given amount of insulin as a bolus.
 // For safety, this command is not attempted more than once.
 func (pump *Pump) Bolus(amount Insulin) {
-	newer := pump.Family() >= 23
-	if newer {
-		panic("unimplemented")
-	}
 	if amount < 0 {
 		pump.SetError(fmt.Errorf("bolus amount (%d) is negative", amount))
 	}
 	if amount > maxBolus {
 		pump.SetError(fmt.Errorf("bolus amount (%d) is too large", amount))
 	}
-	b := byte(amount / 100)
+	newer := pump.Family() >= 23
+	strokes := int(amount / milliUnitsPerStroke(newer))
 	n := pump.Retries()
 	defer pump.SetRetries(n)
 	pump.SetRetries(1)
-	pump.Execute(bolus, b)
+	switch newer {
+	case true:
+		pump.Execute(bolus, marshalUint16(uint16(strokes))...)
+	case false:
+		pump.Execute(bolus, uint8(strokes))
+	}
 }
