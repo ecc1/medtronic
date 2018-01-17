@@ -15,6 +15,8 @@ def duration_to_minutes:
 
 # Output a single JSON array.
 [
+  # Treat null as an empty array.
+  (. // []) |
   # Perform the following on each element of the input array.
   .[] |
   # Start with the timestamp field, common to all record types,
