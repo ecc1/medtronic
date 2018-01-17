@@ -14,9 +14,12 @@ type (
 	Prog func(*medtronic.Pump, Arguments) interface{}
 
 	// Command specifies the function and formal parameters for a command.
+	// If Variadic is true, the last parameter is bound to a list of arguments
+	// (a JSON array of strings, or the remaining command-line arguments).
 	Command struct {
-		Cmd    Prog
-		Params []string
+		Cmd      Prog
+		Params   []string
+		Variadic bool
 	}
 )
 
@@ -26,11 +29,11 @@ var (
 		"basal":         cmd(basal),
 		"battery":       cmd(battery),
 		"bolus":         cmd(bolus, "units"),
-		"button":        cmd(button, "keys..."),
+		"button":        cmdN(button, "keys"),
 		"carbratios":    cmd(carbRatios),
 		"carbunits":     cmd(carbUnits),
 		"clock":         cmd(clock),
-		"execute":       cmd(execute, "command", "arguments..."),
+		"execute":       cmdN(execute, "command", "arguments"),
 		"glucoseunits":  cmd(glucoseUnits),
 		"history":       cmd(history),
 		"model":         cmd(model),
@@ -51,7 +54,11 @@ var (
 )
 
 func cmd(prog Prog, params ...string) Command {
-	return Command{Cmd: prog, Params: params}
+	return Command{Cmd: prog, Params: params, Variadic: false}
+}
+
+func cmdN(prog Prog, params ...string) Command {
+	return Command{Cmd: prog, Params: params, Variadic: true}
 }
 
 // TODO: with argument to schedule progs, get schedule at that time
@@ -81,7 +88,11 @@ func bolusUsage(err error) {
 }
 
 func button(pump *medtronic.Pump, args Arguments) interface{} {
-	for _, s := range args["keys..."].([]string) {
+	v, err := args.Strings("keys")
+	if err != nil {
+		buttonUsage(err)
+	}
+	for _, s := range v {
 		b := parseButton(s)
 		log.Printf("pressing %v", b)
 		pump.Button(b)
@@ -126,19 +137,25 @@ func clock(pump *medtronic.Pump, _ Arguments) interface{} {
 }
 
 func execute(pump *medtronic.Pump, args Arguments) interface{} {
-	cmd, err := strconv.ParseUint(args["command"].(string), 16, 8)
+	c, err := strconv.ParseUint(args["command"].(string), 16, 8)
+	if err != nil {
+		executeUsage(err)
+	}
+	v, err := args.Strings("arguments")
 	if err != nil {
 		executeUsage(err)
 	}
 	var params []byte
-	for _, s := range args["arguments..."].([]string) {
+	for _, s := range v {
 		b, err := strconv.ParseUint(s, 16, 8)
 		if err != nil {
 			executeUsage(err)
 		}
 		params = append(params, byte(b))
 	}
-	return pump.Execute(medtronic.Command(cmd), params...)
+	cmd := medtronic.Command(c)
+	log.Printf("executing %v % X", cmd, params)
+	return pump.Execute(cmd, params...)
 }
 
 func executeUsage(err error) {
@@ -151,7 +168,7 @@ func glucoseUnits(pump *medtronic.Pump, _ Arguments) interface{} {
 }
 
 func history(pump *medtronic.Pump, _ Arguments) interface{} {
-	return pump.LastHistoryPage()
+	return pump.HistoryPageCount()
 }
 
 func model(pump *medtronic.Pump, _ Arguments) interface{} {

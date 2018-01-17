@@ -90,40 +90,61 @@ type (
 	Arguments map[string]interface{}
 )
 
-// Float returns the float value associated with the given key.
+// String returns the string value associated with the given key.
+func (args Arguments) String(key string) (string, error) {
+	arg := args[key]
+	s, ok := arg.(string)
+	if !ok {
+		return s, fmt.Errorf("%q argument must be a string", key)
+	}
+	return s, nil
+}
+
+// Float returns the float64 value associated with the given key.
 func (args Arguments) Float(key string) (float64, error) {
+	arg := args[key]
 	if openAPSMode {
-		f, ok := args[key].(float64)
+		f, ok := arg.(float64)
 		if !ok {
 			return f, fmt.Errorf("%q parameter must be a number", key)
 		}
 		return f, nil
 	}
-	return strconv.ParseFloat(args[key].(string), 64)
+	return strconv.ParseFloat(arg.(string), 64)
 }
 
 // Int returns the int value associated with the given key.
 func (args Arguments) Int(key string) (int, error) {
+	arg := args[key]
 	if openAPSMode {
-		f, ok := args[key].(float64)
+		f, ok := arg.(float64)
 		if !ok {
-			return int(f), fmt.Errorf("%q parameter must be a number", key)
+			return int(f), fmt.Errorf("%q argument must be a number", key)
 		}
 		return int(f), nil
 	}
-	return strconv.Atoi(args[key].(string))
+	return strconv.Atoi(arg.(string))
 }
 
-// String returns the string value associated with the given key.
-func (args Arguments) String(key string) (string, error) {
+// Strings returns the []string value associated with the given key.
+func (args Arguments) Strings(key string) ([]string, error) {
+	arg := args[key]
 	if openAPSMode {
-		s, ok := args[key].(string)
+		v, ok := arg.([]interface{})
 		if !ok {
-			return s, fmt.Errorf("%q parameter must be a string", key)
+			return nil, fmt.Errorf("%q argument must be an array", key)
 		}
-		return s, nil
+		a := make([]string, len(v))
+		for i, si := range v {
+			s, ok := si.(string)
+			if !ok {
+				return nil, fmt.Errorf("%q argument must be a list of strings", key)
+			}
+			a[i] = s
+		}
+		return a, nil
 	}
-	return args[key].(string), nil
+	return arg.([]string), nil
 }
 
 func getArgs(name string, cmd Command) Arguments {
@@ -136,16 +157,17 @@ func getArgs(name string, cmd Command) Arguments {
 		return nil
 	}
 	if openAPSMode {
-		return openAPSArgs(name, params, argv)
+		return openAPSArgs(name, params, argv, cmd.Variadic)
 	}
-	return cliArgs(name, params, argv)
+	return cliArgs(name, params, argv, cmd.Variadic)
 }
 
 // Parse an openaps JSON file for arguments.
-func openAPSArgs(name string, params []string, argv []string) Arguments {
+func openAPSArgs(name string, params []string, argv []string, variadic bool) Arguments {
 	if len(argv) != 1 || !strings.HasSuffix(argv[0], ".json") {
 		log.Fatalf("%s: openaps format requires single JSON argument file", name)
 	}
+	// Unmarshal the JSON argument file.
 	file := argv[0]
 	f, err := os.Open(file)
 	if err != nil {
@@ -157,6 +179,7 @@ func openAPSArgs(name string, params []string, argv []string) Arguments {
 		log.Fatalf("%s: %v", name, err)
 	}
 	_ = f.Close()
+	// Check that all parameters are present.
 	for _, k := range params {
 		_, present := args[k]
 		if !present {
@@ -167,20 +190,21 @@ func openAPSArgs(name string, params []string, argv []string) Arguments {
 }
 
 // Collect command-line arguments.
-func cliArgs(name string, params []string, argv []string) Arguments {
+func cliArgs(name string, params []string, argv []string, variadic bool) Arguments {
 	args := make(Arguments)
 	for i, k := range params {
+		if i == len(params)-1 && variadic {
+			// Bind all remaining args to this parameter.
+			if i < len(argv) {
+				args[k] = argv[i:]
+			} else {
+				args[k] = []string{}
+			}
+			continue
+		}
 		if i >= len(argv) {
 			// Bind remaining parameters to "".
 			args[k] = ""
-			continue
-		}
-		if strings.HasSuffix(k, "...") {
-			// Bind all remaining args to this parameter.
-			args[k] = argv[i:]
-			if i != len(params)-1 {
-				panic(k + " is not the final parameter")
-			}
 			continue
 		}
 		args[k] = argv[i]
