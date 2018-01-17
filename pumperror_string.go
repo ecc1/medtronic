@@ -6,12 +6,12 @@ import "strconv"
 
 const (
 	_PumpError_name_0 = "CommandRefusedMaxSettingExceeded"
-	_PumpError_name_1 = "BolusInProgress"
+	_PumpError_name_1 = "BolusInProgressInvalidHistoryPageNumber"
 )
 
 var (
 	_PumpError_index_0 = [...]uint8{0, 14, 32}
-	_PumpError_index_1 = [...]uint8{0, 15}
+	_PumpError_index_1 = [...]uint8{0, 15, 39}
 )
 
 func (i PumpError) String() string {
@@ -19,8 +19,9 @@ func (i PumpError) String() string {
 	case 8 <= i && i <= 9:
 		i -= 8
 		return _PumpError_name_0[_PumpError_index_0[i]:_PumpError_index_0[i+1]]
-	case i == 12:
-		return _PumpError_name_1
+	case 12 <= i && i <= 13:
+		i -= 12
+		return _PumpError_name_1[_PumpError_index_1[i]:_PumpError_index_1[i+1]]
 	default:
 		return "PumpError(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
