@@ -536,7 +536,15 @@ func decodeBolusWizardConfig(data []byte, newerPump bool) BolusWizardConfig {
 	const numEntries = 8
 	r := BolusWizardConfig{}
 	carbUnits := CarbUnitsType(data[0] & 0x3)
+	if carbUnits != Exchanges {
+		// Pumps can return 0 when first turned on.
+		carbUnits = Grams
+	}
 	bgUnits := GlucoseUnitsType((data[0] >> 2) & 0x3)
+	if bgUnits != MMolPerLiter {
+		// Pumps can return 0 when first turned on.
+		bgUnits = MgPerDeciLiter
+	}
 	step := carbRatioStep(newerPump)
 	r.Ratios = decodeCarbRatioSchedule(data[2:2+numEntries*step], carbUnits, newerPump)
 	data = data[2+numEntries*step:]
