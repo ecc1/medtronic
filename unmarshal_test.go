@@ -20,10 +20,10 @@ func TestTwoByteUint(t *testing.T) {
 		if val != c.val {
 			t.Errorf("twoByteUint(% X) == %04X, want %04X", c.rep, val, c.val)
 		}
-                rep := marshalUint16(c.val)
-                if !bytes.Equal(rep, c.rep) {
-                        t.Errorf("marshalUint16(%04X) == % X, want % X", c.val, rep, c.rep)
-                }
+		rep := marshalUint16(c.val)
+		if !bytes.Equal(rep, c.rep) {
+			t.Errorf("marshalUint16(%04X) == % X, want % X", c.val, rep, c.rep)
+		}
 	}
 }
 
