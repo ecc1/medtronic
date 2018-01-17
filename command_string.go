@@ -4,7 +4,7 @@ package medtronic
 
 import "strconv"
 
-const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagerfRemoteSrfRemoteACTrfRemoteBglucoseUnitscarbRatiosinsulinSensitivitiesmodelbasalRatesbasalPatternAbasalPatternBtempBasallastHistoryPageglucoseTargetssettingsstatus"
+const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagerfRemoteSrfRemoteACTrfRemoteBglucoseUnitscarbRatiosinsulinSensitivitiesmodelbasalRatesbasalPatternAbasalPatternBtempBasalhistoryPageCountglucoseTargetssettingsstatus"
 
 var _Command_map = map[Command]string{
 	6:   _Command_name[0:3],
@@ -32,10 +32,10 @@ var _Command_map = map[Command]string{
 	147: _Command_name[201:214],
 	148: _Command_name[214:227],
 	152: _Command_name[227:236],
-	157: _Command_name[236:251],
-	159: _Command_name[251:265],
-	192: _Command_name[265:273],
-	206: _Command_name[273:279],
+	157: _Command_name[236:252],
+	159: _Command_name[252:266],
+	192: _Command_name[266:274],
+	206: _Command_name[274:280],
 }
 
 func (i Command) String() string {
