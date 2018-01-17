@@ -274,7 +274,7 @@ func convertStatusInfo(r medtronic.StatusInfo) interface{} {
 		status = "error"
 	}
 	return struct {
-		Status    string `json:"string"`
+		Status    string `json:"status"`
 		Bolusing  bool   `json:"bolusing"`
 		Suspended bool   `json:"suspended"`
 	}{
