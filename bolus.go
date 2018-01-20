@@ -20,7 +20,12 @@ func (pump *Pump) Bolus(amount Insulin) {
 		pump.SetError(fmt.Errorf("bolus amount (%d) is too large", amount))
 	}
 	newer := pump.Family() >= 23
-	strokes := int(amount / milliUnitsPerStroke(newer))
+	d := milliUnitsPerStroke(newer)
+	if amount%d != 0 {
+		pump.SetError(fmt.Errorf("bolus (%d) is not a multiple of %d milliUnits per hour", amount, d))
+		return
+	}
+	strokes := int(amount / d)
 	n := pump.Retries()
 	defer pump.SetRetries(n)
 	pump.SetRetries(1)
