@@ -2,6 +2,7 @@ package medtronic
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -77,11 +78,12 @@ func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is too large", rate))
 		return
 	}
-	if rate%25 != 0 {
-		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is not a multiple of 25 milliUnits per hour", rate))
-		return
+	strokes := rate / 25
+	actual := strokes * 25
+	if actual != rate {
+		log.Printf("rounding temporary basal rate from %v to %v", rate, actual)
 	}
-	r := marshalUint16(uint16(rate / 25))
+	r := marshalUint16(uint16(strokes))
 	pump.Execute(setAbsoluteTempBasal, r[0], r[1], d)
 }
 

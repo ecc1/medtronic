@@ -2,6 +2,7 @@ package medtronic
 
 import (
 	"fmt"
+	"log"
 )
 
 const (
@@ -21,11 +22,11 @@ func (pump *Pump) Bolus(amount Insulin) {
 	}
 	newer := pump.Family() >= 23
 	d := milliUnitsPerStroke(newer)
-	if amount%d != 0 {
-		pump.SetError(fmt.Errorf("bolus (%d) is not a multiple of %d milliUnits per hour", amount, d))
-		return
+	strokes := amount / d
+	actual := strokes * d
+	if actual != amount {
+		log.Printf("rounding bolus from %v to %v", amount, actual)
 	}
-	strokes := int(amount / d)
 	n := pump.Retries()
 	defer pump.SetRetries(n)
 	pump.SetRetries(1)
