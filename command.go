@@ -288,6 +288,16 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 		if pump.unexpected(cmd, resp, data) {
 			return nil
 		}
+		if tries != 0 {
+			var r string
+			switch tries {
+			case 1:
+				r = "retry"
+			default:
+				r = "retries"
+			}
+			log.Printf("%v command required %d %s", cmd, tries, r)
+		}
 		pump.rssi = rssi
 		return data[5:]
 	}
