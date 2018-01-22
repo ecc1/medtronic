@@ -20,5 +20,8 @@ const (
 
 // Button sends the button-press to the pump.
 func (pump *Pump) Button(b PumpButton) {
+	n := pump.Retries()
+	defer pump.SetRetries(n)
+	pump.SetRetries(1)
 	pump.Execute(button, byte(b))
 }
