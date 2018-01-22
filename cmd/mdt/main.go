@@ -77,6 +77,10 @@ func main() {
 	pump.Wakeup()
 	result := cmd.Cmd(pump, args)
 	if pump.Error() != nil {
+		if pump.NoResponse() {
+			log.Print(pump.Error())
+			os.Exit(2)
+		}
 		log.Fatal(pump.Error())
 	}
 	if result == nil {

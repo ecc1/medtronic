@@ -97,7 +97,7 @@ func button(pump *medtronic.Pump, args Arguments) interface{} {
 		log.Printf("pressing %v", b)
 		pump.Button(b)
 		if pump.Error() != nil {
-			log.Fatal(pump.Error())
+			break
 		}
 	}
 	return nil
