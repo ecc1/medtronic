@@ -17,8 +17,9 @@ var (
 	worldWide = flag.Bool("ww", false, "scan worldwide frequencies (868 MHz band)")
 	showGraph = flag.Bool("g", false, "print graph instead of JSON")
 
-	startFreq uint32
-	endFreq   uint32
+	startFreq   uint32
+	endFreq     uint32
+	defaultFreq uint32
 )
 
 func main() {
@@ -48,29 +49,35 @@ func main() {
 	}
 	defer pump.Close()
 	pump.Wakeup()
-	f := searchFrequencies(pump)
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
+	}
+	defaultFreq = pump.Radio.Frequency()
+	f, usedDefault := searchFrequencies(pump)
 	sort.Sort(results)
 	if *showGraph {
 		showResults(f)
 	} else {
-		showJSON(f)
+		showJSON(f, usedDefault)
 	}
 }
 
 // Find frequency with maximum RSSI.
-func searchFrequencies(pump *medtronic.Pump) uint32 {
+func searchFrequencies(pump *medtronic.Pump) (uint32, bool) {
 	pump.SetRetries(1)
 	maxRSSI := -128
-	bestFreq := startFreq
+	bestFreq := defaultFreq
 	deltaHz := uint32(*delta) * 1000
+	noResponse := true
 	for f := startFreq; f <= endFreq; f += deltaHz {
 		rssi := tryFrequency(pump, f)
 		if rssi > maxRSSI {
 			maxRSSI = rssi
 			bestFreq = f
+			noResponse = false
 		}
 	}
-	return bestFreq
+	return bestFreq, noResponse
 }
 
 // Result represents the RSSI at a given frequency.

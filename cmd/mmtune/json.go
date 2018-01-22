@@ -15,11 +15,11 @@ type JSONResults struct {
 	UsedDefault bool          `json:"usedDefault"`
 }
 
-func showJSON(winner uint32) {
+func showJSON(winner uint32, usedDefault bool) {
 	j := JSONResults{
 		ScanDetails: make([]interface{}, len(results)),
 		SetFreq:     float64(winner) / 1000000,
-		UsedDefault: winner == startFreq,
+		UsedDefault: usedDefault,
 	}
 	// Convert each Result struct into a slice of interfaces
 	// so it will be marshaled as a JSON array.
