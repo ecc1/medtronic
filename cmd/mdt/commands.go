@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -61,6 +62,12 @@ func cmdN(prog Prog, params ...string) Command {
 	return Command{Cmd: prog, Params: params, Variadic: true}
 }
 
+func cmdError(name string, msg string, err error) {
+	eprintf("%s: %v\n", name, err)
+	eprintf("usage: %s %s\n", name, msg)
+	os.Exit(1)
+}
+
 // TODO: with argument to schedule progs, get schedule at that time
 
 func basal(pump *medtronic.Pump, _ Arguments) interface{} {
@@ -74,17 +81,12 @@ func battery(pump *medtronic.Pump, _ Arguments) interface{} {
 func bolus(pump *medtronic.Pump, args Arguments) interface{} {
 	f, err := args.Float("units")
 	if err != nil {
-		bolusUsage(err)
+		cmdError("bolus", "units", err)
 	}
 	amount := medtronic.Insulin(1000.0*f + 0.5)
 	log.Printf("performing bolus of %v units", amount)
 	pump.Bolus(amount)
 	return nil
-}
-
-func bolusUsage(err error) {
-	log.Printf("bolus: %v", err)
-	log.Fatal("usage: bolus units")
 }
 
 func button(pump *medtronic.Pump, args Arguments) interface{} {
@@ -120,8 +122,7 @@ func parseButton(s string) medtronic.PumpButton {
 }
 
 func buttonUsage(err error) {
-	log.Printf("button: %v", err)
-	log.Fatal("usage: button (b|esc|act|up|down) ...\n")
+	cmdError("button", "(b|esc|act|up|down) ...", err)
 }
 
 func carbRatios(pump *medtronic.Pump, _ Arguments) interface{} {
@@ -159,8 +160,7 @@ func execute(pump *medtronic.Pump, args Arguments) interface{} {
 }
 
 func executeUsage(err error) {
-	log.Printf("execute: %v", err)
-	log.Fatal("usage: execute cmd [param ...]")
+	cmdError("execute", "cmd [param ...]", err)
 }
 
 func glucoseUnits(pump *medtronic.Pump, _ Arguments) interface{} {
@@ -214,14 +214,9 @@ func setClock(pump *medtronic.Pump, args Arguments) interface{} {
 func parseTime(date string) time.Time {
 	t, err := time.ParseInLocation(medtronic.UserTimeLayout, date, time.Local)
 	if err != nil {
-		setClockUsage(err)
+		cmdError("setclock", "YYYY-MM-DD HH:MM:SS (or \"now\")", err)
 	}
 	return t
-}
-
-func setClockUsage(err error) {
-	log.Printf("setclock: %v", err)
-	log.Fatal("usage: setclock YYYY-MM-DD HH:MM:SS (or \"now\")")
 }
 
 func setTempBasal(pump *medtronic.Pump, args Arguments) interface{} {
@@ -254,8 +249,7 @@ func setTempBasal(pump *medtronic.Pump, args Arguments) interface{} {
 }
 
 func setTempBasalUsage(err error) {
-	log.Printf("settempbasal: %v", err)
-	log.Fatal("usage: settempbasal temp rate duration")
+	cmdError("settempbasal", "temp rate duration", err)
 }
 
 func settings(pump *medtronic.Pump, _ Arguments) interface{} {

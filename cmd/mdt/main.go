@@ -31,14 +31,14 @@ var (
 )
 
 func usage() {
-	log.Printf("usage: %s [options] command [ arg ...]", os.Args[0])
-	log.Printf("   or: %s [options] command [ args.json ]", os.Args[0])
+	eprintf("usage: %s [options] command [ arg ... ]\n", os.Args[0])
+	eprintf("   or: %s [options] command [ args.json ]\n", os.Args[0])
 	flag.PrintDefaults()
 	fmts := ""
 	for k := range format {
 		fmts += " " + k
 	}
-	log.Printf("output formats:%s", fmts)
+	eprintf("output formats:%s\n", fmts)
 	keys := make([]string, len(command))
 	i := 0
 	for k := range command {
@@ -50,7 +50,8 @@ func usage() {
 	for _, k := range keys {
 		cmds += " " + k
 	}
-	log.Fatalf("commands:%s", cmds)
+	eprintf("commands:%s\n", cmds)
+	os.Exit(1)
 }
 
 func main() {
@@ -58,7 +59,7 @@ func main() {
 	flag.Parse()
 	printFn := format[*formatFlag]
 	if printFn == nil {
-		log.Printf("%s: unknown format", *formatFlag)
+		eprintf("%s: unknown format\n", *formatFlag)
 		usage()
 	}
 	openAPSMode = *formatFlag == "openaps"
@@ -68,7 +69,7 @@ func main() {
 	name := flag.Arg(0)
 	cmd, found := command[name]
 	if !found {
-		log.Printf("%s: unknown command", name)
+		eprintf("%s: unknown command\n", name)
 		usage()
 	}
 	args := getArgs(name, cmd)
@@ -214,4 +215,8 @@ func cliArgs(name string, params []string, argv []string, variadic bool) Argumen
 		args[k] = argv[i]
 	}
 	return args
+}
+
+func eprintf(format string, arg ...interface{}) {
+	fmt.Fprintf(os.Stderr, format, arg...)
 }
