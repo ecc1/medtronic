@@ -21,7 +21,7 @@ func (pump *Pump) History(since time.Time) History {
 		if err != nil {
 			pump.SetError(err)
 		}
-		i := findOlder(records, since)
+		i := findSince(records, since)
 		results = append(results, records[:i]...)
 		if i < len(records) {
 			break
@@ -30,9 +30,9 @@ func (pump *Pump) History(since time.Time) History {
 	return results
 }
 
-// findOlder finds the first record that is older than the given time and returns its index,
+// findSince finds the first record that did not occur after the cutoff and returns its index,
 // or len(records) if all the records occur more recently.
-func findOlder(records History, cutoff time.Time) int {
+func findSince(records History, cutoff time.Time) int {
 	for i, r := range records {
 		// Don't use DailyTotal timestamps to decide when to stop,
 		// because they appear out of order (at the end of the day).
@@ -42,7 +42,7 @@ func findOlder(records History, cutoff time.Time) int {
 		case DailyTotal523:
 		default:
 			t := time.Time(r.Time)
-			if !t.IsZero() && t.Before(cutoff) {
+			if !t.IsZero() && !t.After(cutoff) {
 				log.Printf("stopping pump history scan at %s", t.Format(UserTimeLayout))
 				return i
 			}
