@@ -145,6 +145,10 @@ func carelinkPacket(cmd Command, params []byte) []byte {
 func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 	if len(params) != 0 {
 		pump.perform(cmd, ack, nil)
+		if pump.NoResponse() {
+			pump.SetError(fmt.Errorf("%v command not performed", cmd))
+			return nil
+		}
 		return pump.perform(cmd, ack, params)
 	}
 	return pump.perform(cmd, cmd, nil)
