@@ -47,7 +47,7 @@ def duration_to_minutes:
     {
       amount: .Info.Manual,
       fixed: .Info.Fixed,
-      type: "fixed"
+      type: (if .Info.Fixed == 0 then "manual" else "fixed" end),
     }
   elif .Type == "SuspendPump" then
     {
