@@ -275,8 +275,7 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 	}
 	p := carelinkPacket(cmd, params)
 	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
-		pump.Radio.Send(p)
-		response, rssi := pump.Radio.Receive(pump.Timeout())
+		response, rssi := pump.Radio.SendAndReceive(p, pump.Timeout())
 		if len(response) == 0 {
 			pump.SetError(nil)
 			continue
