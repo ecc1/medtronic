@@ -278,14 +278,24 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 		return nil
 	}
 	p := carelinkPacket(cmd, params)
-	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
+	maxTries := pump.retries
+	if len(params) != 0 {
+		// Don't attempt any state-changing commands more than once.
+		maxTries = 1
+	}
+	for tries := 0; tries < maxTries; tries++ {
+		pump.SetError(nil)
 		response, rssi := pump.Radio.SendAndReceive(p, pump.Timeout())
+		if pump.Error() != nil {
+			continue
+		}
 		if len(response) == 0 {
-			pump.SetError(nil)
+			pump.SetError(NoResponseError(cmd))
 			continue
 		}
 		data, err := packet.Decode(response)
 		if err != nil {
+			pump.SetError(err)
 			continue
 		}
 		if pump.unexpected(cmd, resp, data) {
@@ -304,7 +314,9 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 		pump.rssi = rssi
 		return data[5:]
 	}
-	pump.SetError(NoResponseError(cmd))
+	if pump.Error() == nil {
+		panic("perform")
+	}
 	return nil
 }
 

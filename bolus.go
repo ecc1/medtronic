@@ -12,7 +12,6 @@ const (
 )
 
 // Bolus delivers the given amount of insulin as a bolus.
-// For safety, this command is not attempted more than once.
 func (pump *Pump) Bolus(amount Insulin) {
 	if amount < 0 {
 		pump.SetError(fmt.Errorf("bolus amount (%d) is negative", amount))
@@ -27,9 +26,6 @@ func (pump *Pump) Bolus(amount Insulin) {
 	if actual != amount {
 		log.Printf("rounding bolus from %v to %v", amount, actual)
 	}
-	n := pump.Retries()
-	defer pump.SetRetries(n)
-	pump.SetRetries(1)
 	switch newer {
 	case true:
 		pump.Execute(bolus, marshalUint16(uint16(strokes))...)

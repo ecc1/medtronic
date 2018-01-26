@@ -57,7 +57,7 @@ func (pump *Pump) RFRemote(cmd Command, seq uint8) {
 		return
 	}
 	p := rfRemotePacket(cmd, seq)
-	for tries := 0; tries < pump.retries || pump.retries == 0; tries++ {
+	for tries := 0; tries < pump.retries; tries++ {
 		pump.Radio.Send(p)
 		time.Sleep(pump.Timeout())
 	}

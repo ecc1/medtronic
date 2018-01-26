@@ -101,6 +101,7 @@ func (pump *Pump) Retries() int {
 }
 
 // SetRetries sets the number of retries used for pump communications.
+// For safety, state-changing commands are only tried once.
 func (pump *Pump) SetRetries(n int) {
 	pump.retries = n
 }
