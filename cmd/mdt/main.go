@@ -74,20 +74,28 @@ func main() {
 	}
 	args := getArgs(name, cmd)
 	pump := medtronic.Open()
+	exitOnError(pump)
 	defer pump.Close()
 	pump.Wakeup()
+	exitOnError(pump)
 	result := cmd.Cmd(pump, args)
-	if pump.Error() != nil {
-		if pump.NoResponse() {
-			log.Print(pump.Error())
-			os.Exit(2)
-		}
-		log.Fatal(pump.Error())
-	}
+	exitOnError(pump)
 	if result == nil {
 		return
 	}
 	printFn(result)
+}
+
+func exitOnError(pump *medtronic.Pump) {
+	err := pump.Error()
+	if err == nil {
+		return
+	}
+	if pump.NoResponse() {
+		log.Print(err)
+		os.Exit(2)
+	}
+	log.Fatal(err)
 }
 
 type (
