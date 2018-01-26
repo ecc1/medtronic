@@ -8,11 +8,11 @@ import (
 // It returns the decoded data, excluding the CRC byte.
 func Decode(p []byte) ([]byte, error) {
 	data, err := Decode6b4b(p)
-	if len(data) == 0 {
-		err = fmt.Errorf("empty packet")
-	}
 	if err != nil {
 		return data, err
+	}
+	if len(data) == 0 {
+		return nil, fmt.Errorf("empty packet")
 	}
 	last := len(data) - 1
 	pktCRC := data[last]
