@@ -1,4 +1,4 @@
-// +build cc111x
+// +build !cc1101,!rfm69
 
 package medtronic
 
