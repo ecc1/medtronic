@@ -50,7 +50,7 @@ func main() {
 	defer pump.Close()
 	pump.Wakeup()
 	if pump.Error() != nil {
-		log.Fatal(pump.Error())
+		log.Print(pump.Error())
 	}
 	defaultFreq = pump.Radio.Frequency()
 	f, usedDefault := searchFrequencies(pump)
