@@ -11,11 +11,12 @@ import (
 )
 
 var (
-	start     = flag.String("f", "916.300", "scan from this `freq`uency")
-	end       = flag.String("t", "916.900", "scan to this `freq`uency")
-	delta     = flag.Int("k", 50, "`step` size in kHz")
-	worldWide = flag.Bool("ww", false, "scan worldwide frequencies (868 MHz band)")
-	showGraph = flag.Bool("g", false, "print graph instead of JSON")
+	start      = flag.String("f", "916.300", "scan from this `frequency`")
+	end        = flag.String("t", "916.900", "scan to this `frequency`")
+	delta      = flag.Int("k", 50, "`step` size in kHz")
+	worldWide  = flag.Bool("ww", false, "scan worldwide frequencies (868 MHz band)")
+	showGraph  = flag.Bool("g", false, "print graph instead of JSON")
+	numSamples = flag.Int("n", 3, "number of `samples` at each frequency")
 
 	startFreq   uint32
 	endFreq     uint32
@@ -52,7 +53,7 @@ func main() {
 	if pump.Error() != nil {
 		log.Print(pump.Error())
 	}
-	defaultFreq = pump.Radio.Frequency()
+	defaultFreq = (startFreq + endFreq) / 2
 	f, usedDefault := searchFrequencies(pump)
 	sort.Sort(results)
 	if *showGraph {
@@ -97,7 +98,7 @@ func (r Results) Less(i, j int) bool { return r[i].frequency < r[j].frequency }
 var results Results
 
 func tryFrequency(pump *medtronic.Pump, freq uint32) int {
-	const sampleSize = 2
+	sampleSize := *numSamples
 	pump.Radio.SetFrequency(freq)
 	log.Printf("frequency set to %s", radio.MegaHertz(freq))
 	rssi := -128
