@@ -77,6 +77,19 @@ def duration_to_minutes:
   elif .Type == "Rewind" then
     {
     }
+   elif .Type == "BolusWizard" then
+    {
+      bg: (.Info.Glucose // 0),
+      carb_input: (.Info.CarbInput // 0),
+      bg_target_low: .Info.TargetLow,
+      bg_target_high: .Info.TargetHigh,
+      sensitivity: .Info.Sensitivity,
+      carb_ratio: .Info.CarbRatio,
+      correction_estimate: .Info.Correction,
+      unabsorbed_insulin_total: .Info.Unabsorbed,
+      bolus_estimate: .Info.Bolus,
+      food_estimate: .Info.Food
+    }
   # Add additional cases here as needed.
   else
     # Warn about record types being skipped.
