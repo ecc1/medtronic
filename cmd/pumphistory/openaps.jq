@@ -43,6 +43,19 @@ def duration_to_minutes:
       unabsorbed: .Info.Unabsorbed,
       duration: .Info.Duration | duration_to_minutes
     }
+  elif .Type == "BolusWizard" then
+    {
+      bg: (.Info.Glucose // 0),
+      carb_input: (.Info.CarbInput // 0),
+      bg_target_low: .Info.TargetLow,
+      bg_target_high: .Info.TargetHigh,
+      sensitivity: .Info.Sensitivity,
+      carb_ratio: .Info.CarbRatio,
+      correction_estimate: .Info.Correction,
+      food_estimate: .Info.Food,
+      unabsorbed_insulin_total: .Info.Unabsorbed,
+      bolus_estimate: .Info.Bolus
+    }
   elif .Type == "Prime" then
     {
       amount: .Info.Manual,
