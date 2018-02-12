@@ -37,6 +37,9 @@ const (
 	EnableRemote            HistoryRecordType = 0x26
 	MaxBasal                HistoryRecordType = 0x2C
 	EnableBolusWizard       HistoryRecordType = 0x2D
+	Unknown2E               HistoryRecordType = 0x2E
+	BolusWizard512          HistoryRecordType = 0x2F
+	UnabsorbedInsulin512    HistoryRecordType = 0x30
 	ChangeBGReminder        HistoryRecordType = 0x31
 	SetAlarmClockTime       HistoryRecordType = 0x32
 	TempBasalRate           HistoryRecordType = 0x33
@@ -108,6 +111,9 @@ var decode = map[HistoryRecordType]decoder{
 	EnableRemote:            decodeEnableRemote,
 	MaxBasal:                decodeMaxBasal,
 	EnableBolusWizard:       decodeEnableBolusWizard,
+	Unknown2E:               decodeUnknown2E,
+	BolusWizard512:          decodeBolusWizard512,
+	UnabsorbedInsulin512:    decodeUnabsorbedInsulin512,
 	ChangeBGReminder:        decodeChangeBGReminder,
 	SetAlarmClockTime:       decodeSetAlarmClockTime,
 	TempBasalRate:           decodeTempBasalRate,
@@ -462,6 +468,12 @@ var decodeEnableRemote = decodeEnableN(21)
 var decodeMaxBasal = decodeInsulin
 
 var decodeEnableBolusWizard = decodeEnable
+
+var decodeUnknown2E = decodeBaseN(107)
+
+var decodeBolusWizard512 = decodeBaseN(19)
+
+var decodeUnabsorbedInsulin512 = decodeUnabsorbedInsulin
 
 var decodeChangeBGReminder = decodeBase
 

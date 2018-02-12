@@ -1,0 +1,245 @@
+[
+  {
+    "Type": "DailyTotal",
+    "Time": "2018-02-10T00:00:00-05:00",
+    "Data": "BwAAC0gqEg==",
+    "Info": 72.2
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2018-02-10T20:18:35-05:00",
+    "Data": "Afr6ACOSNAoS",
+    "Info": {
+      "Programmed": 25,
+      "Amount": 25,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "UnabsorbedInsulin512",
+    "Data": "MAvwCwBUFQIgHwI=",
+    "Info": [
+      {
+        "Bolus": 6,
+        "Age": "11m0s"
+      },
+      {
+        "Bolus": 2.1,
+        "Age": "21m0s"
+      },
+      {
+        "Bolus": 0.8,
+        "Age": "31m0s"
+      }
+    ]
+  },
+  {
+    "Type": "BolusWizard512",
+    "Time": "2018-02-10T20:18:35-05:00",
+    "Data": "LwAjkhQKEvpQCi5kAPoAAAAA+g=="
+  },
+  {
+    "Type": "Unknown2E",
+    "Time": "2018-02-10T20:17:07-05:00",
+    "Data": "Lg8HkRQKEhURAA0AAAAAAAAAAAAAAAAAAAAuAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAAAAAAAAAAAFREACgAAAAAAAAAAAAAAAAAAAC4AAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2018-02-10T19:55:36-05:00",
+    "Data": "AebmACS3MwoS",
+    "Info": {
+      "Programmed": 23,
+      "Amount": 23,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "UnabsorbedInsulin512",
+    "Data": "MAXMCAE=",
+    "Info": [
+      {
+        "Bolus": 5.1,
+        "Age": "8m0s"
+      }
+    ]
+  },
+  {
+    "Type": "BolusWizard512",
+    "Time": "2018-02-10T19:55:36-05:00",
+    "Data": "L2QktxMKEixUDS5kAOYAAHMA5g=="
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2018-02-10T19:47:10-05:00",
+    "Data": "AXNzAAqvMwoS",
+    "Info": {
+      "Programmed": 11.5,
+      "Amount": 11.5,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "BolusWizard512",
+    "Time": "2018-02-10T19:47:10-05:00",
+    "Data": "L1gKrxMKEgpSDS5kbAcAAAAAcw=="
+  },
+  {
+    "Type": "MaxBolus",
+    "Time": "2018-02-10T19:37:56-05:00",
+    "Data": "JPo4pRMKEg==",
+    "Info": 6.25
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T09:40:47-05:00",
+    "Data": "FgQvqAlKEg==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T09:40:47-05:00",
+    "Data": "MwAvqAlKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T09:31:21-05:00",
+    "Data": "FgEVnwlKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T09:31:21-05:00",
+    "Data": "MxIVnwlKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.45
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T08:31:15-05:00",
+    "Data": "FgQPnwhKEg==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T08:31:15-05:00",
+    "Data": "MwAPnwhKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T08:15:47-05:00",
+    "Data": "FgEvjwhKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T08:15:47-05:00",
+    "Data": "MwUvjwhKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.125
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T08:11:01-05:00",
+    "Data": "FgEBiwhKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T08:11:01-05:00",
+    "Data": "MwsBiwhKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.275
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T08:01:03-05:00",
+    "Data": "FgEDgQhKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T08:01:03-05:00",
+    "Data": "MxQDgQhKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T07:56:02-05:00",
+    "Data": "FgECuAdKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T07:56:02-05:00",
+    "Data": "MygCuAdKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T07:45:45-05:00",
+    "Data": "FgEtrQdKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T07:45:45-05:00",
+    "Data": "MwItrQdKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.05
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T07:41:38-05:00",
+    "Data": "FgEmqQdKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T07:41:38-05:00",
+    "Data": "MwomqQdKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.25
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-02-10T07:41:01-05:00",
+    "Data": "FgEBqQdKEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-02-10T07:41:01-05:00",
+    "Data": "MxQBqQdKEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  }
+]
