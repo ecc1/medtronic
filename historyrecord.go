@@ -601,7 +601,7 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 	switch newerPump {
 	case true:
 		r.Info = BolusWizardRecord{
-			GlucoseInput: intToGlucose(bg|int(body[1]&0x3)<<8, bgU),
+			GlucoseInput: intToGlucose(int(body[1]&0x3)<<8|bg, bgU),
 			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
 			GlucoseUnits: bgU,
 			CarbUnits:    carbU,
@@ -617,8 +617,8 @@ func decodeBolusWizard(data []byte, newerPump bool) HistoryRecord {
 		r.Data = data[:22]
 	case false:
 		r.Info = BolusWizardRecord{
-			GlucoseInput: intToGlucose(bg|int(body[1]&0xF)<<8, bgU),
-			CarbInput:    Carbs(body[0]),
+			GlucoseInput: intToGlucose(int(body[1]&0x3)<<8|bg, bgU),
+			CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
 			GlucoseUnits: bgU,
 			CarbUnits:    carbU,
 			TargetLow:    byteToGlucose(body[4], bgU),

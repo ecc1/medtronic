@@ -497,5 +497,24 @@
       "Units": "μmol/L",
       "Glucose": 5900
     }
+  },
+  {
+    "Type": "BolusWizard",
+    "Time": "2018-02-13T21:53:06-05:00",
+    "Data": "WwAGtRUNEixUBhlkAPQBAAAB9GQ=",
+    "Info": {
+      "CarbRatio": 6,
+      "GlucoseInput": 0,
+      "CarbInput": 300,
+      "GlucoseUnits": "mg/dL",
+      "CarbUnits": "Grams",
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 25,
+      "Correction": 0.1,
+      "Food": 24.4,
+      "Unabsorbed": 0,
+      "Bolus": 24.4
+    }
   }
 ]
