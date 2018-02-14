@@ -37,7 +37,21 @@
   {
     "Type": "BolusWizard512",
     "Time": "2018-02-10T20:18:35-05:00",
-    "Data": "LwAjkhQKEvpQCi5kAPoAAAAA+g=="
+    "Data": "LwAjkhQKEvpQCi5kAPoAAAAA+g==",
+    "Info": {
+      "CarbRatio": 10,
+      "GlucoseInput": 0,
+      "CarbInput": 250,
+      "GlucoseUnits": "mg/dL",
+      "CarbUnits": "Grams",
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 46,
+      "Correction": 0,
+      "Food": 25,
+      "Unabsorbed": 0,
+      "Bolus": 25
+    }
   },
   {
     "Type": "Unknown2E",
@@ -68,7 +82,21 @@
   {
     "Type": "BolusWizard512",
     "Time": "2018-02-10T19:55:36-05:00",
-    "Data": "L2QktxMKEixUDS5kAOYAAHMA5g=="
+    "Data": "L2QktxMKEixUDS5kAOYAAHMA5g==",
+    "Info": {
+      "CarbRatio": 13,
+      "GlucoseInput": 100,
+      "CarbInput": 300,
+      "GlucoseUnits": "mg/dL",
+      "CarbUnits": "Grams",
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 46,
+      "Correction": 0,
+      "Food": 23,
+      "Unabsorbed": 11.5,
+      "Bolus": 23
+    }
   },
   {
     "Type": "Bolus",
@@ -84,7 +112,21 @@
   {
     "Type": "BolusWizard512",
     "Time": "2018-02-10T19:47:10-05:00",
-    "Data": "L1gKrxMKEgpSDS5kbAcAAAAAcw=="
+    "Data": "L1gKrxMKEgpSDS5kbAcAAAAAcw==",
+    "Info": {
+      "CarbRatio": 13,
+      "GlucoseInput": 600,
+      "CarbInput": 10,
+      "GlucoseUnits": "mg/dL",
+      "CarbUnits": "Grams",
+      "TargetLow": 100,
+      "TargetHigh": 100,
+      "Sensitivity": 46,
+      "Correction": 1.2,
+      "Food": 0.7,
+      "Unabsorbed": 0,
+      "Bolus": 11.5
+    }
   },
   {
     "Type": "MaxBolus",

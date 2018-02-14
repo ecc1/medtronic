@@ -471,7 +471,30 @@ var decodeEnableBolusWizard = decodeEnable
 
 var decodeUnknown2E = decodeBaseN(107)
 
-var decodeBolusWizard512 = decodeBaseN(19)
+func decodeBolusWizard512(data []byte, newerPump bool) HistoryRecord {
+	r := decodeBase(data, newerPump)
+	bg := int(data[1])
+	body := data[7:]
+	bgU := GlucoseUnitsType((body[1] >> 6) & 0x3)
+	carbU := CarbUnitsType((body[1] >> 4) & 0x3)
+	info := BolusWizardRecord{
+		GlucoseInput: intToGlucose(int(body[1]&0x3)<<8|bg, bgU),
+		CarbInput:    Carbs(int(body[1]&0xC)<<6 | int(body[0])),
+		GlucoseUnits: bgU,
+		CarbUnits:    carbU,
+		TargetLow:    byteToGlucose(body[4], bgU),
+		Sensitivity:  byteToGlucose(body[3], bgU),
+		CarbRatio:    intToRatio(int(body[2]), carbU, false),
+		Correction:   intToInsulin(int(body[7])+int(body[5]&0xF), false),
+		Food:         byteToInsulin(body[6], false),
+		Unabsorbed:   byteToInsulin(body[9], false),
+		Bolus:        byteToInsulin(body[11], false),
+	}
+	info.TargetHigh = info.TargetLow
+	r.Info = info
+	r.Data = data[:19]
+	return r
+}
 
 var decodeUnabsorbedInsulin512 = decodeUnabsorbedInsulin
 
