@@ -9,7 +9,7 @@ import (
 
 func TestPacketEncoding(t *testing.T) {
 	cases := []struct {
-		decoded []byte
+		decoded []byte // excluding CRC byte
 		encoded []byte
 	}{
 		{parseBytes("A7 12 89 86 5D 00"), parseBytes("A9 6C 72 69 96 A6 94 D5 55 2C E5")},
@@ -17,6 +17,7 @@ func TestPacketEncoding(t *testing.T) {
 		{parseBytes("A7 12 89 86 15 09"), parseBytes("A9 6C 72 69 96 A6 C6 55 59 96 65")},
 		{parseBytes("A7 12 89 86 8D 00"), parseBytes("A9 6C 72 69 96 A6 68 D5 55 2D 55")},
 		{parseBytes("A7 12 89 86 8D 09 03 37 32 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"), parseBytes("A9 6C 72 69 96 A6 68 D5 59 56 38 D6 8F 28 F2 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 8D 95")},
+		{parseBytes("A8 0F 25 C1 23 0D 19 1C 50 00 8F 00 90 00 34 34 99 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"), parseBytes("A9 A5 5C CA 5B 31 CA 35 4D C5 9C 6C 95 55 55 69 C5 55 65 55 55 8F 48 F4 65 95 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 34 E3 96")},
 	}
 	for _, c := range cases {
 		result := Encode(c.decoded)

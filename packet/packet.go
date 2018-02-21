@@ -14,19 +14,43 @@ func Decode(p []byte) ([]byte, error) {
 	if len(data) == 0 {
 		return nil, fmt.Errorf("empty packet")
 	}
+	if data[0] == Sensor {
+		return checkCRC16(data)
+	}
+	return checkCRC8(data)
+}
+
+func checkCRC8(data []byte) ([]byte, error) {
 	last := len(data) - 1
 	pktCRC := data[last]
 	data = data[:last] // without CRC
 	calcCRC := CRC8(data)
 	if calcCRC != pktCRC {
-		err = fmt.Errorf("computed CRC %02X but received %02X", calcCRC, pktCRC)
-
+		return nil, fmt.Errorf("computed CRC %02X but received %02X", calcCRC, pktCRC)
 	}
-	return data, err
+	return data, nil
+}
+
+func checkCRC16(data []byte) ([]byte, error) {
+	last := len(data) - 2
+	pktCRC := uint16(data[last])<<8 | uint16(data[last+1])
+	data = data[:last] // without CRC
+	calcCRC := CRC16(data)
+	if calcCRC != pktCRC {
+		return nil, fmt.Errorf("computed CRC %04X but received %04X", calcCRC, pktCRC)
+	}
+	return data, nil
 }
 
 // Encode appends the CRC to the data and returns the 4b/6b-encoded result.
 // This may modify data's underlying array.
 func Encode(data []byte) []byte {
-	return Encode4b6b(append(data, CRC8(data)))
+	var msg []byte
+	if data[0] == Sensor {
+		crc := CRC16(data)
+		msg = append(data, byte(crc>>8), byte(crc&0xFF))
+	} else {
+		msg = append(data, CRC8(data))
+	}
+	return Encode4b6b(msg)
 }
