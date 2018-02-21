@@ -11,11 +11,37 @@ import (
 )
 
 const (
+	pumpEnvVar       = "MEDTRONIC_PUMP_ID"
 	freqEnvVar       = "MEDTRONIC_FREQUENCY"
 	defaultFrequency = 916600000
 	defaultTimeout   = 500 * time.Millisecond
 	defaultRetries   = 3
 )
+
+// PumpAddress returns the encoded form of the pump ID.
+func PumpAddress() []byte {
+	id := os.Getenv(pumpEnvVar)
+	if len(id) == 0 {
+		log.Fatalf("%s environment variable is not set", pumpEnvVar)
+	}
+	addr, err := DeviceAddress(id)
+	if err != nil {
+		log.Fatalf("%s: %v", pumpEnvVar, err)
+	}
+	return addr
+}
+
+// DeviceAddress returns the encoded form of a device ID.
+func DeviceAddress(id string) ([]byte, error) {
+	if len(id) != 6 {
+		return nil, fmt.Errorf("device ID %q must be 6 digits", id)
+	}
+	h, err := strconv.ParseUint(id, 16, 24)
+	if err != nil {
+		return nil, fmt.Errorf("device ID %q: %v", id, err)
+	}
+	return []byte{byte(h >> 16), byte(h >> 8), byte(h >> 0)}, nil
+}
 
 // Pump represents a Medtronic insulin pump.
 type Pump struct {

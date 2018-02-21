@@ -4,46 +4,25 @@ import (
 	"bytes"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/ecc1/medtronic/packet"
 )
 
 const (
-	pumpEnvVar      = "MEDTRONIC_PUMP_ID"
-	carelinkDevice  = 0xA7
 	maxPacketSize   = 70   // excluding CRC byte
 	historyPageSize = 1024 // including CRC16
 )
 
 var (
-	carelinkPrefix []byte
+	pumpPrefix []byte
 )
 
-func initCarelinkPrefix() {
-	if len(carelinkPrefix) != 0 {
+func initPumpPrefix() {
+	if len(pumpPrefix) != 0 {
 		return
 	}
-	id := os.Getenv(pumpEnvVar)
-	if len(id) == 0 {
-		log.Fatalf("%s environment variable is not set", pumpEnvVar)
-	}
-	if len(id) != 6 {
-		log.Fatalf("%s environment variable must be 6 digits", pumpEnvVar)
-	}
-	carelinkPrefix = append([]byte{carelinkDevice}, marshalDeviceID(id)...)
-}
-
-func marshalDeviceID(id string) []byte {
-	if len(id) != 6 {
-		panic("device ID must be 6 digits")
-	}
-	return []byte{
-		(id[0]-'0')<<4 | (id[1] - '0'),
-		(id[2]-'0')<<4 | (id[3] - '0'),
-		(id[4]-'0')<<4 | (id[5] - '0'),
-	}
+	pumpPrefix = append([]byte{packet.Pump}, PumpAddress()...)
 }
 
 // Command represents a pump command.
@@ -107,7 +86,7 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 	pump.SetError(BadResponseError{Command: cmd, Data: data})
 }
 
-// carelinkPacket constructs a packet
+// pumpPacket constructs a packet
 // with the specified command code and parameters.
 // A command packet with no parameters is 7 bytes long:
 //   device type (0xA7)
@@ -122,15 +101,15 @@ func (pump *Pump) BadResponse(cmd Command, data []byte) {
 //   length of parameters
 //   64 bytes of parameters plus padding
 //   CRC-8
-func carelinkPacket(cmd Command, params []byte) []byte {
-	initCarelinkPrefix()
+func pumpPacket(cmd Command, params []byte) []byte {
+	initPumpPrefix()
 	var data []byte
 	if len(params) == 0 {
 		data = make([]byte, 6)
 	} else {
 		data = make([]byte, maxPacketSize)
 	}
-	copy(data, carelinkPrefix)
+	copy(data, pumpPrefix)
 	data[4] = byte(cmd)
 	data[5] = byte(len(params))
 	if len(params) != 0 {
@@ -277,7 +256,7 @@ func (pump *Pump) perform(cmd Command, resp Command, params []byte) []byte {
 	if pump.Error() != nil {
 		return nil
 	}
-	p := carelinkPacket(cmd, params)
+	p := pumpPacket(cmd, params)
 	maxTries := pump.retries
 	if len(params) != 0 {
 		// Don't attempt any state-changing commands more than once.
@@ -327,8 +306,8 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 		pump.BadResponse(cmd, data)
 		return true
 	}
-	n := len(carelinkPrefix)
-	if !bytes.Equal(data[:n], carelinkPrefix) {
+	n := len(pumpPrefix)
+	if !bytes.Equal(data[:n], pumpPrefix) {
 		pump.BadResponse(cmd, data)
 		return true
 	}
