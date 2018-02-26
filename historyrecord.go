@@ -173,6 +173,7 @@ type (
 	GlucoseRecord struct {
 		Units   GlucoseUnitsType
 		Glucose Glucose
+		MeterID string `json:",omitempty"`
 	}
 
 	CarbRecord struct {
@@ -538,6 +539,7 @@ func decodeBGReceived(data []byte, newerPump bool) HistoryRecord {
 	r.Info = GlucoseRecord{
 		Units:   units,
 		Glucose: intToGlucose(int(data[1])<<3|int(data[4]>>5), units),
+		MeterID: fmt.Sprintf("%06X", data[7:10]),
 	}
 	return r
 }

@@ -155,6 +155,7 @@
     "Time": "2016-07-10T20:37:26-04:00",
     "Info": {
       "Units": "mg/dL",
+      "MeterID": "CE2692",
       "Glucose": 163
     }
   },
@@ -164,6 +165,7 @@
     "Time": "2017-06-07T06:30:09-04:00",
     "Info": {
       "Units": "mg/dL",
+      "MeterID": "C23647",
       "Glucose": 79
     }
   },
