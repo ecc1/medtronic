@@ -8,3 +8,8 @@ const (
 	Pump     = 0xA7
 	Sensor   = 0xA8
 )
+
+// IsSensorType returns true for Sensor packet types.
+func IsSensorType(b byte) bool {
+	return b&^0x3 == Sensor
+}

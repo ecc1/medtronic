@@ -14,7 +14,7 @@ func Decode(p []byte) ([]byte, error) {
 	if len(data) == 0 {
 		return nil, fmt.Errorf("empty packet")
 	}
-	if data[0] == Sensor {
+	if IsSensorType(data[0]) {
 		return checkCRC16(data)
 	}
 	return checkCRC8(data)
@@ -46,7 +46,7 @@ func checkCRC16(data []byte) ([]byte, error) {
 // This may modify data's underlying array.
 func Encode(data []byte) []byte {
 	var msg []byte
-	if data[0] == Sensor {
+	if IsSensorType(data[0]) {
 		crc := CRC16(data)
 		msg = append(data, byte(crc>>8), byte(crc&0xFF))
 	} else {
