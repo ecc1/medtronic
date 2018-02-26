@@ -62,6 +62,10 @@ def duration_to_minutes:
       fixed: .Info.Fixed,
       type: (if .Info.Fixed == 0 then "manual" else "fixed" end),
     }
+  elif .Type == "BGReceived" then
+    {
+      meterID: .Info.MeterID
+    }
   elif .Type == "SuspendPump" then
     {
       _type: "PumpSuspend"
