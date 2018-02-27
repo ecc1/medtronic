@@ -19,6 +19,8 @@ def duration_to_minutes:
   (. // []) |
   # Perform the following on each element of the input array.
   .[] |
+  # Filter out fake meter entries.
+  select((.Type == "BGReceived" and .Info.MeterID == "000000") | not) |
   # Start with the timestamp field, common to all record types,
   # and the type, which is the same as the decocare type in many cases.
   {
@@ -64,6 +66,7 @@ def duration_to_minutes:
     }
   elif .Type == "BGReceived" then
     {
+      glucose: .Info.Glucose,
       meterID: .Info.MeterID
     }
   elif .Type == "SuspendPump" then
