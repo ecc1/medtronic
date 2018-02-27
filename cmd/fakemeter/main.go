@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	meterID = flag.String("m", "123456", "meter `ID`")
+	meterID = flag.String("m", "000000", "meter `ID`")
 
 	meterAddress []byte
 
