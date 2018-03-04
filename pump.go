@@ -151,9 +151,3 @@ func (pump *Pump) SetError(err error) {
 	pump.Radio.SetError(err)
 	pump.err = err
 }
-
-// PrintStats prints pump communication statistics.
-func (pump *Pump) PrintStats() {
-	stats := pump.Radio.Statistics()
-	fmt.Printf("\nTX: %6d    RX: %6d\n", stats.Packets.Sent, stats.Packets.Received)
-}
