@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/ecc1/medtronic"
@@ -21,14 +20,13 @@ var (
 func main() {
 	flag.Parse()
 	var cutoff time.Time
+	var err error
 	if *all {
 		log.Printf("retrieving entire pump history")
 	} else if *sinceFlag != "" {
-		var err error
 		cutoff, err = time.Parse(medtronic.JSONTimeLayout, *sinceFlag)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 	} else {
 		cutoff = time.Now().Add(-time.Duration(*numHours) * time.Hour)
