@@ -78,6 +78,10 @@ func getRecordInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatmen
 }
 
 func tempBasalInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatment) bool {
+	tb := r.Info.(TempBasalRecord)
+	if tb.Type != Absolute {
+		return false
+	}
 	if !nextEvent(r, r2, TempBasalDuration) {
 		return false
 	}
@@ -87,7 +91,6 @@ func tempBasalInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatmen
 		duration0 := 0
 		info.Duration = &duration0
 	} else {
-		tb := r.Info.(TempBasalRecord)
 		ins := tb.Value.(Insulin).NightscoutInsulin()
 		info.Absolute = &ins
 		min := int(r2.Info.(Duration) / Duration(time.Minute))
