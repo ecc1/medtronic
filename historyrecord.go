@@ -391,6 +391,9 @@ func decodeBasalProfile(data []byte, newerPump bool) HistoryRecord {
 	body := data[7:]
 	var sched BasalRateSchedule
 	for i := 0; i < 144; i += 3 {
+		if body[i] == 0x3F {
+			break
+		}
 		b := decodeBasalRate(body[i : i+3])
 		// Don't stop if the 00:00 rate happens to be zero.
 		if i > 0 && b.Start == 0 && b.Rate == 0 {
