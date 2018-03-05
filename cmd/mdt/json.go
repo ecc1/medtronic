@@ -285,13 +285,18 @@ func convertStatusInfo(r medtronic.StatusInfo) interface{} {
 }
 
 func convertTempBasalInfo(r medtronic.TempBasalInfo) interface{} {
-	return struct {
-		Duration int               `json:"duration"`
-		Rate     medtronic.Insulin `json:"rate"`
-		Temp     string            `json:"temp"`
+	t := struct {
+		Duration int         `json:"duration"`
+		Temp     string      `json:"temp"`
+		Rate     interface{} `json:"rate"`
 	}{
 		Duration: minutes(r.Duration),
-		Rate:     *r.Rate,
 		Temp:     strings.ToLower(r.Type.String()),
 	}
+	if r.Rate != nil {
+		t.Rate = *r.Rate
+	} else if r.Percent != nil {
+		t.Rate = *r.Percent
+	}
+	return t
 }
