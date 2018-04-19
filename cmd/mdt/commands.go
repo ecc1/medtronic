@@ -36,7 +36,6 @@ var (
 		"clock":         cmd(clock),
 		"execute":       cmdN(execute, "command", "arguments"),
 		"glucoseunits":  cmd(glucoseUnits),
-		"history":       cmd(history),
 		"model":         cmd(model),
 		"pumpid":        cmd(pumpID),
 		"reservoir":     cmd(reservoir),
@@ -165,10 +164,6 @@ func executeUsage(err error) {
 
 func glucoseUnits(pump *medtronic.Pump, _ Arguments) interface{} {
 	return pump.GlucoseUnits()
-}
-
-func history(pump *medtronic.Pump, _ Arguments) interface{} {
-	return pump.HistoryPageCount()
 }
 
 func model(pump *medtronic.Pump, _ Arguments) interface{} {
