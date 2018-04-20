@@ -85,6 +85,8 @@ def duration_to_minutes:
     {
     }
   # Add additional cases here as needed.
+  # WARNING: if DailyTotal records are added,
+  # they will not appear in chronological order.
   else
     # Warn about record types being skipped.
     ("skipping " + .Type + " record") | debug | empty
