@@ -53,14 +53,19 @@ func TestFourByteUint(t *testing.T) {
 		val uint32
 		rep []byte
 	}{
-		{0x12345678, []byte{0x12, 0x34, 0x56, 0x78}},
 		{0, []byte{0x00, 0x00, 0x00, 0x00}},
+		{1, []byte{0x00, 0x00, 0x00, 0x01}},
+		{0x12345678, []byte{0x12, 0x34, 0x56, 0x78}},
 		{math.MaxUint32, []byte{0xFF, 0xFF, 0xFF, 0xFF}},
 	}
 	for _, c := range cases {
 		val := fourByteUint(c.rep)
 		if val != c.val {
 			t.Errorf("fourByteUint(% X) == %08X, want %08X", c.rep, val, c.val)
+		}
+		rep := marshalUint32(c.val)
+		if !bytes.Equal(rep, c.rep) {
+			t.Errorf("marshalUint32(%04X) == % X, want % X", c.val, rep, c.rep)
 		}
 	}
 }
