@@ -81,9 +81,12 @@ def duration_to_minutes:
     {
       _type: "Battery"
     }
-  else
-    # Default: just print timestamp and type.
+  elif .Type == "Rewind" then
     {
     }
+  # Add additional cases here as needed.
+  else
+    # Warn about record types being skipped.
+    ("skipping " + .Type + " record") | debug | empty
   end
 ]
