@@ -38,6 +38,7 @@ func findSince(records History, cutoff time.Time) int {
 		// because they appear out of order (at the end of the day).
 		switch r.Type() {
 		case DailyTotal:
+		case DailyTotal515:
 		case DailyTotal522:
 		case DailyTotal523:
 		default:
