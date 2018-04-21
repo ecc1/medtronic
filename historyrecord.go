@@ -54,6 +54,8 @@ const (
 	InsulinMarker           HistoryRecordType = 0x42
 	OtherMarker             HistoryRecordType = 0x43
 	ChangeBolusWizardSetup  HistoryRecordType = 0x4F
+	SensorSetup             HistoryRecordType = 0x50
+	Sensor51                HistoryRecordType = 0x51
 	ChangeGlucoseUnits      HistoryRecordType = 0x56
 	BolusWizardSetup        HistoryRecordType = 0x5A
 	BolusWizard             HistoryRecordType = 0x5B
@@ -128,6 +130,8 @@ var decode = map[HistoryRecordType]decoder{
 	InsulinMarker:           decodeInsulinMarker,
 	OtherMarker:             decodeOtherMarker,
 	ChangeBolusWizardSetup:  decodeChangeBolusWizardSetup,
+	SensorSetup:             decodeSensorSetup,
+	Sensor51:                decodeSensor51,
 	ChangeGlucoseUnits:      decodeChangeGlucoseUnits,
 	BolusWizardSetup:        decodeBolusWizardSetup,
 	BolusWizard:             decodeBolusWizard,
@@ -569,6 +573,10 @@ func decodeInsulinMarker(data []byte, newerPump bool) HistoryRecord {
 var decodeOtherMarker = decodeBase
 
 var decodeChangeBolusWizardSetup = decodeBaseN(39)
+
+var decodeSensorSetup = decodeBaseN(37)
+
+var decodeSensor51 = decodeBase
 
 var decodeChangeGlucoseUnits = decodeBaseN(12)
 

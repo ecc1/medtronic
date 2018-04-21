@@ -342,3 +342,41 @@ func (r *TimeOfDay) UnmarshalJSON(data []byte) error {
 	*r, err = parseTimeOfDay(v)
 	return err
 }
+
+// MarshalJSON marshals CGMRecord values.
+func (r CGMRecord) MarshalJSON() ([]byte, error) {
+	type Original CGMRecord
+	rep := struct {
+		Type string
+		Time string `json:",omitempty"`
+		Original
+	}{
+		Type:     fmt.Sprintf("%v", r.Type),
+		Original: Original(r),
+	}
+	t := r.Time
+	if !t.IsZero() {
+		rep.Time = t.Format(JSONTimeLayout)
+	}
+	return json.Marshal(rep)
+}
+
+// UnmarshalJSON unmarshals CGMRecord values.
+func (r *CGMRecord) UnmarshalJSON(data []byte) error {
+	type Original CGMRecord
+	rep := struct {
+		Type string
+		Time string
+		*Original
+	}{
+		Original: (*Original)(r),
+	}
+	err := json.Unmarshal(data, &rep)
+	if err != nil {
+		return err
+	}
+	if rep.Time != "" {
+		r.Time, err = time.Parse(JSONTimeLayout, rep.Time)
+	}
+	return err
+}
