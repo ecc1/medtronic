@@ -778,8 +778,8 @@ func unknownRecord(data []byte) error {
 // to match the order of the history pages themselves.
 func DecodeHistory(data []byte, newerPump bool) (History, error) {
 	var results History
-	r := HistoryRecord{}
-	err := error(nil)
+	var r HistoryRecord
+	var err error
 	for !allZero(data) {
 		r, err = DecodeHistoryRecord(data, newerPump)
 		if err != nil {

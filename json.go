@@ -218,7 +218,7 @@ func (r CarbUnitsType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals CarbUnitsType values.
 func (r *CarbUnitsType) UnmarshalJSON(data []byte) error {
-	err := error(nil)
+	var err error
 	switch string(data) {
 	case `"Grams"`:
 		*r = Grams
@@ -237,7 +237,7 @@ func (r GlucoseUnitsType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals GlucoseUnitsType values.
 func (r *GlucoseUnitsType) UnmarshalJSON(data []byte) error {
-	err := error(nil)
+	var err error
 	switch string(data) {
 	case `"mg/dL"`:
 		*r = MgPerDeciLiter
@@ -256,7 +256,7 @@ func (r TempBasalType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals TempBasalType values.
 func (r *TempBasalType) UnmarshalJSON(data []byte) error {
-	err := error(nil)
+	var err error
 	switch string(data) {
 	case `"Absolute"`:
 		*r = Absolute
