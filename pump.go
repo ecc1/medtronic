@@ -59,15 +59,16 @@ type Pump struct {
 
 // Open opens radio communication with a pump.
 func Open() *Pump {
+	r := radioInterface()
 	pump := &Pump{
-		Radio:   radioInterface(),
+		Radio:   r,
 		timeout: defaultTimeout,
 		retries: defaultRetries,
 	}
 	if pump.Error() != nil {
+		log.Printf("cannot connect to %s radio on %s", r.Name(), r.Device())
 		return pump
 	}
-	r := pump.Radio
 	log.Printf("connected to %s radio on %s", r.Name(), r.Device())
 	freq := getFrequency()
 	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
