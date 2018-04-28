@@ -72,13 +72,21 @@ func TestHalfHours(t *testing.T) {
 	}
 }
 
+var layouts = []string{
+	"2006-01-02T15:04:05.999999999",
+	"2006-01-02T15:04",
+}
+
 func parseTime(s string) time.Time {
-	const layout = "2006-01-02T15:04:05.999999999"
-	t, err := time.ParseInLocation(layout, s, time.Local)
-	if err != nil {
-		panic(err)
+	var t time.Time
+	var err error
+	for _, layout := range layouts {
+		t, err = time.ParseInLocation(layout, s, time.Local)
+		if err == nil {
+			return t
+		}
 	}
-	return t
+	panic(err)
 }
 
 func TestSinceMidnight(t *testing.T) {
@@ -86,19 +94,19 @@ func TestSinceMidnight(t *testing.T) {
 		t time.Time
 		d TimeOfDay
 	}{
-		{parseTime("2015-01-01T09:00:00"), durationToTimeOfDay(9 * time.Hour)},
+		{parseTime("2015-01-01T09:00"), durationToTimeOfDay(9 * time.Hour)},
 		{parseTime("2016-03-15T10:00:00.5"), durationToTimeOfDay(10*time.Hour + 500*time.Millisecond)},
-		{parseTime("2016-06-15T20:30:00"), durationToTimeOfDay(20*time.Hour + 30*time.Minute)},
+		{parseTime("2016-06-15T20:30"), durationToTimeOfDay(20*time.Hour + 30*time.Minute)},
 		{parseTime("2010-11-30T23:59:59.999"), durationToTimeOfDay(24*time.Hour - time.Millisecond)},
 		// DST changes
-		{parseTime("2016-03-13T01:00:00"), durationToTimeOfDay(1 * time.Hour)},
-		{parseTime("2016-03-13T03:00:00"), durationToTimeOfDay(3 * time.Hour)},
-		{parseTime("2016-03-13T12:00:00"), durationToTimeOfDay(12 * time.Hour)},
-		{parseTime("2016-11-06T01:00:00"), durationToTimeOfDay(1 * time.Hour)},
-		{parseTime("2016-11-06T02:00:00"), durationToTimeOfDay(2 * time.Hour)},
-		{parseTime("2016-11-06T03:00:00"), durationToTimeOfDay(3 * time.Hour)},
-		{parseTime("2016-11-06T23:00:00"), durationToTimeOfDay(23 * time.Hour)},
-		{parseTime("2016-11-06T23:30:00"), durationToTimeOfDay(23*time.Hour + 30*time.Minute)},
+		{parseTime("2016-03-13T01:00"), durationToTimeOfDay(1 * time.Hour)},
+		{parseTime("2016-03-13T03:00"), durationToTimeOfDay(3 * time.Hour)},
+		{parseTime("2016-03-13T12:00"), durationToTimeOfDay(12 * time.Hour)},
+		{parseTime("2016-11-06T01:00"), durationToTimeOfDay(1 * time.Hour)},
+		{parseTime("2016-11-06T02:00"), durationToTimeOfDay(2 * time.Hour)},
+		{parseTime("2016-11-06T03:00"), durationToTimeOfDay(3 * time.Hour)},
+		{parseTime("2016-11-06T23:00"), durationToTimeOfDay(23 * time.Hour)},
+		{parseTime("2016-11-06T23:30"), durationToTimeOfDay(23*time.Hour + 30*time.Minute)},
 	}
 	for _, c := range cases {
 		d := sinceMidnight(c.t)
@@ -132,13 +140,31 @@ func TestDecodeDate(t *testing.T) {
 		b []byte
 		t time.Time
 	}{
-		{[]byte{0xBF, 0x0F}, parseTime("2015-10-31T00:00:00")},
-		{[]byte{0x78, 0x10}, parseTime("2016-06-24T00:00:00")},
+		{[]byte{0xBF, 0x0F}, parseTime("2015-10-31T00:00")},
+		{[]byte{0x78, 0x10}, parseTime("2016-06-24T00:00")},
 	}
 	for _, c := range cases {
 		ts := time.Time(decodeDate(c.b))
 		if !ts.Equal(c.t) {
 			t.Errorf("decodeDate(% X) == %v, want %v", c.b, ts, c.t)
+		}
+	}
+}
+
+func TestDecodeCGMTime(t *testing.T) {
+	cases := []struct {
+		b []byte
+		t time.Time
+	}{
+		{[]byte{0x8D, 0x9B, 0x1D, 0x0C}, parseTime("2012-10-29T13:27")},
+		{[]byte{0x0B, 0xAE, 0x0A, 0x0E}, parseTime("2014-02-10T11:46")},
+		{[]byte{0x4F, 0x5B, 0x13, 0x8F}, parseTime("2015-05-19T15:27")},
+		{[]byte{0x14, 0xB6, 0x28, 0x10}, parseTime("2016-02-08T20:54")},
+	}
+	for _, c := range cases {
+		ts := time.Time(decodeCGMTime(c.b))
+		if !ts.Equal(c.t) {
+			t.Errorf("decodeCGMTime(% X) == %v, want %v", c.b, ts, c.t)
 		}
 	}
 }
