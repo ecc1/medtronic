@@ -152,15 +152,14 @@ func reverseBytes(a []byte) {
 }
 
 func addTimestamps(results CGMHistory) {
-	var prev int
-	var ts time.Time
+	var prev time.Time
 	for i := len(results) - 1; i >= 0; i-- {
 		t := results[i].Time
 		if !t.IsZero() {
-			prev = i
-			ts = t
-		} else if prev != 0 {
-			results[i].Time = ts.Add(time.Duration(prev-i) * 5 * time.Minute)
+			prev = t
+		} else if !prev.IsZero() {
+			prev = prev.Add(5 * time.Minute)
+			results[i].Time = prev
 		}
 	}
 }
