@@ -2,6 +2,7 @@ package medtronic
 
 import (
 	"fmt"
+	"time"
 )
 
 // HistoryRecordType represents a history record type.
@@ -168,7 +169,7 @@ type (
 
 	HistoryRecord struct {
 		Data []byte
-		Time Time
+		Time time.Time
 		Info interface{} `json:",omitempty"`
 	}
 

@@ -9,7 +9,7 @@ import (
 func cgmTS(t time.Time) CGMRecord {
 	return CGMRecord{
 		Type: CGMTimestamp,
-		Time: Time(t),
+		Time: t,
 	}
 }
 
@@ -23,7 +23,7 @@ func cgmBG() CGMRecord {
 func cgmBGT(t time.Time) CGMRecord {
 	return CGMRecord{
 		Type:    CGMGlucose,
-		Time:    Time(t),
+		Time:    t,
 		Glucose: 100,
 	}
 }

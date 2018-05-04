@@ -30,7 +30,7 @@ func Treatments(records History) []nightscout.Treatment {
 			r2 = &records[i+1]
 		}
 		info := nightscout.Treatment{
-			CreatedAt: time.Time(r.Time),
+			CreatedAt: r.Time,
 			EnteredBy: user,
 		}
 		if getRecordInfo(r, r2, &info) {
@@ -101,12 +101,12 @@ func tempBasalInfo(r HistoryRecord, r2 *HistoryRecord, info *nightscout.Treatmen
 
 func nextEvent(r HistoryRecord, r2 *HistoryRecord, t HistoryRecordType) bool {
 	if r2 == nil {
-		ts := time.Time(r.Time).Format(UserTimeLayout)
+		ts := r.Time.Format(UserTimeLayout)
 		log.Printf("expected %v to be followed by %v at %s", r.Type(), t, ts)
 		return false
 	}
 	if r2.Type() != t {
-		ts := time.Time(r.Time).Format(UserTimeLayout)
+		ts := r.Time.Format(UserTimeLayout)
 		log.Printf("expected %v to be followed by %v at %s but found %v", r.Type(), t, ts, r2.Type())
 		return false
 	}

@@ -54,7 +54,7 @@ type (
 	CGMRecord struct {
 		Type    CGMRecordType
 		Data    []byte
-		Time    Time
+		Time    time.Time
 		Glucose int `json:",omitempty"`
 	}
 
@@ -68,7 +68,7 @@ func decodeCGMTimestamp(r *CGMRecord) error {
 }
 
 // Decode a 4-byte timestamp from a glucose history record.
-func decodeCGMTime(data []byte) Time {
+func decodeCGMTime(data []byte) time.Time {
 	sec := 0
 	min := int(data[1] & 0x3F)
 	hour := int(data[0] & 0x1F)
@@ -76,7 +76,7 @@ func decodeCGMTime(data []byte) Time {
 	// The 4-bit month value is encoded in the high 2 bits of the first 2 bytes.
 	month := time.Month(int(data[0]>>6)<<2 | int(data[1]>>6))
 	year := 2000 + int(data[3]&0x7F)
-	return Time(time.Date(year, month, day, hour, min, sec, 0, time.Local))
+	return time.Date(year, month, day, hour, min, sec, 0, time.Local)
 }
 
 func decodeCGMGlucose(r *CGMRecord) error {
@@ -152,20 +152,15 @@ func reverseBytes(a []byte) {
 }
 
 func addTimestamps(results CGMHistory) {
-	// Start at the end to find the earliest timestamp.
 	var prev int
 	var ts time.Time
-	i := len(results) - 1
-	for i >= 0 {
-		r := results[i]
-		t := time.Time(r.Time)
+	for i := len(results) - 1; i >= 0; i-- {
+		t := results[i].Time
 		if !t.IsZero() {
 			prev = i
 			ts = t
 		} else if prev != 0 {
-			t = ts.Add(time.Duration(prev-i) * 5 * time.Minute)
-			results[i].Time = Time(t)
+			results[i].Time = ts.Add(time.Duration(prev-i) * 5 * time.Minute)
 		}
-		i--
 	}
 }

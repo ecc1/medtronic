@@ -17,9 +17,8 @@ func (r HistoryRecord) MarshalJSON() ([]byte, error) {
 		Type:     fmt.Sprintf("%v", r.Type()),
 		Original: Original(r),
 	}
-	t := time.Time(r.Time)
-	if !t.IsZero() {
-		rep.Time = t.Format(JSONTimeLayout)
+	if !r.Time.IsZero() {
+		rep.Time = r.Time.Format(JSONTimeLayout)
 	}
 	return json.Marshal(rep)
 }
@@ -39,9 +38,7 @@ func (r *HistoryRecord) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if rep.Time != "" {
-		var t time.Time
-		t, err = time.Parse(JSONTimeLayout, rep.Time)
-		r.Time = Time(t)
+		r.Time, err = time.Parse(JSONTimeLayout, rep.Time)
 	}
 	return err
 }
@@ -298,16 +295,6 @@ func (r *Voltage) UnmarshalJSON(data []byte) error {
 	}
 	*r = Voltage(1000*v + 0.5)
 	return nil
-}
-
-// MarshalJSON marshals Time values.
-func (r Time) MarshalJSON() ([]byte, error) {
-	return nil, fmt.Errorf("marshaling Time value")
-}
-
-// UnmarshalJSON unmarshals Time values.
-func (r *Time) UnmarshalJSON(data []byte) error {
-	return fmt.Errorf("unmarshaling Time value")
 }
 
 // MarshalJSON marshals Duration values.

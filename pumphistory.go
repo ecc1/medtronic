@@ -42,7 +42,7 @@ func findSince(records History, cutoff time.Time) int {
 		case DailyTotal522:
 		case DailyTotal523:
 		default:
-			t := time.Time(r.Time)
+			t := r.Time
 			if !t.IsZero() && !t.After(cutoff) {
 				log.Printf("stopping pump history scan at %s", t.Format(UserTimeLayout))
 				return i
