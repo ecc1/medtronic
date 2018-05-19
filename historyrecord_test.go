@@ -20,11 +20,12 @@ func TestDecodeHistoryRecord(t *testing.T) {
 	}{
 		{"testdata/records-new.json", true},
 		{"testdata/records-old.json", false},
-		{"testdata/new1.json", true},
-		{"testdata/new2.json", true},
-		{"testdata/old1.json", false},
-		{"testdata/pump-records.json", false},
+		{"testdata/model523-1.json", true},
+		{"testdata/model523-2.json", true},
+		{"testdata/model522.json", false},
+		{"testdata/model515.json", false},
 		{"testdata/model512.json", false},
+		{"testdata/pump-records.json", false},
 	}
 	for _, c := range cases {
 		records, err := decodeFromData(c.jsonFile, c.newer)
@@ -74,9 +75,10 @@ func TestDecodeHistory(t *testing.T) {
 		jsonFile string
 		newer    bool
 	}{
-		{"testdata/new1.data", "testdata/new1.json", true},
-		{"testdata/new2.data", "testdata/new2.json", true},
-		{"testdata/old1.data", "testdata/old1.json", false},
+		{"testdata/model523-1.data", "testdata/model523-1.json", true},
+		{"testdata/model523-2.data", "testdata/model523-2.json", true},
+		{"testdata/model522.data", "testdata/model522.json", false},
+		{"testdata/model515.data", "testdata/model515.json", false},
 		{"testdata/model512.data", "testdata/model512.json", false},
 	}
 	for _, c := range cases {

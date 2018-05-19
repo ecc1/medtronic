@@ -1,0 +1,508 @@
+[
+  {
+    "Type": "EnableRemote",
+    "Time": "2018-05-19T18:19:30-04:00",
+    "Data": "JgFeUxITEicAAAAAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2018-05-19T18:19:14-04:00",
+    "Data": "JgFOUxITEicAAAAAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "BolusWizardSetup",
+    "Time": "2018-05-19T18:17:21-04:00",
+    "Data": "Wg9VURITElkRAAoOChYKIgouCgAAAAAAAAAcAAAAAAAAAAAAAAAAAAAAODgAAAAAAAAAAAAAAAAAAAAAAAAAAABVEQAKDgoWCiIKLgoAAAAAAAAAMgAAAAAAAAAAAAAAAAAAAGRkAAAAAAAAAAAAAAAAAAAAAAAAAAAAMw==",
+    "Info": {
+      "Before": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "07:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "17:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "23:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 2800,
+            "Units": "μmol/L"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 5600,
+            "High": 5600,
+            "Units": "μmol/L"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      },
+      "After": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "07:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "17:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "23:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 50,
+            "Units": "mg/dL"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 100,
+            "High": 100,
+            "Units": "mg/dL"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      }
+    }
+  },
+  {
+    "Type": "ResumePump",
+    "Time": "2018-05-19T18:00:27-04:00",
+    "Data": "HwBbQBITEg=="
+  },
+  {
+    "Type": "SuspendPump",
+    "Time": "2018-05-19T17:48:41-04:00",
+    "Data": "HgBpcBETEg=="
+  },
+  {
+    "Type": "BolusWizardSetup",
+    "Time": "2018-05-19T17:13:29-04:00",
+    "Data": "Wg5dTRETElkAAAoOChYKIgouCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABZEQAKDgoWCiIKLgoAAAAAAAAAHAAAAAAAAAAAAAAAAAAAADg4AAAAAAAAAAAAAAAAAAAAAAAAAAAAMw==",
+    "Info": {
+      "Before": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "07:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "17:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "23:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 0,
+            "Units": "μmol/L"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 0,
+            "High": 0,
+            "Units": "μmol/L"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      },
+      "After": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "07:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "17:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "23:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 2800,
+            "Units": "μmol/L"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 5600,
+            "High": 5600,
+            "Units": "μmol/L"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      }
+    }
+  },
+  {
+    "Type": "BGReceived512",
+    "Time": "2018-05-19T17:09:31-04:00",
+    "Data": "ORFfSZFzEgAAAA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 140,
+      "MeterID": "000000"
+    }
+  },
+  {
+    "Type": "BolusWizardSetup",
+    "Time": "2018-05-19T17:08:19-04:00",
+    "Data": "Wg1TSBETElURAAoOChYKIgouCgAAAAAAAAA3AAAAAAAAAAAAAAAAAAAAZHgAAAAAAAAAAAAAAAAAAAAAAAAAAABZAAAKDgoWCiIKLgoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMw==",
+    "Info": {
+      "Before": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "07:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "17:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "23:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 55,
+            "Units": "mg/dL"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 100,
+            "High": 120,
+            "Units": "mg/dL"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      },
+      "After": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "07:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "17:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "23:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 0,
+            "Units": "μmol/L"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 0,
+            "High": 0,
+            "Units": "μmol/L"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-05-19T16:54:09-04:00",
+    "Data": "FgFJdhBTEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-05-19T16:54:09-04:00",
+    "Data": "M0ZJdhBTEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.75
+    }
+  },
+  {
+    "Type": "BGReceived512",
+    "Time": "2018-05-19T16:52:01-04:00",
+    "Data": "ORJBdNBzEgAAAA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 150,
+      "MeterID": "000000"
+    }
+  },
+  {
+    "Type": "ResumePump",
+    "Time": "2018-05-19T12:38:45-04:00",
+    "Data": "HwBtZgwTEg=="
+  },
+  {
+    "Type": "SuspendPump",
+    "Time": "2018-05-19T12:38:43-04:00",
+    "Data": "HgBrZgwTEg=="
+  },
+  {
+    "Type": "BGReceived512",
+    "Time": "2018-05-19T12:28:11-04:00",
+    "Data": "OQ5LXGxzEgAAAA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 115,
+      "MeterID": "000000"
+    }
+  },
+  {
+    "Type": "DailyTotal515",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "bAGEBQwA6AAAAAAAAgACZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "BwAAAAIBhA==",
+    "Info": 0.05
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2018-05-19T12:27:02-04:00",
+    "Data": "GABCWwxTEg=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2004-01-01T00:04:43-05:00",
+    "Data": "FwArRABBBA=="
+  },
+  {
+    "Type": "ChangeMeterID",
+    "Time": "2004-01-01T00:01:57-05:00",
+    "Data": "NgE5QQABBDcAAAAAAAA4AAAAAAAA"
+  },
+  {
+    "Type": "ChangeMeterID",
+    "Time": "2004-01-01T00:01:43-05:00",
+    "Data": "NgErQQABBDcAAAAAAAA4AAAAAAAA"
+  },
+  {
+    "Type": "ChangeMeterID",
+    "Time": "2004-01-01T00:01:40-05:00",
+    "Data": "NgEoQQABBDcAAAAKyw44AAAAAAAA"
+  },
+  {
+    "Type": "Prime",
+    "Time": "2004-01-01T00:00:55-05:00",
+    "Data": "AwAAAAA3QCABBA==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2004-01-01T00:00:03-05:00",
+    "Data": "IQADQAABBA=="
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "GAAAQAABBA=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2004-01-01T00:00:52-05:00",
+    "Data": "FwA0QAABBA=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2004-01-01T00:00:47-05:00",
+    "Data": "ZAAvQAABBA==",
+    "Info": 0
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "BhUFGABAQKEE",
+    "Info": 21
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "BhEM9ABAIMEE",
+    "Info": 17
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8M5QBAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8M1ABAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8MsABAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8MnwBAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8MjgBAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8MfQBAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8MbABAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "Bi8YVgBAIMEE",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "BjYFBwBAYAEE",
+    "Info": 54
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2004-01-01T00:00:00-05:00",
+    "Data": "BhUE/wBAYAEE",
+    "Info": 21
+  }
+]

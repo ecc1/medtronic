@@ -47,6 +47,7 @@ const (
 	LowReservoir            HistoryRecordType = 0x34
 	AlarmClock              HistoryRecordType = 0x35
 	ChangeMeterID           HistoryRecordType = 0x36
+	BGReceived512           HistoryRecordType = 0x39
 	SensorStatus            HistoryRecordType = 0x3B
 	EnableMeter             HistoryRecordType = 0x3C
 	BGReceived              HistoryRecordType = 0x3F
@@ -123,6 +124,7 @@ var decode = map[HistoryRecordType]decoder{
 	LowReservoir:            decodeLowReservoir,
 	AlarmClock:              decodeAlarmClock,
 	ChangeMeterID:           decodeChangeMeterID,
+	BGReceived512:           decodeBGReceived512,
 	SensorStatus:            decodeSensorStatus,
 	EnableMeter:             decodeEnableMeter,
 	BGReceived:              decodeBGReceived,
@@ -535,6 +537,8 @@ func decodeLowReservoir(data []byte, newerPump bool) HistoryRecord {
 var decodeAlarmClock = decodeBase
 
 var decodeChangeMeterID = decodeBaseN(21)
+
+var decodeBGReceived512 = decodeBGReceived
 
 var decodeSensorStatus = decodeEnable
 
