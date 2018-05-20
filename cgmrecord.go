@@ -163,3 +163,10 @@ func addTimestamps(results CGMHistory) {
 		}
 	}
 }
+
+// ReverseCGMHistory reverses a slice of CGM history records.
+func ReverseCGMHistory(a CGMHistory) {
+	for i, j := 0, len(a)-1; i < len(a)/2; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
+	}
+}

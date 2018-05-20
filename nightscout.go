@@ -188,3 +188,25 @@ func (sched GlucoseTargetSchedule) NightscoutSchedule() (nightscout.Schedule, ni
 	}
 	return low, high
 }
+
+// Entries converts CGM history records
+// into records that can be uploaded as Nightscout entries.
+// Currently only BG records are converted.
+func Entries(records CGMHistory) nightscout.Entries {
+	var entries nightscout.Entries
+	for _, r := range records {
+		if r.Type != CGMGlucose {
+			continue
+		}
+		t := r.Time
+		e := nightscout.Entry{
+			Type:       nightscout.SGVType,
+			Date:       nightscout.Date(t),
+			DateString: t.Format(nightscout.DateStringLayout),
+			Device:     nightscout.Device(),
+			SGV:        r.Glucose,
+		}
+		entries = append(entries, e)
+	}
+	return entries
+}
