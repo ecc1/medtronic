@@ -42,7 +42,7 @@ var (
 		"resume":        cmd(resume),
 		"rssi":          cmd(rssi),
 		"sensitivities": cmd(sensitivities),
-		"setclock":      cmd(setClock, "date", "time"),
+		"setclock":      cmd(setClock, "time"),
 		"settempbasal":  cmd(setTempBasal, "temp", "rate", "duration"),
 		"settings":      cmd(settings),
 		"status":        cmd(status),
@@ -194,19 +194,16 @@ func sensitivities(pump *medtronic.Pump, _ Arguments) interface{} {
 
 func setClock(pump *medtronic.Pump, args Arguments) interface{} {
 	var t time.Time
-	ds := args["date"].(string)
-	ts := args["time"].(string)
-	if ds == "now" {
-		t = time.Now()
-	} else {
-		t = parseTime(ds + " " + ts)
-	}
+	t = parseTime(args["time"].(string))
 	log.Printf("setting pump clock to %s", t.Format(medtronic.UserTimeLayout))
 	pump.SetClock(t)
 	return nil
 }
 
 func parseTime(date string) time.Time {
+	if date == "now" {
+		return time.Now()
+	}
 	t, err := time.ParseInLocation(medtronic.UserTimeLayout, date, time.Local)
 	if err != nil {
 		cmdError("setclock", "YYYY-MM-DD HH:MM:SS (or \"now\")", err)

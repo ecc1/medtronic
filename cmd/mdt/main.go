@@ -204,16 +204,19 @@ func openAPSArgs(name string, params []string, argv []string, variadic bool) Arg
 
 // Collect command-line arguments.
 func cliArgs(name string, params []string, argv []string, variadic bool) Arguments {
+	if !variadic && len(argv) != len(params) {
+		var p string
+		if len(params) != 1 {
+			p = "s"
+		}
+		log.Fatalf("%s requires %d argument%s", name, len(params), p)
+	}
 	args := make(Arguments)
 	for i, k := range params {
-		if i == len(params)-1 && variadic {
+		if variadic && i == len(params)-1 {
 			// Bind all remaining args to this parameter.
-			if i < len(argv) {
-				args[k] = argv[i:]
-			} else {
-				args[k] = []string{}
-			}
-			continue
+			args[k] = argv[i:]
+			break
 		}
 		if i >= len(argv) {
 			// Bind remaining parameters to "".
