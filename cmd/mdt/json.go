@@ -98,6 +98,9 @@ type AltBasalRate struct {
 }
 
 func convertBasalRateSchedule(r medtronic.BasalRateSchedule) interface{} {
+	if len(r) == 0 {
+		return nil
+	}
 	sched := make([]AltBasalRate, len(r))
 	for i, s := range r {
 		sched[i] = AltBasalRate{
@@ -120,6 +123,9 @@ type AltCarbRatio struct {
 }
 
 func convertCarbRatioSchedule(r medtronic.CarbRatioSchedule) interface{} {
+	if len(r) == 0 {
+		return nil
+	}
 	sched := make([]AltCarbRatio, len(r))
 	u := r[0].Units
 	for i, s := range r {
@@ -161,6 +167,9 @@ type AltGlucoseTarget struct {
 }
 
 func convertGlucoseTargetSchedule(r medtronic.GlucoseTargetSchedule) interface{} {
+	if len(r) == 0 {
+		return nil
+	}
 	sched := make([]AltGlucoseTarget, len(r))
 	u := r[0].Units
 	for i, s := range r {
@@ -204,6 +213,9 @@ type AltInsulinSensitivity struct {
 }
 
 func convertInsulinSensitivitySchedule(r medtronic.InsulinSensitivitySchedule) interface{} {
+	if len(r) == 0 {
+		return nil
+	}
 	sched := make([]AltInsulinSensitivity, len(r))
 	u := r[0].Units
 	for i, s := range r {
