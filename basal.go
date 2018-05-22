@@ -21,7 +21,7 @@ type BasalRateSchedule []BasalRate
 
 func decodeBasalRateSchedule(data []byte) BasalRateSchedule {
 	var sched []BasalRate
-	for i := 1; i < len(data); i += 3 {
+	for i := 1; i < len(data)-2; i += 3 {
 		r := data[i]
 		t := data[i+2]
 		// Don't stop if the 00:00 rate happens to be zero.
