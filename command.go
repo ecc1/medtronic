@@ -9,7 +9,10 @@ import (
 )
 
 const (
-	maxPacketSize = 70 // excluding CRC byte
+	maxPacketLength = 70 // excluding CRC byte
+	fragmentLength  = 65 // above, minus header bytes
+	doneBit         = 1 << 7
+	maxNAKs         = 10
 )
 
 var (
@@ -105,7 +108,7 @@ func pumpPacket(cmd Command, params []byte) []byte {
 	if len(params) == 0 {
 		data = make([]byte, 6)
 	} else {
-		data = make([]byte, maxPacketSize)
+		data = make([]byte, maxPacketLength)
 	}
 	copy(data, pumpPrefix)
 	data[4] = byte(cmd)
@@ -129,6 +132,34 @@ func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 		return pump.perform(cmd, ack, params)
 	}
 	return pump.perform(cmd, cmd, nil)
+}
+
+// ExtendedExecute sends a command and parameters to the pump and
+// collects the sequence of packets that make up its response.
+func (pump *Pump) ExtendedExecute(cmd Command, params ...byte) []byte {
+	var result []byte
+	phase := cmd
+	expected := 1
+	for pump.Error() == nil {
+		data := pump.perform(phase, cmd, nil)
+		// Acknowledge each response from now on.
+		phase = ack
+		if len(data) != fragmentLength {
+			pump.SetError(fmt.Errorf("%v: received %d-byte response", cmd, len(data)))
+			break
+		}
+		seqNum := int(data[0] &^ doneBit)
+		if seqNum != expected {
+			pump.SetError(fmt.Errorf("%v: received response %d instead of %d", cmd, seqNum, expected))
+			break
+		}
+		result = append(result, data[1:]...)
+		if data[0]&doneBit != 0 {
+			break
+		}
+		expected++
+	}
+	return result
 }
 
 // History pages are returned as a series of 65-byte fragments:
@@ -168,12 +199,6 @@ var pageData = map[Command]pageStructure{
 		paramBits:       8,
 	},
 }
-
-const (
-	fragmentLength = 65
-	doneBit        = 1 << 7
-	maxNAKs        = 10
-)
 
 // Download requests the given history page from the pump.
 func (pump *Pump) Download(cmd Command, page int) []byte {
@@ -224,7 +249,7 @@ func (pump *Pump) execPage(cmd Command, page int) ([]byte, pageStructure) {
 }
 
 // checkFragment verifies that a fragment has the expected sequence number
-// and returns the payload.
+// and returns the payload and sequence number.
 func (pump *Pump) checkFragment(ps pageStructure, page int, data []byte, expected int) ([]byte, int) {
 	if len(data) != fragmentLength {
 		pump.SetError(fmt.Errorf("history page %d: unexpected fragment length (%d)", page, len(data)))
