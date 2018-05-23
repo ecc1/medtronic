@@ -45,8 +45,9 @@ def duration_to_minutes:
       unabsorbed: .Info.Unabsorbed,
       duration: .Info.Duration | duration_to_minutes
     }
-  elif .Type == "BolusWizard" then
+  elif .Type == "BolusWizard" or .Type == "BolusWizard512" then
     {
+      _type: "BolusWizard",
       bg: (.Info.Glucose // 0),
       carb_input: (.Info.CarbInput // 0),
       bg_target_low: .Info.TargetLow,
