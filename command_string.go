@@ -4,7 +4,7 @@ package medtronic
 
 import "strconv"
 
-const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagecarbUnitsglucoseUnitscarbRatiosinsulinSensitivitiesmodelbasalRatesbasalPatternAbasalPatternBtempBasalglucosePageisigPagecalibrationFactorhistoryPageCountglucoseTargetssettingscgmPageCountstatusvcntrPage"
+const _Command_name = "acknaksetClockbolussetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalclockpumpIDbatteryreservoirhistoryPagecarbUnitsglucoseUnitscarbRatiosinsulinSensitivitiesglucoseTargets512modelsettings512basalRatesbasalPatternAbasalPatternBtempBasalglucosePageisigPagecalibrationFactorhistoryPageCountglucoseTargetssettingscgmPageCountstatusvcntrPage"
 
 var _Command_map = map[Command]string{
 	6:   _Command_name[0:3],
@@ -25,20 +25,22 @@ var _Command_map = map[Command]string{
 	137: _Command_name[124:136],
 	138: _Command_name[136:146],
 	139: _Command_name[146:166],
-	141: _Command_name[166:171],
-	146: _Command_name[171:181],
-	147: _Command_name[181:194],
-	148: _Command_name[194:207],
-	152: _Command_name[207:216],
-	154: _Command_name[216:227],
-	155: _Command_name[227:235],
-	156: _Command_name[235:252],
-	157: _Command_name[252:268],
-	159: _Command_name[268:282],
-	192: _Command_name[282:290],
-	205: _Command_name[290:302],
-	206: _Command_name[302:308],
-	213: _Command_name[308:317],
+	140: _Command_name[166:183],
+	141: _Command_name[183:188],
+	145: _Command_name[188:199],
+	146: _Command_name[199:209],
+	147: _Command_name[209:222],
+	148: _Command_name[222:235],
+	152: _Command_name[235:244],
+	154: _Command_name[244:255],
+	155: _Command_name[255:263],
+	156: _Command_name[263:280],
+	157: _Command_name[280:296],
+	159: _Command_name[296:310],
+	192: _Command_name[310:318],
+	205: _Command_name[318:330],
+	206: _Command_name[330:336],
+	213: _Command_name[336:345],
 }
 
 func (i Command) String() string {
