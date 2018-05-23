@@ -16,19 +16,20 @@ import (
 func TestDecodeHistoryRecord(t *testing.T) {
 	cases := []struct {
 		jsonFile string
-		newer    bool
+		family   Family
 	}{
-		{"testdata/records-new.json", true},
-		{"testdata/records-old.json", false},
-		{"testdata/model523-1.json", true},
-		{"testdata/model523-2.json", true},
-		{"testdata/model522.json", false},
-		{"testdata/model515.json", false},
-		{"testdata/model512.json", false},
-		{"testdata/pump-records.json", false},
+		{"testdata/records-523.json", 23},
+		{"testdata/records-522.json", 22},
+		{"testdata/model523-1.json", 23},
+		{"testdata/model523-2.json", 23},
+		{"testdata/model522.json", 22},
+		{"testdata/model515.json", 15},
+		{"testdata/model512.json", 12},
+		{"testdata/pump-records-522.json", 22},
 	}
 	for _, c := range cases {
-		records, err := decodeFromData(c.jsonFile, c.newer)
+		t.Logf("%s", c.jsonFile)
+		records, err := decodeFromData(c.jsonFile, c.family)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue
@@ -37,7 +38,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 	}
 }
 
-func decodeFromData(file string, newer bool) (History, error) {
+func decodeFromData(file string, family Family) (History, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, err
@@ -60,7 +61,7 @@ func decodeFromData(file string, newer bool) (History, error) {
 		if err != nil {
 			return records, err
 		}
-		r, err := DecodeHistoryRecord(data, newer)
+		r, err := DecodeHistoryRecord(data, family)
 		if err != nil {
 			return records, err
 		}
@@ -73,23 +74,24 @@ func TestDecodeHistory(t *testing.T) {
 	cases := []struct {
 		pageFile string
 		jsonFile string
-		newer    bool
+		family   Family
 	}{
-		{"testdata/model523-1.data", "testdata/model523-1.json", true},
-		{"testdata/model523-2.data", "testdata/model523-2.json", true},
-		{"testdata/model522.data", "testdata/model522.json", false},
-		{"testdata/model515.data", "testdata/model515.json", false},
-		{"testdata/model512.data", "testdata/model512.json", false},
+		{"testdata/model523-1.data", "testdata/model523-1.json", 23},
+		{"testdata/model523-2.data", "testdata/model523-2.json", 23},
+		{"testdata/model522.data", "testdata/model522.json", 22},
+		{"testdata/model515.data", "testdata/model515.json", 15},
+		{"testdata/model512.data", "testdata/model512.json", 12},
 	}
 	for _, c := range cases {
+		t.Logf("%s", c.pageFile)
 		data, err := readBytes(c.pageFile)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue
 		}
-		decoded, err := DecodeHistory(data, c.newer)
+		decoded, err := DecodeHistory(data, c.family)
 		if err != nil {
-			t.Errorf("DecodeHistory(% X, %v) returned %v", data, c.newer, err)
+			t.Errorf("DecodeHistory(% X, %d) returned %v", data, c.family, err)
 			continue
 		}
 		checkHistory(t, decoded, c.jsonFile)
@@ -176,11 +178,13 @@ func TestTreatments(t *testing.T) {
 	cases := []struct {
 		recordFile    string
 		treatmentFile string
+		family        Family
 	}{
-		{"testdata/pump-records.json", "testdata/pump-treatments.json"},
+		{"testdata/pump-records-522.json", "testdata/pump-treatments-522.json", 22},
 	}
 	for _, c := range cases {
-		records, err := decodeFromData(c.recordFile, false)
+		t.Logf("%s", c.recordFile)
+		records, err := decodeFromData(c.recordFile, c.family)
 		if err != nil {
 			t.Errorf("%v", err)
 			continue

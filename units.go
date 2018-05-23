@@ -97,24 +97,21 @@ func (r Insulin) String() string {
 	return fmt.Sprintf("%g", float64(r)/1000)
 }
 
-func milliUnitsPerStroke(newerPump bool) Insulin {
-	switch newerPump {
-	case true:
-		return 25
-	case false:
+func milliUnitsPerStroke(family Family) Insulin {
+	if family <= 22 {
 		return 100
 	}
-	panic("unreachable")
+	return 25
 }
 
-func intToInsulin(strokes int, newerPump bool) Insulin {
-	return Insulin(strokes) * milliUnitsPerStroke(newerPump)
+func intToInsulin(strokes int, family Family) Insulin {
+	return Insulin(strokes) * milliUnitsPerStroke(family)
 }
 
-func byteToInsulin(strokes uint8, newerPump bool) Insulin {
-	return intToInsulin(int(strokes), newerPump)
+func byteToInsulin(strokes uint8, family Family) Insulin {
+	return intToInsulin(int(strokes), family)
 }
 
-func twoByteInsulin(data []byte, newerPump bool) Insulin {
-	return Insulin(twoByteUint(data)) * milliUnitsPerStroke(newerPump)
+func twoByteInsulin(data []byte, family Family) Insulin {
+	return intToInsulin(twoByteInt(data), family)
 }

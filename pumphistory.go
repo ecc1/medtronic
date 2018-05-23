@@ -9,15 +9,15 @@ import (
 // Note that the results may include records with a zero timestamp or
 // an earlier timestamp than the cutoff (in the case of DailyTotal records).
 func (pump *Pump) History(since time.Time) History {
-	newer := pump.Family() >= 23
 	count := pump.HistoryPageCount()
 	if pump.Error() != nil {
 		return nil
 	}
+	family := pump.Family()
 	var results History
 	for page := 0; page < count && pump.Error() == nil; page++ {
 		data := pump.HistoryPage(page)
-		records, err := DecodeHistory(data, newer)
+		records, err := DecodeHistory(data, family)
 		if err != nil {
 			pump.SetError(err)
 		}

@@ -9,6 +9,11 @@ const (
 	model Command = 0x8D
 )
 
+// Family represents a pump family.
+// Use int8 so the compiler will warn about
+// accidental uses of 523 instead of 23, etc.
+type Family int8
+
 // Model requests the model number from the pump and returns it,
 // caching the pump family as a side effect.
 // Use Family to avoid contacting the pump more than once.
@@ -26,9 +31,9 @@ func (pump *Pump) Model() string {
 		pump.BadResponse(model, data)
 		return ""
 	}
-	model := string(data[2 : 2+n])
-	pump.cacheFamily(model)
-	return model
+	m := string(data[2 : 2+n])
+	pump.cacheFamily(m)
+	return m
 }
 
 func (pump *Pump) cacheFamily(model string) {
@@ -47,13 +52,13 @@ func (pump *Pump) cacheFamily(model string) {
 	} else {
 		log.Printf("unsupported pump model %d", n)
 	}
-	pump.family = family
+	pump.family = Family(family)
 }
 
 // Family returns 22 for 522/722 pumps, 23 for 523/723 pumps, etc.,
 // and returns -1 for an unrecognized model.  It calls Model once and
 // caches the result.
-func (pump *Pump) Family() int {
+func (pump *Pump) Family() Family {
 	if pump.family == 0 {
 		pump.Model()
 		if pump.Error() != nil {

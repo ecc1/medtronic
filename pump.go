@@ -48,7 +48,7 @@ type Pump struct {
 	Radio radio.Interface
 
 	// 22 for 522/722, 23 for 523/723, etc.
-	family int
+	family Family
 
 	// Implicit parameters for command execution.
 	timeout time.Duration

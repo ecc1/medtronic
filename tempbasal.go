@@ -44,7 +44,7 @@ func decodeTempBasal(data []byte) (TempBasalInfo, error) {
 	info := TempBasalInfo{Duration: d, Type: tempType}
 	switch tempType {
 	case Absolute:
-		rate := twoByteInsulin(data[3:5], true)
+		rate := twoByteInsulin(data[3:5], 23)
 		info.Rate = &rate
 	case Percent:
 		percent := data[2]

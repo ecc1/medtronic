@@ -23,12 +23,8 @@ type CarbRatio struct {
 // 10x grams/unit or 1000x units/exchange.
 type Ratio int
 
-func intToRatio(n int, u CarbUnitsType, newerPump bool) Ratio {
-	switch newerPump {
-	case true:
-		// Use representation as-is.
-		return Ratio(n)
-	case false:
+func intToRatio(n int, u CarbUnitsType, family Family) Ratio {
+	if family <= 22 {
 		// Convert to higher-resolution representation.
 		switch u {
 		case Grams:
@@ -39,40 +35,37 @@ func intToRatio(n int, u CarbUnitsType, newerPump bool) Ratio {
 			log.Panicf("unknown carb unit %d", u)
 		}
 	}
-	panic("unreachable")
+	// Use representation as-is.
+	return Ratio(n)
 }
 
 // CarbRatioSchedule represents a carb ratio schedule.
 type CarbRatioSchedule []CarbRatio
 
-func carbRatioStep(newerPump bool) int {
-	switch newerPump {
-	case true:
-		return 3
-	case false:
+func carbRatioStep(family Family) int {
+	if family <= 22 {
 		return 2
 	}
-	panic("unreachable")
+	return 3
 }
 
-func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) CarbRatioSchedule {
+func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, family Family) CarbRatioSchedule {
 	var sched []CarbRatio
-	step := carbRatioStep(newerPump)
-	for i := 0; i < len(data); i += step {
+	step := carbRatioStep(family)
+	for i := 0; i <= len(data)-step; i += step {
 		start := halfHoursToTimeOfDay(data[i])
 		if start == 0 && len(sched) != 0 {
 			break
 		}
 		var value int
-		switch newerPump {
-		case true:
-			value = twoByteInt(data[i+1 : i+3])
-		case false:
+		if family <= 22 {
 			value = int(data[i+1])
+		} else {
+			value = twoByteInt(data[i+1 : i+3])
 		}
 		sched = append(sched, CarbRatio{
 			Start: start,
-			Ratio: intToRatio(value, units, newerPump),
+			Ratio: intToRatio(value, units, family),
 			Units: units,
 		})
 	}
@@ -81,8 +74,6 @@ func decodeCarbRatioSchedule(data []byte, units CarbUnitsType, newerPump bool) C
 
 // CarbRatios returns the pump's carb ratio schedule..
 func (pump *Pump) CarbRatios() CarbRatioSchedule {
-	// Format of response depends on the pump family.
-	newer := pump.Family() >= 23
 	data := pump.Execute(carbRatios)
 	if pump.Error() != nil {
 		return CarbRatioSchedule{}
@@ -91,14 +82,16 @@ func (pump *Pump) CarbRatios() CarbRatioSchedule {
 		pump.BadResponse(carbRatios, data)
 		return CarbRatioSchedule{}
 	}
+	// Format of response depends on the pump family.
+	family := pump.Family()
 	n := int(data[0]) - 1
-	step := carbRatioStep(newer)
+	step := carbRatioStep(family)
 	if n%step != 0 {
 		pump.BadResponse(carbRatios, data)
 		return CarbRatioSchedule{}
 	}
 	units := CarbUnitsType(data[1])
-	return decodeCarbRatioSchedule(data[step:step+n], units, newer)
+	return decodeCarbRatioSchedule(data[step:step+n], units, family)
 }
 
 // CarbRatioAt returns the carb ratio in effect at the given time.

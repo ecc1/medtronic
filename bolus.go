@@ -19,17 +19,16 @@ func (pump *Pump) Bolus(amount Insulin) {
 	if amount > maxBolus {
 		pump.SetError(fmt.Errorf("bolus amount (%d) is too large", amount))
 	}
-	newer := pump.Family() >= 23
-	d := milliUnitsPerStroke(newer)
+	family := pump.Family()
+	d := milliUnitsPerStroke(family)
 	strokes := amount / d
 	actual := strokes * d
 	if actual != amount {
 		log.Printf("rounding bolus from %v to %v", amount, actual)
 	}
-	switch newer {
-	case true:
-		pump.Execute(bolus, marshalUint16(uint16(strokes))...)
-	case false:
+	if family <= 22 {
 		pump.Execute(bolus, uint8(strokes))
+	} else {
+		pump.Execute(bolus, marshalUint16(uint16(strokes))...)
 	}
 }

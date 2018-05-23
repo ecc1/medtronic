@@ -4,31 +4,27 @@ const (
 	reservoir Command = 0x73
 )
 
-func decodeReservoir(data []byte, newerPump bool) (Insulin, error) {
-	switch newerPump {
-	case true:
-		if len(data) < 5 || data[0] != 4 {
-			return 0, BadResponseError{Command: reservoir, Data: data}
-		}
-		return twoByteInsulin(data[3:5], true), nil
-	case false:
+func decodeReservoir(data []byte, family Family) (Insulin, error) {
+	if family <= 22 {
 		if len(data) < 3 || data[0] != 2 {
 			return 0, BadResponseError{Command: reservoir, Data: data}
 		}
-		return twoByteInsulin(data[1:3], false), nil
+		return twoByteInsulin(data[1:3], family), nil
 	}
-	panic("unreachable")
+	if len(data) < 5 || data[0] != 4 {
+		return 0, BadResponseError{Command: reservoir, Data: data}
+	}
+	return twoByteInsulin(data[3:5], family), nil
 }
 
 // Reservoir returns the amount of insulin remaining.
 func (pump *Pump) Reservoir() Insulin {
-	// Format of response depends on the pump family.
-	newer := pump.Family() >= 23
 	data := pump.Execute(reservoir)
 	if pump.Error() != nil {
 		return 0
 	}
-	i, err := decodeReservoir(data, newer)
+	// Format of response depends on the pump family.
+	i, err := decodeReservoir(data, pump.Family())
 	pump.SetError(err)
 	return i
 }

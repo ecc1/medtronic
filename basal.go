@@ -29,7 +29,7 @@ func decodeBasalRateSchedule(data []byte) BasalRateSchedule {
 			break
 		}
 		start := halfHoursToTimeOfDay(t)
-		rate := byteToInsulin(r, true)
+		rate := byteToInsulin(r, 23)
 		sched = append(sched, BasalRate{Start: start, Rate: rate})
 	}
 	return sched
