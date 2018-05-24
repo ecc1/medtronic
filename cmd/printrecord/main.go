@@ -15,7 +15,7 @@ var (
 
 func main() {
 	flag.Parse()
-	newer := *model%100 > 22
+	family := medtronic.Family(*model % 100)
 	for _, arg := range flag.Args() {
 		data, err := base64.StdEncoding.DecodeString(arg)
 		if err != nil {
@@ -23,7 +23,7 @@ func main() {
 			continue
 		}
 		fmt.Printf("[ % X ]\n", data)
-		r, err := medtronic.DecodeHistoryRecord(data, newer)
+		r, err := medtronic.DecodeHistoryRecord(data, family)
 		if err != nil {
 			fmt.Printf("decoding error: %v\n", err)
 			continue

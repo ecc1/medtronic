@@ -19,7 +19,7 @@ var (
 
 func main() {
 	flag.Parse()
-	newer := *model%100 > 22
+	family := medtronic.Family(*model % 100)
 	var records []medtronic.HistoryRecord
 	for _, file := range flag.Args() {
 		f, err := os.Open(file)
@@ -28,7 +28,7 @@ func main() {
 		}
 		data := readBytes(f)
 		_ = f.Close()
-		v, err := medtronic.DecodeHistory(data, newer)
+		v, err := medtronic.DecodeHistory(data, family)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -19,7 +19,7 @@ var (
 
 func main() {
 	flag.Parse()
-	newer := *model%100 > 22
+	family := medtronic.Family(*model % 100)
 	d := json.NewDecoder(os.Stdin)
 	var maps []interface{}
 	if err := d.Decode(&maps); err != nil {
@@ -34,7 +34,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		r, err := medtronic.DecodeHistoryRecord(data, newer)
+		r, err := medtronic.DecodeHistoryRecord(data, family)
 		if err != nil {
 			log.Fatal(err)
 		}
