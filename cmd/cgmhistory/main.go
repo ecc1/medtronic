@@ -32,7 +32,7 @@ func main() {
 		cutoff = time.Now().Add(-time.Duration(*numHours) * time.Hour)
 	}
 	if !*all {
-		log.Printf("retrieving pump history since %s", cutoff.Format(medtronic.UserTimeLayout))
+		log.Printf("retrieving CGM history since %s", cutoff.Format(medtronic.UserTimeLayout))
 	}
 	pump := medtronic.Open()
 	defer pump.Close()
