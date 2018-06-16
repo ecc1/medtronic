@@ -7,13 +7,15 @@ import "strconv"
 const (
 	_CGMRecordType_name_0 = "CGMDataEndCGMWeakSignalCGMCalCGMPacketCGMErrorCGMDataLowCGMDataHighCGMTimestamp"
 	_CGMRecordType_name_1 = "CGMBatteryChangeCGMSensorStatusCGMTimeChangeCGMSyncCGMCalBGForGHCGMCalFactorCGMEvent10"
-	_CGMRecordType_name_2 = "CGMGlucose"
+	_CGMRecordType_name_2 = "CGMEvent13"
+	_CGMRecordType_name_3 = "CGMGlucose"
 )
 
 var (
 	_CGMRecordType_index_0 = [...]uint8{0, 10, 23, 29, 38, 46, 56, 67, 79}
 	_CGMRecordType_index_1 = [...]uint8{0, 16, 31, 44, 51, 64, 76, 86}
 	_CGMRecordType_index_2 = [...]uint8{0, 10}
+	_CGMRecordType_index_3 = [...]uint8{0, 10}
 )
 
 func (i CGMRecordType) String() string {
@@ -24,8 +26,10 @@ func (i CGMRecordType) String() string {
 	case 10 <= i && i <= 16:
 		i -= 10
 		return _CGMRecordType_name_1[_CGMRecordType_index_1[i]:_CGMRecordType_index_1[i+1]]
-	case i == 32:
+	case i == 19:
 		return _CGMRecordType_name_2
+	case i == 32:
+		return _CGMRecordType_name_3
 	default:
 		return "CGMRecordType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
