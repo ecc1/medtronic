@@ -35,6 +35,7 @@ var (
 		"carbunits":     cmd(carbUnits),
 		"clock":         cmd(clock),
 		"execute":       cmdN(execute, "command", "arguments"),
+		"firmware":      cmd(firmware),
 		"glucoseunits":  cmd(glucoseUnits),
 		"model":         cmd(model),
 		"pumpid":        cmd(pumpID),
@@ -160,6 +161,10 @@ func execute(pump *medtronic.Pump, args Arguments) interface{} {
 
 func executeUsage(err error) {
 	cmdError("execute", "cmd [param ...]", err)
+}
+
+func firmware(pump *medtronic.Pump, _ Arguments) interface{} {
+	return pump.FirmwareVersion()
 }
 
 func glucoseUnits(pump *medtronic.Pump, _ Arguments) interface{} {
