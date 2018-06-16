@@ -27,6 +27,7 @@ const (
 	CGMCalBGForGH    CGMRecordType = 0x0E
 	CGMCalFactor     CGMRecordType = 0x0F
 	CGMEvent10       CGMRecordType = 0x10
+	CGMEvent13       CGMRecordType = 0x13
 
 	// Synthetic record type.
 	// Single bytes with this value or greater represent glucose readings.
@@ -141,7 +142,6 @@ func DecodeCGMHistory(data []byte) (CGMHistory, error) {
 		results = append(results, r)
 		data = data[len(r.Data):]
 	}
-	addTimestamps(results)
 	return results, err
 }
 
@@ -151,7 +151,9 @@ func reverseBytes(a []byte) {
 	}
 }
 
-func addTimestamps(results CGMHistory) {
+// AddCGMTimes updates the Time field of each record in results
+// by scanning backwards from the oldest (last) record.
+func AddCGMTimes(results CGMHistory) {
 	var prev time.Time
 	for i := len(results) - 1; i >= 0; i-- {
 		t := results[i].Time

@@ -28,7 +28,7 @@ func cgmBGT(t time.Time) CGMRecord {
 	}
 }
 
-func TestAddTimestamps(t *testing.T) {
+func TestAddCGMTimes(t *testing.T) {
 	var (
 		r0 = cgmTS(parseTime("2018-05-01T00:00"))
 		r1 = cgmBG()
@@ -53,9 +53,9 @@ func TestAddTimestamps(t *testing.T) {
 	}
 	for _, c := range cases {
 		before := c.before[:]
-		addTimestamps(before)
+		AddCGMTimes(before)
 		if !reflect.DeepEqual(before, c.after) {
-			t.Errorf("addTimestamps(%+v) == %+v, want %+v", c.before, before, c.after)
+			t.Errorf("AddCGMTimes(%+v) == %+v, want %+v", c.before, before, c.after)
 		}
 	}
 }
