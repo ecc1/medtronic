@@ -15,6 +15,7 @@ var (
 	numHours  = flag.Int("n", 6, "number of `hours` of history to get")
 	nsFlag    = flag.Bool("e", false, "format as Nightscout entries")
 	sinceFlag = flag.String("s", "", "get history since the specified `time` in RFC3339 format")
+	noTimes   = flag.Bool("notimes", false, "do not add times to glucose records")
 )
 
 func main() {
@@ -40,6 +41,9 @@ func main() {
 	results := pump.CGMHistory(cutoff)
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
+	}
+	if !*noTimes {
+		medtronic.AddCGMTimes(results)
 	}
 	if *nsFlag {
 		medtronic.ReverseCGMHistory(results)
