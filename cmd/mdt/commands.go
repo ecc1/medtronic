@@ -44,6 +44,7 @@ var (
 		"rssi":          cmd(rssi),
 		"sensitivities": cmd(sensitivities),
 		"setclock":      cmd(setClock, "time"),
+		"setmaxbolus":   cmd(setMaxBolus, "units"),
 		"settempbasal":  cmd(setTempBasal, "temp", "rate", "duration"),
 		"settings":      cmd(settings),
 		"status":        cmd(status),
@@ -214,6 +215,17 @@ func parseTime(date string) time.Time {
 		cmdError("setclock", "YYYY-MM-DD HH:MM:SS (or \"now\")", err)
 	}
 	return t
+}
+
+func setMaxBolus(pump *medtronic.Pump, args Arguments) interface{} {
+	f, err := args.Float("units")
+	if err != nil {
+		cmdError("setmaxbolus", "units", err)
+	}
+	amount := medtronic.Insulin(1000.0*f + 0.5)
+	log.Printf("setting max bolus to %v units", amount)
+	pump.SetMaxBolus(amount)
+	return nil
 }
 
 func setTempBasal(pump *medtronic.Pump, args Arguments) interface{} {
