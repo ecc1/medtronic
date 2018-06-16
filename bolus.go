@@ -17,6 +17,9 @@ func (pump *Pump) Bolus(amount Insulin) {
 	if amount > maxBolus {
 		pump.SetError(fmt.Errorf("bolus amount (%d) is too large", amount))
 	}
+	if pump.Error() != nil {
+		return
+	}
 	family := pump.Family()
 	d := milliUnitsPerStroke(family)
 	strokes := amount / d
