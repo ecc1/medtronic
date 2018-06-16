@@ -6,8 +6,6 @@ import (
 )
 
 const (
-	bolus Command = 0x42
-
 	maxBolus = 25000 // milliUnits
 )
 

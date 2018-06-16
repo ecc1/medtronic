@@ -4,10 +4,6 @@ import (
 	"time"
 )
 
-const (
-	insulinSensitivities Command = 0x8B
-)
-
 // InsulinSensitivity represents an entry in an insulin sensitivity schedule.
 type InsulinSensitivity struct {
 	Start       TimeOfDay

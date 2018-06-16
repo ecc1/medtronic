@@ -1,9 +1,5 @@
 package medtronic
 
-const (
-	status Command = 0xCE
-)
-
 // StatusInfo represents the pump's status.
 type StatusInfo struct {
 	Code      byte

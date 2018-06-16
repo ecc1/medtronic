@@ -1,9 +1,5 @@
 package medtronic
 
-const (
-	reservoir Command = 0x73
-)
-
 func decodeReservoir(data []byte, family Family) (Insulin, error) {
 	if family <= 22 {
 		if len(data) < 3 || data[0] != 2 {

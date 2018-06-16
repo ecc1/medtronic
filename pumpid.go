@@ -1,9 +1,5 @@
 package medtronic
 
-const (
-	pumpID Command = 0x71
-)
-
 // PumpID returns the pump's ID.
 func (pump *Pump) PumpID() string {
 	data := pump.Execute(pumpID)

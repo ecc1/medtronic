@@ -4,11 +4,6 @@ import (
 	"time"
 )
 
-const (
-	settings    Command = 0xC0
-	settings512 Command = 0x91
-)
-
 // SettingsInfo represents the pump's settings.
 type SettingsInfo struct {
 	AutoOff              time.Duration

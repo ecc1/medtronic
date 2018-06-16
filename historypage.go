@@ -1,10 +1,5 @@
 package medtronic
 
-const (
-	historyPage      Command = 0x80
-	historyPageCount Command = 0x9D
-)
-
 // HistoryPage downloads the given history page.
 func (pump *Pump) HistoryPage(page int) []byte {
 	return pump.Download(historyPage, page)

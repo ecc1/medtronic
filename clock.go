@@ -4,11 +4,6 @@ import (
 	"time"
 )
 
-const (
-	clock    Command = 0x70
-	setClock Command = 0x40
-)
-
 func decodeClock(data []byte) time.Time {
 	hour := int(data[1])
 	min := int(data[2])

@@ -1,13 +1,5 @@
 package medtronic
 
-const (
-	cgmPageCount      Command = 0xCD
-	glucosePage       Command = 0x9A
-	isigPage          Command = 0x9B
-	calibrationFactor Command = 0x9C
-	vcntrPage         Command = 0xD5
-)
-
 // GlucosePage downloads the given glucose page.
 func (pump *Pump) GlucosePage(page int) []byte {
 	return pump.Download(glucosePage, page)

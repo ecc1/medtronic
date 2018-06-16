@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-const (
-	carbRatios Command = 0x8A
-)
-
 // CarbRatio represents an entry in a carb ratio schedule.
 type CarbRatio struct {
 	Start TimeOfDay

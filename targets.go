@@ -4,11 +4,6 @@ import (
 	"time"
 )
 
-const (
-	glucoseTargets    Command = 0x9F
-	glucoseTargets512 Command = 0x8C
-)
-
 // GlucoseTarget represents an entry in a glucose target schedule.
 type GlucoseTarget struct {
 	Start TimeOfDay

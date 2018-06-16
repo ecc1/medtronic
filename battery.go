@@ -4,10 +4,6 @@ import (
 	"fmt"
 )
 
-const (
-	battery Command = 0x72
-)
-
 // Voltage represents the battery voltage in milliVolts.
 type Voltage int
 

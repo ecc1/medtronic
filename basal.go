@@ -4,12 +4,6 @@ import (
 	"time"
 )
 
-const (
-	basalRates    Command = 0x92
-	basalPatternA Command = 0x93
-	basalPatternB Command = 0x94
-)
-
 // BasalRate represents an entry in a basal rate schedule.
 type BasalRate struct {
 	Start TimeOfDay

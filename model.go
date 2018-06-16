@@ -5,10 +5,6 @@ import (
 	"strconv"
 )
 
-const (
-	model Command = 0x8D
-)
-
 // Family represents a pump family.
 // Use int8 so the compiler will warn about
 // accidental uses of 523 instead of 23, etc.

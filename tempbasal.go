@@ -7,10 +7,6 @@ import (
 )
 
 const (
-	tempBasal            Command = 0x98
-	setAbsoluteTempBasal Command = 0x4C
-	setPercentTempBasal  Command = 0x69
-
 	maxBasal    = 34000 // milliUnits
 	maxDuration = 24 * time.Hour
 )

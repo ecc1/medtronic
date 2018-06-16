@@ -1,9 +1,5 @@
 package medtronic
 
-const (
-	button Command = 0x5B
-)
-
 // PumpButton represents a key on the pump keypad.
 type PumpButton byte
 

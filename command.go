@@ -32,8 +32,40 @@ type Command byte
 //go:generate stringer -type Command
 
 const (
-	ack Command = 0x06
-	nak Command = 0x15
+	ack                  Command = 0x06
+	nak                  Command = 0x15
+	setClock             Command = 0x40
+	bolus                Command = 0x42
+	setAbsoluteTempBasal Command = 0x4C
+	suspend              Command = 0x4D
+	button               Command = 0x5B
+	wakeup               Command = 0x5D
+	setPercentTempBasal  Command = 0x69
+	clock                Command = 0x70
+	pumpID               Command = 0x71
+	battery              Command = 0x72
+	reservoir            Command = 0x73
+	historyPage          Command = 0x80
+	carbUnits            Command = 0x88
+	glucoseUnits         Command = 0x89
+	carbRatios           Command = 0x8A
+	insulinSensitivities Command = 0x8B
+	glucoseTargets512    Command = 0x8C
+	model                Command = 0x8D
+	settings512          Command = 0x91
+	basalRates           Command = 0x92
+	basalPatternA        Command = 0x93
+	basalPatternB        Command = 0x94
+	tempBasal            Command = 0x98
+	glucosePage          Command = 0x9A
+	isigPage             Command = 0x9B
+	calibrationFactor    Command = 0x9C
+	historyPageCount     Command = 0x9D
+	glucoseTargets       Command = 0x9F
+	settings             Command = 0xC0
+	cgmPageCount         Command = 0xCD
+	status               Command = 0xCE
+	vcntrPage            Command = 0xD5
 )
 
 // NoResponseError indicates that no response to a command was received.

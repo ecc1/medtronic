@@ -8,11 +8,6 @@ import (
 // Carbs represents a carb value as either grams or 10x exchanges.
 type Carbs int
 
-const (
-	carbUnits    Command = 0x88
-	glucoseUnits Command = 0x89
-)
-
 // CarbUnitsType represents the pump's carb unit type (grams or exchanges).
 type CarbUnitsType byte
 
