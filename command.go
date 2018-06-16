@@ -34,17 +34,25 @@ type Command byte
 const (
 	ack                  Command = 0x06
 	nak                  Command = 0x15
+	setBasalPatternA     Command = 0x30
+	setBasalPatternB     Command = 0x31
 	setClock             Command = 0x40
+	setMaxBolus          Command = 0x41
 	bolus                Command = 0x42
+	selectBasalPattern   Command = 0x4A
 	setAbsoluteTempBasal Command = 0x4C
 	suspend              Command = 0x4D
 	button               Command = 0x5B
 	wakeup               Command = 0x5D
 	setPercentTempBasal  Command = 0x69
+	setMaxBasal          Command = 0x6E
+	setBasalRates        Command = 0x6F
 	clock                Command = 0x70
 	pumpID               Command = 0x71
 	battery              Command = 0x72
 	reservoir            Command = 0x73
+	firmwareVersion      Command = 0x74
+	errorStatus          Command = 0x75
 	historyPage          Command = 0x80
 	carbUnits            Command = 0x88
 	glucoseUnits         Command = 0x89
