@@ -16,9 +16,9 @@ func (pump *Pump) SetMaxBolus(amount Insulin) {
 	if pump.Error() != nil {
 		return
 	}
-	d := milliUnitsPerStroke(22)
-	strokes := amount / d
-	actual := strokes * d
+	m := milliUnitsPerStroke(22)
+	strokes := amount / m
+	actual := strokes * m
 	if actual != amount {
 		log.Printf("rounding max bolus from %v to %v", amount, actual)
 	}

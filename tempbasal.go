@@ -74,8 +74,9 @@ func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is too large", rate))
 		return
 	}
-	strokes := rate / 25
-	actual := strokes * 25
+	m := milliUnitsPerStroke(23)
+	strokes := rate / m
+	actual := strokes * m
 	if actual != rate {
 		log.Printf("rounding temporary basal rate from %v to %v", rate, actual)
 	}

@@ -21,9 +21,9 @@ func (pump *Pump) Bolus(amount Insulin) {
 		return
 	}
 	family := pump.Family()
-	d := milliUnitsPerStroke(family)
-	strokes := amount / d
-	actual := strokes * d
+	m := milliUnitsPerStroke(family)
+	strokes := amount / m
+	actual := strokes * m
 	if actual != amount {
 		log.Printf("rounding bolus from %v to %v", amount, actual)
 	}
