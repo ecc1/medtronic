@@ -382,8 +382,7 @@ func decodeDailyTotal(data []byte, family Family) HistoryRecord {
 func decodeBasalRate(data []byte) BasalRate {
 	return BasalRate{
 		Start: halfHoursToTimeOfDay(data[0]),
-		Rate:  byteToInsulin(data[1], 23),
-		// data[2] unused
+		Rate:  twoByteInsulinLE(data[1:3]),
 	}
 }
 

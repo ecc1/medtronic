@@ -110,3 +110,7 @@ func byteToInsulin(strokes uint8, family Family) Insulin {
 func twoByteInsulin(data []byte, family Family) Insulin {
 	return intToInsulin(twoByteInt(data), family)
 }
+
+func twoByteInsulinLE(data []byte) Insulin {
+	return intToInsulin(twoByteIntLE(data), 23)
+}

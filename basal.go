@@ -16,14 +16,13 @@ type BasalRateSchedule []BasalRate
 func decodeBasalRateSchedule(data []byte) BasalRateSchedule {
 	var sched []BasalRate
 	for i := 0; i < len(data)-2; i += 3 {
-		r := data[i]
+		rate := twoByteInsulinLE(data[i : i+2])
 		t := data[i+2]
 		// Don't stop if the 00:00 rate happens to be zero.
-		if i > 1 && r == 0 && t == 0 {
+		if i > 1 && rate == 0 && t == 0 {
 			break
 		}
 		start := halfHoursToTimeOfDay(t)
-		rate := byteToInsulin(r, 23)
 		sched = append(sched, BasalRate{Start: start, Rate: rate})
 	}
 	return sched

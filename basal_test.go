@@ -66,6 +66,14 @@ func TestBasalRates(t *testing.T) {
 				{parseTD("23:00"), 2300},
 			},
 		},
+		{
+			[]byte{0x28, 0x00, 0x00, 0x40, 0x01, 0x08, 0x28, 0x00, 0x2C, 0x00, 0x00, 0x00},
+			BasalRateSchedule{
+				{parseTD("00:00"), 1000},
+				{parseTD("04:00"), 8000},
+				{parseTD("22:00"), 1000},
+			},
+		},
 	}
 	for _, c := range cases {
 		s := decodeBasalRateSchedule(c.data)

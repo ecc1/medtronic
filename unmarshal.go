@@ -4,8 +4,16 @@ func twoByteUint(data []byte) uint16 {
 	return uint16(data[0])<<8 | uint16(data[1])
 }
 
+func twoByteUintLE(data []byte) uint16 {
+	return uint16(data[1])<<8 | uint16(data[0])
+}
+
 func twoByteInt(data []byte) int {
 	return int(int16(twoByteUint(data)))
+}
+
+func twoByteIntLE(data []byte) int {
+	return int(int16(twoByteUintLE(data)))
 }
 
 func fourByteUint(data []byte) uint32 {
@@ -19,6 +27,10 @@ func fourByteInt(data []byte) int {
 
 func marshalUint16(n uint16) []byte {
 	return []byte{byte(n >> 8), byte(n & 0xFF)}
+}
+
+func marshalUint16LE(n uint16) []byte {
+	return []byte{byte(n & 0xFF), byte(n >> 8)}
 }
 
 func marshalUint32(n uint32) []byte {
