@@ -18,7 +18,7 @@ func TestCarbRatios(t *testing.T) {
 			[]byte{0x00, 0x06, 0x12, 0x08},
 			Grams,
 			22,
-			[]CarbRatio{
+			CarbRatioSchedule{
 				{parseTD("00:00"), 60, Grams},
 				{parseTD("09:00"), 80, Grams},
 			},
@@ -27,7 +27,7 @@ func TestCarbRatios(t *testing.T) {
 			[]byte{0x00, 0x0A, 0x02, 0x0B, 0x04, 0x0C, 0x06, 0x0D, 0x08, 0x0E, 0x0A, 0x0F, 0x0C, 0x10, 0x0E, 0x11, 0x00, 0x00, 0x00, 0x00},
 			Grams,
 			12,
-			[]CarbRatio{
+			CarbRatioSchedule{
 				{parseTD("00:00"), 100, Grams},
 				{parseTD("01:00"), 110, Grams},
 				{parseTD("02:00"), 120, Grams},
@@ -54,7 +54,7 @@ func TestCarbRatioAt(t *testing.T) {
 		target CarbRatio
 	}{
 		{
-			[]CarbRatio{
+			CarbRatioSchedule{
 				{parseTD("00:00"), 60, Grams},
 			},
 			parseTime("2016-11-06T23:00:00"),
