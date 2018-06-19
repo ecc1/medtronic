@@ -326,7 +326,7 @@ func (r *TimeOfDay) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	*r, err = parseTimeOfDay(v)
+	*r, err = ParseTimeOfDay(v)
 	return err
 }
 

@@ -92,7 +92,7 @@ func (pump *Pump) CarbRatios() CarbRatioSchedule {
 
 // CarbRatioAt returns the carb ratio in effect at the given time.
 func (s CarbRatioSchedule) CarbRatioAt(t time.Time) CarbRatio {
-	d := sinceMidnight(t)
+	d := SinceMidnight(t)
 	last := CarbRatio{}
 	for _, v := range s {
 		if v.Start > d {

@@ -83,10 +83,10 @@ func TestGlucoseTargetAt(t *testing.T) {
 	}{
 		{
 			GlucoseTargetSchedule{
-				{durationToTimeOfDay(0), 80, 120, MgPerDeciLiter},
+				{TimeOfDay(0), 80, 120, MgPerDeciLiter},
 			},
 			parseTime("2016-11-06T23:00:00"),
-			GlucoseTarget{durationToTimeOfDay(0), 80, 120, MgPerDeciLiter},
+			GlucoseTarget{TimeOfDay(0), 80, 120, MgPerDeciLiter},
 		},
 	}
 	for _, c := range cases {

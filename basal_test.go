@@ -116,7 +116,7 @@ func TestBasalRateAt(t *testing.T) {
 }
 
 func parseTD(s string) TimeOfDay {
-	t, err := parseTimeOfDay(s)
+	t, err := ParseTimeOfDay(s)
 	if err != nil {
 		panic(err)
 	}

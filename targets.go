@@ -75,7 +75,7 @@ func (pump *Pump) GlucoseTargets() GlucoseTargetSchedule {
 
 // GlucoseTargetAt returns the glucose target in effect at the given time.
 func (s GlucoseTargetSchedule) GlucoseTargetAt(t time.Time) GlucoseTarget {
-	d := sinceMidnight(t)
+	d := SinceMidnight(t)
 	last := GlucoseTarget{}
 	for _, v := range s {
 		if v.Start > d {

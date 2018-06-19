@@ -53,7 +53,7 @@ func (pump *Pump) BasalPatternB() BasalRateSchedule {
 
 // BasalRateAt returns the basal rate in effect at the given time.
 func (s BasalRateSchedule) BasalRateAt(t time.Time) BasalRate {
-	d := sinceMidnight(t)
+	d := SinceMidnight(t)
 	last := BasalRate{}
 	for _, v := range s {
 		if v.Start > d {

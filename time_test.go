@@ -19,8 +19,8 @@ func TestTimeOfDay(t *testing.T) {
 		err error
 	}{
 		{"00:00", 0, nil},
-		{"12:00", durationToTimeOfDay(12 * time.Hour), nil},
-		{"23:59", durationToTimeOfDay(24*time.Hour - 1*time.Minute), nil},
+		{"12:00", Duration(12 * time.Hour).TimeOfDay(), nil},
+		{"23:59", Duration(24*time.Hour - 1*time.Minute).TimeOfDay(), nil},
 		{"01:02:03", 0, fmt.Errorf("")},
 		{"24:00", 0, fmt.Errorf("")},
 		{"01:60", 0, fmt.Errorf("")},
@@ -33,22 +33,22 @@ func TestTimeOfDay(t *testing.T) {
 					t.Errorf("%v.String() == %v, want %v", c.t, s, c.s)
 				}
 			}
-			td, err := parseTimeOfDay(c.s)
+			td, err := ParseTimeOfDay(c.s)
 			if err == nil {
 				if c.err == nil {
 					if td == c.t {
 						return
 					} else {
-						t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
+						t.Errorf("ParseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
 					}
 				} else {
-					t.Errorf("parseTimeOfDay(%s) == %v, want error", c.s, td)
+					t.Errorf("ParseTimeOfDay(%s) == %v, want error", c.s, td)
 				}
 			} else {
 				if c.err != nil {
 					return
 				} else {
-					t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
+					t.Errorf("ParseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
 				}
 			}
 		})
@@ -58,7 +58,7 @@ func TestTimeOfDay(t *testing.T) {
 
 func TestHalfHours(t *testing.T) {
 	cases := []struct {
-		t uint8
+		h uint8
 		d time.Duration
 	}{
 		{0, 0},
@@ -67,10 +67,16 @@ func TestHalfHours(t *testing.T) {
 		{4, 2 * time.Hour},
 	}
 	for _, c := range cases {
-		t.Run(fmt.Sprintf("%02d", c.t), func(t *testing.T) {
-			d := halfHoursToDuration(c.t)
+		t.Run(fmt.Sprintf("from%d", c.h), func(t *testing.T) {
+			d := halfHoursToDuration(c.h)
 			if d != Duration(c.d) {
-				t.Errorf("halfHoursToDuration(%d) == %v, want %v", c.t, d, c.d)
+				t.Errorf("halfHoursToDuration(%d) == %v, want %v", c.h, d, c.d)
+			}
+		})
+		t.Run(fmt.Sprintf("to%d", c.h), func(t *testing.T) {
+			h := TimeOfDay(c.d).HalfHours()
+			if h != c.h {
+				t.Errorf("HalfHours(%v) == %d, want %d", c.d, h, c.h)
 			}
 		})
 	}
@@ -98,23 +104,23 @@ func TestSinceMidnight(t *testing.T) {
 		t time.Time
 		d TimeOfDay
 	}{
-		{parseTime("2015-01-01T09:00"), durationToTimeOfDay(9 * time.Hour)},
-		{parseTime("2016-03-15T10:00:00.5"), durationToTimeOfDay(10*time.Hour + 500*time.Millisecond)},
-		{parseTime("2016-06-15T20:30"), durationToTimeOfDay(20*time.Hour + 30*time.Minute)},
-		{parseTime("2010-11-30T23:59:59.999"), durationToTimeOfDay(24*time.Hour - time.Millisecond)},
+		{parseTime("2015-01-01T09:00"), Duration(9 * time.Hour).TimeOfDay()},
+		{parseTime("2016-03-15T10:00:00.5"), Duration(10*time.Hour + 500*time.Millisecond).TimeOfDay()},
+		{parseTime("2016-06-15T20:30"), Duration(20*time.Hour + 30*time.Minute).TimeOfDay()},
+		{parseTime("2010-11-30T23:59:59.999"), Duration(24*time.Hour - time.Millisecond).TimeOfDay()},
 		// DST changes
-		{parseTime("2016-03-13T01:00"), durationToTimeOfDay(1 * time.Hour)},
-		{parseTime("2016-03-13T03:00"), durationToTimeOfDay(3 * time.Hour)},
-		{parseTime("2016-03-13T12:00"), durationToTimeOfDay(12 * time.Hour)},
-		{parseTime("2016-11-06T01:00"), durationToTimeOfDay(1 * time.Hour)},
-		{parseTime("2016-11-06T02:00"), durationToTimeOfDay(2 * time.Hour)},
-		{parseTime("2016-11-06T03:00"), durationToTimeOfDay(3 * time.Hour)},
-		{parseTime("2016-11-06T23:00"), durationToTimeOfDay(23 * time.Hour)},
-		{parseTime("2016-11-06T23:30"), durationToTimeOfDay(23*time.Hour + 30*time.Minute)},
+		{parseTime("2016-03-13T01:00"), Duration(1 * time.Hour).TimeOfDay()},
+		{parseTime("2016-03-13T03:00"), Duration(3 * time.Hour).TimeOfDay()},
+		{parseTime("2016-03-13T12:00"), Duration(12 * time.Hour).TimeOfDay()},
+		{parseTime("2016-11-06T01:00"), Duration(1 * time.Hour).TimeOfDay()},
+		{parseTime("2016-11-06T02:00"), Duration(2 * time.Hour).TimeOfDay()},
+		{parseTime("2016-11-06T03:00"), Duration(3 * time.Hour).TimeOfDay()},
+		{parseTime("2016-11-06T23:00"), Duration(23 * time.Hour).TimeOfDay()},
+		{parseTime("2016-11-06T23:30"), Duration(23*time.Hour + 30*time.Minute).TimeOfDay()},
 	}
 	for _, c := range cases {
 		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
-			d := sinceMidnight(c.t)
+			d := SinceMidnight(c.t)
 			if d != c.d {
 				// Print TimeOfDay as underlying time.Duration.
 				t.Errorf("sinceMidnight(%v) == %v, want %v", c.t, time.Duration(d), time.Duration(c.d))

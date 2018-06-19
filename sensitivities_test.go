@@ -55,10 +55,10 @@ func TestInsulinSensitivityAt(t *testing.T) {
 	}{
 		{
 			InsulinSensitivitySchedule{
-				{durationToTimeOfDay(0), 40, MgPerDeciLiter},
+				{TimeOfDay(0), 40, MgPerDeciLiter},
 			},
 			parseTime("2016-11-06T23:00:00"),
-			InsulinSensitivity{durationToTimeOfDay(0), 40, MgPerDeciLiter},
+			InsulinSensitivity{TimeOfDay(0), 40, MgPerDeciLiter},
 		},
 	}
 	for _, c := range cases {

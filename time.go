@@ -21,27 +21,37 @@ type (
 	TimeOfDay time.Duration
 )
 
-// Convert n hours to a Duration.
+// hourstoDuration converts n hours to a Duration.
 func hoursToDuration(n uint8) Duration {
 	return Duration(time.Duration(n) * time.Hour)
 }
 
-// Convert n half-hours to a Duration.
+// halfHoursToDuration converts n half-hours to a Duration.
 func halfHoursToDuration(n uint8) Duration {
 	return Duration(time.Duration(n) * 30 * time.Minute)
 }
 
-// Convert n minutes to a Duration.
+// minutesToDuration converts n minutes to a Duration.
 func minutesToDuration(n uint8) Duration {
 	return Duration(time.Duration(n) * time.Minute)
 }
 
-// Convert a duration to a time of day.
-func durationToTimeOfDay(d time.Duration) TimeOfDay {
-	if d < 0 || 24*time.Hour <= d {
-		log.Panicf("duration %v is not a valid time of day", d)
+// TimeOfDay converts a duration to a time of day.
+func (d Duration) TimeOfDay() TimeOfDay {
+	td := time.Duration(d)
+	if td < 0 || 24*time.Hour <= td {
+		log.Panicf("duration %v is not a valid time of day", td)
 	}
-	return TimeOfDay(d)
+	return TimeOfDay(td)
+}
+
+// Convert a time of day into half-hours.
+func (t TimeOfDay) HalfHours() uint8 {
+	n := time.Duration(t) / (30 * time.Minute)
+	if n > 255 {
+		log.Panicf("time of day %v is too large", t)
+	}
+	return uint8(n)
 }
 
 // Convert a time of day to a string of the form HH:MM.
@@ -52,32 +62,31 @@ func (t TimeOfDay) String() string {
 	return fmt.Sprintf("%02d:%02d", hour, min)
 }
 
-// ParseTimeOfDay parses a string of the form HH:MM
-// and returns a time of day.
-func parseTimeOfDay(s string) (TimeOfDay, error) {
+// ParseTimeOfDay parses a string of the form HH:MM into a time of day.
+func ParseTimeOfDay(s string) (TimeOfDay, error) {
 	if len(s) == 5 && s[2] == ':' {
 		hour, hErr := strconv.Atoi(s[0:2])
 		min, mErr := strconv.Atoi(s[3:5])
 		if hErr == nil && 0 <= hour && hour <= 23 && mErr == nil && 0 <= min && min <= 59 {
 			d := time.Duration(hour)*time.Hour + time.Duration(min)*time.Minute
-			return durationToTimeOfDay(d), nil
+			return Duration(d).TimeOfDay(), nil
 		}
 	}
 	return 0, fmt.Errorf("parseTimeOfDay: %q must be of the form HH:MM", s)
 }
 
-// Convert n half-hours to a time of day.
+// halfHoursToTimeOfDay converts n half-hours to a time of day.
 func halfHoursToTimeOfDay(n uint8) TimeOfDay {
-	return durationToTimeOfDay(time.Duration(n) * 30 * time.Minute)
+	return Duration(time.Duration(n) * 30 * time.Minute).TimeOfDay()
 }
 
-// Convert a time to a time of day.
-func sinceMidnight(t time.Time) TimeOfDay {
+// SinceMidnight converts a time to a time of day.
+func SinceMidnight(t time.Time) TimeOfDay {
 	hour, min, sec := t.Clock()
 	h, m, s := time.Duration(hour), time.Duration(min), time.Duration(sec)
 	n := time.Duration(t.Nanosecond())
 	d := h*time.Hour + m*time.Minute + s*time.Second + n*time.Nanosecond
-	return durationToTimeOfDay(d)
+	return Duration(d).TimeOfDay()
 }
 
 // Decode a 5-byte timestamp from a pump history record.

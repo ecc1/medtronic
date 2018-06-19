@@ -49,7 +49,7 @@ func (pump *Pump) InsulinSensitivities() InsulinSensitivitySchedule {
 
 // InsulinSensitivityAt returns the insulin sensitivity in effect at the given time.
 func (s InsulinSensitivitySchedule) InsulinSensitivityAt(t time.Time) InsulinSensitivity {
-	d := sinceMidnight(t)
+	d := SinceMidnight(t)
 	last := InsulinSensitivity{}
 	for _, v := range s {
 		if v.Start > d {
