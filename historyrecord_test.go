@@ -28,13 +28,14 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		{"testdata/pump-records-522.json", 22},
 	}
 	for _, c := range cases {
-		t.Logf("%s", c.jsonFile)
-		records, err := decodeFromData(c.jsonFile, c.family)
-		if err != nil {
-			t.Errorf("%v", err)
-			continue
-		}
-		checkHistory(t, records, c.jsonFile)
+		t.Run(c.jsonFile, func(t *testing.T) {
+			records, err := decodeFromData(c.jsonFile, c.family)
+			if err != nil {
+				t.Errorf("%v", err)
+				return
+			}
+			checkHistory(t, records, c.jsonFile)
+		})
 	}
 }
 
@@ -83,18 +84,19 @@ func TestDecodeHistory(t *testing.T) {
 		{"testdata/model512.data", "testdata/model512.json", 12},
 	}
 	for _, c := range cases {
-		t.Logf("%s", c.pageFile)
-		data, err := readBytes(c.pageFile)
-		if err != nil {
-			t.Errorf("%v", err)
-			continue
-		}
-		decoded, err := DecodeHistory(data, c.family)
-		if err != nil {
-			t.Errorf("DecodeHistory(% X, %d) returned %v", data, c.family, err)
-			continue
-		}
-		checkHistory(t, decoded, c.jsonFile)
+		t.Run(c.pageFile, func(t *testing.T) {
+			data, err := readBytes(c.pageFile)
+			if err != nil {
+				t.Errorf("%v", err)
+				return
+			}
+			decoded, err := DecodeHistory(data, c.family)
+			if err != nil {
+				t.Errorf("DecodeHistory(% X, %d) returned %v", data, c.family, err)
+				return
+			}
+			checkHistory(t, decoded, c.jsonFile)
+		})
 	}
 }
 
@@ -183,16 +185,17 @@ func TestTreatments(t *testing.T) {
 		{"testdata/pump-records-522.json", "testdata/pump-treatments-522.json", 22},
 	}
 	for _, c := range cases {
-		t.Logf("%s", c.recordFile)
-		records, err := decodeFromData(c.recordFile, c.family)
-		if err != nil {
-			t.Errorf("%v", err)
-			continue
-		}
-		treatments := Treatments(records)
-		eq, msg := compareJSON(treatments, c.treatmentFile)
-		if !eq {
-			t.Errorf("JSON is different:\n%s\n", msg)
-		}
+		t.Run(c.recordFile, func(t *testing.T) {
+			records, err := decodeFromData(c.recordFile, c.family)
+			if err != nil {
+				t.Errorf("%v", err)
+				return
+			}
+			treatments := Treatments(records)
+			eq, msg := compareJSON(treatments, c.treatmentFile)
+			if !eq {
+				t.Errorf("JSON is different:\n%s\n", msg)
+			}
+		})
 	}
 }

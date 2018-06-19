@@ -26,30 +26,32 @@ func TestTimeOfDay(t *testing.T) {
 		{"01:60", 0, fmt.Errorf("")},
 	}
 	for _, c := range cases {
-		if c.err == nil {
-			s := c.t.String()
-			if s != c.s {
-				t.Errorf("%v.String() == %v, want %v", c.t, s, c.s)
-			}
-		}
-		td, err := parseTimeOfDay(c.s)
-		if err == nil {
+		t.Run(c.s, func(t *testing.T) {
 			if c.err == nil {
-				if td == c.t {
-					continue
+				s := c.t.String()
+				if s != c.s {
+					t.Errorf("%v.String() == %v, want %v", c.t, s, c.s)
+				}
+			}
+			td, err := parseTimeOfDay(c.s)
+			if err == nil {
+				if c.err == nil {
+					if td == c.t {
+						return
+					} else {
+						t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
+					}
 				} else {
-					t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
+					t.Errorf("parseTimeOfDay(%s) == %v, want error", c.s, td)
 				}
 			} else {
-				t.Errorf("parseTimeOfDay(%s) == %v, want error", c.s, td)
+				if c.err != nil {
+					return
+				} else {
+					t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
+				}
 			}
-		} else {
-			if c.err != nil {
-				continue
-			} else {
-				t.Errorf("parseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
-			}
-		}
+		})
 	}
 
 }
@@ -65,10 +67,12 @@ func TestHalfHours(t *testing.T) {
 		{4, 2 * time.Hour},
 	}
 	for _, c := range cases {
-		d := halfHoursToDuration(c.t)
-		if d != Duration(c.d) {
-			t.Errorf("halfHoursToDuration(%d) == %v, want %v", c.t, d, c.d)
-		}
+		t.Run(fmt.Sprintf("%02d", c.t), func(t *testing.T) {
+			d := halfHoursToDuration(c.t)
+			if d != Duration(c.d) {
+				t.Errorf("halfHoursToDuration(%d) == %v, want %v", c.t, d, c.d)
+			}
+		})
 	}
 }
 
@@ -109,11 +113,13 @@ func TestSinceMidnight(t *testing.T) {
 		{parseTime("2016-11-06T23:30"), durationToTimeOfDay(23*time.Hour + 30*time.Minute)},
 	}
 	for _, c := range cases {
-		d := sinceMidnight(c.t)
-		if d != c.d {
-			// Print TimeOfDay as underlying time.Duration.
-			t.Errorf("sinceMidnight(%v) == %v, want %v", c.t, time.Duration(d), time.Duration(c.d))
-		}
+		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
+			d := sinceMidnight(c.t)
+			if d != c.d {
+				// Print TimeOfDay as underlying time.Duration.
+				t.Errorf("sinceMidnight(%v) == %v, want %v", c.t, time.Duration(d), time.Duration(c.d))
+			}
+		})
 	}
 }
 
@@ -128,10 +134,12 @@ func TestDecodeTime(t *testing.T) {
 		{[]byte{0x40, 0x94, 0x12, 0x0F, 0x10}, parseTime("2016-06-15T18:20:00")},
 	}
 	for _, c := range cases {
-		ts := time.Time(decodeTime(c.b))
-		if !ts.Equal(c.t) {
-			t.Errorf("decodeTime(% X) == %v, want %v", c.b, ts, c.t)
-		}
+		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
+			ts := time.Time(decodeTime(c.b))
+			if !ts.Equal(c.t) {
+				t.Errorf("decodeTime(% X) == %v, want %v", c.b, ts, c.t)
+			}
+		})
 	}
 }
 
@@ -144,10 +152,12 @@ func TestDecodeDate(t *testing.T) {
 		{[]byte{0x78, 0x10}, parseTime("2016-06-24T00:00")},
 	}
 	for _, c := range cases {
-		ts := time.Time(decodeDate(c.b))
-		if !ts.Equal(c.t) {
-			t.Errorf("decodeDate(% X) == %v, want %v", c.b, ts, c.t)
-		}
+		t.Run(c.t.Format("2006-01-02"), func(t *testing.T) {
+			ts := time.Time(decodeDate(c.b))
+			if !ts.Equal(c.t) {
+				t.Errorf("decodeDate(% X) == %v, want %v", c.b, ts, c.t)
+			}
+		})
 	}
 }
 
@@ -162,9 +172,11 @@ func TestDecodeCGMTime(t *testing.T) {
 		{[]byte{0x14, 0xB6, 0x28, 0x10}, parseTime("2016-02-08T20:54")},
 	}
 	for _, c := range cases {
-		ts := time.Time(decodeCGMTime(c.b))
-		if !ts.Equal(c.t) {
-			t.Errorf("decodeCGMTime(% X) == %v, want %v", c.b, ts, c.t)
-		}
+		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
+			ts := time.Time(decodeCGMTime(c.b))
+			if !ts.Equal(c.t) {
+				t.Errorf("decodeCGMTime(% X) == %v, want %v", c.b, ts, c.t)
+			}
+		})
 	}
 }

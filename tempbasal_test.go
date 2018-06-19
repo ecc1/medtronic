@@ -42,13 +42,15 @@ func TestTempBasal(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		b, err := decodeTempBasal(c.data)
-		if err != nil {
-			t.Errorf("decodeTempBasal(% X) returned %+v, want %+v", c.data, err, c.b)
-			continue
-		}
-		if !reflect.DeepEqual(b, c.b) {
-			t.Errorf("decodeTempBasal(% X) == %+v, want %+v", c.data, b, c.b)
-		}
+		t.Run("", func(t *testing.T) {
+			b, err := decodeTempBasal(c.data)
+			if err != nil {
+				t.Errorf("decodeTempBasal(% X) returned %+v, want %+v", c.data, err, c.b)
+				return
+			}
+			if !reflect.DeepEqual(b, c.b) {
+				t.Errorf("decodeTempBasal(% X) == %+v, want %+v", c.data, b, c.b)
+			}
+		})
 	}
 }

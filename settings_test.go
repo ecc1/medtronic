@@ -53,15 +53,31 @@ func TestSettings(t *testing.T) {
 				SelectedPattern:      0,
 			},
 		},
+		{
+			[]byte{0x15, 0x00, 0x03, 0x00, 0x0A, 0x01, 0x7D, 0x01, 0x44, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x64, 0x01, 0x03, 0x00, 0x14, 0x00},
+			22,
+			SettingsInfo{
+				AutoOff:              0,
+				InsulinAction:        3 * time.Hour,
+				InsulinConcentration: 100,
+				MaxBolus:             Insulin(12500),
+				MaxBasal:             Insulin(8100),
+				RFEnabled:            true,
+				TempBasalType:        Absolute,
+				SelectedPattern:      0,
+			},
+		},
 	}
 	for _, c := range cases {
-		b, err := decodeSettings(c.data, c.family)
-		if err != nil {
-			t.Errorf("decodeSettings(% X, %d) returned %+v, want %+v", c.data, c.family, err, c.b)
-			continue
-		}
-		if !reflect.DeepEqual(b, c.b) {
-			t.Errorf("decodeSettings(% X, %d) == %+v, want %+v", c.data, c.family, b, c.b)
-		}
+		t.Run("", func(t *testing.T) {
+			b, err := decodeSettings(c.data, c.family)
+			if err != nil {
+				t.Errorf("decodeSettings(% X, %d) returned %+v, want %+v", c.data, c.family, err, c.b)
+				return
+			}
+			if !reflect.DeepEqual(b, c.b) {
+				t.Errorf("decodeSettings(% X, %d) == %+v, want %+v", c.data, c.family, b, c.b)
+			}
+		})
 	}
 }

@@ -20,18 +20,22 @@ func TestPacketEncoding(t *testing.T) {
 		{parseBytes("A8 0F 25 C1 23 0D 19 1C 50 00 8F 00 90 00 34 34 99 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"), parseBytes("A9 A5 5C CA 5B 31 CA 35 4D C5 9C 6C 95 55 55 69 C5 55 65 55 55 8F 48 F4 65 95 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 34 E3 96")},
 	}
 	for _, c := range cases {
-		result := Encode(c.decoded)
-		if !bytes.Equal(result, c.encoded) {
-			t.Errorf("Encode(% X) == % X, want % X", c.decoded, result, c.encoded)
-		}
-		result, err := Decode(c.encoded)
-		if err != nil {
-			t.Errorf("Decode(% X) == %v, want % X", c.encoded, err, c.decoded)
-			continue
-		}
-		if !bytes.Equal(result, c.decoded) {
-			t.Errorf("Decode(% X) == % X, want % X", c.encoded, result, c.decoded)
-		}
+		t.Run("encode", func(t *testing.T) {
+			result := Encode(c.decoded)
+			if !bytes.Equal(result, c.encoded) {
+				t.Errorf("Encode(% X) == % X, want % X", c.decoded, result, c.encoded)
+			}
+		})
+		t.Run("decode", func(t *testing.T) {
+			result, err := Decode(c.encoded)
+			if err != nil {
+				t.Errorf("Decode(% X) == %v, want % X", c.encoded, err, c.decoded)
+				return
+			}
+			if !bytes.Equal(result, c.decoded) {
+				t.Errorf("Decode(% X) == % X, want % X", c.encoded, result, c.decoded)
+			}
+		})
 	}
 }
 

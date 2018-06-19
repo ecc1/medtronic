@@ -15,9 +15,11 @@ func TestBattery(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		b := decodeBatteryInfo(c.data)
-		if b != c.b {
-			t.Errorf("decodeBatteryInfo(% X) == %+v, want %+v", c.data, b, c.b)
-		}
+		t.Run("", func(t *testing.T) {
+			b := decodeBatteryInfo(c.data)
+			if b != c.b {
+				t.Errorf("decodeBatteryInfo(% X) == %+v, want %+v", c.data, b, c.b)
+			}
+		})
 	}
 }

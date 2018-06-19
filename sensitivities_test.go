@@ -6,13 +6,15 @@ import (
 	"time"
 )
 
-func TestInsulinSensitivitys(t *testing.T) {
+func TestInsulinSensitivities(t *testing.T) {
 	cases := []struct {
+		name  string
 		data  []byte
 		units GlucoseUnitsType
 		sched InsulinSensitivitySchedule
 	}{
 		{
+			"1_sens",
 			[]byte{0x00, 0x28},
 			MgPerDeciLiter,
 			InsulinSensitivitySchedule{
@@ -20,6 +22,7 @@ func TestInsulinSensitivitys(t *testing.T) {
 			},
 		},
 		{
+			"8_sens",
 			[]byte{0x00, 0x14, 0x02, 0x19, 0x04, 0x1E, 0x06, 0x23, 0x08, 0x28, 0x0A, 0x2D, 0x0C, 0x32, 0x0E, 0x37, 0x00, 0x00, 0x00},
 			MgPerDeciLiter,
 			InsulinSensitivitySchedule{
@@ -35,10 +38,12 @@ func TestInsulinSensitivitys(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		s := decodeInsulinSensitivitySchedule(c.data, c.units)
-		if !reflect.DeepEqual(s, c.sched) {
-			t.Errorf("decodeInsulinSensitivitySchedule(% X, %v) == %+v, want %+v", c.data, c.units, s, c.sched)
-		}
+		t.Run(c.name, func(t *testing.T) {
+			s := decodeInsulinSensitivitySchedule(c.data, c.units)
+			if !reflect.DeepEqual(s, c.sched) {
+				t.Errorf("decodeInsulinSensitivitySchedule(% X, %v) == %+v, want %+v", c.data, c.units, s, c.sched)
+			}
+		})
 	}
 }
 
@@ -57,9 +62,11 @@ func TestInsulinSensitivityAt(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		target := c.sched.InsulinSensitivityAt(c.at)
-		if !reflect.DeepEqual(target, c.target) {
-			t.Errorf("%v.InsulinSensitivityAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
-		}
+		t.Run("", func(t *testing.T) {
+			target := c.sched.InsulinSensitivityAt(c.at)
+			if !reflect.DeepEqual(target, c.target) {
+				t.Errorf("%v.InsulinSensitivityAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
+			}
+		})
 	}
 }

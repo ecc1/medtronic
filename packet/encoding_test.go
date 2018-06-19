@@ -20,15 +20,19 @@ func Test4b6bEncoding(t *testing.T) {
 		{parseBytes("A7 12 89 86 8D 09 03 37 32 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 39"), parseBytes("A9 6C 72 69 96 A6 68 D5 59 56 38 D6 8F 28 F2 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 55 8D 95")},
 	}
 	for _, c := range cases {
-		result := Encode4b6b(c.decoded)
-		if !bytes.Equal(result, c.encoded) {
-			t.Errorf("Encode4b6b(% X) == % X, want % X", c.decoded, result, c.encoded)
-		}
-		result, err := Decode6b4b(c.encoded)
-		if err != nil {
-			t.Errorf("Decode6b4b(% X) == %v, want % X", c.encoded, err, c.decoded)
-		} else if !bytes.Equal(result, c.decoded) {
-			t.Errorf("Decode6b4b(% X) == % X, want % X", c.encoded, result, c.decoded)
-		}
+		t.Run("encode", func(t *testing.T) {
+			result := Encode4b6b(c.decoded)
+			if !bytes.Equal(result, c.encoded) {
+				t.Errorf("Encode4b6b(% X) == % X, want % X", c.decoded, result, c.encoded)
+			}
+		})
+		t.Run("decode", func(t *testing.T) {
+			result, err := Decode6b4b(c.encoded)
+			if err != nil {
+				t.Errorf("Decode6b4b(% X) == %v, want % X", c.encoded, err, c.decoded)
+			} else if !bytes.Equal(result, c.decoded) {
+				t.Errorf("Decode6b4b(% X) == % X, want % X", c.encoded, result, c.decoded)
+			}
+		})
 	}
 }

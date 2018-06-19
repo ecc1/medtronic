@@ -8,12 +8,14 @@ import (
 
 func TestGlucoseTargets(t *testing.T) {
 	cases := []struct {
+		name   string
 		data   []byte
 		units  GlucoseUnitsType
 		family Family
 		sched  GlucoseTargetSchedule
 	}{
 		{
+			"1_target",
 			[]byte{0x00, 0x50, 0x78},
 			MgPerDeciLiter,
 			22,
@@ -22,6 +24,7 @@ func TestGlucoseTargets(t *testing.T) {
 			},
 		},
 		{
+			"1_target_mmol",
 			[]byte{0x00, 0x2C, 0x43},
 			MMolPerLiter,
 			22,
@@ -30,6 +33,7 @@ func TestGlucoseTargets(t *testing.T) {
 			},
 		},
 		{
+			"8_targets_x23",
 			[]byte{0x00, 0x64, 0x64, 0x02, 0x65, 0x65, 0x04, 0x66, 0x66, 0x06, 0x67, 0x67, 0x08, 0x68, 0x68, 0x0A, 0x69, 0x69, 0x0C, 0x6A, 0x6A, 0x0E, 0x6B, 0x6B, 0x00, 0x00, 0x00},
 			MgPerDeciLiter,
 			23,
@@ -45,6 +49,7 @@ func TestGlucoseTargets(t *testing.T) {
 			},
 		},
 		{
+			"8_targets_x12",
 			[]byte{0x00, 0x64, 0x02, 0x65, 0x04, 0x66, 0x06, 0x67, 0x08, 0x68, 0x0A, 0x69, 0x0C, 0x6A, 0x0E, 0x6B, 0x00, 0x00},
 			MgPerDeciLiter,
 			12,
@@ -61,10 +66,12 @@ func TestGlucoseTargets(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		s := decodeGlucoseTargetSchedule(c.data, c.units, c.family)
-		if !reflect.DeepEqual(s, c.sched) {
-			t.Errorf("decodeGlucoseTargetSchedule(% X, %v, %d) == %+v, want %+v", c.data, c.units, c.family, s, c.sched)
-		}
+		t.Run(c.name, func(t *testing.T) {
+			s := decodeGlucoseTargetSchedule(c.data, c.units, c.family)
+			if !reflect.DeepEqual(s, c.sched) {
+				t.Errorf("decodeGlucoseTargetSchedule(% X, %v, %d) == %+v, want %+v", c.data, c.units, c.family, s, c.sched)
+			}
+		})
 	}
 }
 
@@ -83,9 +90,11 @@ func TestGlucoseTargetAt(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		target := c.sched.GlucoseTargetAt(c.at)
-		if !reflect.DeepEqual(target, c.target) {
-			t.Errorf("%v.GlucoseTargetAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
-		}
+		t.Run("", func(t *testing.T) {
+			target := c.sched.GlucoseTargetAt(c.at)
+			if !reflect.DeepEqual(target, c.target) {
+				t.Errorf("%v.GlucoseTargetAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
+			}
+		})
 	}
 }

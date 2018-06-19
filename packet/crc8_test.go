@@ -17,9 +17,11 @@ func TestCRC8(t *testing.T) {
 		{parseBytes("A7 12 89 86 8D 09 03 37 32 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"), 0x39},
 	}
 	for _, c := range cases {
-		sum := CRC8(c.msg)
-		if sum != c.sum {
-			t.Errorf("CRC8(% X) == %02X, want %02X", c.msg, sum, c.sum)
-		}
+		t.Run("", func(t *testing.T) {
+			sum := CRC8(c.msg)
+			if sum != c.sum {
+				t.Errorf("CRC8(% X) == %02X, want %02X", c.msg, sum, c.sum)
+			}
+		})
 	}
 }

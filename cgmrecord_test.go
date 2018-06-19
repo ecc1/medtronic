@@ -46,16 +46,18 @@ func TestAddCGMTimes(t *testing.T) {
 		{nil, nil},
 		{CGMHistory{r0}, CGMHistory{r0}},
 		{CGMHistory{r1}, CGMHistory{r1}},
-		{CGMHistory{r1, r1, r1}, CGMHistory{r1, r1, r1}},
 		{CGMHistory{r1, r0}, CGMHistory{t1, r0}},
+		{CGMHistory{r1, r1, r1}, CGMHistory{r1, r1, r1}},
 		{CGMHistory{r1, r1, r1, r0}, CGMHistory{t3, t2, t1, r0}},
 		{CGMHistory{r1, r1, r2, r1, r0}, CGMHistory{t5, t4, r2, t1, r0}},
 	}
 	for _, c := range cases {
-		before := c.before[:]
-		AddCGMTimes(before)
-		if !reflect.DeepEqual(before, c.after) {
-			t.Errorf("AddCGMTimes(%+v) == %+v, want %+v", c.before, before, c.after)
-		}
+		t.Run("", func(t *testing.T) {
+			before := c.before[:]
+			AddCGMTimes(before)
+			if !reflect.DeepEqual(before, c.after) {
+				t.Errorf("AddCGMTimes(%+v) == %+v, want %+v", c.before, before, c.after)
+			}
+		})
 	}
 }

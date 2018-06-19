@@ -2,6 +2,7 @@ package medtronic
 
 import (
 	"bytes"
+	"fmt"
 	"math"
 	"testing"
 )
@@ -16,14 +17,18 @@ func TestTwoByteUint(t *testing.T) {
 		{math.MaxUint16, []byte{0xFF, 0xFF}},
 	}
 	for _, c := range cases {
-		val := twoByteUint(c.rep)
-		if val != c.val {
-			t.Errorf("twoByteUint(% X) == %04X, want %04X", c.rep, val, c.val)
-		}
-		rep := marshalUint16(c.val)
-		if !bytes.Equal(rep, c.rep) {
-			t.Errorf("marshalUint16(%04X) == % X, want % X", c.val, rep, c.rep)
-		}
+		t.Run(fmt.Sprintf("unmarshal_%d", c.val), func(t *testing.T) {
+			val := twoByteUint(c.rep)
+			if val != c.val {
+				t.Errorf("twoByteUint(% X) == %04X, want %04X", c.rep, val, c.val)
+			}
+		})
+		t.Run(fmt.Sprintf("marshal_%d", c.val), func(t *testing.T) {
+			rep := marshalUint16(c.val)
+			if !bytes.Equal(rep, c.rep) {
+				t.Errorf("marshalUint16(%04X) == % X, want % X", c.val, rep, c.rep)
+			}
+		})
 	}
 }
 
@@ -37,14 +42,18 @@ func TestTwoByteUintLE(t *testing.T) {
 		{math.MaxUint16, []byte{0xFF, 0xFF}},
 	}
 	for _, c := range cases {
-		val := twoByteUintLE(c.rep)
-		if val != c.val {
-			t.Errorf("twoByteUintLE(% X) == %04X, want %04X", c.rep, val, c.val)
-		}
-		rep := marshalUint16LE(c.val)
-		if !bytes.Equal(rep, c.rep) {
-			t.Errorf("marshalUint16LE(%04X) == % X, want % X", c.val, rep, c.rep)
-		}
+		t.Run(fmt.Sprintf("unmarshal_%d", c.val), func(t *testing.T) {
+			val := twoByteUintLE(c.rep)
+			if val != c.val {
+				t.Errorf("twoByteUintLE(% X) == %04X, want %04X", c.rep, val, c.val)
+			}
+		})
+		t.Run(fmt.Sprintf("marshal_%d", c.val), func(t *testing.T) {
+			rep := marshalUint16LE(c.val)
+			if !bytes.Equal(rep, c.rep) {
+				t.Errorf("marshalUint16LE(%04X) == % X, want % X", c.val, rep, c.rep)
+			}
+		})
 	}
 }
 
@@ -62,10 +71,12 @@ func TestTwoByteInt(t *testing.T) {
 		{math.MinInt16, []byte{0x80, 0x00}},
 	}
 	for _, c := range cases {
-		val := twoByteInt(c.rep)
-		if val != c.val {
-			t.Errorf("twoByteInt(% X) == %d, want %d", c.rep, val, c.val)
-		}
+		t.Run(fmt.Sprintf("%d", c.val), func(t *testing.T) {
+			val := twoByteInt(c.rep)
+			if val != c.val {
+				t.Errorf("twoByteInt(% X) == %d, want %d", c.rep, val, c.val)
+			}
+		})
 	}
 }
 
@@ -83,10 +94,12 @@ func TestTwoByteIntLE(t *testing.T) {
 		{math.MinInt16, []byte{0x00, 0x80}},
 	}
 	for _, c := range cases {
-		val := twoByteIntLE(c.rep)
-		if val != c.val {
-			t.Errorf("twoByteIntLE(% X) == %d, want %d", c.rep, val, c.val)
-		}
+		t.Run(fmt.Sprintf("%d", c.val), func(t *testing.T) {
+			val := twoByteIntLE(c.rep)
+			if val != c.val {
+				t.Errorf("twoByteIntLE(% X) == %d, want %d", c.rep, val, c.val)
+			}
+		})
 	}
 }
 
@@ -101,14 +114,18 @@ func TestFourByteUint(t *testing.T) {
 		{math.MaxUint32, []byte{0xFF, 0xFF, 0xFF, 0xFF}},
 	}
 	for _, c := range cases {
-		val := fourByteUint(c.rep)
-		if val != c.val {
-			t.Errorf("fourByteUint(% X) == %08X, want %08X", c.rep, val, c.val)
-		}
-		rep := marshalUint32(c.val)
-		if !bytes.Equal(rep, c.rep) {
-			t.Errorf("marshalUint32(%04X) == % X, want % X", c.val, rep, c.rep)
-		}
+		t.Run(fmt.Sprintf("unmarshal_%d", c.val), func(t *testing.T) {
+			val := fourByteUint(c.rep)
+			if val != c.val {
+				t.Errorf("fourByteUint(% X) == %08X, want %08X", c.rep, val, c.val)
+			}
+		})
+		t.Run(fmt.Sprintf("marshal_%d", c.val), func(t *testing.T) {
+			rep := marshalUint32(c.val)
+			if !bytes.Equal(rep, c.rep) {
+				t.Errorf("marshalUint32(%04X) == % X, want % X", c.val, rep, c.rep)
+			}
+		})
 	}
 }
 
@@ -126,9 +143,11 @@ func TestFourByteInt(t *testing.T) {
 		{math.MinInt32, []byte{0x80, 0x00, 0x00, 0x00}},
 	}
 	for _, c := range cases {
-		val := fourByteInt(c.rep)
-		if val != c.val {
-			t.Errorf("fourByteInt(% X) == %d, want %d", c.rep, val, c.val)
-		}
+		t.Run(fmt.Sprintf("%d", c.val), func(t *testing.T) {
+			val := fourByteInt(c.rep)
+			if val != c.val {
+				t.Errorf("fourByteInt(% X) == %d, want %d", c.rep, val, c.val)
+			}
+		})
 	}
 }
