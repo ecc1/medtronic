@@ -1,6 +1,8 @@
 package medtronic
 
 import (
+	"fmt"
+	"log"
 	"time"
 )
 
@@ -29,7 +31,7 @@ func decodeBasalRateSchedule(data []byte) BasalRateSchedule {
 }
 
 func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
-	data := pump.ExtendedExecute(cmd)
+	data := pump.ExtendedResponse(cmd)
 	if pump.Error() != nil {
 		return BasalRateSchedule{}
 	}
@@ -62,4 +64,44 @@ func (s BasalRateSchedule) BasalRateAt(t time.Time) BasalRate {
 		last = v
 	}
 	return last
+}
+
+func (pump *Pump) setBasalSchedule(cmd Command, s BasalRateSchedule) {
+	if len(s) == 0 {
+		pump.SetError(fmt.Errorf("%v: empty schedule", cmd))
+		return
+	}
+	pump.ExtendedRequest(setBasalRates, s.Encode()...)
+}
+
+func (s BasalRateSchedule) Encode() []byte {
+	data := make([]byte, len(s)*3)
+	i := 0
+	for _, v := range s {
+		m := milliUnitsPerStroke(23)
+		strokes := v.Rate / m
+		actual := strokes * m
+		if actual != v.Rate {
+			log.Printf("rounding basal rate from %v to %v", v.Rate, actual)
+		}
+		copy(data[i:i+2], marshalUint16LE(uint16(strokes)))
+		data[i+2] = v.Start.HalfHours()
+		i += 3
+	}
+	return data
+}
+
+// SetBasalRates sets the pump's basal rate schedule.
+func (pump *Pump) SetBasalRates(s BasalRateSchedule) {
+	pump.setBasalSchedule(setBasalRates, s)
+}
+
+// SetBasalPatternA sets the pump's basal pattern A.
+func (pump *Pump) SetBasalPatternA(s BasalRateSchedule) {
+	pump.setBasalSchedule(setBasalPatternA, s)
+}
+
+// SetBasalPatternB sets the pump's basal pattern B.
+func (pump *Pump) SetBasalPatternB(s BasalRateSchedule) {
+	pump.setBasalSchedule(setBasalPatternB, s)
 }
