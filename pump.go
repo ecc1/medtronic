@@ -70,6 +70,7 @@ func Open() *Pump {
 		return pump
 	}
 	log.Printf("connected to %s radio on %s", r.Name(), r.Device())
+	precomputePackets()
 	freq := getFrequency()
 	log.Printf("setting frequency to %s", radio.MegaHertz(freq))
 	r.Init(freq)
