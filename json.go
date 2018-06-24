@@ -272,7 +272,7 @@ func (r Insulin) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals Insulin values.
 func (r *Insulin) UnmarshalJSON(data []byte) error {
-	v := 0.0
+	var v float64
 	err := json.Unmarshal(data, &v)
 	if err != nil {
 		return err
@@ -288,7 +288,7 @@ func (r Voltage) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals Voltage values.
 func (r *Voltage) UnmarshalJSON(data []byte) error {
-	v := 0.0
+	var v float64
 	err := json.Unmarshal(data, &v)
 	if err != nil {
 		return err
@@ -304,7 +304,7 @@ func (r Duration) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals Duration values.
 func (r *Duration) UnmarshalJSON(data []byte) error {
-	v := ""
+	var v string
 	err := json.Unmarshal(data, &v)
 	if err != nil {
 		return err
@@ -321,7 +321,7 @@ func (r TimeOfDay) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON unmarshals TimeOfDay values.
 func (r *TimeOfDay) UnmarshalJSON(data []byte) error {
-	v := ""
+	var v string
 	err := json.Unmarshal(data, &v)
 	if err != nil {
 		return err
