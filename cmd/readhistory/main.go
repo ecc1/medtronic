@@ -6,9 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/ecc1/medtronic"
 	"github.com/ecc1/nightscout"
@@ -30,48 +28,51 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		data := readBytes(f)
+		data, err := readBytes(f)
 		_ = f.Close()
-		records, err := medtronic.DecodeHistory(data, family)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			*verbose = true
+			log.Fatal(err)
 		}
-		if *verbose {
-			fmt.Println(nightscout.JSON(records))
-		} else if *nsFlag {
-			medtronic.ReverseHistory(records)
-			fmt.Println(nightscout.JSON(medtronic.Treatments(records)))
-		} else {
-			for _, r := range records {
-				printRecord(r)
-			}
-		}
+		readHistory(data, family)
 	}
 }
 
-func readBytes(r io.Reader) []byte {
+func readBytes(r io.Reader) ([]byte, error) {
 	var data []byte
-	s := ""
 	for {
-		n, err := fmt.Fscan(r, &s)
+		var b byte
+		n, err := fmt.Fscanf(r, "%02x", &b)
 		if n == 0 {
 			break
 		}
 		if err != nil {
-			log.Fatal(err)
+			return data, err
 		}
-		b, err := strconv.ParseUint(s, 16, 8)
-		if err != nil {
-			log.Fatal(err)
-		}
-		data = append(data, byte(b))
+		data = append(data, b)
 	}
-	return data
+	return data, nil
+}
+
+func readHistory(data []byte, family medtronic.Family) {
+	records, err := medtronic.DecodeHistory(data, family)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		*verbose = true
+	}
+	if *verbose {
+		fmt.Println(nightscout.JSON(records))
+	} else if *nsFlag {
+		medtronic.ReverseHistory(records)
+		fmt.Println(nightscout.JSON(medtronic.Treatments(records)))
+	} else {
+		for _, r := range records {
+			printRecord(r)
+		}
+	}
 }
 
 func printRecord(r medtronic.HistoryRecord) {
-	t := time.Time(r.Time)
+	t := r.Time
 	tStr := timeBlank
 	if !t.IsZero() {
 		tStr = t.Format(medtronic.UserTimeLayout)

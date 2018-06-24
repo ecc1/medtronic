@@ -6,16 +6,16 @@ import (
 	"io"
 	"log"
 	"os"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/ecc1/medtronic"
 	"github.com/ecc1/nightscout"
 )
 
 var (
-	noTimes   = flag.Bool("notimes", false, "do not add times to glucose records")
+	noTimes  = flag.Bool("notimes", false, "do not add times to glucose records")
+	jsonFlag = flag.Bool("j", false, "print records in JSON format")
+
 	timeBlank = strings.Repeat(" ", len(medtronic.UserTimeLayout))
 )
 
@@ -27,8 +27,11 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		data := readBytes(f)
+		data, err := readBytes(f)
 		_ = f.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
 		records, err := medtronic.DecodeCGMHistory(data)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
@@ -38,31 +41,33 @@ func main() {
 	if !*noTimes {
 		medtronic.AddCGMTimes(history)
 	}
-	fmt.Println(nightscout.JSON(history))
+	if *jsonFlag {
+		fmt.Println(nightscout.JSON(history))
+	} else {
+		for _, r := range history {
+			printRecord(r)
+		}
+	}
 }
 
-func readBytes(r io.Reader) []byte {
+func readBytes(r io.Reader) ([]byte, error) {
 	var data []byte
-	s := ""
 	for {
-		n, err := fmt.Fscan(r, &s)
+		var b byte
+		n, err := fmt.Fscanf(r, "%02x", &b)
 		if n == 0 {
 			break
 		}
 		if err != nil {
-			log.Fatal(err)
+			return data, err
 		}
-		b, err := strconv.ParseUint(s, 16, 8)
-		if err != nil {
-			log.Fatal(err)
-		}
-		data = append(data, byte(b))
+		data = append(data, b)
 	}
-	return data
+	return data, nil
 }
 
 func printRecord(r medtronic.CGMRecord) {
-	t := time.Time(r.Time)
+	t := r.Time
 	tStr := timeBlank
 	if !t.IsZero() {
 		tStr = t.Format(medtronic.UserTimeLayout)

@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/ecc1/medtronic"
 )
@@ -26,8 +25,11 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		data := readBytes(f)
+		data, err := readBytes(f)
 		_ = f.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
 		v, err := medtronic.DecodeHistory(data, family)
 		if err != nil {
 			log.Fatal(err)
@@ -47,24 +49,20 @@ func main() {
 	}
 }
 
-func readBytes(r io.Reader) []byte {
+func readBytes(r io.Reader) ([]byte, error) {
 	var data []byte
-	s := ""
 	for {
-		n, err := fmt.Fscan(r, &s)
+		var b byte
+		n, err := fmt.Fscanf(r, "%02x", &b)
 		if n == 0 {
 			break
 		}
 		if err != nil {
-			log.Fatal(err)
+			return data, err
 		}
-		b, err := strconv.ParseUint(s, 16, 8)
-		if err != nil {
-			log.Fatal(err)
-		}
-		data = append(data, byte(b))
+		data = append(data, b)
 	}
-	return data
+	return data, nil
 }
 
 // Reduce a set of records to one representative of each record type present.

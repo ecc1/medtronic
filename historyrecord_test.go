@@ -1,15 +1,14 @@
 package medtronic
 
 import (
-	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
-	"strconv"
 	"testing"
 )
 
@@ -31,7 +30,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		t.Run(c.jsonFile, func(t *testing.T) {
 			records, err := decodeFromData(c.jsonFile, c.family)
 			if err != nil {
-				t.Errorf("%v", err)
+				t.Error(err)
 				return
 			}
 			checkHistory(t, records, c.jsonFile)
@@ -85,9 +84,15 @@ func TestDecodeHistory(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.pageFile, func(t *testing.T) {
-			data, err := readBytes(c.pageFile)
+			f, err := os.Open(c.pageFile)
 			if err != nil {
-				t.Errorf("%v", err)
+				t.Error(err)
+				return
+			}
+			data, err := readBytes(f)
+			_ = f.Close()
+			if err != nil {
+				t.Error(err)
 				return
 			}
 			decoded, err := DecodeHistory(data, c.family)
@@ -107,19 +112,18 @@ func checkHistory(t *testing.T, decoded History, jsonFile string) {
 	}
 }
 
-func readBytes(file string) ([]byte, error) {
-	hex, err := ioutil.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-	fields := bytes.Fields(hex)
-	data := make([]byte, len(fields))
-	for i, s := range fields {
-		b, err := strconv.ParseUint(string(s), 16, 8)
-		if err != nil {
-			return nil, err
+func readBytes(r io.Reader) ([]byte, error) {
+	var data []byte
+	for {
+		var b byte
+		n, err := fmt.Fscanf(r, "%02x", &b)
+		if n == 0 {
+			break
 		}
-		data[i] = byte(b)
+		if err != nil {
+			return data, err
+		}
+		data = append(data, b)
 	}
 	return data, nil
 }
@@ -188,7 +192,7 @@ func TestTreatments(t *testing.T) {
 		t.Run(c.recordFile, func(t *testing.T) {
 			records, err := decodeFromData(c.recordFile, c.family)
 			if err != nil {
-				t.Errorf("%v", err)
+				t.Error(err)
 				return
 			}
 			treatments := Treatments(records)
