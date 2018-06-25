@@ -55,10 +55,16 @@ const (
 	ExerciseMarker          HistoryRecordType = 0x41
 	InsulinMarker           HistoryRecordType = 0x42
 	OtherMarker             HistoryRecordType = 0x43
+	EnableSensorAutoCal     HistoryRecordType = 0x44
 	ChangeBolusWizardSetup  HistoryRecordType = 0x4F
 	SensorSetup             HistoryRecordType = 0x50
 	Sensor51                HistoryRecordType = 0x51
-	ChangeGlucoseUnits      HistoryRecordType = 0x56
+	Sensor52                HistoryRecordType = 0x52
+	ChangeSensorAlarm       HistoryRecordType = 0x53
+	Sensor54                HistoryRecordType = 0x54
+	Sensor55                HistoryRecordType = 0x55
+	ChangeSensorAlert       HistoryRecordType = 0x56
+	ChangeBolusStep         HistoryRecordType = 0x57
 	BolusWizardSetup        HistoryRecordType = 0x5A
 	BolusWizard             HistoryRecordType = 0x5B
 	UnabsorbedInsulin       HistoryRecordType = 0x5C
@@ -132,10 +138,16 @@ var decode = map[HistoryRecordType]decoder{
 	ExerciseMarker:          decodeExerciseMarker,
 	InsulinMarker:           decodeInsulinMarker,
 	OtherMarker:             decodeOtherMarker,
+	EnableSensorAutoCal:     decodeEnableSensorAutoCal,
 	ChangeBolusWizardSetup:  decodeChangeBolusWizardSetup,
 	SensorSetup:             decodeSensorSetup,
 	Sensor51:                decodeSensor51,
-	ChangeGlucoseUnits:      decodeChangeGlucoseUnits,
+	Sensor52:                decodeSensor52,
+	ChangeSensorAlarm:       decodeChangeSensorAlarm,
+	Sensor54:                decodeSensor54,
+	Sensor55:                decodeSensor55,
+	ChangeSensorAlert:       decodeChangeSensorAlert,
+	ChangeBolusStep:         decodeChangeBolusStep,
 	BolusWizardSetup:        decodeBolusWizardSetup,
 	BolusWizard:             decodeBolusWizard,
 	UnabsorbedInsulin:       decodeUnabsorbedInsulin,
@@ -570,13 +582,33 @@ func decodeInsulinMarker(data []byte, family Family) HistoryRecord {
 
 var decodeOtherMarker = decodeBase
 
+var decodeEnableSensorAutoCal = decodeBase
+
 var decodeChangeBolusWizardSetup = decodeBaseN(39)
 
-var decodeSensorSetup = decodeBaseN(37)
+func decodeSensorSetup(data []byte, family Family) HistoryRecord {
+	var d decoder
+	if family >= 51 {
+		d = decodeBaseN(41)
+	} else {
+		d = decodeBaseN(37)
+	}
+	return d(data, family)
+}
 
 var decodeSensor51 = decodeBase
 
-var decodeChangeGlucoseUnits = decodeBaseN(12)
+var decodeSensor52 = decodeBase
+
+var decodeChangeSensorAlarm = decodeBaseN(8)
+
+var decodeSensor54 = decodeBaseN(64)
+
+var decodeSensor55 = decodeBaseN(55)
+
+var decodeChangeSensorAlert = decodeBaseN(12)
+
+var decodeChangeBolusStep = decodeBase
 
 func decodeBolusWizardConfig(data []byte, family Family) BolusWizardConfig {
 	const numEntries = 8
