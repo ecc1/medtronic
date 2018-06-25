@@ -1,0 +1,265 @@
+[
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2016-06-20T13:15:12-04:00",
+    "Data": "ZABMjw0UEA==",
+    "Info": 0
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "bgGHBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BwAAAAABhwAAAA==",
+    "Info": 0
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2016-06-20T13:14:53-04:00",
+    "Data": "GAB1jg1UEA=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:02:31-05:00",
+    "Data": "FwAfQgBBBw=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2007-01-01T00:00:27-05:00",
+    "Data": "ewAbQAABBwAAAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0
+      }
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2007-01-01T00:00:10-05:00",
+    "Data": "AwAAAAAKQCABBw==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2007-01-01T00:00:05-05:00",
+    "Data": "IQAFQAABBw=="
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2007-01-02T00:00:00-05:00",
+    "Data": "bgKHBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2007-01-02T00:00:00-05:00",
+    "Data": "BwAAAAAChwAAAA==",
+    "Info": 0
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "GAAAQAABBw=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:00:19-05:00",
+    "Data": "FwATQAABBw=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:00:15-05:00",
+    "Data": "ZAEPQAABBw==",
+    "Info": 1
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T00:00:12-05:00",
+    "Data": "DAMMQAABBw==",
+    "Info": 3
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-02T01:23:02-05:00",
+    "Data": "BgMDaAJXYQIH",
+    "Info": 3
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2007-01-02T01:23:02-05:00",
+    "Data": "GgACVwECBw=="
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "bgGHBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BwAAAAABhwAAAA==",
+    "Info": 0
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T04:26:39-05:00",
+    "Data": "DFYnWgQBBw==",
+    "Info": 86
+  },
+  {
+    "Type": "SensorStatus",
+    "Time": "2007-01-01T04:26:20-05:00",
+    "Data": "O4QUWgQBBw==",
+    "Info": true
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T04:25:48-05:00",
+    "Data": "BlYGkjBZRKEH",
+    "Info": 86
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2007-01-01T04:26:19-05:00",
+    "Data": "GgETWgQBBw=="
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T04:25:48-05:00",
+    "Data": "DDcwWQQBBw==",
+    "Info": 55
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2007-01-01T04:25:48-05:00",
+    "Data": "GgAwWQQBBw=="
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T04:16:58-05:00",
+    "Data": "BjcGdTpQRKEH",
+    "Info": 55
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2007-01-01T04:25:01-05:00",
+    "Data": "GgEBWQQBBw=="
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2007-01-01T04:16:58-05:00",
+    "Data": "GgA6UAQBBw=="
+  },
+  {
+    "Type": "LowBattery",
+    "Time": "2007-01-01T00:01:51-05:00",
+    "Data": "GQAzQQABBw=="
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "GAAAQAABBw=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:00:31-05:00",
+    "Data": "FwAfQAABBw=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:00:22-05:00",
+    "Data": "ZAEWQAABBw==",
+    "Info": 1
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T00:00:30-05:00",
+    "Data": "DBUeQAABBw==",
+    "Info": 21
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BhUEEQBAQKEH",
+    "Info": 21
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BhEPEgBAIMEH",
+    "Info": 17
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8PBQBAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8O9ABAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8O4QBAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8OuwBAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8OqgBAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8OmQBAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8OiABAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8OdwBAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "Bi8d/ABAIMEH",
+    "Info": 47
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BjYDbwBAYAEH",
+    "Info": 54
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BhUDaABAYAEH",
+    "Info": 21
+  }
+]

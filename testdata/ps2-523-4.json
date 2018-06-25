@@ -1,0 +1,1008 @@
+[
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T17:01:42-04:00",
+    "Data": "FgGqARFVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T17:01:42-04:00",
+    "Data": "M6WqARFVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.125
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T16:56:45-04:00",
+    "Data": "FgGtOBBVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T16:56:45-04:00",
+    "Data": "M5KtOBBVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.65
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T16:51:45-04:00",
+    "Data": "FgGtMxBVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T16:51:45-04:00",
+    "Data": "M3mtMxBVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.025
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2016-08-21T16:46:40-04:00",
+    "Data": "AQDmAOYAGwCoLlBVEA==",
+    "Info": {
+      "Programmed": 5.75,
+      "Amount": 5.75,
+      "Unabsorbed": 0.675,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T16:36:45-04:00",
+    "Data": "ewOtJBAVEB00AA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "14:30",
+        "Rate": 1.3
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T16:36:45-04:00",
+    "Data": "FgCtJBBVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T16:36:45-04:00",
+    "Data": "MwCtJBBVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T16:31:45-04:00",
+    "Data": "FgGtHxBVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T16:31:45-04:00",
+    "Data": "MwCtHxBVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T16:11:44-04:00",
+    "Data": "ewOsCxAVEB00AA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "14:30",
+        "Rate": 1.3
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T16:11:44-04:00",
+    "Data": "FgCsCxBVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T16:11:44-04:00",
+    "Data": "MwCsCxBVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T16:01:44-04:00",
+    "Data": "FgGsARBVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T16:01:44-04:00",
+    "Data": "M3usARBVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.075
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T15:56:46-04:00",
+    "Data": "FgGuOA9VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T15:56:46-04:00",
+    "Data": "M5SuOA9VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.7
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T15:51:43-04:00",
+    "Data": "FgGrMw9VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T15:51:43-04:00",
+    "Data": "M7urMw9VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.675
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T15:46:44-04:00",
+    "Data": "FgGsLg9VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T15:46:44-04:00",
+    "Data": "M7esLg9VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.575
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T15:41:43-04:00",
+    "Data": "FgGrKQ9VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T15:41:43-04:00",
+    "Data": "M7GrKQ9VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.425
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T15:36:44-04:00",
+    "Data": "FgGsJA9VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T15:36:44-04:00",
+    "Data": "M5qsJA9VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.85
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T15:31:43-04:00",
+    "Data": "FgGrHw9VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T15:31:43-04:00",
+    "Data": "M3yrHw9VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.1
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T14:52:43-04:00",
+    "Data": "ewOrNA4VEB00AA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "14:30",
+        "Rate": 1.3
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T14:52:43-04:00",
+    "Data": "FgCrNA5VEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T14:52:43-04:00",
+    "Data": "MwCrNA5VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2016-08-21T14:47:20-04:00",
+    "Data": "AQA8ADwANACUL05VEA==",
+    "Info": {
+      "Programmed": 1.5,
+      "Amount": 1.5,
+      "Unabsorbed": 1.3,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T14:46:58-04:00",
+    "Data": "FgG6Lg5VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T14:46:58-04:00",
+    "Data": "M4S6Lg5VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.3
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T14:46:56-04:00",
+    "Data": "FgG4Lg5VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T14:46:56-04:00",
+    "Data": "M4S4Lg5VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.3
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T14:24:37-04:00",
+    "Data": "FgGlGA5VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T14:24:37-04:00",
+    "Data": "M42lGA5VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.525
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T14:06:42-04:00",
+    "Data": "FgGqBg5VEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T14:06:42-04:00",
+    "Data": "M4yqBg5VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.5
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T13:49:23-04:00",
+    "Data": "ewKXMQ0VEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "ChangeBasalPattern",
+    "Time": "2016-08-21T13:49:23-04:00",
+    "Data": "FAGXMQ0VEA==",
+    "Info": 1
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T13:49:04-04:00",
+    "Data": "ewCEMS0VEAAyAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 1.25
+      }
+    }
+  },
+  {
+    "Type": "ChangeBasalPattern",
+    "Time": "2016-08-21T13:49:04-04:00",
+    "Data": "FACEMS0VEA==",
+    "Info": 0
+  },
+  {
+    "Type": "SaveSettings",
+    "Time": "2016-08-21T13:48:31-04:00",
+    "Data": "XQCfMA0VEA=="
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2016-08-21T13:47:46-04:00",
+    "Data": "JgGuLw0VECcBsgcAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2016-08-21T13:47:38-04:00",
+    "Data": "JgGmLw0VECcAAAAAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T13:06:43-04:00",
+    "Data": "ewKrBg0VEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T13:06:43-04:00",
+    "Data": "FgCrBg1VEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T13:06:43-04:00",
+    "Data": "MwCrBg1VEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T12:46:43-04:00",
+    "Data": "FgGrLgxVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T12:46:43-04:00",
+    "Data": "MwCrLgxVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T12:16:46-04:00",
+    "Data": "ewKuEAwVEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T12:16:46-04:00",
+    "Data": "FgCuEAxVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T12:16:46-04:00",
+    "Data": "MwCuEAxVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T12:11:33-04:00",
+    "Data": "FgGhCwxVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T12:11:33-04:00",
+    "Data": "M5uhCwxVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.875
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2016-08-21T12:09:58-04:00",
+    "Data": "AQBWAFYA3wC6CUxVEA==",
+    "Info": {
+      "Programmed": 2.15,
+      "Amount": 2.15,
+      "Unabsorbed": 5.575,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T12:01:38-04:00",
+    "Data": "ewKmAQwVEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T12:01:38-04:00",
+    "Data": "FgCmAQxVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T12:01:38-04:00",
+    "Data": "MwCmAQxVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T11:56:40-04:00",
+    "Data": "FgGoOAtVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T11:56:40-04:00",
+    "Data": "M3aoOAtVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.95
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T11:51:44-04:00",
+    "Data": "FgGsMwtVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T11:51:44-04:00",
+    "Data": "M7qsMwtVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.65
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T11:46:33-04:00",
+    "Data": "FgGhLgtVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T11:46:33-04:00",
+    "Data": "M7ihLgtVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.6
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T11:41:43-04:00",
+    "Data": "FgGrKQtVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T11:41:43-04:00",
+    "Data": "M3erKQtVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.975
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2016-08-21T11:33:48-04:00",
+    "Data": "AQDwAPAAAACwIUtVEA==",
+    "Info": {
+      "Programmed": 6,
+      "Amount": 6,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T11:16:35-04:00",
+    "Data": "ewKjEAsVEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T11:16:35-04:00",
+    "Data": "FgCjEAtVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T11:16:35-04:00",
+    "Data": "MwCjEAtVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T11:11:36-04:00",
+    "Data": "FgGkCwtVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T11:11:36-04:00",
+    "Data": "M4OkCwtVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.275
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T10:56:43-04:00",
+    "Data": "FgGrOApVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T10:56:43-04:00",
+    "Data": "M4urOApVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.475
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T10:51:42-04:00",
+    "Data": "FgGqMwpVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T10:51:42-04:00",
+    "Data": "M3OqMwpVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.875
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T10:46:31-04:00",
+    "Data": "FgGfLgpVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T10:46:31-04:00",
+    "Data": "M2efLgpVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.575
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T09:56:41-04:00",
+    "Data": "ewKpOAkVEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:56:41-04:00",
+    "Data": "FgCpOAlVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:56:41-04:00",
+    "Data": "MwCpOAlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:51:40-04:00",
+    "Data": "FgGoMwlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:51:40-04:00",
+    "Data": "M2aoMwlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.55
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T09:41:44-04:00",
+    "Data": "ewKsKQkVEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:41:44-04:00",
+    "Data": "FgCsKQlVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:41:44-04:00",
+    "Data": "MwCsKQlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:36:42-04:00",
+    "Data": "FgGqJAlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:36:42-04:00",
+    "Data": "M2yqJAlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.7
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:26:40-04:00",
+    "Data": "FgGoGglVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:26:40-04:00",
+    "Data": "M4CoGglVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.2
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:21:40-04:00",
+    "Data": "FgGoFQlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:21:40-04:00",
+    "Data": "M3ioFQlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:16:42-04:00",
+    "Data": "FgGqEAlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:16:42-04:00",
+    "Data": "M3yqEAlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.1
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:16:40-04:00",
+    "Data": "FgGoEAlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:16:40-04:00",
+    "Data": "M3yoEAlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.1
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:11:40-04:00",
+    "Data": "FgGoCwlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:11:40-04:00",
+    "Data": "M4KoCwlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.25
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:06:40-04:00",
+    "Data": "FgGoBglVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:06:40-04:00",
+    "Data": "M3yoBglVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.1
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T09:01:40-04:00",
+    "Data": "FgGoAQlVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T09:01:40-04:00",
+    "Data": "M3qoAQlVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.05
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T08:56:42-04:00",
+    "Data": "FgGqOAhVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T08:56:42-04:00",
+    "Data": "M3uqOAhVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.075
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T08:56:40-04:00",
+    "Data": "FgGoOAhVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T08:56:40-04:00",
+    "Data": "M4OoOAhVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 3.275
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T08:51:43-04:00",
+    "Data": "FgGrMwhVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T08:51:43-04:00",
+    "Data": "M26rMwhVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.75
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T08:34:36-04:00",
+    "Data": "ewKkIggVEBEwAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T08:34:36-04:00",
+    "Data": "FgCkIghVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T08:34:36-04:00",
+    "Data": "MwCkIghVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T08:11:40-04:00",
+    "Data": "FgGoCwhVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T08:11:40-04:00",
+    "Data": "M1+oCwhVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.375
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T06:56:40-04:00",
+    "Data": "ewGoOAYVEAQqAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "02:00",
+        "Rate": 1.05
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T06:56:40-04:00",
+    "Data": "FgCoOAZVEA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T06:56:40-04:00",
+    "Data": "MwCoOAZVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T06:51:54-04:00",
+    "Data": "FgG2MwZVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T06:51:54-04:00",
+    "Data": "M2C2MwZVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.4
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2016-08-21T06:46:54-04:00",
+    "Data": "FgG2LgZVEA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2016-08-21T06:46:54-04:00",
+    "Data": "M622LgZVEAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 4.325
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-08-21T06:26:41-04:00",
+    "Data": "ewGpGgYVEAQqAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "02:00",
+        "Rate": 1.05
+      }
+    }
+  }
+]

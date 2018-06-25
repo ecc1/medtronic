@@ -1,0 +1,200 @@
+[
+  {
+    "Type": "ChangeAlarmType",
+    "Time": "2016-09-23T01:22:23-04:00",
+    "Data": "YwGXVgEXEA==",
+    "Info": 1
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "bgGHBQAAAAAAAAAFCgUKZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "BwAABQoBhwAAAA==",
+    "Info": 32.25
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2016-09-23T01:21:00-04:00",
+    "Data": "GACAVQEXEA=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:01:29-05:00",
+    "Data": "FwAdQQABBw=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:01:03-05:00",
+    "Data": "ZAADQQABBw==",
+    "Info": 0
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "ewAAQAABBwA8AA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 1.5
+      }
+    }
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "GAAAQAABBw=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:00:28-05:00",
+    "Data": "FwAcQAABBw=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:00:27-05:00",
+    "Data": "ZAAbQAABBw==",
+    "Info": 0
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T00:00:14-05:00",
+    "Data": "DAMOQAABBw==",
+    "Info": 3
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2007-01-01T21:30:24-05:00",
+    "Data": "BgMDaBhedQEH",
+    "Info": 3
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2007-01-01T21:30:24-05:00",
+    "Data": "GgAYXhUBBw=="
+  },
+  {
+    "Type": "BolusReminder",
+    "Time": "2007-01-01T20:00:00-05:00",
+    "Data": "aREAQBQBBzQA"
+  },
+  {
+    "Type": "BolusReminder",
+    "Time": "2007-01-01T14:00:00-05:00",
+    "Data": "aQwAQA4BBy4A"
+  },
+  {
+    "Type": "BolusReminder",
+    "Time": "2007-01-01T11:00:00-05:00",
+    "Data": "aQcAQAsBBysA"
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2007-01-01T03:48:34-05:00",
+    "Data": "ewAicAMBBwA8AA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 1.5
+      }
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2007-01-01T03:45:56-05:00",
+    "Data": "AwAAABo4bSMBBw==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 2.6
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2007-01-01T03:45:12-05:00",
+    "Data": "IQAMbQMBBw=="
+  },
+  {
+    "Type": "LowReservoir",
+    "Time": "2007-01-01T03:40:00-05:00",
+    "Data": "NGQAaAMBBw==",
+    "Info": 10
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "ewAAQAABBwA8AA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 1.5
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-09-14T00:00:00-04:00",
+    "Data": "bo6QBQAAAAAAAAABcAFwZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-09-14T00:00:00-04:00",
+    "Data": "BwAAAXCOkAAAAA==",
+    "Info": 9.2
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2007-01-01T00:00:00-05:00",
+    "Data": "GAAAQAABBw=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:00:37-05:00",
+    "Data": "FwAlQAABBw=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:00:32-05:00",
+    "Data": "ZAAgQAABBw==",
+    "Info": 0
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:00:24-05:00",
+    "Data": "ZAAYQAABBw==",
+    "Info": 0
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T00:00:23-05:00",
+    "Data": "DAMXQAABBw==",
+    "Info": 3
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2016-09-14T06:06:16-04:00",
+    "Data": "BgMDaJBGZg4Q",
+    "Info": 3
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2016-09-14T06:06:16-04:00",
+    "Data": "GgCQRgYOEA=="
+  },
+  {
+    "Type": "LowReservoir",
+    "Time": "2016-09-14T03:08:00-04:00",
+    "Data": "NMiASAMOEA==",
+    "Info": 20
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-09-13T00:00:00-04:00",
+    "Data": "bo2QBQAAAAAAAAAHTgcmYgAoAgAAAAAAAAAAACgAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  }
+]

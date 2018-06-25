@@ -1,0 +1,340 @@
+[
+  {
+    "Type": "ChangeOtherDevice",
+    "Time": "2016-03-07T11:04:12-05:00",
+    "Data": "fQEMxAsHEACizoqgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "ChangeMarriage",
+    "Time": "2016-03-07T11:04:12-05:00",
+    "Data": "gQEMxAsHEACizoqg"
+  },
+  {
+    "Type": "DeleteOtherDevice",
+    "Time": "2016-03-07T11:04:08-05:00",
+    "Data": "ggEIxAsHEACizoqg"
+  },
+  {
+    "Type": "ChangeOtherDevice",
+    "Time": "2016-03-07T10:44:11-05:00",
+    "Data": "fQEL7AoHEACizoqgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "ChangeMarriage",
+    "Time": "2016-03-07T10:44:11-05:00",
+    "Data": "gQEL7AoHEACizoqg"
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-07T08:30:00-05:00",
+    "Data": "ewEA3ggHEBEiAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 0.85
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-03-06T00:00:00-05:00",
+    "Data": "biaQBQAAAAAAAAACvgK+ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-03-06T00:00:00-05:00",
+    "Data": "BwAAAr4mkAAAAA==",
+    "Info": 17.55
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-07T00:00:00-05:00",
+    "Data": "ewAAwAAHEAAWAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.55
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-06T22:00:00-05:00",
+    "Data": "ewIAwBYGECwcAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-06T08:30:00-05:00",
+    "Data": "ewEA3ggGEBEiAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 0.85
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-03-05T00:00:00-05:00",
+    "Data": "biWQBQAAAAAAAAACvgK+ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-03-05T00:00:00-05:00",
+    "Data": "BwAAAr4lkAAAAA==",
+    "Info": 17.55
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-06T00:00:00-05:00",
+    "Data": "ewAAwAAGEAAWAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.55
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-05T22:00:00-05:00",
+    "Data": "ewIAwBYFECwcAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-05T08:30:00-05:00",
+    "Data": "ewEA3ggFEBEiAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 0.85
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-03-04T00:00:00-05:00",
+    "Data": "biSQBQAAAAAAAAACvgK+ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-03-04T00:00:00-05:00",
+    "Data": "BwAAAr4kkAAAAA==",
+    "Info": 17.55
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-05T00:00:00-05:00",
+    "Data": "ewAAwAAFEAAWAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.55
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-04T22:00:00-05:00",
+    "Data": "ewIAwBYEECwcAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-04T08:30:00-05:00",
+    "Data": "ewEA3ggEEBEiAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 0.85
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-03-03T00:00:00-05:00",
+    "Data": "biOQBQAAAAAAAAACuAK4ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-03-03T00:00:00-05:00",
+    "Data": "BwAAArgjkAAAAA==",
+    "Info": 17.4
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-04T00:00:00-05:00",
+    "Data": "ewAAwAAEEAAWAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.55
+      }
+    }
+  },
+  {
+    "Type": "DeleteOtherDevice",
+    "Time": "2016-03-03T22:28:08-05:00",
+    "Data": "ggEI3BYDEAAQERER"
+  },
+  {
+    "Type": "DeleteOtherDevice",
+    "Time": "2016-03-03T22:28:06-05:00",
+    "Data": "ggEG3BYDEACizoqg"
+  },
+  {
+    "Type": "Prime",
+    "Time": "2016-03-03T22:27:28-05:00",
+    "Data": "AwABAAEc2xYDEA==",
+    "Info": {
+      "Fixed": 0.1,
+      "Manual": 0.1
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-03T22:27:30-05:00",
+    "Data": "ewIe2xYDECwcAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2016-03-03T22:16:15-05:00",
+    "Data": "AwAAABAP0DYDEA==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 1.6
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2016-03-03T22:14:28-05:00",
+    "Data": "IQAczhYDEA=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-03T22:00:00-05:00",
+    "Data": "ewIAwBYDECwcAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "ChangeOtherDevice",
+    "Time": "2016-03-03T18:47:35-05:00",
+    "Data": "fQIj7xIDEACizoqgABAREREAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "ChangeMarriage",
+    "Time": "2016-03-03T18:47:35-05:00",
+    "Data": "gQEj7xIDEAAQERER"
+  },
+  {
+    "Type": "LowReservoir",
+    "Time": "2016-03-03T18:28:14-05:00",
+    "Data": "NGQO3BIDEA==",
+    "Info": 10
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-03T08:30:00-05:00",
+    "Data": "ewEA3ggDEBEiAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 0.85
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-03-02T00:00:00-05:00",
+    "Data": "biKQBQAAAAAAAAACvgK+ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-03-02T00:00:00-05:00",
+    "Data": "BwAAAr4ikAAAAA==",
+    "Info": 17.55
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-03T00:00:00-05:00",
+    "Data": "ewAAwAADEAAWAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.55
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-02T22:00:00-05:00",
+    "Data": "ewIAwBYCECwcAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-03-02T08:30:00-05:00",
+    "Data": "ewEA3ggCEBEiAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "08:30",
+        "Rate": 0.85
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-03-01T00:00:00-05:00",
+    "Data": "biGQBQAAAAAAAAACvgK+ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  }
+]

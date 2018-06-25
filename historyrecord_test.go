@@ -17,15 +17,32 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		jsonFile string
 		family   Family
 	}{
-		{"testdata/records-554.json", 54},
-		{"testdata/records-523.json", 23},
-		{"testdata/records-522.json", 22},
+		{"testdata/model512.json", 12},
+		{"testdata/model515.json", 15},
+		{"testdata/model522.json", 22},
 		{"testdata/model523-1.json", 23},
 		{"testdata/model523-2.json", 23},
-		{"testdata/model522.json", 22},
-		{"testdata/model515.json", 15},
-		{"testdata/model512.json", 12},
+		{"testdata/ps2-522-1.json", 22},
+		{"testdata/ps2-522-2.json", 22},
+		{"testdata/ps2-523-1.json", 23},
+		{"testdata/ps2-523-2.json", 23},
+		{"testdata/ps2-523-3.json", 23},
+		{"testdata/ps2-523-4.json", 23},
+		{"testdata/ps2-523-5.json", 23},
+		{"testdata/ps2-523-6.json", 23},
+		{"testdata/ps2-551-1.json", 51},
+		{"testdata/ps2-551-2.json", 51},
+		{"testdata/ps2-551-3.json", 51},
+		{"testdata/ps2-551-4.json", 51},
+		{"testdata/ps2-554-1.json", 54},
+		{"testdata/ps2-554-2.json", 54},
+		{"testdata/ps2-554-3.json", 54},
+		{"testdata/ps2-554-4.json", 54},
+		{"testdata/ps2-554-5.json", 54},
 		{"testdata/pump-records-522.json", 22},
+		{"testdata/records-522.json", 22},
+		{"testdata/records-523.json", 23},
+		{"testdata/records-554.json", 54},
 	}
 	for _, c := range cases {
 		t.Run(c.jsonFile, func(t *testing.T) {
@@ -77,11 +94,28 @@ func TestDecodeHistory(t *testing.T) {
 		jsonFile string
 		family   Family
 	}{
+		{"testdata/model512.data", "testdata/model512.json", 12},
+		{"testdata/model515.data", "testdata/model515.json", 15},
+		{"testdata/model522.data", "testdata/model522.json", 22},
 		{"testdata/model523-1.data", "testdata/model523-1.json", 23},
 		{"testdata/model523-2.data", "testdata/model523-2.json", 23},
-		{"testdata/model522.data", "testdata/model522.json", 22},
-		{"testdata/model515.data", "testdata/model515.json", 15},
-		{"testdata/model512.data", "testdata/model512.json", 12},
+		{"testdata/ps2-522-1.data", "testdata/ps2-522-1.json", 22},
+		{"testdata/ps2-522-2.data", "testdata/ps2-522-2.json", 22},
+		{"testdata/ps2-523-1.data", "testdata/ps2-523-1.json", 23},
+		{"testdata/ps2-523-2.data", "testdata/ps2-523-2.json", 23},
+		{"testdata/ps2-523-3.data", "testdata/ps2-523-3.json", 23},
+		{"testdata/ps2-523-4.data", "testdata/ps2-523-4.json", 23},
+		{"testdata/ps2-523-5.data", "testdata/ps2-523-5.json", 23},
+		{"testdata/ps2-523-6.data", "testdata/ps2-523-6.json", 23},
+		{"testdata/ps2-551-1.data", "testdata/ps2-551-1.json", 51},
+		{"testdata/ps2-551-2.data", "testdata/ps2-551-2.json", 51},
+		{"testdata/ps2-551-3.data", "testdata/ps2-551-3.json", 51},
+		{"testdata/ps2-551-4.data", "testdata/ps2-551-4.json", 51},
+		{"testdata/ps2-554-1.data", "testdata/ps2-554-1.json", 54},
+		{"testdata/ps2-554-2.data", "testdata/ps2-554-2.json", 54},
+		{"testdata/ps2-554-3.data", "testdata/ps2-554-3.json", 54},
+		{"testdata/ps2-554-4.data", "testdata/ps2-554-4.json", 54},
+		{"testdata/ps2-554-5.data", "testdata/ps2-554-5.json", 54},
 	}
 	for _, c := range cases {
 		t.Run(c.pageFile, func(t *testing.T) {

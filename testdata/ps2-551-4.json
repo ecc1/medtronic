@@ -1,0 +1,742 @@
+[
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T19:00:00-04:00",
+    "Data": "ewdAwBMQECYQAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "InsulinMarker",
+    "Time": "2016-07-16T18:28:28-04:00",
+    "Data": "QgFc3BIQEAA=",
+    "Info": 0.1
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2016-07-16T18:00:25-04:00",
+    "Data": "CmVZwDIQEA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 101
+    }
+  },
+  {
+    "Type": "InsulinMarker",
+    "Time": "2016-07-16T17:45:38-04:00",
+    "Data": "Qt5m7XEQEAA=",
+    "Info": 99
+  },
+  {
+    "Type": "OtherMarker",
+    "Time": "2016-07-16T16:48:51-04:00",
+    "Data": "QwBz8BAQEA=="
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2016-07-16T16:10:23-04:00",
+    "Data": "ClhXyjAQEA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 88
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T16:00:00-04:00",
+    "Data": "ewZAwBAQECAOAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 0.35
+      }
+    }
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2016-07-16T15:21:56-04:00",
+    "Data": "Clh41a8QEA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 600
+    }
+  },
+  {
+    "Type": "MealMarker",
+    "Time": "2016-07-16T13:54:14-04:00",
+    "Data": "QABO9g0QEMgC",
+    "Info": {
+      "Units": "Exchanges",
+      "Carbs": 200
+    }
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2016-07-16T13:50:55-04:00",
+    "Data": "ClB38i0QEA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 80
+    }
+  },
+  {
+    "Type": "ChangeCarbUnits",
+    "Time": "2016-07-16T13:50:38-04:00",
+    "Data": "bxJm8g0QEA==",
+    "Info": 18
+  },
+  {
+    "Type": "MealMarker",
+    "Time": "2016-07-16T13:18:47-04:00",
+    "Data": "QAFv0g0QECwB",
+    "Info": {
+      "Units": "Grams",
+      "Carbs": 300
+    }
+  },
+  {
+    "Type": "EnableCaptureEvent",
+    "Time": "2016-07-16T13:18:13-04:00",
+    "Data": "gwFN0g0QEA==",
+    "Info": true
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T12:00:00-04:00",
+    "Data": "ewVAwAwQEBgKAA==",
+    "Info": {
+      "ProfileIndex": 5,
+      "BasalRate": {
+        "Start": "12:00",
+        "Rate": 0.25
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T10:00:00-04:00",
+    "Data": "ewRAwAoQEBQLAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.275
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T06:00:00-04:00",
+    "Data": "ewNAwAYQEAwQAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T04:00:00-04:00",
+    "Data": "ewJAwAQQEAgNAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "04:00",
+        "Rate": 0.325
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T01:00:00-04:00",
+    "Data": "ewFAwAEQEAIMAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "01:00",
+        "Rate": 0.3
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-07-15T00:00:00-04:00",
+    "Data": "bm+QBQCampoBAAABVwFXZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-07-15T00:00:00-04:00",
+    "Data": "BwAAAVdvkAAAAA==",
+    "Info": 8.575
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-16T00:00:00-04:00",
+    "Data": "ewBAwAAQEAAQAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BGReceived",
+    "Time": "2016-07-15T22:07:05-04:00",
+    "Data": "PxNFx1ZvEMUnrQ==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 154,
+      "MeterID": "C527AD"
+    }
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2016-07-15T22:07:05-04:00",
+    "Data": "CppFxzZvEA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 154
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T20:30:00-04:00",
+    "Data": "ewhA3hQPECkVAA==",
+    "Info": {
+      "ProfileIndex": 8,
+      "BasalRate": {
+        "Start": "20:30",
+        "Rate": 0.525
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T19:00:00-04:00",
+    "Data": "ewdAwBMPECYQAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T16:00:00-04:00",
+    "Data": "ewZAwBAPECAOAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 0.35
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T12:00:00-04:00",
+    "Data": "ewVAwAwPEBgKAA==",
+    "Info": {
+      "ProfileIndex": 5,
+      "BasalRate": {
+        "Start": "12:00",
+        "Rate": 0.25
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T10:00:00-04:00",
+    "Data": "ewRAwAoPEBQLAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.275
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T06:00:00-04:00",
+    "Data": "ewNAwAYPEAwQAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T04:00:00-04:00",
+    "Data": "ewJAwAQPEAgNAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "04:00",
+        "Rate": 0.325
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T01:00:00-04:00",
+    "Data": "ewFAwAEPEAIMAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "01:00",
+        "Rate": 0.3
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-07-14T00:00:00-04:00",
+    "Data": "bm6QBQDS0tIBAAABVwFXZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-07-14T00:00:00-04:00",
+    "Data": "BwAAAVdukAAAAA==",
+    "Info": 8.575
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-15T00:00:00-04:00",
+    "Data": "ewBAwAAPEAAQAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BGReceived",
+    "Time": "2016-07-14T23:07:49-04:00",
+    "Data": "Pxpxx1duEMUnrQ==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 210,
+      "MeterID": "C527AD"
+    }
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2016-07-14T23:07:49-04:00",
+    "Data": "CtJxxzduEA==",
+    "Info": {
+      "Units": "mg/dL",
+      "Glucose": 210
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T20:30:00-04:00",
+    "Data": "ewhA3hQOECkVAA==",
+    "Info": {
+      "ProfileIndex": 8,
+      "BasalRate": {
+        "Start": "20:30",
+        "Rate": 0.525
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T19:00:00-04:00",
+    "Data": "ewdAwBMOECYQAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T16:00:00-04:00",
+    "Data": "ewZAwBAOECAOAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 0.35
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T12:00:00-04:00",
+    "Data": "ewVAwAwOEBgKAA==",
+    "Info": {
+      "ProfileIndex": 5,
+      "BasalRate": {
+        "Start": "12:00",
+        "Rate": 0.25
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T10:00:00-04:00",
+    "Data": "ewRAwAoOEBQLAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.275
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T06:00:00-04:00",
+    "Data": "ewNAwAYOEAwQAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T04:00:00-04:00",
+    "Data": "ewJAwAQOEAgNAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "04:00",
+        "Rate": 0.325
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T01:00:00-04:00",
+    "Data": "ewFAwAEOEAIMAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "01:00",
+        "Rate": 0.3
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-07-13T00:00:00-04:00",
+    "Data": "bm2QBQAAAAAAAAABVwFXZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-07-13T00:00:00-04:00",
+    "Data": "BwAAAVdtkAAAAA==",
+    "Info": 8.575
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-14T00:00:00-04:00",
+    "Data": "ewBAwAAOEAAQAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T20:30:00-04:00",
+    "Data": "ewhA3hQNECkVAA==",
+    "Info": {
+      "ProfileIndex": 8,
+      "BasalRate": {
+        "Start": "20:30",
+        "Rate": 0.525
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T19:00:00-04:00",
+    "Data": "ewdAwBMNECYQAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T16:00:00-04:00",
+    "Data": "ewZAwBANECAOAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 0.35
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T12:00:00-04:00",
+    "Data": "ewVAwAwNEBgKAA==",
+    "Info": {
+      "ProfileIndex": 5,
+      "BasalRate": {
+        "Start": "12:00",
+        "Rate": 0.25
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T10:00:00-04:00",
+    "Data": "ewRAwAoNEBQLAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.275
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T06:00:00-04:00",
+    "Data": "ewNAwAYNEAwQAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T04:00:00-04:00",
+    "Data": "ewJAwAQNEAgNAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "04:00",
+        "Rate": 0.325
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T01:00:00-04:00",
+    "Data": "ewFAwAENEAIMAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "01:00",
+        "Rate": 0.3
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-07-12T00:00:00-04:00",
+    "Data": "bmyQBQAAAAAAAAABVwFXZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-07-12T00:00:00-04:00",
+    "Data": "BwAAAVdskAAAAA==",
+    "Info": 8.575
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-13T00:00:00-04:00",
+    "Data": "ewBAwAANEAAQAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T20:30:00-04:00",
+    "Data": "ewhA3hQMECkVAA==",
+    "Info": {
+      "ProfileIndex": 8,
+      "BasalRate": {
+        "Start": "20:30",
+        "Rate": 0.525
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T19:00:00-04:00",
+    "Data": "ewdAwBMMECYQAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T16:00:00-04:00",
+    "Data": "ewZAwBAMECAOAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 0.35
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T12:00:00-04:00",
+    "Data": "ewVAwAwMEBgKAA==",
+    "Info": {
+      "ProfileIndex": 5,
+      "BasalRate": {
+        "Start": "12:00",
+        "Rate": 0.25
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T10:00:00-04:00",
+    "Data": "ewRAwAoMEBQLAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.275
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T06:00:00-04:00",
+    "Data": "ewNAwAYMEAwQAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T04:00:00-04:00",
+    "Data": "ewJAwAQMEAgNAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "04:00",
+        "Rate": 0.325
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T01:00:00-04:00",
+    "Data": "ewFAwAEMEAIMAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "01:00",
+        "Rate": 0.3
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2016-07-11T00:00:00-04:00",
+    "Data": "bmuQBQAAAAAAAAABVwFXZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2016-07-11T00:00:00-04:00",
+    "Data": "BwAAAVdrkAAAAA==",
+    "Info": 8.575
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-12T00:00:00-04:00",
+    "Data": "ewBAwAAMEAAQAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-11T20:30:00-04:00",
+    "Data": "ewhA3hQLECkVAA==",
+    "Info": {
+      "ProfileIndex": 8,
+      "BasalRate": {
+        "Start": "20:30",
+        "Rate": 0.525
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-11T19:00:00-04:00",
+    "Data": "ewdAwBMLECYQAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 0.4
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2016-07-11T16:00:00-04:00",
+    "Data": "ewZAwBALECAOAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 0.35
+      }
+    }
+  }
+]

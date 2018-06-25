@@ -1,0 +1,496 @@
+[
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-05-24T20:39:20-04:00",
+    "Data": "FgBUZxQYEg==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-05-24T20:39:20-04:00",
+    "Data": "MwBUZxQYEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2018-05-24T20:32:17-04:00",
+    "Data": "FgFRYBQYEg==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2018-05-24T20:32:17-04:00",
+    "Data": "MwBRYBQYEgA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "SensorAlarm",
+    "Time": "2018-05-24T20:23:25-04:00",
+    "Data": "C3AAWVdUuBI=",
+    "Info": 112
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T20:00:00-04:00",
+    "Data": "exRAQBQYEigsAA==",
+    "Info": {
+      "ProfileIndex": 20,
+      "BasalRate": {
+        "Start": "20:00",
+        "Rate": 1.1
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T19:20:24-04:00",
+    "Data": "exNYVBMYEiYwAA==",
+    "Info": {
+      "ProfileIndex": 19,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "ResumePump",
+    "Time": "2018-05-24T19:20:24-04:00",
+    "Data": "HyBYVBNYEg=="
+  },
+  {
+    "Type": "SuspendPump",
+    "Time": "2018-05-24T19:14:34-04:00",
+    "Data": "HgFiThNYEg=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T19:00:00-04:00",
+    "Data": "exNAQBMYEiYwAA==",
+    "Info": {
+      "ProfileIndex": 19,
+      "BasalRate": {
+        "Start": "19:00",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T18:00:00-04:00",
+    "Data": "exJAQBIYEiQwAA==",
+    "Info": {
+      "ProfileIndex": 18,
+      "BasalRate": {
+        "Start": "18:00",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "SensorAlarm",
+    "Time": "2018-05-24T17:57:29-04:00",
+    "Data": "C3AAXXlRuBI=",
+    "Info": 112
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T17:00:00-04:00",
+    "Data": "exFAQBEYEiIwAA==",
+    "Info": {
+      "ProfileIndex": 17,
+      "BasalRate": {
+        "Start": "17:00",
+        "Rate": 1.2
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T16:00:00-04:00",
+    "Data": "exBAQBAYEiAsAA==",
+    "Info": {
+      "ProfileIndex": 16,
+      "BasalRate": {
+        "Start": "16:00",
+        "Rate": 1.1
+      }
+    }
+  },
+  {
+    "Type": "SensorAlarm",
+    "Time": "2018-05-24T15:38:28-04:00",
+    "Data": "C3AAXGZPuBI=",
+    "Info": 112
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T15:00:00-04:00",
+    "Data": "ew9AQA8YEh4gAA==",
+    "Info": {
+      "ProfileIndex": 15,
+      "BasalRate": {
+        "Start": "15:00",
+        "Rate": 0.8
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T14:00:00-04:00",
+    "Data": "ew5AQA4YEhwYAA==",
+    "Info": {
+      "ProfileIndex": 14,
+      "BasalRate": {
+        "Start": "14:00",
+        "Rate": 0.6
+      }
+    }
+  },
+  {
+    "Type": "SensorAlarm",
+    "Time": "2018-05-24T13:47:10-04:00",
+    "Data": "C3EASm9NuBI=",
+    "Info": 113
+  },
+  {
+    "Type": "SensorAlarm",
+    "Time": "2018-05-24T13:33:11-04:00",
+    "Data": "C3AAS2FNuBI=",
+    "Info": 112
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T13:00:00-04:00",
+    "Data": "ew1AQA0YEhoYAA==",
+    "Info": {
+      "ProfileIndex": 13,
+      "BasalRate": {
+        "Start": "13:00",
+        "Rate": 0.6
+      }
+    }
+  },
+  {
+    "Type": "ChangeOtherDevice",
+    "Time": "2018-05-24T12:35:27-04:00",
+    "Data": "fQFbYwwYEgCiHIVoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2018-05-24T12:35:01-04:00",
+    "Data": "GABBYwxYEg=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2018-05-24T12:35:02-04:00",
+    "Data": "FwBCYwxYEg=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T12:00:00-04:00",
+    "Data": "ewxAQAwYEhgYAA==",
+    "Info": {
+      "ProfileIndex": 12,
+      "BasalRate": {
+        "Start": "12:00",
+        "Rate": 0.6
+      }
+    }
+  },
+  {
+    "Type": "ChangeOtherDevice",
+    "Time": "2018-05-24T11:19:01-04:00",
+    "Data": "fQFBUwsYEgCiHIVoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "ChangeMarriage",
+    "Time": "2018-05-24T11:19:01-04:00",
+    "Data": "gQFBUwsYEgCiHIVo"
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2018-05-24T11:14:29-04:00",
+    "Data": "GABdTgtYEg=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2018-05-24T11:14:10-04:00",
+    "Data": "FwBKTgtYEg=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T11:00:00-04:00",
+    "Data": "ewtAQAsYEhYcAA==",
+    "Info": {
+      "ProfileIndex": 11,
+      "BasalRate": {
+        "Start": "11:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BGCapture",
+    "Time": "2018-05-24T10:43:10-04:00",
+    "Data": "CkZKa0oYEg==",
+    "Info": {
+      "Units": "μmol/L",
+      "Glucose": 7000
+    }
+  },
+  {
+    "Type": "SensorAlarm",
+    "Time": "2018-05-24T10:42:44-04:00",
+    "Data": "C2gAbGpKuBI=",
+    "Info": 104
+  },
+  {
+    "Type": "SaveSettings",
+    "Time": "2018-05-24T10:39:30-04:00",
+    "Data": "XQBeZwoYEg=="
+  },
+  {
+    "Type": "SensorSetup",
+    "Time": "2018-05-24T10:38:31-04:00",
+    "Data": "UABfZgoYEkEBHgB4HgAePP///2QngIAfQQEeAHgeAB48I++nZCeAgB8="
+  },
+  {
+    "Type": "EnableSensorAutoCal",
+    "Time": "2018-05-24T10:38:29-04:00",
+    "Data": "RAFdZgoYEg=="
+  },
+  {
+    "Type": "EnableSensorAutoCal",
+    "Time": "2018-05-24T10:37:59-04:00",
+    "Data": "RAB7ZQoYEg=="
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2018-05-24T10:34:50-04:00",
+    "Data": "JgFyYgoYEicFt6EAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "ConnectOtherDevices",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "fAF5YQqYEg==",
+    "Info": true
+  },
+  {
+    "Type": "Sensor54",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "VPx5YUqYEv/8/wDwUAD//wD//wD//wD//wD//wD//wD///z//P8AZCwA//8A//8A//8A//8A//8A//8A//9EAQ=="
+  },
+  {
+    "Type": "SensorSetup",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "UAB5YQqYEiABHgA8FAAePP///7RGAAA8QQEeAHgeAB48I++nZCeAgB8="
+  },
+  {
+    "Type": "ChangeSensorAlert",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "VgB5YUqYEtzcACgo"
+  },
+  {
+    "Type": "Sensor55",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "VRF5YQqYEgAPDwD//wD//wD//wD//wD//wD//wD//wAAFAD//wD//wD//wD//wD//wD//wD//w=="
+  },
+  {
+    "Type": "Sensor51",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "UQJ5YQqYEg=="
+  },
+  {
+    "Type": "Sensor52",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "UgB5YQqYEg=="
+  },
+  {
+    "Type": "ChangeEasyBolus",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "Xyl5YQqYEg=="
+  },
+  {
+    "Type": "ChangeTempBasalType",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "YgB5YQqYEg==",
+    "Info": "Absolute"
+  },
+  {
+    "Type": "BolusWizardSetup",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "Wgp5YQqYEgUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiRgAAGQEAFMMAEsQAFwWAHgaAIwgAGQiAEsAAAAfBBoMFxAcFiQaKiAfIhcAMj4AAAAAAAAAAAAAAAAAAAAAAAAAAAA/",
+    "Info": {
+      "Before": {
+        "Ratios": [
+          {
+            "Ratio": 0,
+            "Start": "00:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 0,
+            "Units": "mg/dL"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 0,
+            "High": 0,
+            "Units": "mg/dL"
+          }
+        ],
+        "InsulinAction": "15h0m0s"
+      },
+      "After": {
+        "Ratios": [
+          {
+            "Ratio": 10,
+            "Start": "00:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 8.3,
+            "Start": "02:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 7.5,
+            "Start": "06:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 9.2,
+            "Start": "08:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 12,
+            "Start": "11:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 14,
+            "Start": "13:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 10,
+            "Start": "16:00",
+            "Units": "Grams"
+          },
+          {
+            "Ratio": 7.5,
+            "Start": "17:00",
+            "Units": "Grams"
+          }
+        ],
+        "Sensitivities": [
+          {
+            "Start": "00:00",
+            "Sensitivity": 0,
+            "Units": "μmol/L"
+          }
+        ],
+        "Targets": [
+          {
+            "Start": "00:00",
+            "Low": 5000,
+            "High": 6200,
+            "Units": "μmol/L"
+          }
+        ],
+        "InsulinAction": "3h0m0s"
+      }
+    }
+  },
+  {
+    "Type": "EnableBolusWizard",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "LQF5YQqYEg==",
+    "Info": true
+  },
+  {
+    "Type": "EnableVariableBolus",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "XgF5YQqYEg==",
+    "Info": true
+  },
+  {
+    "Type": "EnableChildBlock",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "IwB5YQqYEg==",
+    "Info": false
+  },
+  {
+    "Type": "EnableBGReminder",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "YAB5YQpYEg==",
+    "Info": false
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "JgF5YQqYEicFt6EAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "EnableMeter",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "PAF5YQqYEj3CJUUAAAA+AAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "SetBolusReminderTime",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "ZwB5YQqYEgAe",
+    "Info": false
+  },
+  {
+    "Type": "EnableBolusReminder",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "ZgB5YQqYEg==",
+    "Info": false
+  },
+  {
+    "Type": "SetAlarmClockTime",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "MhJ5YQqYEg=="
+  },
+  {
+    "Type": "EnableAlarmClock",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "YQB5YQqYEg==",
+    "Info": false
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "ewp5YQoYEhQcAA==",
+    "Info": {
+      "ProfileIndex": 10,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileAfter",
+    "Time": "2018-05-24T10:33:57-04:00",
+    "Data": "CQB5YUqYEj8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+    "Info": null
+  }
+]
