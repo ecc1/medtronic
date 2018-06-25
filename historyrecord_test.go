@@ -17,6 +17,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		jsonFile string
 		family   Family
 	}{
+		{"testdata/records-554.json", 54},
 		{"testdata/records-523.json", 23},
 		{"testdata/records-522.json", 22},
 		{"testdata/model523-1.json", 23},

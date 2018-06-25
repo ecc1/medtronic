@@ -541,5 +541,10 @@
     "Type": "DeleteOtherDevice",
     "Time": "2016-07-05T13:12:19-04:00",
     "Data": "ggFTzA0FEAARERER"
+  },
+  {
+    "Type": "SensorSetup",
+    "Time": "2018-04-19T16:40:28-04:00",
+    "Data": "UABcKBATEiABKAA8FAAePAAAALRGACEBKAA8FAAePAAAALRGAA=="
   }
 ]
