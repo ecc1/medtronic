@@ -45,7 +45,7 @@ func (d Duration) TimeOfDay() TimeOfDay {
 	return TimeOfDay(td)
 }
 
-// Convert a time of day into half-hours.
+// HalfHours convert a time of day into half-hours.
 func (t TimeOfDay) HalfHours() uint8 {
 	n := time.Duration(t) / (30 * time.Minute)
 	if n > 255 {

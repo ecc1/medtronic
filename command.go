@@ -193,7 +193,7 @@ func (pump *Pump) Execute(cmd Command, params ...byte) []byte {
 	return pump.perform(cmd, ack, longPumpPacket(cmd, 0, params))
 }
 
-// ExtendedResquest sends a command and a sequence of parameter packets
+// ExtendedRequest sends a command and a sequence of parameter packets
 // to the pump and returns its response.
 func (pump *Pump) ExtendedRequest(cmd Command, params ...byte) []byte {
 	seqNum := 1

@@ -38,18 +38,16 @@ func TestTimeOfDay(t *testing.T) {
 				if c.err == nil {
 					if td == c.t {
 						return
-					} else {
-						t.Errorf("ParseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
 					}
+					t.Errorf("ParseTimeOfDay(%s) == %v, want %v", c.s, td, c.t)
 				} else {
 					t.Errorf("ParseTimeOfDay(%s) == %v, want error", c.s, td)
 				}
 			} else {
 				if c.err != nil {
 					return
-				} else {
-					t.Errorf("ParseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
 				}
+				t.Errorf("ParseTimeOfDay(%s) == %v, want %v", c.s, err, c.t)
 			}
 		})
 	}
