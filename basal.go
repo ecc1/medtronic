@@ -30,6 +30,19 @@ func decodeBasalRateSchedule(data []byte) BasalRateSchedule {
 	return sched
 }
 
+func encodeBasalRateSchedule(s BasalRateSchedule, family Family) ([]byte, error) {
+	data := make([]byte, 0, len(s)*3)
+	for _, v := range s {
+		r, err := encodeBasalRate("basal", v.Rate, family)
+		if err != nil {
+			return nil, err
+		}
+		b := append(marshalUint16LE(r), v.Start.HalfHours())
+		data = append(data, b...)
+	}
+	return data, nil
+}
+
 func (pump *Pump) basalSchedule(cmd Command) BasalRateSchedule {
 	data := pump.ExtendedResponse(cmd)
 	if pump.Error() != nil {
@@ -71,24 +84,12 @@ func (pump *Pump) setBasalSchedule(cmd Command, s BasalRateSchedule) {
 		pump.SetError(fmt.Errorf("%v: empty schedule", cmd))
 		return
 	}
-	pump.ExtendedRequest(setBasalRates, s.Encode()...)
-}
-
-func (s BasalRateSchedule) Encode() []byte {
-	data := make([]byte, len(s)*3)
-	i := 0
-	for _, v := range s {
-		m := milliUnitsPerStroke(23)
-		strokes := v.Rate / m
-		actual := strokes * m
-		if actual != v.Rate {
-			log.Printf("rounding basal rate from %v to %v", v.Rate, actual)
-		}
-		copy(data[i:i+2], marshalUint16LE(uint16(strokes)))
-		data[i+2] = v.Start.HalfHours()
-		i += 3
+	data, err := encodeBasalRateSchedule(s, pump.Family())
+	if err != nil {
+		pump.SetError(err)
+		return
 	}
-	return data
+	pump.ExtendedRequest(setBasalRates, data...)
 }
 
 // SetBasalRates sets the pump's basal rate schedule.
@@ -104,4 +105,31 @@ func (pump *Pump) SetBasalPatternA(s BasalRateSchedule) {
 // SetBasalPatternB sets the pump's basal pattern B.
 func (pump *Pump) SetBasalPatternB(s BasalRateSchedule) {
 	pump.setBasalSchedule(setBasalPatternB, s)
+}
+
+func encodeBasalRate(kind string, rate Insulin, family Family) (uint16, error) {
+	if rate < 0 {
+		return 0, fmt.Errorf("%s rate (%d) is negative", kind, rate)
+	}
+	if rate > maxBasal {
+		return 0, fmt.Errorf("%s rate (%d) is too large", kind, rate)
+	}
+	// Round the rate to the pump's delivery resolution.
+	var res Insulin
+	if family <= 22 {
+		res = 50
+	} else if rate < 1000 {
+		res = 25
+	} else if rate < 10000 {
+		res = 50
+	} else {
+		res = 100
+	}
+	actual := (rate / res) * res
+	if actual != rate {
+		log.Printf("rounding %s rate from %v to %v", kind, rate, actual)
+	}
+	// Encode the rounded value using 25 milliUnits/stroke.
+	m := milliUnitsPerStroke(23)
+	return uint16(actual / m), nil
 }

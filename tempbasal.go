@@ -2,7 +2,6 @@ package medtronic
 
 import (
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -66,22 +65,13 @@ func (pump *Pump) TempBasal() TempBasalInfo {
 // SetAbsoluteTempBasal sets a temporary basal with the given absolute rate and duration.
 func (pump *Pump) SetAbsoluteTempBasal(duration time.Duration, rate Insulin) {
 	d := pump.halfHours(duration)
-	if rate < 0 {
-		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is negative", rate))
+	r, err := encodeBasalRate("temporary basal", rate, pump.Family())
+	if err != nil {
+		pump.SetError(err)
 		return
 	}
-	if rate > maxBasal {
-		pump.SetError(fmt.Errorf("absolute temporary basal rate (%d) is too large", rate))
-		return
-	}
-	m := milliUnitsPerStroke(23)
-	strokes := rate / m
-	actual := strokes * m
-	if actual != rate {
-		log.Printf("rounding temporary basal rate from %v to %v", rate, actual)
-	}
-	r := marshalUint16(uint16(strokes))
-	pump.Execute(setAbsoluteTempBasal, r[0], r[1], d)
+	args := append(marshalUint16(r), d)
+	pump.Execute(setAbsoluteTempBasal, args...)
 }
 
 // SetPercentTempBasal sets a temporary basal with the given percent rate and duration.
