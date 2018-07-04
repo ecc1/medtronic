@@ -2,7 +2,7 @@ package packet
 
 import (
 	"bytes"
-	"strconv"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -40,14 +40,18 @@ func TestPacketEncoding(t *testing.T) {
 }
 
 func parseBytes(hex string) []byte {
-	fields := strings.Fields(hex)
-	data := make([]byte, len(fields))
-	for i, s := range fields {
-		b, err := strconv.ParseUint(string(s), 16, 8)
+	r := strings.NewReader(hex)
+	var data []byte
+	for {
+		var b byte
+		n, err := fmt.Fscanf(r, "%02x", &b)
+		if n == 0 {
+			break
+		}
 		if err != nil {
 			panic(err)
 		}
-		data[i] = byte(b)
+		data = append(data, b)
 	}
 	return data
 }
