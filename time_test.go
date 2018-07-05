@@ -3,6 +3,7 @@ package medtronic
 import (
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )
@@ -80,23 +81,6 @@ func TestHalfHours(t *testing.T) {
 	}
 }
 
-var layouts = []string{
-	"2006-01-02T15:04:05.999999999",
-	"2006-01-02T15:04",
-}
-
-func parseTime(s string) time.Time {
-	var t time.Time
-	var err error
-	for _, layout := range layouts {
-		t, err = time.ParseInLocation(layout, s, time.Local)
-		if err == nil {
-			return t
-		}
-	}
-	panic(err)
-}
-
 func TestSinceMidnight(t *testing.T) {
 	cases := []struct {
 		t time.Time
@@ -132,10 +116,10 @@ func TestDecodeTime(t *testing.T) {
 		b []byte
 		t time.Time
 	}{
-		{[]byte{0x1F, 0x40, 0x00, 0x01, 0x05}, parseTime("2005-01-01T00:00:31")},
-		{[]byte{0x75, 0xB7, 0x13, 0x04, 0x10}, parseTime("2016-06-04T19:55:53")},
-		{[]byte{0x5D, 0xB3, 0x0F, 0x06, 0x10}, parseTime("2016-06-06T15:51:29")},
-		{[]byte{0x40, 0x94, 0x12, 0x0F, 0x10}, parseTime("2016-06-15T18:20:00")},
+		{parseBytes("1F 40 00 01 05"), parseTime("2005-01-01T00:00:31")},
+		{parseBytes("75 B7 13 04 10"), parseTime("2016-06-04T19:55:53")},
+		{parseBytes("5D B3 0F 06 10"), parseTime("2016-06-06T15:51:29")},
+		{parseBytes("40 94 12 0F 10"), parseTime("2016-06-15T18:20:00")},
 	}
 	for _, c := range cases {
 		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
@@ -152,8 +136,8 @@ func TestDecodeDate(t *testing.T) {
 		b []byte
 		t time.Time
 	}{
-		{[]byte{0xBF, 0x0F}, parseTime("2015-10-31T00:00")},
-		{[]byte{0x78, 0x10}, parseTime("2016-06-24T00:00")},
+		{parseBytes("BF 0F"), parseTime("2015-10-31T00:00")},
+		{parseBytes("78 10"), parseTime("2016-06-24T00:00")},
 	}
 	for _, c := range cases {
 		t.Run(c.t.Format("2006-01-02"), func(t *testing.T) {
@@ -165,22 +149,29 @@ func TestDecodeDate(t *testing.T) {
 	}
 }
 
-func TestDecodeCGMTime(t *testing.T) {
-	cases := []struct {
-		b []byte
-		t time.Time
-	}{
-		{[]byte{0x8D, 0x9B, 0x1D, 0x0C}, parseTime("2012-10-29T13:27")},
-		{[]byte{0x0B, 0xAE, 0x0A, 0x0E}, parseTime("2014-02-10T11:46")},
-		{[]byte{0x4F, 0x5B, 0x13, 0x8F}, parseTime("2015-05-19T15:27")},
-		{[]byte{0x14, 0xB6, 0x28, 0x10}, parseTime("2016-02-08T20:54")},
+var layouts = []string{
+	"2006-01-02T15:04:05.999999999",
+	"2006-01-02T15:04",
+}
+
+func parseTime(s string) time.Time {
+	var t time.Time
+	var err error
+	for _, layout := range layouts {
+		t, err = time.ParseInLocation(layout, s, time.Local)
+		if err == nil {
+			return t
+		}
 	}
-	for _, c := range cases {
-		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
-			ts := time.Time(decodeCGMTime(c.b))
-			if !ts.Equal(c.t) {
-				t.Errorf("decodeCGMTime(% X) == %v, want %v", c.b, ts, c.t)
-			}
-		})
+	panic(err)
+}
+
+func parseBytes(hex string) []byte {
+	var data []byte
+	r := strings.NewReader(hex)
+	data, err := readBytes(r)
+	if err != nil {
+		panic(err)
 	}
+	return data
 }

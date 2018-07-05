@@ -3,6 +3,8 @@ package medtronic
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"reflect"
 	"testing"
 	"time"
@@ -20,6 +22,7 @@ func TestEncodeBasalRate(t *testing.T) {
 		{23, 2575, 2550},
 		{23, 11250, 11200},
 	}
+	log.SetOutput(ioutil.Discard)
 	for _, c := range cases {
 		name := fmt.Sprintf("%d_%d", c.family, c.rate)
 		t.Run(name, func(t *testing.T) {
@@ -43,7 +46,7 @@ func TestBasalRates(t *testing.T) {
 	}{
 		{
 			22,
-			[]byte{0x28, 0x00, 0x00, 0x30, 0x00, 0x12},
+			parseBytes("28 00 00 30 00 12"),
 			BasalRateSchedule{
 				{parseTD("00:00"), 1000},
 				{parseTD("09:00"), 1200},
@@ -51,7 +54,7 @@ func TestBasalRates(t *testing.T) {
 		},
 		{
 			23,
-			[]byte{0x20, 0x00, 0x00, 0x26, 0x00, 0x0D, 0x2C, 0x00, 0x13, 0x26, 0x00, 0x1C},
+			parseBytes("20 00 00 26 00 0D 2C 00 13 26 00 1C"),
 			BasalRateSchedule{
 				{parseTD("00:00"), 800},
 				{parseTD("06:30"), 950},
@@ -61,7 +64,7 @@ func TestBasalRates(t *testing.T) {
 		},
 		{
 			22,
-			[]byte{0x28, 0x00, 0x00, 0x28, 0x00, 0x06, 0x2C, 0x00, 0x0C, 0x30, 0x00, 0x14, 0x30, 0x00, 0x2C},
+			parseBytes("28 00 00 28 00 06 2C 00 0C 30 00 14 30 00 2C"),
 			BasalRateSchedule{
 				{parseTD("00:00"), 1000},
 				{parseTD("03:00"), 1000},
@@ -72,7 +75,7 @@ func TestBasalRates(t *testing.T) {
 		},
 		{
 			22,
-			[]byte{0x00, 0x00, 0x00, 0x04, 0x00, 0x02, 0x08, 0x00, 0x04, 0x0C, 0x00, 0x06, 0x10, 0x00, 0x08, 0x14, 0x00, 0x0A, 0x18, 0x00, 0x0C, 0x1C, 0x00, 0x0E, 0x20, 0x00, 0x10, 0x24, 0x00, 0x12, 0x28, 0x00, 0x14, 0x2C, 0x00, 0x16, 0x30, 0x00, 0x18, 0x34, 0x00, 0x1A, 0x38, 0x00, 0x1C, 0x3C, 0x00, 0x1E, 0x40, 0x00, 0x20, 0x44, 0x00, 0x22, 0x48, 0x00, 0x24, 0x4C, 0x00, 0x26, 0x50, 0x00, 0x28, 0x54, 0x00, 0x2A, 0x58, 0x00, 0x2C, 0x5C, 0x00, 0x2E},
+			parseBytes("00 00 00 04 00 02 08 00 04 0C 00 06 10 00 08 14 00 0A 18 00 0C 1C 00 0E 20 00 10 24 00 12 28 00 14 2C 00 16 30 00 18 34 00 1A 38 00 1C 3C 00 1E 40 00 20 44 00 22 48 00 24 4C 00 26 50 00 28 54 00 2A 58 00 2C 5C 00 2E"),
 			BasalRateSchedule{
 				{parseTD("00:00"), 0},
 				{parseTD("01:00"), 100},
@@ -102,7 +105,7 @@ func TestBasalRates(t *testing.T) {
 		},
 		{
 			22,
-			[]byte{0x28, 0x00, 0x00, 0x40, 0x01, 0x08, 0x28, 0x00, 0x2C},
+			parseBytes("28 00 00 40 01 08 28 00 2C"),
 			BasalRateSchedule{
 				{parseTD("00:00"), 1000},
 				{parseTD("04:00"), 8000},

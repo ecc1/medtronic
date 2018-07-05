@@ -15,7 +15,7 @@ func TestInsulinSensitivities(t *testing.T) {
 	}{
 		{
 			"1_sens",
-			[]byte{0x00, 0x28},
+			parseBytes("00 28"),
 			MgPerDeciLiter,
 			InsulinSensitivitySchedule{
 				{parseTD("00:00"), 40, MgPerDeciLiter},
@@ -23,7 +23,7 @@ func TestInsulinSensitivities(t *testing.T) {
 		},
 		{
 			"8_sens",
-			[]byte{0x00, 0x14, 0x02, 0x19, 0x04, 0x1E, 0x06, 0x23, 0x08, 0x28, 0x0A, 0x2D, 0x0C, 0x32, 0x0E, 0x37, 0x00, 0x00, 0x00},
+			parseBytes("00 14 02 19 04 1E 06 23 08 28 0A 2D 0C 32 0E 37 00 00 00"),
 			MgPerDeciLiter,
 			InsulinSensitivitySchedule{
 				{parseTD("00:00"), 20, MgPerDeciLiter},

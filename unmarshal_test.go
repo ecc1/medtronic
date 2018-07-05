@@ -12,9 +12,9 @@ func TestTwoByteUint(t *testing.T) {
 		val uint16
 		rep []byte
 	}{
-		{0x1234, []byte{0x12, 0x34}},
-		{0, []byte{0x00, 0x00}},
-		{math.MaxUint16, []byte{0xFF, 0xFF}},
+		{0x1234, parseBytes("12 34")},
+		{0, parseBytes("00 00")},
+		{math.MaxUint16, parseBytes("FF FF")},
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("unmarshal_%d", c.val), func(t *testing.T) {
@@ -37,9 +37,9 @@ func TestTwoByteUintLE(t *testing.T) {
 		val uint16
 		rep []byte
 	}{
-		{0x1234, []byte{0x34, 0x12}},
-		{0, []byte{0x00, 0x00}},
-		{math.MaxUint16, []byte{0xFF, 0xFF}},
+		{0x1234, parseBytes("34 12")},
+		{0, parseBytes("00 00")},
+		{math.MaxUint16, parseBytes("FF FF")},
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("unmarshal_%d", c.val), func(t *testing.T) {
@@ -62,13 +62,13 @@ func TestTwoByteInt(t *testing.T) {
 		val int
 		rep []byte
 	}{
-		{0x1234, []byte{0x12, 0x34}},
-		{0, []byte{0x00, 0x00}},
-		{256, []byte{0x01, 0x00}},
-		{-1, []byte{0xFF, 0xFF}},
-		{-256, []byte{0xFF, 0x00}},
-		{math.MaxInt16, []byte{0x7F, 0xFF}},
-		{math.MinInt16, []byte{0x80, 0x00}},
+		{0x1234, parseBytes("12 34")},
+		{0, parseBytes("00 00")},
+		{256, parseBytes("01 00")},
+		{-1, parseBytes("FF FF")},
+		{-256, parseBytes("FF 00")},
+		{math.MaxInt16, parseBytes("7F FF")},
+		{math.MinInt16, parseBytes("80 00")},
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("%d", c.val), func(t *testing.T) {
@@ -85,13 +85,13 @@ func TestTwoByteIntLE(t *testing.T) {
 		val int
 		rep []byte
 	}{
-		{0x1234, []byte{0x34, 0x12}},
-		{0, []byte{0x00, 0x00}},
-		{256, []byte{0x00, 0x01}},
-		{-1, []byte{0xFF, 0xFF}},
-		{-256, []byte{0x00, 0xFF}},
-		{math.MaxInt16, []byte{0xFF, 0x7F}},
-		{math.MinInt16, []byte{0x00, 0x80}},
+		{0x1234, parseBytes("34 12")},
+		{0, parseBytes("00 00")},
+		{256, parseBytes("00 01")},
+		{-1, parseBytes("FF FF")},
+		{-256, parseBytes("00 FF")},
+		{math.MaxInt16, parseBytes("FF 7F")},
+		{math.MinInt16, parseBytes("00 80")},
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("%d", c.val), func(t *testing.T) {
@@ -108,10 +108,10 @@ func TestFourByteUint(t *testing.T) {
 		val uint32
 		rep []byte
 	}{
-		{0, []byte{0x00, 0x00, 0x00, 0x00}},
-		{1, []byte{0x00, 0x00, 0x00, 0x01}},
-		{0x12345678, []byte{0x12, 0x34, 0x56, 0x78}},
-		{math.MaxUint32, []byte{0xFF, 0xFF, 0xFF, 0xFF}},
+		{0, parseBytes("00 00 00 00")},
+		{1, parseBytes("00 00 00 01")},
+		{0x12345678, parseBytes("12 34 56 78")},
+		{math.MaxUint32, parseBytes("FF FF FF FF")},
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("unmarshal_%d", c.val), func(t *testing.T) {
@@ -134,13 +134,13 @@ func TestFourByteInt(t *testing.T) {
 		val int
 		rep []byte
 	}{
-		{0x12345678, []byte{0x12, 0x34, 0x56, 0x78}},
-		{0, []byte{0x00, 0x00, 0x00, 0x00}},
-		{-1, []byte{0xFF, 0xFF, 0xFF, 0xFF}},
-		{0x0000FFFF, []byte{0x00, 0x00, 0xFF, 0xFF}},
-		{-0x10000, []byte{0xFF, 0xFF, 0x00, 0x00}},
-		{math.MaxInt32, []byte{0x7F, 0xFF, 0xFF, 0xFF}},
-		{math.MinInt32, []byte{0x80, 0x00, 0x00, 0x00}},
+		{0x12345678, parseBytes("12 34 56 78")},
+		{0, parseBytes("00 00 00 00")},
+		{-1, parseBytes("FF FF FF FF")},
+		{0x0000FFFF, parseBytes("00 00 FF FF")},
+		{-0x10000, parseBytes("FF FF 00 00")},
+		{math.MaxInt32, parseBytes("7F FF FF FF")},
+		{math.MinInt32, parseBytes("80 00 00 00")},
 	}
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("%d", c.val), func(t *testing.T) {

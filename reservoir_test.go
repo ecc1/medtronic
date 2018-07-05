@@ -12,12 +12,12 @@ func TestReservoir(t *testing.T) {
 		i      Insulin
 	}{
 		{
-			[]byte{0x02, 0x05, 0x46},
+			parseBytes("02 05 46"),
 			22,
 			135000,
 		},
 		{
-			[]byte{0x04, 0x00, 0x00, 0x0C, 0xA3},
+			parseBytes("04 00 00 0C A3"),
 			23,
 			80875,
 		},

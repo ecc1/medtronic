@@ -17,7 +17,7 @@ func TestTempBasal(t *testing.T) {
 		b    TempBasalInfo
 	}{
 		{
-			[]byte{0x06, 0x00, 0x00, 0x00, 0x8C, 0x00, 0x1E},
+			parseBytes("06 00 00 00 8C 00 1E"),
 			TempBasalInfo{
 				Duration: 30 * time.Minute,
 				Type:     Absolute,
@@ -25,7 +25,7 @@ func TestTempBasal(t *testing.T) {
 			},
 		},
 		{
-			[]byte{0x06, 0x00, 0x00, 0x00, 0x37, 0x00, 0x17},
+			parseBytes("06 00 00 00 37 00 17"),
 			TempBasalInfo{
 				Duration: 23 * time.Minute,
 				Type:     Absolute,
@@ -33,7 +33,7 @@ func TestTempBasal(t *testing.T) {
 			},
 		},
 		{
-			[]byte{0x06, 0x00, 0x00, 0x05, 0x50, 0x00, 0x1E},
+			parseBytes("06 00 00 05 50 00 1E"),
 			TempBasalInfo{
 				Duration: 30 * time.Minute,
 				Type:     Absolute,

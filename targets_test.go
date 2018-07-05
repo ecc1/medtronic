@@ -16,7 +16,7 @@ func TestGlucoseTargets(t *testing.T) {
 	}{
 		{
 			"1_target",
-			[]byte{0x00, 0x50, 0x78},
+			parseBytes("00 50 78"),
 			MgPerDeciLiter,
 			22,
 			GlucoseTargetSchedule{
@@ -25,7 +25,7 @@ func TestGlucoseTargets(t *testing.T) {
 		},
 		{
 			"1_target_mmol",
-			[]byte{0x00, 0x2C, 0x43},
+			parseBytes("00 2C 43"),
 			MMolPerLiter,
 			22,
 			GlucoseTargetSchedule{
@@ -34,7 +34,7 @@ func TestGlucoseTargets(t *testing.T) {
 		},
 		{
 			"8_targets_x23",
-			[]byte{0x00, 0x64, 0x64, 0x02, 0x65, 0x65, 0x04, 0x66, 0x66, 0x06, 0x67, 0x67, 0x08, 0x68, 0x68, 0x0A, 0x69, 0x69, 0x0C, 0x6A, 0x6A, 0x0E, 0x6B, 0x6B, 0x00, 0x00, 0x00},
+			parseBytes("00 64 64 02 65 65 04 66 66 06 67 67 08 68 68 0A 69 69 0C 6A 6A 0E 6B 6B 00 00 00"),
 			MgPerDeciLiter,
 			23,
 			GlucoseTargetSchedule{
@@ -50,7 +50,7 @@ func TestGlucoseTargets(t *testing.T) {
 		},
 		{
 			"8_targets_x12",
-			[]byte{0x00, 0x64, 0x02, 0x65, 0x04, 0x66, 0x06, 0x67, 0x08, 0x68, 0x0A, 0x69, 0x0C, 0x6A, 0x0E, 0x6B, 0x00, 0x00},
+			parseBytes("00 64 02 65 04 66 06 67 08 68 0A 69 0C 6A 0E 6B 00 00"),
 			MgPerDeciLiter,
 			12,
 			GlucoseTargetSchedule{

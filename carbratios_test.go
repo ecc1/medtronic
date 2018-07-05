@@ -17,7 +17,7 @@ func TestCarbRatios(t *testing.T) {
 	}{
 		{
 			"2_carbratios",
-			[]byte{0x00, 0x06, 0x12, 0x08},
+			parseBytes("00 06 12 08"),
 			Grams,
 			22,
 			CarbRatioSchedule{
@@ -27,7 +27,7 @@ func TestCarbRatios(t *testing.T) {
 		},
 		{
 			"8_carbratios",
-			[]byte{0x00, 0x0A, 0x02, 0x0B, 0x04, 0x0C, 0x06, 0x0D, 0x08, 0x0E, 0x0A, 0x0F, 0x0C, 0x10, 0x0E, 0x11, 0x00, 0x00, 0x00, 0x00},
+			parseBytes("00 0A 02 0B 04 0C 06 0D 08 0E 0A 0F 0C 10 0E 11 00 00 00 00"),
 			Grams,
 			12,
 			CarbRatioSchedule{
@@ -43,7 +43,7 @@ func TestCarbRatios(t *testing.T) {
 		},
 		{
 			"12_carbratios",
-			[]byte{0x00, 0x05, 0x01, 0x06, 0x02, 0x07, 0x03, 0x08, 0x04, 0x09, 0x05, 0x0A, 0x06, 0x0B, 0x07, 0x0C, 0x00, 0x00},
+			parseBytes("00 05 01 06 02 07 03 08 04 09 05 0A 06 0B 07 0C 00 00"),
 			Grams,
 			22,
 			CarbRatioSchedule{

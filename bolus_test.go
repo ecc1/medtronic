@@ -2,6 +2,8 @@ package medtronic
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"testing"
 )
 
@@ -21,6 +23,7 @@ func TestEncodeBolus(t *testing.T) {
 		{54, 10125, 10100},
 		{54, 10175, 10100},
 	}
+	log.SetOutput(ioutil.Discard)
 	for _, c := range cases {
 		name := fmt.Sprintf("%d_%d", c.family, c.amount)
 		t.Run(name, func(t *testing.T) {
