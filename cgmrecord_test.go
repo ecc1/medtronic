@@ -59,7 +59,7 @@ func TestDecodeCGMRecord(t *testing.T) {
 		// github.com/ps2/rileylink_ios/MinimedKitTests/GlucoseEvents/
 		{parseBytes("0300"), CGMRecord{
 			Type:  CGMCal,
-			Value: "meter",
+			Value: "bgNow",
 		}},
 		{parseBytes("0301"), CGMRecord{
 			Type:  CGMCal,
@@ -99,12 +99,14 @@ func TestDecodeCGMRecord(t *testing.T) {
 			Type: CGMDataHigh,
 		}},
 		{parseBytes("0814b62810"), CGMRecord{
-			Type: CGMTimestamp,
-			Time: parseTime("2016-02-08T20:54"),
+			Type:  CGMTimestamp,
+			Time:  parseTime("2016-02-08T20:54"),
+			Value: "pageEnd",
 		}},
 		{parseBytes("088d9b5d0c"), CGMRecord{
-			Type: CGMTimestamp,
-			Time: parseTime("2012-10-29T13:27"),
+			Type:  CGMTimestamp,
+			Time:  parseTime("2012-10-29T13:27"),
+			Value: "gap",
 		}},
 		{parseBytes("0b0baf0a0e"), CGMRecord{
 			Type:  CGMStatus,
@@ -157,7 +159,7 @@ func TestDecodeCGMRecord(t *testing.T) {
 
 func DecodeOneRecord(t *testing.T, data []byte) (CGMRecord, error) {
 	reverseBytes(data)
-	h, err := DecodeCGMHistory(data)
+	h, _, err := DecodeCGMHistory(data, time.Time{})
 	var r CGMRecord
 	if len(h) != 1 {
 		t.Errorf("DecodeCGMHistory returned %d records", len(h))

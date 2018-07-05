@@ -16,9 +16,10 @@ func (pump *Pump) CGMHistory(since time.Time) CGMHistory {
 		return nil
 	}
 	var results CGMHistory
-	for page := m; page <= n && pump.Error() == nil; page++ {
+	var last time.Time
+	for page := n; page >= m && pump.Error() == nil; page-- {
 		data := pump.GlucosePage(page)
-		records, err := DecodeCGMHistory(data)
+		records, t, err := DecodeCGMHistory(data, last)
 		if err != nil {
 			pump.SetError(err)
 		}
@@ -27,6 +28,7 @@ func (pump *Pump) CGMHistory(since time.Time) CGMHistory {
 		if i < len(records) {
 			break
 		}
+		last = t
 	}
 	return results
 }

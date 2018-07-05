@@ -7,13 +7,13 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ecc1/medtronic"
 	"github.com/ecc1/nightscout"
 )
 
 var (
-	noTimes  = flag.Bool("notimes", false, "do not add times to glucose records")
 	jsonFlag = flag.Bool("j", false, "print records in JSON format")
 
 	timeBlank = strings.Repeat(" ", len(medtronic.UserTimeLayout))
@@ -32,14 +32,11 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		records, err := medtronic.DecodeCGMHistory(data)
+		records, _, err := medtronic.DecodeCGMHistory(data, time.Time{})
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 		}
 		history = append(history, records...)
-	}
-	if !*noTimes {
-		medtronic.AddCGMTimes(history)
 	}
 	if *jsonFlag {
 		fmt.Println(nightscout.JSON(history))
@@ -75,6 +72,9 @@ func printRecord(r medtronic.CGMRecord) {
 	fmt.Printf("%s %v", tStr, r.Type)
 	if r.Glucose != 0 {
 		fmt.Printf(" %3d", r.Glucose)
+	}
+	if r.Value != "" {
+		fmt.Printf(" %s", r.Value)
 	}
 	fmt.Println()
 }
