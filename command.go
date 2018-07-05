@@ -16,6 +16,7 @@ type Command byte
 const (
 	ack                  Command = 0x06
 	nak                  Command = 0x15
+	cgmWriteTimestamp    Command = 0x28
 	setBasalPatternA     Command = 0x30
 	setBasalPatternB     Command = 0x31
 	setClock             Command = 0x40
@@ -483,7 +484,7 @@ func (pump *Pump) unexpected(cmd Command, resp Command, data []byte) bool {
 	case resp:
 		return false
 	case ack:
-		if cmd == wakeup {
+		if cmd == cgmWriteTimestamp || cmd == wakeup {
 			return false
 		}
 		pump.BadResponse(cmd, data)

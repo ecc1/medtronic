@@ -9,10 +9,11 @@ import (
 )
 
 var (
-	glucosePage = flag.Int("g", -1, "read glucose history `page`")
-	isigPage    = flag.Int("i", -1, "read ISIG history `page`")
-	vcntrPage   = flag.Int("v", -1, "read vcntr history `page`")
-	calFactor   = flag.Bool("c", false, "read calibration factor")
+	glucosePage    = flag.Int("g", -1, "read glucose history `page`")
+	isigPage       = flag.Int("i", -1, "read ISIG history `page`")
+	vcntrPage      = flag.Int("v", -1, "read vcntr history `page`")
+	calFactor      = flag.Bool("c", false, "read calibration factor")
+	writeTimestamp = flag.Bool("w", false, "write timestamp")
 )
 
 func main() {
@@ -42,9 +43,16 @@ func main() {
 		fmt.Println(f)
 		return
 	}
-	m, n := pump.CGMPageRange()
+	if *writeTimestamp {
+		pump.CGMWriteTimestamp()
+		if pump.Error() != nil {
+			log.Fatal(pump.Error())
+		}
+		return
+	}
+	n := pump.CGMCurrentGlucosePage()
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
-	fmt.Printf("[%d, %d)\n", m, n)
+	fmt.Println(n)
 }
