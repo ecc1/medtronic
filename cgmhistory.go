@@ -7,12 +7,16 @@ import (
 
 // CGMHistory returns the CGM records since the specified time.
 func (pump *Pump) CGMHistory(since time.Time) CGMHistory {
-	i, j := pump.CGMPageRange()
+	n := pump.CGMCurrentGlucosePage()
+	m := n - MaxGlucosePages + 1
+	if m < 0 {
+		m = 0
+	}
 	if pump.Error() != nil {
 		return nil
 	}
 	var results CGMHistory
-	for page := i; page < j && pump.Error() == nil; page++ {
+	for page := m; page <= n && pump.Error() == nil; page++ {
 		data := pump.GlucosePage(page)
 		records, err := DecodeCGMHistory(data)
 		if err != nil {

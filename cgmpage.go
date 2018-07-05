@@ -1,5 +1,10 @@
 package medtronic
 
+const (
+	// MaxGlucosePages is the maximum number of glucose history pages.
+	MaxGlucosePages = 32
+)
+
 // GlucosePage downloads the given glucose page.
 func (pump *Pump) GlucosePage(page int) []byte {
 	return pump.Download(glucosePage, page)
@@ -29,19 +34,20 @@ func (pump *Pump) CalibrationFactor() int {
 
 }
 
-// CGMPageRange returns the CGM history page range.
-// A return value of (i, j) means that pages i through j-1 (inclusive) are valid.
-func (pump *Pump) CGMPageRange() (int, int) {
+// CGMCurrentGlucosePage returns the current CGM glucose page number.
+func (pump *Pump) CGMCurrentGlucosePage() int {
 	data := pump.Execute(cgmPageCount)
 	if pump.Error() != nil {
-		return 0, 0
+		return 0
 	}
 	if len(data) < 13 || data[0] != 12 {
 		pump.BadResponse(cgmPageCount, data)
-		return 0, 0
+		return 0
 	}
-	i := int(fourByteUint(data[1:5]))
-	j := int(data[6])
-	// ISIG range in data[8] is currently unused.
-	return i, j
+	return int(fourByteUint(data[1:5]))
+}
+
+// CGMWriteTimestamp writes a new sensor timestamp to the CGM history.
+func (pump *Pump) CGMWriteTimestamp() {
+	pump.Execute(cgmWriteTimestamp)
 }
