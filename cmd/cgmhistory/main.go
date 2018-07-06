@@ -13,7 +13,7 @@ import (
 var (
 	all       = flag.Bool("a", false, "get entire CGM history")
 	numHours  = flag.Int("n", 6, "number of `hours` of history to get")
-	nsFlag    = flag.Bool("e", false, "format as Nightscout entries")
+	nsFlag    = flag.Bool("ns", false, "format as Nightscout entries")
 	sinceFlag = flag.String("s", "", "get history since the specified `time` in RFC3339 format")
 )
 

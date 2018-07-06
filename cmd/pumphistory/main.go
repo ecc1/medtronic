@@ -13,7 +13,7 @@ import (
 var (
 	all       = flag.Bool("a", false, "get entire pump history")
 	numHours  = flag.Int("n", 6, "number of `hours` of history to get")
-	nsFlag    = flag.Bool("t", false, "format as Nightscout treatments")
+	nsFlag    = flag.Bool("ns", false, "format as Nightscout treatments")
 	sinceFlag = flag.String("s", "", "get history since the specified `time` in RFC3339 format")
 )
 
@@ -38,13 +38,13 @@ func main() {
 	defer pump.Close()
 	pump.Wakeup()
 	results := pump.History(cutoff)
-	if pump.Error() != nil {
-		log.Fatal(pump.Error())
-	}
 	if *nsFlag {
 		medtronic.ReverseHistory(results)
 		fmt.Println(nightscout.JSON(medtronic.Treatments(results)))
 	} else {
 		fmt.Println(nightscout.JSON(results))
+	}
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
 	}
 }
