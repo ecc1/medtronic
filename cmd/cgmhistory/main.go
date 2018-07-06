@@ -40,7 +40,7 @@ func main() {
 	results := pump.CGMHistory(cutoff)
 	if *nsFlag {
 		medtronic.ReverseCGMHistory(results)
-		fmt.Println(nightscout.JSON(medtronic.Entries(results)))
+		fmt.Println(nightscout.JSON(medtronic.NightscoutEntries(results)))
 	} else {
 		fmt.Println(nightscout.JSON(results))
 	}
