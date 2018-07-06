@@ -17,10 +17,19 @@ func (pump *Pump) CGMHistory(since time.Time) CGMHistory {
 	}
 	var results CGMHistory
 	var last time.Time
+	wroteTimestamp := false
 	for page := n; page >= m && pump.Error() == nil; page-- {
 		data := pump.GlucosePage(page)
 		records, t, err := DecodeCGMHistory(data, last)
 		if err != nil {
+			if err == ErrorNeedsTimestamp && page == n && !wroteTimestamp {
+				// This is only tried once, for the first page.
+				log.Printf("writing CGM timestamp for page %d and rescanning", page)
+				pump.CGMWriteTimestamp()
+				wroteTimestamp = true
+				page = n + 1
+				continue
+			}
 			pump.SetError(err)
 		}
 		i := findCGMSince(records, since)
