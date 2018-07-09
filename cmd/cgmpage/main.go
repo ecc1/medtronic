@@ -36,20 +36,32 @@ func main() {
 		return
 	}
 	if *calFactor {
-		f := pump.CalibrationFactor()
-		if pump.Error() != nil {
-			log.Fatal(pump.Error())
-		}
-		fmt.Println(f)
+		getCal(pump)
 		return
 	}
 	if *writeTimestamp {
-		pump.CGMWriteTimestamp()
-		if pump.Error() != nil {
-			log.Fatal(pump.Error())
-		}
+		writeTS(pump)
 		return
 	}
+	getCur(pump)
+}
+
+func getCal(pump *medtronic.Pump) {
+	f := pump.CalibrationFactor()
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
+	}
+	fmt.Println(f)
+}
+
+func writeTS(pump *medtronic.Pump) {
+	pump.CGMWriteTimestamp()
+	if pump.Error() != nil {
+		log.Fatal(pump.Error())
+	}
+}
+
+func getCur(pump *medtronic.Pump) {
 	n := pump.CGMCurrentGlucosePage()
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
