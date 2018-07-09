@@ -19,7 +19,7 @@ var (
 
 	meterAddress []byte
 
-	noResponse = errors.New("no response")
+	errNoResponse = errors.New("no response")
 )
 
 func usage() {
@@ -60,17 +60,17 @@ func main() {
 	for tries := 0; tries < pump.Retries(); tries++ {
 		pump.SetError(nil)
 		sendPacket(pump, p)
-		err := pump.Error()
+		err = pump.Error()
 		if err == nil {
 			break
 		}
-		if err != noResponse {
+		if err != errNoResponse {
 			log.Print(err)
 		}
 	}
 	err = pump.Error()
 	if err != nil {
-		if err == noResponse {
+		if err == errNoResponse {
 			log.Print(err)
 		}
 		os.Exit(1)
@@ -83,7 +83,7 @@ func sendPacket(pump *medtronic.Pump, p []byte) {
 		return
 	}
 	if len(response) == 0 {
-		pump.SetError(noResponse)
+		pump.SetError(errNoResponse)
 		return
 	}
 	data, err := packet.Decode(response)

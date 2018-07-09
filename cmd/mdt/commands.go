@@ -200,8 +200,7 @@ func sensitivities(pump *medtronic.Pump, _ Arguments) interface{} {
 }
 
 func setClock(pump *medtronic.Pump, args Arguments) interface{} {
-	var t time.Time
-	t = parseTime(args["time"].(string))
+	t := parseTime(args["time"].(string))
 	log.Printf("setting pump clock to %s", t.Format(medtronic.UserTimeLayout))
 	pump.SetClock(t)
 	return nil
