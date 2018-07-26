@@ -6,54 +6,73 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"testing"
 )
 
+const testDataDir = "testdata"
+
+type testCase struct {
+	testBase    string
+	modelNumber int
+	alternative int
+}
+
 func TestDecodeHistoryRecord(t *testing.T) {
-	cases := []struct {
-		jsonFile string
-		family   Family
-	}{
-		{"testdata/model512.json", 12},
-		{"testdata/model515.json", 15},
-		{"testdata/model522.json", 22},
-		{"testdata/model523-1.json", 23},
-		{"testdata/model523-2.json", 23},
-		{"testdata/ps2-522-1.json", 22},
-		{"testdata/ps2-522-2.json", 22},
-		{"testdata/ps2-523-1.json", 23},
-		{"testdata/ps2-523-2.json", 23},
-		{"testdata/ps2-523-3.json", 23},
-		{"testdata/ps2-523-4.json", 23},
-		{"testdata/ps2-523-5.json", 23},
-		{"testdata/ps2-523-6.json", 23},
-		{"testdata/ps2-551-1.json", 51},
-		{"testdata/ps2-551-2.json", 51},
-		{"testdata/ps2-551-3.json", 51},
-		{"testdata/ps2-551-4.json", 51},
-		{"testdata/ps2-554-1.json", 54},
-		{"testdata/ps2-554-2.json", 54},
-		{"testdata/ps2-554-3.json", 54},
-		{"testdata/ps2-554-4.json", 54},
-		{"testdata/ps2-554-5.json", 54},
-		{"testdata/pump-records-522.json", 22},
-		{"testdata/records-522.json", 22},
-		{"testdata/records-523.json", 23},
-		{"testdata/records-554.json", 54},
+	cases := []testCase{
+		{"model", 512, 0},
+		{"model", 515, 0},
+		{"model", 522, 0},
+		{"model", 523, 1},
+		{"model", 523, 2},
+		{"ps2-", 522, 1},
+		{"ps2-", 522, 2},
+		{"ps2-", 523, 1},
+		{"ps2-", 523, 2},
+		{"ps2-", 523, 3},
+		{"ps2-", 523, 4},
+		{"ps2-", 523, 5},
+		{"ps2-", 523, 6},
+		{"ps2-", 551, 1},
+		{"ps2-", 551, 2},
+		{"ps2-", 551, 3},
+		{"ps2-", 551, 4},
+		{"ps2-", 554, 1},
+		{"ps2-", 554, 2},
+		{"ps2-", 554, 3},
+		{"ps2-", 554, 4},
+		{"ps2-", 554, 5},
+		{"pump-records-", 522, 0},
+		{"records-", 522, 0},
+		{"records-", 523, 0},
+		{"records-", 554, 0},
 	}
 	for _, c := range cases {
-		t.Run(c.jsonFile, func(t *testing.T) {
-			records, err := decodeFromData(c.jsonFile, c.family)
+		testFile := testFileName(c)
+		t.Run(testFile, func(t *testing.T) {
+			jsonFile := testFile + ".json"
+			family := testPumpFamily(c)
+			records, err := decodeFromData(jsonFile, family)
 			if err != nil {
 				t.Error(err)
 				return
 			}
-			checkHistory(t, records, c.jsonFile)
+			checkHistory(t, records, jsonFile)
 		})
 	}
+}
+
+func testFileName(c testCase) string {
+	s := fmt.Sprintf("%s/%s%d", testDataDir, c.testBase, c.modelNumber)
+	if c.alternative != 0 {
+		s += fmt.Sprintf("-%d", c.alternative)
+	}
+	return s
+}
+
+func testPumpFamily(c testCase) Family {
+	return Family(c.modelNumber % 100)
 }
 
 func decodeFromData(file string, family Family) (History, error) {
@@ -89,37 +108,35 @@ func decodeFromData(file string, family Family) (History, error) {
 }
 
 func TestDecodeHistory(t *testing.T) {
-	cases := []struct {
-		pageFile string
-		jsonFile string
-		family   Family
-	}{
-		{"testdata/model512.data", "testdata/model512.json", 12},
-		{"testdata/model515.data", "testdata/model515.json", 15},
-		{"testdata/model522.data", "testdata/model522.json", 22},
-		{"testdata/model523-1.data", "testdata/model523-1.json", 23},
-		{"testdata/model523-2.data", "testdata/model523-2.json", 23},
-		{"testdata/ps2-522-1.data", "testdata/ps2-522-1.json", 22},
-		{"testdata/ps2-522-2.data", "testdata/ps2-522-2.json", 22},
-		{"testdata/ps2-523-1.data", "testdata/ps2-523-1.json", 23},
-		{"testdata/ps2-523-2.data", "testdata/ps2-523-2.json", 23},
-		{"testdata/ps2-523-3.data", "testdata/ps2-523-3.json", 23},
-		{"testdata/ps2-523-4.data", "testdata/ps2-523-4.json", 23},
-		{"testdata/ps2-523-5.data", "testdata/ps2-523-5.json", 23},
-		{"testdata/ps2-523-6.data", "testdata/ps2-523-6.json", 23},
-		{"testdata/ps2-551-1.data", "testdata/ps2-551-1.json", 51},
-		{"testdata/ps2-551-2.data", "testdata/ps2-551-2.json", 51},
-		{"testdata/ps2-551-3.data", "testdata/ps2-551-3.json", 51},
-		{"testdata/ps2-551-4.data", "testdata/ps2-551-4.json", 51},
-		{"testdata/ps2-554-1.data", "testdata/ps2-554-1.json", 54},
-		{"testdata/ps2-554-2.data", "testdata/ps2-554-2.json", 54},
-		{"testdata/ps2-554-3.data", "testdata/ps2-554-3.json", 54},
-		{"testdata/ps2-554-4.data", "testdata/ps2-554-4.json", 54},
-		{"testdata/ps2-554-5.data", "testdata/ps2-554-5.json", 54},
+	cases := []testCase{
+		{"model", 512, 0},
+		{"model", 515, 0},
+		{"model", 522, 0},
+		{"model", 523, 1},
+		{"model", 523, 2},
+		{"ps2-", 522, 1},
+		{"ps2-", 522, 2},
+		{"ps2-", 523, 1},
+		{"ps2-", 523, 2},
+		{"ps2-", 523, 3},
+		{"ps2-", 523, 4},
+		{"ps2-", 523, 5},
+		{"ps2-", 523, 6},
+		{"ps2-", 551, 1},
+		{"ps2-", 551, 2},
+		{"ps2-", 551, 3},
+		{"ps2-", 551, 4},
+		{"ps2-", 554, 1},
+		{"ps2-", 554, 2},
+		{"ps2-", 554, 3},
+		{"ps2-", 554, 4},
+		{"ps2-", 554, 5},
 	}
 	for _, c := range cases {
-		t.Run(c.pageFile, func(t *testing.T) {
-			f, err := os.Open(c.pageFile)
+		testFile := testFileName(c)
+		t.Run(testFile, func(t *testing.T) {
+			family := testPumpFamily(c)
+			f, err := os.Open(testFile + ".data")
 			if err != nil {
 				t.Error(err)
 				return
@@ -130,12 +147,12 @@ func TestDecodeHistory(t *testing.T) {
 				t.Error(err)
 				return
 			}
-			decoded, err := DecodeHistory(data, c.family)
+			decoded, err := DecodeHistory(data, family)
 			if err != nil {
-				t.Errorf("DecodeHistory(% X, %d) returned %v", data, c.family, err)
+				t.Errorf("DecodeHistory(% X, %d) returned %v", data, family, err)
 				return
 			}
-			checkHistory(t, decoded, c.jsonFile)
+			checkHistory(t, decoded, testFile+".json")
 		})
 	}
 }
@@ -204,11 +221,11 @@ func compareJSON(data interface{}, jsonFile string) (bool, string) {
 func canonicalJSON(file string) string {
 	canon, err := exec.Command("jq", "-S", ".", file).Output()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	tmpfile, err := ioutil.TempFile("", "json")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	_, _ = tmpfile.Write(canon)
 	_ = tmpfile.Close()
@@ -217,21 +234,24 @@ func canonicalJSON(file string) string {
 
 func TestTreatments(t *testing.T) {
 	cases := []struct {
-		recordFile    string
-		treatmentFile string
-		family        Family
+		records    testCase
+		treatments testCase
 	}{
-		{"testdata/pump-records-522.json", "testdata/pump-treatments-522.json", 22},
+		{testCase{"pump-records-", 522, 0}, testCase{"pump-treatments-", 522, 0}},
 	}
 	for _, c := range cases {
-		t.Run(c.recordFile, func(t *testing.T) {
-			records, err := decodeFromData(c.recordFile, c.family)
+		testFile := testFileName(c.records)
+		t.Run(testFile, func(t *testing.T) {
+			recordFile := testFile + ".json"
+			family := testPumpFamily(c.records)
+			records, err := decodeFromData(recordFile, family)
 			if err != nil {
 				t.Error(err)
 				return
 			}
 			treatments := Treatments(records)
-			eq, msg := compareJSON(treatments, c.treatmentFile)
+			treatmentFile := testFileName(c.treatments) + ".json"
+			eq, msg := compareJSON(treatments, treatmentFile)
 			if !eq {
 				t.Errorf("JSON is different:\n%s\n", msg)
 			}
