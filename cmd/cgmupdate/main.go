@@ -158,7 +158,7 @@ func discardIncomplete(entries Entries) Entries {
 		return entries
 	}
 	e := entries[0]
-	if e.Type == nightscout.SGVType && (e.SGV == 0 || e.Unfiltered == 0) {
+	if e.Type == nightscout.SGVType && (e.SGV == 0) {
 		return entries[1:]
 	}
 	return entries
