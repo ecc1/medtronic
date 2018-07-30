@@ -104,7 +104,7 @@ func getCGMInfo() {
 		log.Fatal(pump.Error())
 	}
 	log.Printf("%d CGM records", len(cgmRecords))
-	newEntries = discardIncomplete(medtronic.NightscoutEntries(cgmRecords))
+	newEntries = medtronic.NightscoutEntries(cgmRecords)
 	describeEntries(newEntries, "Nightscout")
 }
 
@@ -148,24 +148,6 @@ func uploadEntries() {
 			return
 		}
 	}
-}
-
-// If the most recent glucose entry is incomplete, discard it.
-// This can happen if the loop runs at the same time the sensor
-// transmits a new reading, or if the sensor is warming up. If we
-// simply wait until next time, both EGV and sensor records might be
-// available.  If the sensor is warming up, there still won't be a
-// matching EGV record, but the raw-only entry will be uploaded
-// because it's no longer the most recent.
-func discardIncomplete(entries Entries) Entries {
-	if len(entries) == 0 {
-		return entries
-	}
-	e := entries[0]
-	if e.Type == nightscout.SGVType && (e.SGV == 0 || e.Unfiltered == 0) {
-		return entries[1:]
-	}
-	return entries
 }
 
 func checkCGMClock() time.Time {
