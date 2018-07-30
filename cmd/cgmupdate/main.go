@@ -42,6 +42,7 @@ var (
 	newEntries Entries
 
 	somethingFailed = false
+	uploadFailed = false
 )
 
 func main() {
@@ -67,6 +68,8 @@ func main() {
 	}
 	if somethingFailed {
 		os.Exit(1)
+	} else if uploadFailed {
+		os.Exit(2)
 	}
 }
 
@@ -124,7 +127,7 @@ func uploadEntries() {
 	gaps, err := nightscout.Gaps(cgmEpoch, gapDuration)
 	if err != nil {
 		log.Print(err)
-		somethingFailed = true
+		uploadFailed = true
 		return
 	}
 	if *verboseFlag {
@@ -140,7 +143,7 @@ func uploadEntries() {
 		err := nightscout.Upload("POST", "entries", e)
 		if err != nil {
 			log.Print(err)
-			somethingFailed = true
+			uploadFailed = true
 			return
 		}
 	}
