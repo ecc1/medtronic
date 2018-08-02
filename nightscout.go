@@ -189,24 +189,35 @@ func (sched GlucoseTargetSchedule) NightscoutSchedule() (nightscout.Schedule, ni
 	return low, high
 }
 
-// NightscoutEntries converts CGM history records
+// NightscoutEntries converts certain CGM history records
 // into records that can be uploaded as Nightscout entries.
-// Currently only BG records are converted.
+// The nightscout.Trend calculation assumes that
+// the records are in reverse chronological order.
 func NightscoutEntries(records CGMHistory) nightscout.Entries {
 	var entries nightscout.Entries
 	for _, r := range records {
-		if r.Type != CGMGlucose {
+		e := nightscout.Entry{
+			Date:       nightscout.Date(r.Time),
+			DateString: r.Time.Format(nightscout.DateStringLayout),
+			Device:     nightscout.Device(),
+		}
+		switch r.Type {
+		case CGMGlucose:
+			e.Type = nightscout.SGVType
+			e.SGV = r.Glucose
+		case CGMCalBG:
+			e.Type = nightscout.MBGType
+			e.MBG = r.Glucose
+		default:
 			continue
 		}
-		t := r.Time
-		e := nightscout.Entry{
-			Type:       nightscout.SGVType,
-			Date:       nightscout.Date(t),
-			DateString: t.Format(nightscout.DateStringLayout),
-			Device:     nightscout.Device(),
-			SGV:        r.Glucose,
-		}
 		entries = append(entries, e)
+	}
+	for i, e := range entries {
+		if e.Type != nightscout.SGVType {
+			continue
+		}
+		entries[i].Direction = nightscout.Trend(entries[i:])
 	}
 	return entries
 }
