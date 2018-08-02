@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	jsonFlag = flag.Bool("j", false, "print records in JSON format")
+	verbose = flag.Bool("v", false, "print record details")
+	nsFlag  = flag.Bool("t", false, "format as Nightscout treatments")
 
 	timeBlank = strings.Repeat(" ", len(medtronic.UserTimeLayout))
 )
@@ -38,8 +39,10 @@ func main() {
 		}
 		history = append(history, records...)
 	}
-	if *jsonFlag {
+	if *verbose {
 		fmt.Println(nightscout.JSON(history))
+	} else if *nsFlag {
+		fmt.Println(nightscout.JSON(medtronic.NightscoutEntries(history)))
 	} else {
 		for _, r := range history {
 			printRecord(r)
