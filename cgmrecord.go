@@ -24,7 +24,7 @@ const (
 	CGMStatus        CGMRecordType = 0x0B
 	CGMTimeChange    CGMRecordType = 0x0C
 	CGMSync          CGMRecordType = 0x0D
-	CGMCalBGForGH    CGMRecordType = 0x0E
+	CGMCalBG         CGMRecordType = 0x0E
 	CGMCalFactor     CGMRecordType = 0x0F
 	CGMEvent10       CGMRecordType = 0x10
 	CGMEvent13       CGMRecordType = 0x13
@@ -68,7 +68,7 @@ var cgmDecodeInfo = map[CGMRecordType]decodeInfo{
 	CGMStatus:        {5, decodeCGMStatus},
 	CGMTimeChange:    {5, nil},
 	CGMSync:          {5, decodeCGMSync},
-	CGMCalBGForGH:    {6, decodeCGMCalBGForGH},
+	CGMCalBG:         {6, decodeCGMCalBG},
 	CGMCalFactor:     {7, nil},
 	CGMEvent10:       {8, nil},
 	CGMGlucose:       {1, decodeCGMGlucose},
@@ -145,7 +145,7 @@ func decodeCGMSync(r *CGMRecord) {
 	}
 }
 
-func decodeCGMCalBGForGH(r *CGMRecord) {
+func decodeCGMCalBG(r *CGMRecord) {
 	r.Glucose = int(r.Data[5])
 }
 

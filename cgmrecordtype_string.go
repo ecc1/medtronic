@@ -6,14 +6,14 @@ import "strconv"
 
 const (
 	_CGMRecordType_name_0 = "CGMDataEndCGMWeakSignalCGMCalCGMPacketCGMErrorCGMDataLowCGMDataHighCGMTimestamp"
-	_CGMRecordType_name_1 = "CGMBatteryChangeCGMStatusCGMTimeChangeCGMSyncCGMCalBGForGHCGMCalFactorCGMEvent10"
+	_CGMRecordType_name_1 = "CGMBatteryChangeCGMStatusCGMTimeChangeCGMSyncCGMCalBGCGMCalFactorCGMEvent10"
 	_CGMRecordType_name_2 = "CGMEvent13"
 	_CGMRecordType_name_3 = "CGMGlucose"
 )
 
 var (
 	_CGMRecordType_index_0 = [...]uint8{0, 10, 23, 29, 38, 46, 56, 67, 79}
-	_CGMRecordType_index_1 = [...]uint8{0, 16, 25, 38, 45, 58, 70, 80}
+	_CGMRecordType_index_1 = [...]uint8{0, 16, 25, 38, 45, 53, 65, 75}
 	_CGMRecordType_index_2 = [...]uint8{0, 10}
 	_CGMRecordType_index_3 = [...]uint8{0, 10}
 )

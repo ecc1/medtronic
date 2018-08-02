@@ -81,7 +81,7 @@ func TestDecodeCGMRecord(t *testing.T) {
 			Time: parseTime("2014-03-30T10:18"),
 		}},
 		{parseBytes("0e4f5b138fa0"), CGMRecord{
-			Type:    CGMCalBGForGH,
+			Type:    CGMCalBG,
 			Time:    parseTime("2015-05-19T15:27"),
 			Glucose: 160,
 		}},
