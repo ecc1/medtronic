@@ -59,16 +59,31 @@ def duration_to_minutes:
       unabsorbed_insulin_total: .Info.Unabsorbed,
       bolus_estimate: .Info.Bolus
     }
+  elif .Type == "InsulinMarker" then
+    {
+      _type: "JournalEntryInsulinMarker",
+      amount: .Info
+    }
+  elif .Type == "MealMarker" then
+    {
+      _type: "JournalEntryMealMarker",
+      carb_input: .Info.Carbs
+    }
   elif .Type == "Prime" then
     {
       amount: .Info.Manual,
       fixed: .Info.Fixed,
-      type: (if .Info.Fixed == 0 then "manual" else "fixed" end),
+      type: (if .Info.Fixed == 0 then "manual" else "fixed" end)
+    }
+  elif .Type == "BGCapture" then
+    {
+      _type: "CalBGForPH",
+      amount: .Info.Glucose
     }
   elif .Type == "BGReceived" then
     {
-      glucose: .Info.Glucose,
-      meterID: .Info.MeterID
+      link: .Info.MeterID,
+      amount: .Info.Glucose
     }
   elif .Type == "SuspendPump" then
     {
