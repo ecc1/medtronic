@@ -34,13 +34,10 @@ func (pump *Pump) History(since time.Time) History {
 // or len(records) if all the records occur more recently.
 func findSince(records History, cutoff time.Time) int {
 	for i, r := range records {
-		// Don't use DailyTotal timestamps to decide when to stop,
-		// because they appear out of order (at the end of the day).
 		switch r.Type() {
-		case DailyTotal:
-		case DailyTotal515:
-		case DailyTotal522:
-		case DailyTotal523:
+		case DailyTotal, DailyTotal515, DailyTotal522, DailyTotal523:
+			// Don't use DailyTotal timestamps to decide when to stop,
+			// because they appear out of order (at the end of the day).
 		default:
 			t := r.Time
 			if !t.IsZero() && !t.After(cutoff) {
