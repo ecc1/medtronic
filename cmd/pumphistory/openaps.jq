@@ -25,7 +25,8 @@ def duration_to_minutes:
   # and the type, which is the same as the decocare type in many cases.
   {
     timestamp: .Time,
-    _type: .Type
+    _type: .Type,
+    id: .Data
   } +
   # Add type-specific fields.
   if .Type == "TempBasalDuration" then

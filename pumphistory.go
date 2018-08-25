@@ -1,10 +1,49 @@
 package medtronic
 
 import (
+	"bytes"
+	"encoding/base64"
 	"log"
 	"time"
 )
 
+// History returns the history records until a specified record id. If the record id 
+// is not found, found will be false, and the result will contain the entire pump history.
+func (pump *Pump) HistoryFrom(fromId []byte) (bool, History) {
+	count := pump.HistoryPageCount()
+	if pump.Error() != nil {
+		return false, nil
+	}
+	family := pump.Family()
+	var results History
+	found := false
+	for page := 0; page < count && pump.Error() == nil; page++ {
+		data := pump.HistoryPage(page)
+		records, err := DecodeHistory(data, family)
+		if err != nil {
+			pump.SetError(err)
+		}
+		i := findFromId(records, fromId)
+		results = append(results, records[:i]...)
+		if i < len(records) {
+			found = true
+			break
+		}
+	}
+	return found, results
+}
+
+// findFromId finds the first record that did not occur after the given record id and returns its index,
+// or len(records) if no records match the given record id
+func findFromId(records History, fromId []byte) int {
+	for i, r := range records {
+		if fromId != nil && bytes.Equal(r.Data, fromId) {
+			log.Printf("stopping pump history scan at %s", base64.StdEncoding.EncodeToString(r.Data))
+			return i
+		}
+	}
+	return len(records)
+}
 // History returns the history records since the specified time.
 // Note that the results may include records with a zero timestamp or
 // an earlier timestamp than the cutoff (in the case of DailyTotal records).
