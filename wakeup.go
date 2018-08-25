@@ -15,7 +15,7 @@ const (
 
 // Wakeup wakes up the pump.
 // It first attempts a model command, which will succeed quickly if
-// the pump is already awake.  If that times out, it will repeatedly
+// the pump is already awake. If that times out, it will repeatedly
 // send wakeup commands.
 func (pump *Pump) Wakeup() {
 	pump.Model()

@@ -52,7 +52,7 @@ func (pump *Pump) cacheFamily(model string) {
 }
 
 // Family returns 22 for 522/722 pumps, 23 for 523/723 pumps, etc.,
-// and returns -1 for an unrecognized model.  It calls Model once and
+// and returns -1 for an unrecognized model. It calls Model once and
 // caches the result.
 func (pump *Pump) Family() Family {
 	if pump.family == 0 {
