@@ -2,16 +2,9 @@ package medtronic
 
 import (
 	"fmt"
-	"os"
-	"strings"
 	"testing"
 	"time"
 )
-
-// Force timezone to match test data.
-func init() {
-	os.Setenv("TZ", "America/New_York")
-}
 
 func TestTimeOfDay(t *testing.T) {
 	cases := []struct {
@@ -147,31 +140,4 @@ func TestDecodeDate(t *testing.T) {
 			}
 		})
 	}
-}
-
-var layouts = []string{
-	"2006-01-02T15:04:05.999999999",
-	"2006-01-02T15:04",
-}
-
-func parseTime(s string) time.Time {
-	var t time.Time
-	var err error
-	for _, layout := range layouts {
-		t, err = time.ParseInLocation(layout, s, time.Local)
-		if err == nil {
-			return t
-		}
-	}
-	panic(err)
-}
-
-func parseBytes(hex string) []byte {
-	var data []byte
-	r := strings.NewReader(hex)
-	data, err := readBytes(r)
-	if err != nil {
-		panic(err)
-	}
-	return data
 }
