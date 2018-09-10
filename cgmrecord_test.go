@@ -93,10 +93,12 @@ func TestDecodeCGMRecord(t *testing.T) {
 			Type: CGMPacket,
 		}},
 		{parseBytes("06"), CGMRecord{
-			Type: CGMDataLow,
+			Type:    CGMDataLow,
+			Glucose: 40,
 		}},
 		{parseBytes("07ff"), CGMRecord{
-			Type: CGMDataHigh,
+			Type:    CGMDataHigh,
+			Glucose: 400,
 		}},
 		{parseBytes("0814b62810"), CGMRecord{
 			Type:  CGMTimestamp,

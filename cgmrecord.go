@@ -55,14 +55,16 @@ type (
 	}
 )
 
-// 1-byte records containing just a type code need not be specified here.
+// 1-byte records containing just a type code need not be specified here
+// unless additional decoding logic is required.
 // Timestamp decoding is done whenever the record is at least 5 bytes long,
 // so there is no need to include that in the decoder.
 var cgmDecodeInfo = map[CGMRecordType]decodeInfo{
 	CGMCal:           {2, decodeCGMCal},
 	CGMPacket:        {2, nil},
 	CGMError:         {2, nil},
-	CGMDataHigh:      {2, nil},
+	CGMDataLow:       {1, decodeCGMDataLow},
+	CGMDataHigh:      {2, decodeCGMDataHigh},
 	CGMTimestamp:     {5, decodeCGMTimestamp},
 	CGMBatteryChange: {5, nil},
 	CGMStatus:        {5, decodeCGMStatus},
@@ -106,6 +108,14 @@ func decodeCGMCal(r *CGMRecord) {
 	default:
 		r.Value = "unknown"
 	}
+}
+
+func decodeCGMDataLow(r *CGMRecord) {
+	r.Glucose = 40
+}
+
+func decodeCGMDataHigh(r *CGMRecord) {
+	r.Glucose = 400
 }
 
 func decodeCGMTimestamp(r *CGMRecord) {
