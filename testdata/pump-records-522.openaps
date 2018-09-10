@@ -1,0 +1,613 @@
+[
+  {
+    "timestamp": "2017-05-11T16:35:10-04:00",
+    "_type": "TempBasal",
+    "id": "M2JKYxBLEQA=",
+    "temp": "absolute",
+    "rate": 2.45
+  },
+  {
+    "timestamp": "2017-05-11T16:35:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKYxBLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T16:40:10-04:00",
+    "_type": "TempBasal",
+    "id": "M2tKaBBLEQA=",
+    "temp": "absolute",
+    "rate": 2.675
+  },
+  {
+    "timestamp": "2017-05-11T16:40:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKaBBLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T16:45:10-04:00",
+    "_type": "TempBasal",
+    "id": "MwBKbRBLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T16:45:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKbRBLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T16:55:10-04:00",
+    "_type": "TempBasal",
+    "id": "Mw5KdxBLEQA=",
+    "temp": "absolute",
+    "rate": 0.35
+  },
+  {
+    "timestamp": "2017-05-11T16:55:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKdxBLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:00:18-04:00",
+    "_type": "TempBasal",
+    "id": "M4xSQBFLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T17:00:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSQBFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:05:25-04:00",
+    "_type": "TempBasal",
+    "id": "MzBZRRFLEQA=",
+    "temp": "absolute",
+    "rate": 1.2
+  },
+  {
+    "timestamp": "2017-05-11T17:05:25-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFZRRFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:10:18-04:00",
+    "_type": "TempBasal",
+    "id": "M4xSShFLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T17:10:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSShFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:30:17-04:00",
+    "_type": "TempBasal",
+    "id": "MwBRXhFLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T17:30:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRXhFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:40:10-04:00",
+    "_type": "TempBasal",
+    "id": "M4xKaBFLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T17:40:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKaBFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:50:10-04:00",
+    "_type": "TempBasal",
+    "id": "M3JKchFLEQA=",
+    "temp": "absolute",
+    "rate": 2.85
+  },
+  {
+    "timestamp": "2017-05-11T17:50:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKchFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T17:55:10-04:00",
+    "_type": "TempBasal",
+    "id": "M4xKdxFLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T17:55:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKdxFLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:10:10-04:00",
+    "_type": "TempBasal",
+    "id": "M4tKShJLEQA=",
+    "temp": "absolute",
+    "rate": 3.475
+  },
+  {
+    "timestamp": "2017-05-11T18:10:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKShJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:15:10-04:00",
+    "_type": "TempBasal",
+    "id": "M4xKTxJLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T18:15:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKTxJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:20:10-04:00",
+    "_type": "TempBasal",
+    "id": "M4JKVBJLEQA=",
+    "temp": "absolute",
+    "rate": 3.25
+  },
+  {
+    "timestamp": "2017-05-11T18:20:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKVBJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:25:10-04:00",
+    "_type": "TempBasal",
+    "id": "M3hKWRJLEQA=",
+    "temp": "absolute",
+    "rate": 3
+  },
+  {
+    "timestamp": "2017-05-11T18:25:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKWRJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:30:10-04:00",
+    "_type": "TempBasal",
+    "id": "M0NKXhJLEQA=",
+    "temp": "absolute",
+    "rate": 1.675
+  },
+  {
+    "timestamp": "2017-05-11T18:30:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKXhJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:35:10-04:00",
+    "_type": "TempBasal",
+    "id": "Mx5KYxJLEQA=",
+    "temp": "absolute",
+    "rate": 0.75
+  },
+  {
+    "timestamp": "2017-05-11T18:35:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKYxJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:40:02-04:00",
+    "_type": "TempBasal",
+    "id": "MzlCaBJLEQA=",
+    "temp": "absolute",
+    "rate": 1.425
+  },
+  {
+    "timestamp": "2017-05-11T18:40:02-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFCaBJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:45:02-04:00",
+    "_type": "TempBasal",
+    "id": "MwBCbRJLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T18:45:02-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFCbRJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:50:02-04:00",
+    "_type": "TempBasal",
+    "id": "MwVCchJLEQA=",
+    "temp": "absolute",
+    "rate": 0.125
+  },
+  {
+    "timestamp": "2017-05-11T18:50:02-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFCchJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T18:55:03-04:00",
+    "_type": "TempBasal",
+    "id": "M4xDdxJLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T18:55:03-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFDdxJLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:05:17-04:00",
+    "_type": "TempBasal",
+    "id": "M3FRRRNLEQA=",
+    "temp": "absolute",
+    "rate": 2.825
+  },
+  {
+    "timestamp": "2017-05-11T19:05:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRRRNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:10:17-04:00",
+    "_type": "TempBasal",
+    "id": "MwBRShNLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T19:10:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRShNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:15:18-04:00",
+    "_type": "TempBasal",
+    "id": "MxNSTxNLEQA=",
+    "temp": "absolute",
+    "rate": 0.475
+  },
+  {
+    "timestamp": "2017-05-11T19:15:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSTxNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:20:18-04:00",
+    "_type": "TempBasal",
+    "id": "MwRSVBNLEQA=",
+    "temp": "absolute",
+    "rate": 0.1
+  },
+  {
+    "timestamp": "2017-05-11T19:20:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSVBNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:25:18-04:00",
+    "_type": "TempBasal",
+    "id": "MwBSWRNLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T19:25:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSWRNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:30:18-04:00",
+    "_type": "TempBasal",
+    "id": "MxFSXhNLEQA=",
+    "temp": "absolute",
+    "rate": 0.425
+  },
+  {
+    "timestamp": "2017-05-11T19:30:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSXhNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:35:17-04:00",
+    "_type": "TempBasal",
+    "id": "MypRYxNLEQA=",
+    "temp": "absolute",
+    "rate": 1.05
+  },
+  {
+    "timestamp": "2017-05-11T19:35:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRYxNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:40:17-04:00",
+    "_type": "TempBasal",
+    "id": "MwBRaBNLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T19:40:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRaBNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:45:18-04:00",
+    "_type": "TempBasal",
+    "id": "MwtSbRNLEQA=",
+    "temp": "absolute",
+    "rate": 0.275
+  },
+  {
+    "timestamp": "2017-05-11T19:45:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSbRNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:50:18-04:00",
+    "_type": "TempBasal",
+    "id": "MzZSchNLEQA=",
+    "temp": "absolute",
+    "rate": 1.35
+  },
+  {
+    "timestamp": "2017-05-11T19:50:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSchNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T19:55:17-04:00",
+    "_type": "TempBasal",
+    "id": "MwVRdxNLEQA=",
+    "temp": "absolute",
+    "rate": 0.125
+  },
+  {
+    "timestamp": "2017-05-11T19:55:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRdxNLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:00:10-04:00",
+    "_type": "TempBasal",
+    "id": "MwBKQBRLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T20:00:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKQBRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:25:12-04:00",
+    "_type": "TempBasal",
+    "id": "Mw1MWRRLEQA=",
+    "temp": "absolute",
+    "rate": 0.325
+  },
+  {
+    "timestamp": "2017-05-11T20:25:12-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFMWRRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:30:10-04:00",
+    "_type": "TempBasal",
+    "id": "Mx9KXhRLEQA=",
+    "temp": "absolute",
+    "rate": 0.775
+  },
+  {
+    "timestamp": "2017-05-11T20:30:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKXhRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:35:09-04:00",
+    "_type": "TempBasal",
+    "id": "MwlJYxRLEQA=",
+    "temp": "absolute",
+    "rate": 0.225
+  },
+  {
+    "timestamp": "2017-05-11T20:35:09-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFJYxRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:40:10-04:00",
+    "_type": "TempBasal",
+    "id": "MwBKaBRLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T20:40:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKaBRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:50:10-04:00",
+    "_type": "TempBasal",
+    "id": "M0dKchRLEQA=",
+    "temp": "absolute",
+    "rate": 1.775
+  },
+  {
+    "timestamp": "2017-05-11T20:50:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKchRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T20:55:09-04:00",
+    "_type": "TempBasal",
+    "id": "M11JdxRLEQA=",
+    "temp": "absolute",
+    "rate": 2.325
+  },
+  {
+    "timestamp": "2017-05-11T20:55:09-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFJdxRLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:00:11-04:00",
+    "_type": "TempBasal",
+    "id": "MwBLQBVLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T21:00:11-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFLQBVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:15:17-04:00",
+    "_type": "TempBasal",
+    "id": "Mz1RTxVLEQA=",
+    "temp": "absolute",
+    "rate": 1.525
+  },
+  {
+    "timestamp": "2017-05-11T21:15:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRTxVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:20:17-04:00",
+    "_type": "TempBasal",
+    "id": "MwZRVBVLEQA=",
+    "temp": "absolute",
+    "rate": 0.15
+  },
+  {
+    "timestamp": "2017-05-11T21:20:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRVBVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:25:17-04:00",
+    "_type": "TempBasal",
+    "id": "MzFRWRVLEQA=",
+    "temp": "absolute",
+    "rate": 1.225
+  },
+  {
+    "timestamp": "2017-05-11T21:25:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRWRVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:30:17-04:00",
+    "_type": "TempBasal",
+    "id": "MxFRXhVLEQA=",
+    "temp": "absolute",
+    "rate": 0.425
+  },
+  {
+    "timestamp": "2017-05-11T21:30:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRXhVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:35:18-04:00",
+    "_type": "TempBasal",
+    "id": "MwBSYxVLEQA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2017-05-11T21:35:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFSYxVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T21:50:17-04:00",
+    "_type": "TempBasal",
+    "id": "M4xRchVLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T21:50:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFRchVLEQ==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2017-05-11T22:15:10-04:00",
+    "_type": "TempBasal",
+    "id": "M4xKTxZLEQA=",
+    "temp": "absolute",
+    "rate": 3.5
+  },
+  {
+    "timestamp": "2017-05-11T22:15:10-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgFKTxZLEQ==",
+    "duration (min)": 30
+  }
+]

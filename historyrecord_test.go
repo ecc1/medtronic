@@ -4,7 +4,9 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"os/exec"
 	"testing"
 )
 
@@ -189,6 +191,60 @@ func TestTreatments(t *testing.T) {
 			treatments := Treatments(records)
 			treatmentFile := testFileName(c.treatments) + ".json"
 			eq, msg := compareDataToJSON(treatments, treatmentFile)
+			if !eq {
+				t.Errorf("JSON is different:\n%s\n", msg)
+			}
+		})
+	}
+}
+
+const jqFilter = "cmd/pumphistory/openaps.jq"
+
+func TestJQFilter(t *testing.T) {
+	cases := []testCase{
+		{"model", 512, 0},
+		{"model", 515, 0},
+		{"model", 522, 0},
+		{"model", 523, 1},
+		{"model", 523, 2},
+		{"ps2-", 522, 1},
+		{"ps2-", 522, 2},
+		{"ps2-", 523, 1},
+		{"ps2-", 523, 2},
+		{"ps2-", 523, 3},
+		{"ps2-", 523, 4},
+		{"ps2-", 523, 5},
+		{"ps2-", 523, 6},
+		{"ps2-", 551, 1},
+		{"ps2-", 551, 2},
+		{"ps2-", 551, 3},
+		{"ps2-", 551, 4},
+		{"ps2-", 554, 1},
+		{"ps2-", 554, 2},
+		{"ps2-", 554, 3},
+		{"ps2-", 554, 4},
+		{"ps2-", 554, 5},
+		{"pump-records-", 522, 0},
+		{"records-", 522, 0},
+		{"records-", 523, 0},
+		{"records-", 554, 0},
+	}
+	for _, c := range cases {
+		testFile := testFileName(c)
+		t.Run(testFile, func(t *testing.T) {
+			jsonFile := testFile + ".json"
+			openAPSFile := testFile + ".openaps"
+			f, err := exec.Command("jq", "-f", jqFilter, jsonFile).Output()
+			if err != nil {
+				panic(err)
+			}
+			tmpfile, err := ioutil.TempFile("", "json")
+			if err != nil {
+				panic(err)
+			}
+			_, _ = tmpfile.Write(f)
+			_ = tmpfile.Close()
+			eq, msg := diffJSON(tmpfile.Name(), openAPSFile)
 			if !eq {
 				t.Errorf("JSON is different:\n%s\n", msg)
 			}

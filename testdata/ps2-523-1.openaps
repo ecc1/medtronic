@@ -1,0 +1,277 @@
+[
+  {
+    "timestamp": "2016-04-06T21:16:34-04:00",
+    "_type": "Bolus",
+    "id": "AQBwAHAADABiEFUGEA==",
+    "amount": 2.8,
+    "programmed": 2.8,
+    "unabsorbed": 0.3,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-06T21:16:34-04:00",
+    "_type": "BolusWizard",
+    "id": "W4JiEBUGEABRALRVUHwAAAAADABweA==",
+    "bg": 0,
+    "carb_input": 0,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 85,
+    "carb_ratio": 18,
+    "correction_estimate": 3.1,
+    "food_estimate": 0,
+    "unabsorbed_insulin_total": 0.3,
+    "bolus_estimate": 2.8
+  },
+  {
+    "timestamp": "2016-04-06T21:16:32-04:00",
+    "_type": "BolusWizard",
+    "id": "W4JgEBUGEABRALRVUHwAAAAADABweA==",
+    "bg": 0,
+    "carb_input": 0,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 85,
+    "carb_ratio": 18,
+    "correction_estimate": 3.1,
+    "food_estimate": 0,
+    "unabsorbed_insulin_total": 0.3,
+    "bolus_estimate": 2.8
+  },
+  {
+    "timestamp": "2016-04-06T21:16:27-04:00",
+    "_type": "CalBGForPH",
+    "id": "CoJbEDUGkA==",
+    "amount": 386
+  },
+  {
+    "timestamp": "2016-04-06T19:27:28-04:00",
+    "_type": "Prime",
+    "id": "AwADAANcGxMGEA==",
+    "amount": 0.3,
+    "fixed": 0.3,
+    "type": "fixed"
+  },
+  {
+    "timestamp": "2016-04-06T19:21:42-04:00",
+    "_type": "Prime",
+    "id": "AwAAAENqFTMGEA==",
+    "amount": 6.7,
+    "fixed": 0,
+    "type": "manual"
+  },
+  {
+    "timestamp": "2016-04-06T19:20:55-04:00",
+    "_type": "Battery",
+    "id": "GgF3FBMGEA=="
+  },
+  {
+    "timestamp": "2016-04-06T19:20:34-04:00",
+    "_type": "Battery",
+    "id": "GgBiFBMGEA=="
+  },
+  {
+    "timestamp": "2016-04-06T19:18:52-04:00",
+    "_type": "Rewind",
+    "id": "IQB0EhMGEA=="
+  },
+  {
+    "timestamp": "2016-04-06T19:18:46-04:00",
+    "_type": "PumpResume",
+    "id": "HyBuEhMGEA=="
+  },
+  {
+    "timestamp": "2016-04-06T19:18:37-04:00",
+    "_type": "PumpSuspend",
+    "id": "HgFlEhMGEA=="
+  },
+  {
+    "timestamp": "2016-04-06T18:25:03-04:00",
+    "_type": "Bolus",
+    "id": "AQBkAGQAAABDGZJmEA==",
+    "amount": 2.5,
+    "programmed": 2.5,
+    "unabsorbed": 0,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-06T18:26:43-04:00",
+    "_type": "Bolus",
+    "id": "AQBkABwAAAZrGrJmEA==",
+    "amount": 0.7,
+    "programmed": 2.5,
+    "unabsorbed": 0,
+    "duration": 180
+  },
+  {
+    "timestamp": "2016-04-06T18:25:03-04:00",
+    "_type": "BolusWizard",
+    "id": "WwBDGRJmEDxQAHhLUAAAyAAAAADIeA==",
+    "bg": 0,
+    "carb_input": 60,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 75,
+    "carb_ratio": 12,
+    "correction_estimate": 0,
+    "food_estimate": 5,
+    "unabsorbed_insulin_total": 0,
+    "bolus_estimate": 5
+  },
+  {
+    "timestamp": "2016-04-06T11:54:39-04:00",
+    "_type": "Bolus",
+    "id": "AQBwAHAACABnNotmEA==",
+    "amount": 2.8,
+    "programmed": 2.8,
+    "unabsorbed": 0.2,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-06T11:56:29-04:00",
+    "_type": "Bolus",
+    "id": "AQBoAGgACARdOKtmEA==",
+    "amount": 2.6,
+    "programmed": 2.6,
+    "unabsorbed": 0.2,
+    "duration": 120
+  },
+  {
+    "timestamp": "2016-04-06T11:54:39-04:00",
+    "_type": "BolusWizard",
+    "id": "W/pnNgtmEEdQALRLUEQAnAAACADYeA==",
+    "bg": 0,
+    "carb_input": 71,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 75,
+    "carb_ratio": 18,
+    "correction_estimate": 1.7,
+    "food_estimate": 3.9,
+    "unabsorbed_insulin_total": 0.2,
+    "bolus_estimate": 5.4
+  },
+  {
+    "timestamp": "2016-04-06T11:54:01-04:00",
+    "_type": "CalBGForPH",
+    "id": "CvpBNisGEA==",
+    "amount": 250
+  },
+  {
+    "timestamp": "2016-04-06T09:19:42-04:00",
+    "_type": "Bolus",
+    "id": "AQBIAEgAAABqE0lmEA==",
+    "amount": 1.8,
+    "programmed": 1.8,
+    "unabsorbed": 0,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-06T09:19:42-04:00",
+    "_type": "BolusWizard",
+    "id": "WwBqEwlmEBRQAG5LUAAASAAAAABIeA==",
+    "bg": 0,
+    "carb_input": 20,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 75,
+    "carb_ratio": 11,
+    "correction_estimate": 0,
+    "food_estimate": 1.8,
+    "unabsorbed_insulin_total": 0,
+    "bolus_estimate": 1.8
+  },
+  {
+    "timestamp": "2016-04-06T01:09:12-04:00",
+    "_type": "Bolus",
+    "id": "AQAoACgAAABMCUEGEA==",
+    "amount": 1,
+    "programmed": 1,
+    "unabsorbed": 0,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-06T01:09:11-04:00",
+    "_type": "BolusWizard",
+    "id": "W8pLCQEGEABQAMhQUCgAAAAAAAAoeA==",
+    "bg": 0,
+    "carb_input": 0,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 80,
+    "carb_ratio": 20,
+    "correction_estimate": 1,
+    "food_estimate": 0,
+    "unabsorbed_insulin_total": 0,
+    "bolus_estimate": 1
+  },
+  {
+    "timestamp": "2016-04-06T01:09:08-04:00",
+    "_type": "CalBGForPH",
+    "id": "CspICSEGEA==",
+    "amount": 202
+  },
+  {
+    "timestamp": "2016-04-05T22:02:50-04:00",
+    "_type": "Bolus",
+    "id": "AQAWABYAQgByAlZlEA==",
+    "amount": 0.55,
+    "programmed": 0.55,
+    "unabsorbed": 1.65,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-05T22:02:50-04:00",
+    "_type": "BolusWizard",
+    "id": "WzNyAhZlEABRALRVUFgAAAAAQgAWeA==",
+    "bg": 0,
+    "carb_input": 0,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 85,
+    "carb_ratio": 18,
+    "correction_estimate": 2.2,
+    "food_estimate": 0,
+    "unabsorbed_insulin_total": 1.65,
+    "bolus_estimate": 0.55
+  },
+  {
+    "timestamp": "2016-04-05T22:02:33-04:00",
+    "_type": "CalBGForPH",
+    "id": "CjNhAjYFkA==",
+    "amount": 307
+  },
+  {
+    "timestamp": "2016-04-05T20:59:04-04:00",
+    "_type": "Bolus",
+    "id": "AQAuAC4ATABEO1RlEA==",
+    "amount": 1.15,
+    "programmed": 1.15,
+    "unabsorbed": 1.9,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-04-05T20:59:04-04:00",
+    "_type": "BolusWizard",
+    "id": "WwBEOxRlEA5QAHhLUAAALgAAAAAueA==",
+    "bg": 0,
+    "carb_input": 14,
+    "bg_target_low": 80,
+    "bg_target_high": 120,
+    "sensitivity": 75,
+    "carb_ratio": 12,
+    "correction_estimate": 0,
+    "food_estimate": 1.15,
+    "unabsorbed_insulin_total": 0,
+    "bolus_estimate": 1.15
+  },
+  {
+    "timestamp": "2016-04-05T20:34:02-04:00",
+    "_type": "Bolus",
+    "id": "AQBSAFIAAABCIlRlEA==",
+    "amount": 2.05,
+    "programmed": 2.05,
+    "unabsorbed": 0,
+    "duration": 0
+  }
+]

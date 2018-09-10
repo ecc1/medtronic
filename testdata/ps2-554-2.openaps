@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": "2016-07-16T16:10:23-04:00",
+    "_type": "CalBGForPH",
+    "id": "ClhXyjAQEA==",
+    "amount": 88
+  },
+  {
+    "timestamp": "2016-07-16T15:21:56-04:00",
+    "_type": "CalBGForPH",
+    "id": "Clh41a8QEA==",
+    "amount": 600
+  },
+  {
+    "timestamp": "2016-07-16T13:54:14-04:00",
+    "_type": "JournalEntryMealMarker",
+    "id": "QABO9g0QEMgC",
+    "carb_input": 200
+  },
+  {
+    "timestamp": "2016-07-16T13:50:55-04:00",
+    "_type": "CalBGForPH",
+    "id": "ClB38i0QEA==",
+    "amount": 80
+  },
+  {
+    "timestamp": "2016-07-16T13:18:47-04:00",
+    "_type": "JournalEntryMealMarker",
+    "id": "QAFv0g0QECwB",
+    "carb_input": 300
+  },
+  {
+    "timestamp": "2016-07-15T22:07:05-04:00",
+    "_type": "BGReceived",
+    "id": "PxNFx1ZvEMUnrQ==",
+    "link": "C527AD",
+    "amount": 154
+  },
+  {
+    "timestamp": "2016-07-15T22:07:05-04:00",
+    "_type": "CalBGForPH",
+    "id": "CppFxzZvEA==",
+    "amount": 154
+  },
+  {
+    "timestamp": "2016-07-14T23:07:49-04:00",
+    "_type": "BGReceived",
+    "id": "Pxpxx1duEMUnrQ==",
+    "link": "C527AD",
+    "amount": 210
+  },
+  {
+    "timestamp": "2016-07-14T23:07:49-04:00",
+    "_type": "CalBGForPH",
+    "id": "CtJxxzduEA==",
+    "amount": 210
+  }
+]

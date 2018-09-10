@@ -1,0 +1,204 @@
+[
+  {
+    "timestamp": "2018-02-10T20:18:35-05:00",
+    "_type": "Bolus",
+    "id": "Afr6ACOSNAoS",
+    "amount": 25,
+    "programmed": 25,
+    "unabsorbed": 0,
+    "duration": 0
+  },
+  {
+    "timestamp": "2018-02-10T20:18:35-05:00",
+    "_type": "BolusWizard",
+    "id": "LwAjkhQKEvpQCi5kAPoAAAAA+g==",
+    "bg": 0,
+    "carb_input": 250,
+    "bg_target_low": 100,
+    "bg_target_high": 100,
+    "sensitivity": 46,
+    "carb_ratio": 10,
+    "correction_estimate": 0,
+    "food_estimate": 25,
+    "unabsorbed_insulin_total": 0,
+    "bolus_estimate": 25
+  },
+  {
+    "timestamp": "2018-02-10T19:55:36-05:00",
+    "_type": "Bolus",
+    "id": "AebmACS3MwoS",
+    "amount": 23,
+    "programmed": 23,
+    "unabsorbed": 0,
+    "duration": 0
+  },
+  {
+    "timestamp": "2018-02-10T19:55:36-05:00",
+    "_type": "BolusWizard",
+    "id": "L2QktxMKEixUDS5kAOYAAHMA5g==",
+    "bg": 0,
+    "carb_input": 300,
+    "bg_target_low": 100,
+    "bg_target_high": 100,
+    "sensitivity": 46,
+    "carb_ratio": 13,
+    "correction_estimate": 0,
+    "food_estimate": 23,
+    "unabsorbed_insulin_total": 11.5,
+    "bolus_estimate": 23
+  },
+  {
+    "timestamp": "2018-02-10T19:47:10-05:00",
+    "_type": "Bolus",
+    "id": "AXNzAAqvMwoS",
+    "amount": 11.5,
+    "programmed": 11.5,
+    "unabsorbed": 0,
+    "duration": 0
+  },
+  {
+    "timestamp": "2018-02-10T19:47:10-05:00",
+    "_type": "BolusWizard",
+    "id": "L1gKrxMKEgpSDS5kbAcAAAAAcw==",
+    "bg": 0,
+    "carb_input": 10,
+    "bg_target_low": 100,
+    "bg_target_high": 100,
+    "sensitivity": 46,
+    "carb_ratio": 13,
+    "correction_estimate": 1.2,
+    "food_estimate": 0.7,
+    "unabsorbed_insulin_total": 0,
+    "bolus_estimate": 11.5
+  },
+  {
+    "timestamp": "2018-02-10T09:40:47-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgQvqAlKEg==",
+    "duration (min)": 120
+  },
+  {
+    "timestamp": "2018-02-10T09:40:47-05:00",
+    "_type": "TempBasal",
+    "id": "MwAvqAlKEgA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2018-02-10T09:31:21-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEVnwlKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T09:31:21-05:00",
+    "_type": "TempBasal",
+    "id": "MxIVnwlKEgA=",
+    "temp": "absolute",
+    "rate": 0.45
+  },
+  {
+    "timestamp": "2018-02-10T08:31:15-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgQPnwhKEg==",
+    "duration (min)": 120
+  },
+  {
+    "timestamp": "2018-02-10T08:31:15-05:00",
+    "_type": "TempBasal",
+    "id": "MwAPnwhKEgA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2018-02-10T08:15:47-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEvjwhKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T08:15:47-05:00",
+    "_type": "TempBasal",
+    "id": "MwUvjwhKEgA=",
+    "temp": "absolute",
+    "rate": 0.125
+  },
+  {
+    "timestamp": "2018-02-10T08:11:01-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEBiwhKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T08:11:01-05:00",
+    "_type": "TempBasal",
+    "id": "MwsBiwhKEgA=",
+    "temp": "absolute",
+    "rate": 0.275
+  },
+  {
+    "timestamp": "2018-02-10T08:01:03-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEDgQhKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T08:01:03-05:00",
+    "_type": "TempBasal",
+    "id": "MxQDgQhKEgA=",
+    "temp": "absolute",
+    "rate": 0.5
+  },
+  {
+    "timestamp": "2018-02-10T07:56:02-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgECuAdKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T07:56:02-05:00",
+    "_type": "TempBasal",
+    "id": "MygCuAdKEgA=",
+    "temp": "absolute",
+    "rate": 1
+  },
+  {
+    "timestamp": "2018-02-10T07:45:45-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEtrQdKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T07:45:45-05:00",
+    "_type": "TempBasal",
+    "id": "MwItrQdKEgA=",
+    "temp": "absolute",
+    "rate": 0.05
+  },
+  {
+    "timestamp": "2018-02-10T07:41:38-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEmqQdKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T07:41:38-05:00",
+    "_type": "TempBasal",
+    "id": "MwomqQdKEgA=",
+    "temp": "absolute",
+    "rate": 0.25
+  },
+  {
+    "timestamp": "2018-02-10T07:41:01-05:00",
+    "_type": "TempBasalDuration",
+    "id": "FgEBqQdKEg==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2018-02-10T07:41:01-05:00",
+    "_type": "TempBasal",
+    "id": "MxQBqQdKEgA=",
+    "temp": "absolute",
+    "rate": 0.5
+  }
+]

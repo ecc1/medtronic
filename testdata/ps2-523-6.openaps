@@ -1,0 +1,687 @@
+[
+  {
+    "timestamp": "2016-10-23T05:10:20-04:00",
+    "_type": "TempBasal",
+    "id": "MwCUigVXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T05:07:19-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGThwVXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T05:07:19-04:00",
+    "_type": "TempBasal",
+    "id": "MxKThwVXEAA=",
+    "temp": "absolute",
+    "rate": 0.45
+  },
+  {
+    "timestamp": "2016-10-23T05:00:44-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGsgAVXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T05:00:44-04:00",
+    "_type": "TempBasal",
+    "id": "MwusgAVXEAA=",
+    "temp": "absolute",
+    "rate": 0.275
+  },
+  {
+    "timestamp": "2016-10-23T04:56:22-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGWuARXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T04:56:22-04:00",
+    "_type": "TempBasal",
+    "id": "MwOWuARXEAA=",
+    "temp": "absolute",
+    "rate": 0.075
+  },
+  {
+    "timestamp": "2016-10-23T04:45:27-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGbrQRXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T04:45:27-04:00",
+    "_type": "TempBasal",
+    "id": "MwCbrQRXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T04:34:53-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgC1ogRXEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-23T04:34:53-04:00",
+    "_type": "TempBasal",
+    "id": "MwC1ogRXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T04:31:19-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGTnwRXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T04:31:19-04:00",
+    "_type": "TempBasal",
+    "id": "M0KTnwRXEAA=",
+    "temp": "absolute",
+    "rate": 1.65
+  },
+  {
+    "timestamp": "2016-10-23T04:20:31-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGflARXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T04:20:31-04:00",
+    "_type": "TempBasal",
+    "id": "M0uflARXEAA=",
+    "temp": "absolute",
+    "rate": 1.875
+  },
+  {
+    "timestamp": "2016-10-23T04:16:23-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGXkARXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T04:16:23-04:00",
+    "_type": "TempBasal",
+    "id": "M0SXkARXEAA=",
+    "temp": "absolute",
+    "rate": 1.7
+  },
+  {
+    "timestamp": "2016-10-23T04:10:19-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgCTigRXEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-23T04:10:19-04:00",
+    "_type": "TempBasal",
+    "id": "MwCTigRXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T04:05:26-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGahQRXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T04:05:26-04:00",
+    "_type": "TempBasal",
+    "id": "M0aahQRXEAA=",
+    "temp": "absolute",
+    "rate": 1.75
+  },
+  {
+    "timestamp": "2016-10-23T03:50:20-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGUsgNXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T03:50:20-04:00",
+    "_type": "TempBasal",
+    "id": "M1CUsgNXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T03:46:25-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGZrgNXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T03:46:25-04:00",
+    "_type": "TempBasal",
+    "id": "M0iZrgNXEAA=",
+    "temp": "absolute",
+    "rate": 1.8
+  },
+  {
+    "timestamp": "2016-10-23T03:40:46-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGuqANXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T03:40:46-04:00",
+    "_type": "TempBasal",
+    "id": "Mz6uqANXEAA=",
+    "temp": "absolute",
+    "rate": 1.55
+  },
+  {
+    "timestamp": "2016-10-23T03:25:26-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgCamQNXEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-23T03:25:26-04:00",
+    "_type": "TempBasal",
+    "id": "MwCamQNXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T03:20:51-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGzlANXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T03:20:51-04:00",
+    "_type": "TempBasal",
+    "id": "MwqzlANXEAA=",
+    "temp": "absolute",
+    "rate": 0.25
+  },
+  {
+    "timestamp": "2016-10-23T03:06:28-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGchgNXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T03:06:28-04:00",
+    "_type": "TempBasal",
+    "id": "MwCchgNXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T03:00:43-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGrgANXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T03:00:43-04:00",
+    "_type": "TempBasal",
+    "id": "MwyrgANXEAA=",
+    "temp": "absolute",
+    "rate": 0.3
+  },
+  {
+    "timestamp": "2016-10-23T02:56:22-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgCWuAJXEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-23T02:56:22-04:00",
+    "_type": "TempBasal",
+    "id": "MwCWuAJXEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-23T02:50:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGSsgJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:50:18-04:00",
+    "_type": "TempBasal",
+    "id": "MxeSsgJXEAA=",
+    "temp": "absolute",
+    "rate": 0.575
+  },
+  {
+    "timestamp": "2016-10-23T02:45:26-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGarQJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:45:26-04:00",
+    "_type": "TempBasal",
+    "id": "MxqarQJXEAA=",
+    "temp": "absolute",
+    "rate": 0.65
+  },
+  {
+    "timestamp": "2016-10-23T02:41:46-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGuqQJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:41:46-04:00",
+    "_type": "TempBasal",
+    "id": "MzuuqQJXEAA=",
+    "temp": "absolute",
+    "rate": 1.475
+  },
+  {
+    "timestamp": "2016-10-23T02:34:53-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG1ogJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:34:53-04:00",
+    "_type": "TempBasal",
+    "id": "M0W1ogJXEAA=",
+    "temp": "absolute",
+    "rate": 1.725
+  },
+  {
+    "timestamp": "2016-10-23T02:30:20-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGUngJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:30:20-04:00",
+    "_type": "TempBasal",
+    "id": "M0CUngJXEAA=",
+    "temp": "absolute",
+    "rate": 1.6
+  },
+  {
+    "timestamp": "2016-10-23T02:27:47-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGvmwJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:27:47-04:00",
+    "_type": "TempBasal",
+    "id": "M0+vmwJXEAA=",
+    "temp": "absolute",
+    "rate": 1.975
+  },
+  {
+    "timestamp": "2016-10-23T02:10:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGRigJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:10:17-04:00",
+    "_type": "TempBasal",
+    "id": "M1CRigJXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T02:05:25-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGZhQJXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T02:05:25-04:00",
+    "_type": "TempBasal",
+    "id": "M0uZhQJXEAA=",
+    "temp": "absolute",
+    "rate": 1.875
+  },
+  {
+    "timestamp": "2016-10-23T01:50:20-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGUsgFXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T01:50:20-04:00",
+    "_type": "TempBasal",
+    "id": "M1CUsgFXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T01:30:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGSngFXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T01:30:18-04:00",
+    "_type": "TempBasal",
+    "id": "M1CSngFXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T01:25:26-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGamQFXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T01:25:26-04:00",
+    "_type": "TempBasal",
+    "id": "M0+amQFXEAA=",
+    "temp": "absolute",
+    "rate": 1.975
+  },
+  {
+    "timestamp": "2016-10-23T01:10:20-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGUigFXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T01:10:20-04:00",
+    "_type": "TempBasal",
+    "id": "M1CUigFXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T00:50:18-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGSsgBXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T00:50:18-04:00",
+    "_type": "TempBasal",
+    "id": "M1CSsgBXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T00:26:54-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG2mgBXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T00:26:54-04:00",
+    "_type": "TempBasal",
+    "id": "M1C2mgBXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-23T00:01:46-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGugQBXEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-23T00:01:46-04:00",
+    "_type": "TempBasal",
+    "id": "M1CugQBXEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-22T23:54:59-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG7thdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:54:59-04:00",
+    "_type": "TempBasal",
+    "id": "M0q7thdWEAA=",
+    "temp": "absolute",
+    "rate": 1.85
+  },
+  {
+    "timestamp": "2016-10-22T23:50:26-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgCashdWEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-22T23:50:26-04:00",
+    "_type": "TempBasal",
+    "id": "MwCashdWEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-22T23:46:53-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG1rhdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:46:53-04:00",
+    "_type": "TempBasal",
+    "id": "Mxq1rhdWEAA=",
+    "temp": "absolute",
+    "rate": 0.65
+  },
+  {
+    "timestamp": "2016-10-22T23:30:23-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgCXnhdWEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-22T23:30:23-04:00",
+    "_type": "TempBasal",
+    "id": "MwCXnhdWEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-22T23:25:31-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGfmRdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:25:31-04:00",
+    "_type": "TempBasal",
+    "id": "M0+fmRdWEAA=",
+    "temp": "absolute",
+    "rate": 1.975
+  },
+  {
+    "timestamp": "2016-10-22T23:21:52-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG0lRdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:21:52-04:00",
+    "_type": "TempBasal",
+    "id": "M0i0lRdWEAA=",
+    "temp": "absolute",
+    "rate": 1.8
+  },
+  {
+    "timestamp": "2016-10-22T23:14:59-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG7jhdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:14:59-04:00",
+    "_type": "TempBasal",
+    "id": "MxS7jhdWEAA=",
+    "temp": "absolute",
+    "rate": 0.5
+  },
+  {
+    "timestamp": "2016-10-22T23:10:27-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGbihdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:10:27-04:00",
+    "_type": "TempBasal",
+    "id": "MwCbihdWEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-22T23:07:53-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgG1hxdWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T23:07:53-04:00",
+    "_type": "TempBasal",
+    "id": "M0q1hxdWEAA=",
+    "temp": "absolute",
+    "rate": 1.85
+  },
+  {
+    "timestamp": "2016-10-22T23:02:29-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgCdghdWEA==",
+    "duration (min)": 0
+  },
+  {
+    "timestamp": "2016-10-22T23:02:29-04:00",
+    "_type": "TempBasal",
+    "id": "MwCdghdWEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-22T22:52:14-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGOtBZWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T22:52:14-04:00",
+    "_type": "TempBasal",
+    "id": "MwCOtBZWEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-22T22:45:33-04:00",
+    "_type": "Bolus",
+    "id": "AQBkAGQAcAChrVZWEA==",
+    "amount": 2.5,
+    "programmed": 2.5,
+    "unabsorbed": 2.8,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-10-22T22:45:30-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGerRZWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T22:45:30-04:00",
+    "_type": "TempBasal",
+    "id": "M1CerRZWEAA=",
+    "temp": "absolute",
+    "rate": 2
+  },
+  {
+    "timestamp": "2016-10-22T22:45:12-04:00",
+    "_type": "BolusWizard",
+    "id": "W9+MrRYWEABQAFAZY8QAAAAAcABUYw==",
+    "bg": 0,
+    "carb_input": 0,
+    "bg_target_low": 99,
+    "bg_target_high": 99,
+    "sensitivity": 25,
+    "carb_ratio": 8,
+    "correction_estimate": 4.9,
+    "food_estimate": 0,
+    "unabsorbed_insulin_total": 2.8,
+    "bolus_estimate": 2.1
+  },
+  {
+    "timestamp": "2016-10-22T22:45:02-04:00",
+    "_type": "BGReceived",
+    "id": "PxuCrfZ2EKqMAw==",
+    "link": "AA8C03",
+    "amount": 223
+  },
+  {
+    "timestamp": "2016-10-22T22:45:02-04:00",
+    "_type": "CalBGForPH",
+    "id": "Ct+CrTZ2EA==",
+    "amount": 223
+  },
+  {
+    "timestamp": "2016-10-22T21:46:40-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGorhVWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T21:46:40-04:00",
+    "_type": "TempBasal",
+    "id": "MwCorhVWEAA=",
+    "temp": "absolute",
+    "rate": 0
+  },
+  {
+    "timestamp": "2016-10-22T21:42:26-04:00",
+    "_type": "Bolus",
+    "id": "AQCMAIwAJACaqlUWEA==",
+    "amount": 3.5,
+    "programmed": 3.5,
+    "unabsorbed": 0.9,
+    "duration": 0
+  },
+  {
+    "timestamp": "2016-10-22T21:42:25-04:00",
+    "_type": "BolusWizard",
+    "id": "W+GZqhUWEABQAFAeY6gAAAAAJACEYw==",
+    "bg": 0,
+    "carb_input": 0,
+    "bg_target_low": 99,
+    "bg_target_high": 99,
+    "sensitivity": 30,
+    "carb_ratio": 8,
+    "correction_estimate": 4.2,
+    "food_estimate": 0,
+    "unabsorbed_insulin_total": 0.9,
+    "bolus_estimate": 3.3
+  },
+  {
+    "timestamp": "2016-10-22T21:42:21-04:00",
+    "_type": "CalBGForPH",
+    "id": "CuGVqjUWEA==",
+    "amount": 225
+  },
+  {
+    "timestamp": "2016-10-22T21:31:17-04:00",
+    "_type": "TempBasalDuration",
+    "id": "FgGRnxVWEA==",
+    "duration (min)": 30
+  },
+  {
+    "timestamp": "2016-10-22T21:31:17-04:00",
+    "_type": "TempBasal",
+    "id": "M1CRnxVWEAA=",
+    "temp": "absolute",
+    "rate": 2
+  }
+]

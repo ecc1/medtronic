@@ -1,0 +1,25 @@
+[
+  {
+    "timestamp": "2007-01-01T21:30:24-05:00",
+    "_type": "Battery",
+    "id": "GgAYXhUBBw=="
+  },
+  {
+    "timestamp": "2007-01-01T03:45:56-05:00",
+    "_type": "Prime",
+    "id": "AwAAABo4bSMBBw==",
+    "amount": 2.6,
+    "fixed": 0,
+    "type": "manual"
+  },
+  {
+    "timestamp": "2007-01-01T03:45:12-05:00",
+    "_type": "Rewind",
+    "id": "IQAMbQMBBw=="
+  },
+  {
+    "timestamp": "2016-09-14T06:06:16-04:00",
+    "_type": "Battery",
+    "id": "GgCQRgYOEA=="
+  }
+]
