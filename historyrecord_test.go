@@ -155,7 +155,7 @@ func TestDecodeHistory(t *testing.T) {
 }
 
 func checkHistory(t *testing.T, decoded History, jsonFile string) {
-	eq, msg := compareJSON(decoded, jsonFile)
+	eq, msg := compareDataToJSON(decoded, jsonFile)
 	if !eq {
 		t.Errorf("JSON is different:\n%s\n", msg)
 	}
@@ -188,7 +188,7 @@ func TestTreatments(t *testing.T) {
 			}
 			treatments := Treatments(records)
 			treatmentFile := testFileName(c.treatments) + ".json"
-			eq, msg := compareJSON(treatments, treatmentFile)
+			eq, msg := compareDataToJSON(treatments, treatmentFile)
 			if !eq {
 				t.Errorf("JSON is different:\n%s\n", msg)
 			}
