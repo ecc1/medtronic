@@ -13,9 +13,9 @@ func (pump *Pump) HistoryPage(page int) []byte {
 	return pump.Download(historyPage, page)
 }
 
-// HistoryPageCount returns the number of pump history pages.
-func (pump *Pump) HistoryPageCount() int {
-	data := pump.Execute(historyPageCount)
+// LastHistoryPage returns the pump's last (oldest) history page number.
+func (pump *Pump) LastHistoryPage() int {
+	data := pump.Execute(lastHistoryPage)
 	if pump.Error() != nil {
 		e, ok := pump.Error().(InvalidCommandError)
 		if ok && e.PumpError == CommandRefused && pump.Family() == 12 {
@@ -25,16 +25,12 @@ func (pump *Pump) HistoryPageCount() int {
 		return 0
 	}
 	if len(data) < 5 || data[0] != 4 {
-		pump.BadResponse(historyPageCount, data)
+		pump.BadResponse(lastHistoryPage, data)
 		return 0
 	}
 	page := fourByteUint(data[1:5])
-	if page == 0 {
-		// Pumps can return 0 when first turned on.
-		return 1
-	}
-	if page > MaxHistoryPages {
-		page = MaxHistoryPages
+	if page >= MaxHistoryPages {
+		page = MaxHistoryPages - 1
 	}
 	return int(page)
 }

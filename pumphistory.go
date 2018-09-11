@@ -15,13 +15,13 @@ import (
 // the final element of the result satisfies the predicate.
 // The records are retrieved and returned in reverse chronological order.
 func (pump *Pump) findHistory(check func(HistoryRecord) bool) History {
-	count := pump.HistoryPageCount()
+	lastPage := pump.LastHistoryPage()
 	if pump.Error() != nil {
 		return nil
 	}
 	family := pump.Family()
 	var results History
-	for page := 0; page < count && pump.Error() == nil; page++ {
+	for page := 0; page <= lastPage && pump.Error() == nil; page++ {
 		data := pump.HistoryPage(page)
 		records, err := DecodeHistory(data, family)
 		if err != nil {

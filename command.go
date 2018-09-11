@@ -51,7 +51,7 @@ const (
 	glucosePage          Command = 0x9A
 	isigPage             Command = 0x9B
 	calibrationFactor    Command = 0x9C
-	historyPageCount     Command = 0x9D
+	lastHistoryPage      Command = 0x9D
 	glucoseTargets       Command = 0x9F
 	settings             Command = 0xC0
 	cgmPageCount         Command = 0xCD
