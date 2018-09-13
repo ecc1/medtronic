@@ -79,7 +79,7 @@ func decodeFromData(file string, family Family) (History, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = f.Close() }()
+	defer f.Close()
 	d := json.NewDecoder(f)
 	var maps []interface{}
 	err = d.Decode(&maps)
@@ -141,7 +141,7 @@ func TestDecodeHistory(t *testing.T) {
 				return
 			}
 			data, err := readBytes(f)
-			_ = f.Close()
+			f.Close()
 			if err != nil {
 				t.Error(err)
 				return
@@ -242,9 +242,11 @@ func TestJQFilter(t *testing.T) {
 			if err != nil {
 				panic(err)
 			}
-			_, _ = tmpfile.Write(f)
-			_ = tmpfile.Close()
-			eq, msg := diffJSON(tmpfile.Name(), openAPSFile)
+			filterOutput := tmpfile.Name()
+			defer os.Remove(filterOutput)
+			tmpfile.Write(f)
+			tmpfile.Close()
+			eq, msg := diffJSON(filterOutput, openAPSFile)
 			if !eq {
 				t.Errorf("JSON is different:\n%s\n", msg)
 			}

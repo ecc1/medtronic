@@ -73,11 +73,11 @@ func compareDataToJSON(data interface{}, jsonFile string) (bool, string) {
 	if err != nil {
 		return false, err.Error()
 	}
-	defer func() { _ = os.Remove(tmpfile.Name()) }()
+	defer os.Remove(tmpfile.Name())
 	e := json.NewEncoder(tmpfile)
 	e.SetIndent("", "  ")
 	err = e.Encode(data)
-	_ = tmpfile.Close()
+	tmpfile.Close()
 	if err != nil {
 		return false, err.Error()
 	}
@@ -87,12 +87,12 @@ func compareDataToJSON(data interface{}, jsonFile string) (bool, string) {
 func diffJSON(file1, file2 string) (bool, string) {
 	// Write JSON in canonical form for comparison.
 	canon1 := canonicalJSON(file1)
+	defer os.Remove(canon1)
 	canon2 := canonicalJSON(file2)
+	defer os.Remove(canon2)
 	// Find differences.
 	cmd := exec.Command("diff", "-u", "--label", file1, "--label", file2, canon1, canon2)
 	diffs, err := cmd.Output()
-	_ = os.Remove(canon1)
-	_ = os.Remove(canon2)
 	return err == nil, string(diffs)
 }
 
@@ -110,7 +110,7 @@ func canonicalJSON(file string) string {
 	if err != nil {
 		panic(err)
 	}
-	_, _ = tmpfile.Write(canon)
-	_ = tmpfile.Close()
+	tmpfile.Write(canon)
+	tmpfile.Close()
 	return tmpfile.Name()
 }
