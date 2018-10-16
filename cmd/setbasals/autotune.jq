@@ -4,4 +4,4 @@
 #   setbasals $(jq -r -f autotune.jq < autotune.json)
 # Don't forget the -r (--raw-output) flag!
 
-.[] | (.start | rtrimstr(":00")), .rate
+.basalprofile[] | (.start | rtrimstr(":00")), .rate
