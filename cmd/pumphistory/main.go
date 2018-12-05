@@ -12,6 +12,13 @@ import (
 	"github.com/ecc1/nightscout"
 )
 
+const (
+	success        = 0
+	commError      = 1
+	recordNotFound = 2
+	partialResult  = 3
+)
+
 var (
 	all       = flag.Bool("a", false, "get entire pump history")
 	numHours  = flag.Int("n", 6, "number of `hours` of history to get")
@@ -42,12 +49,17 @@ func main() {
 		fmt.Println(nightscout.JSON(results))
 	}
 	if pump.Error() != nil {
-		log.Fatal(pump.Error())
+		log.Print(pump.Error())
+		if len(results) != 0 {
+			os.Exit(partialResult)
+		}
+		os.Exit(commError)
 	}
 	if !found {
 		log.Printf("record %s not found", *fromFlag)
-		os.Exit(2)
+		os.Exit(recordNotFound)
 	}
+	os.Exit(success)
 }
 
 func parseFlags() {
