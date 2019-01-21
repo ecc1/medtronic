@@ -32,13 +32,15 @@
     "_type": "BGReceived",
     "id": "PxN35M9wEM4kzQ==",
     "link": "CE24CD",
-    "amount": 158
+    "amount": 158,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T15:36:55-04:00",
     "_type": "CalBGForPH",
     "id": "Cp535C9wEA==",
-    "amount": 158
+    "amount": 158,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T11:06:56-04:00",
@@ -77,14 +79,15 @@
     "id": "WwBs9gkQEDeQAL48MgAAcAAAAABwMg==",
     "bg": 0,
     "carb_input": 55,
-    "bg_target_low": 5000,
-    "bg_target_high": 5000,
-    "sensitivity": 6000,
+    "bg_target_low": 5,
+    "bg_target_high": 5,
+    "sensitivity": 6,
     "carb_ratio": 19,
     "correction_estimate": 0,
     "food_estimate": 2.8,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 2.8
+    "bolus_estimate": 2.8,
+    "units": "mmol"
   },
   {
     "timestamp": "2016-07-16T07:57:02-04:00",
@@ -97,13 +100,15 @@
     "_type": "BGReceived",
     "id": "Pwhz98dwEM4mkg==",
     "link": "CE2692",
-    "amount": 70
+    "amount": 70,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T07:55:51-04:00",
     "_type": "CalBGForPH",
     "id": "CkZz9ydwEA==",
-    "amount": 70
+    "amount": 70,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T07:34:29-04:00",
@@ -152,27 +157,30 @@
     "id": "W5Jj3AIQEACQAMg8NzwAAAAAEAAsNw==",
     "bg": 0,
     "carb_input": 0,
-    "bg_target_low": 5500,
-    "bg_target_high": 5500,
-    "sensitivity": 6000,
+    "bg_target_low": 5.5,
+    "bg_target_high": 5.5,
+    "sensitivity": 6,
     "carb_ratio": 20,
     "correction_estimate": 1.5,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 0.4,
-    "bolus_estimate": 1.1
+    "bolus_estimate": 1.1,
+    "units": "mmol"
   },
   {
     "timestamp": "2016-07-16T02:28:25-04:00",
     "_type": "BGReceived",
     "id": "PyBZ3OJwEM4mkg==",
     "link": "CE2692",
-    "amount": 263
+    "amount": 263,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T02:28:25-04:00",
     "_type": "CalBGForPH",
     "id": "CgdZ3CJwkA==",
-    "amount": 263
+    "amount": 263,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T02:27:09-04:00",
@@ -210,14 +218,15 @@
     "id": "W4BO0xcPEC+QAL48NzAAYAAATABgNw==",
     "bg": 0,
     "carb_input": 47,
-    "bg_target_low": 5500,
-    "bg_target_high": 5500,
-    "sensitivity": 6000,
+    "bg_target_low": 5.5,
+    "bg_target_high": 5.5,
+    "sensitivity": 6,
     "carb_ratio": 19,
     "correction_estimate": 1.2,
     "food_estimate": 2.4,
     "unabsorbed_insulin_total": 1.9,
-    "bolus_estimate": 2.4
+    "bolus_estimate": 2.4,
+    "units": "mmol"
   },
   {
     "timestamp": "2016-07-15T23:09:01-04:00",
@@ -234,14 +243,15 @@
     "id": "W4BByRcPEACQAL48NzAAAAAASAAANw==",
     "bg": 0,
     "carb_input": 0,
-    "bg_target_low": 5500,
-    "bg_target_high": 5500,
-    "sensitivity": 6000,
+    "bg_target_low": 5.5,
+    "bg_target_high": 5.5,
+    "sensitivity": 6,
     "carb_ratio": 19,
     "correction_estimate": 1.2,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 1.8,
-    "bolus_estimate": 0
+    "bolus_estimate": 0,
+    "units": "mmol"
   },
   {
     "timestamp": "2016-07-15T23:08:52-04:00",
@@ -249,27 +259,30 @@
     "id": "W4B0yBcPEACQAL48NzAAAAAASAAANw==",
     "bg": 0,
     "carb_input": 0,
-    "bg_target_low": 5500,
-    "bg_target_high": 5500,
-    "sensitivity": 6000,
+    "bg_target_low": 5.5,
+    "bg_target_high": 5.5,
+    "sensitivity": 6,
     "carb_ratio": 19,
     "correction_estimate": 1.2,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 1.8,
-    "bolus_estimate": 0
+    "bolus_estimate": 0,
+    "units": "mmol"
   },
   {
     "timestamp": "2016-07-15T23:08:18-04:00",
     "_type": "BGReceived",
     "id": "PxxSyPdvEM4mkg==",
     "link": "CE2692",
-    "amount": 231
+    "amount": 231,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-15T23:08:18-04:00",
     "_type": "CalBGForPH",
     "id": "CudSyDdvEA==",
-    "amount": 231
+    "amount": 231,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-15T21:39:38-04:00",
@@ -286,14 +299,15 @@
     "id": "WwBm5xUPECOQAL48NwAASAAAAABINw==",
     "bg": 0,
     "carb_input": 35,
-    "bg_target_low": 5500,
-    "bg_target_high": 5500,
-    "sensitivity": 6000,
+    "bg_target_low": 5.5,
+    "bg_target_high": 5.5,
+    "sensitivity": 6,
     "carb_ratio": 19,
     "correction_estimate": 0,
     "food_estimate": 1.8,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 1.8
+    "bolus_estimate": 1.8,
+    "units": "mmol"
   },
   {
     "timestamp": "2016-07-15T20:44:00-04:00",

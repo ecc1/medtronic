@@ -21,7 +21,8 @@
     "correction_estimate": 0,
     "food_estimate": 25,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 25
+    "bolus_estimate": 25,
+    "units": "mgdl"
   },
   {
     "timestamp": "2018-02-10T19:55:36-05:00",
@@ -45,7 +46,8 @@
     "correction_estimate": 0,
     "food_estimate": 23,
     "unabsorbed_insulin_total": 11.5,
-    "bolus_estimate": 23
+    "bolus_estimate": 23,
+    "units": "mgdl"
   },
   {
     "timestamp": "2018-02-10T19:47:10-05:00",
@@ -69,7 +71,8 @@
     "correction_estimate": 1.2,
     "food_estimate": 0.7,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 11.5
+    "bolus_estimate": 11.5,
+    "units": "mgdl"
   },
   {
     "timestamp": "2018-02-10T09:40:47-05:00",

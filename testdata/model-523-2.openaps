@@ -21,7 +21,8 @@
     "correction_estimate": 3.1,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 0.3,
-    "bolus_estimate": 2.8
+    "bolus_estimate": 2.8,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T21:16:32-04:00",
@@ -36,13 +37,15 @@
     "correction_estimate": 3.1,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 0.3,
-    "bolus_estimate": 2.8
+    "bolus_estimate": 2.8,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T21:16:27-04:00",
     "_type": "CalBGForPH",
     "id": "CoJbEDUGkA==",
-    "amount": 386
+    "amount": 386,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T19:27:28-04:00",
@@ -116,7 +119,8 @@
     "correction_estimate": 0,
     "food_estimate": 5,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 5
+    "bolus_estimate": 5,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T11:54:39-04:00",
@@ -149,13 +153,15 @@
     "correction_estimate": 1.7,
     "food_estimate": 3.9,
     "unabsorbed_insulin_total": 0.2,
-    "bolus_estimate": 5.4
+    "bolus_estimate": 5.4,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T11:54:01-04:00",
     "_type": "CalBGForPH",
     "id": "CvpBNisGEA==",
-    "amount": 250
+    "amount": 250,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T09:19:42-04:00",
@@ -179,7 +185,8 @@
     "correction_estimate": 0,
     "food_estimate": 1.8,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 1.8
+    "bolus_estimate": 1.8,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T01:09:12-04:00",
@@ -203,13 +210,15 @@
     "correction_estimate": 1,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 1
+    "bolus_estimate": 1,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-06T01:09:08-04:00",
     "_type": "CalBGForPH",
     "id": "CspICSEGEA==",
-    "amount": 202
+    "amount": 202,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-05T22:02:50-04:00",
@@ -233,13 +242,15 @@
     "correction_estimate": 2.2,
     "food_estimate": 0,
     "unabsorbed_insulin_total": 1.65,
-    "bolus_estimate": 0.55
+    "bolus_estimate": 0.55,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-05T22:02:33-04:00",
     "_type": "CalBGForPH",
     "id": "CjNhAjYFkA==",
-    "amount": 307
+    "amount": 307,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-05T20:59:04-04:00",
@@ -263,7 +274,8 @@
     "correction_estimate": 0,
     "food_estimate": 1.15,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 1.15
+    "bolus_estimate": 1.15,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-04-05T20:34:02-04:00",

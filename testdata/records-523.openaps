@@ -29,19 +29,22 @@
     "timestamp": "2017-02-26T17:12:08-05:00",
     "_type": "CalBGForPH",
     "id": "ClMIjFEaEQ==",
-    "amount": 8300
+    "amount": 8.3,
+    "units": "mmol"
   },
   {
     "timestamp": "2017-06-07T06:30:09-04:00",
     "_type": "CalBGForPH",
     "id": "Ck9JniZnEQ==",
-    "amount": 79
+    "amount": 79,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-16T15:21:56-04:00",
     "_type": "CalBGForPH",
     "id": "Clh41a8QEA==",
-    "amount": 600
+    "amount": 600,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-05-23T23:12:05-04:00",
@@ -65,14 +68,16 @@
     "_type": "BGReceived",
     "id": "PxRa5XRqEM4mkg==",
     "link": "CE2692",
-    "amount": 163
+    "amount": 163,
+    "units": "mgdl"
   },
   {
     "timestamp": "2017-06-07T06:30:09-04:00",
     "_type": "BGReceived",
     "id": "PwlJnuZnEcI2Rw==",
     "link": "C23647",
-    "amount": 79
+    "amount": 79,
+    "units": "mgdl"
   },
   {
     "timestamp": "2016-07-11T05:09:29-04:00",
@@ -93,7 +98,8 @@
     "correction_estimate": 0.8,
     "food_estimate": 6.6,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 7.4
+    "bolus_estimate": 7.4,
+    "units": "mgdl"
   },
   {
     "timestamp": "2017-02-26T16:10:51-05:00",
@@ -108,7 +114,8 @@
     "correction_estimate": 0.8,
     "food_estimate": 3.3,
     "unabsorbed_insulin_total": 0,
-    "bolus_estimate": 4.1
+    "bolus_estimate": 4.1,
+    "units": "mgdl"
   },
   {
     "timestamp": "2017-02-26T17:27:03-05:00",
@@ -123,7 +130,8 @@
     "correction_estimate": 0.8,
     "food_estimate": 7.5,
     "unabsorbed_insulin_total": 13.1,
-    "bolus_estimate": 7.5
+    "bolus_estimate": 7.5,
+    "units": "mgdl"
   },
   {
     "timestamp": "2017-02-26T17:13:16-05:00",
@@ -131,14 +139,15 @@
     "id": "W1MQjRF6ERSQADwTMiAAhAAAdACEQw==",
     "bg": 0,
     "carb_input": 20,
-    "bg_target_low": 5000,
-    "bg_target_high": 6700,
-    "sensitivity": 1900,
+    "bg_target_low": 5,
+    "bg_target_high": 6.7,
+    "sensitivity": 1.9,
     "carb_ratio": 6,
     "correction_estimate": 0.8,
     "food_estimate": 3.3,
     "unabsorbed_insulin_total": 2.9,
-    "bolus_estimate": 3.3
+    "bolus_estimate": 3.3,
+    "units": "mmol"
   },
   {
     "timestamp": "2017-02-26T17:18:47-05:00",
@@ -146,13 +155,14 @@
     "id": "W1MvkhF6ER6gCcQTMiABLAAA8AEsQw==",
     "bg": 0,
     "carb_input": 30,
-    "bg_target_low": 5000,
-    "bg_target_high": 6700,
-    "sensitivity": 1900,
+    "bg_target_low": 5,
+    "bg_target_high": 6.7,
+    "sensitivity": 1.9,
     "carb_ratio": 2.5,
     "correction_estimate": 0.8,
     "food_estimate": 7.5,
     "unabsorbed_insulin_total": 6,
-    "bolus_estimate": 7.5
+    "bolus_estimate": 7.5,
+    "units": "mmol"
   }
 ]

@@ -39,6 +39,7 @@
     "timestamp": "2018-05-24T10:43:10-04:00",
     "_type": "CalBGForPH",
     "id": "CkZKa0oYEg==",
-    "amount": 7000
+    "amount": 7,
+    "units": "mmol"
   }
 ]
