@@ -22,10 +22,10 @@ with the appropriate Go build tag for the radio. Currently supported radios:
 The `cmd` directory contains a number of command-line applications:
 
 * `mdt` is a "Swiss army knife" application
-(analogous to the the `openaps use pump ...` commands).
-* `mmtune` scans for the best frequency with which to communicate with the pump.
-* `pumphistory` retrieves pump history records and prints them.
-* `sniff` listens for pump communications and prints the packets it receives.
+(analogous to the the `openaps use pump ...` commands)
+* `mmtune` scans for the best frequency to communicate with the pump
+* `pumphistory` retrieves pump history records and prints them
+* `sniff` listens for pump communications and prints the packets it receives
 
 ### Documentation
 
