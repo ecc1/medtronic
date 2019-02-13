@@ -28,18 +28,20 @@ const (
 var (
 	cgmHistory         = flag.Duration("b", 20*time.Minute, "maximum age of CGM entries to fetch")
 	sinceFlag          = flag.String("t", "", "get records since the specified `time` in RFC3339 format")
-	uploadFlag         = flag.Bool("u", false, "upload to Nightscout")
+	uploadFlag         = flag.Bool("u", false, "upload/backfill to Nightscout")
+	backfillWindow     = flag.Duration("w", 0, "maximum age of CGM entries to backfill (defaults to value of -t/-b)")
 	simulateUploadFlag = flag.Bool("s", false, "simulate upload to Nightscout")
 	verboseFlag        = flag.Bool("v", false, "verbose mode")
 	jsonFile           = flag.String("f", "", "append results to JSON `file`")
 	jsonCutoff         = flag.Duration("k", 7*24*time.Hour, "maximum age of CGM entries to keep in JSON file")
 
-	pump       *medtronic.Pump
-	cgmTime    time.Time
-	cgmEpoch   time.Time
-	cgmRecords medtronic.CGMHistory
-	oldEntries Entries
-	newEntries Entries
+	pump          *medtronic.Pump
+	cgmTime       time.Time
+	cgmEpoch      time.Time
+	cgmRecords    medtronic.CGMHistory
+	oldEntries    Entries
+	newEntries    Entries
+	mergedEntries Entries
 
 	somethingFailed = false
 	uploadFailed    = false
@@ -57,13 +59,13 @@ func main() {
 		oldEntries = readJSON()
 	}
 	getCGMInfo()
-	if *verboseFlag && !*uploadFlag {
+	if *verboseFlag && !*uploadFlag && *backfillWindow == 0 {
 		newEntries.Print()
 	}
 	if *jsonFile != "" {
 		updateJSON()
 	}
-	if *uploadFlag {
+	if *uploadFlag || *backfillWindow != 0 {
 		uploadEntries()
 	}
 	if somethingFailed {
@@ -125,7 +127,13 @@ func describeEntries(v Entries, kind string) {
 }
 
 func uploadEntries() {
-	gaps, err := nightscout.Gaps(cgmEpoch, gapDuration)
+	// Upload entries going back to start of CGM fetch,
+	// or backwill window, whichever is earlier.
+	uploadStart := cgmTime.Add(-*backfillWindow)
+	if cgmEpoch.Before(uploadStart) {
+		uploadStart = cgmEpoch
+	}
+	gaps, err := nightscout.Gaps(uploadStart, gapDuration)
 	if err != nil {
 		log.Print(err)
 		uploadFailed = true
@@ -138,7 +146,7 @@ func uploadEntries() {
 		log.Printf("no Nightscout gaps")
 		return
 	}
-	missing := nightscout.Missing(newEntries, gaps)
+	missing := nightscout.Missing(mergedEntries, gaps)
 	log.Printf("uploading %d entries to Nightscout", len(missing))
 	for _, e := range missing {
 		err := nightscout.Upload("POST", "entries", e)
@@ -191,10 +199,10 @@ func readJSON() Entries {
 
 func updateJSON() {
 	log.Printf("merging %d old and %d new entries", len(oldEntries), len(newEntries))
-	merged := nightscout.MergeEntries(oldEntries, newEntries)
-	describeEntries(merged, "merged")
+	mergedEntries = nightscout.MergeEntries(oldEntries, newEntries)
+	describeEntries(mergedEntries, "merged")
 	cutoff := cgmTime.Add(-*jsonCutoff)
-	trimmed := merged.TrimAfter(cutoff)
+	trimmed := mergedEntries.TrimAfter(cutoff)
 	describeEntries(trimmed, "trimmed")
 	// Back up JSON file with a "~" suffix.
 	err := os.Rename(*jsonFile, *jsonFile+"~")
