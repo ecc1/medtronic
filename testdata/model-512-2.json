@@ -1,0 +1,263 @@
+[
+  {
+    "Type": "Prime",
+    "Time": "2019-02-12T19:16:36-05:00",
+    "Data": "AwAAAAAkkDMMEw==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:16:25-05:00",
+    "Data": "IQAZkBMMEw=="
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:16:06-05:00",
+    "Data": "IQAGkBMMEw=="
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:15:52-05:00",
+    "Data": "IQA0jxMMEw=="
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:15:43-05:00",
+    "Data": "IQArjxMMEw=="
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:15:36-05:00",
+    "Data": "IQAkjxMMEw=="
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:15:25-05:00",
+    "Data": "IQAZjxMMEw=="
+  },
+  {
+    "Type": "ConfirmInsulinChange",
+    "Time": "2019-02-12T19:15:23-05:00",
+    "Data": "OgEXjxMMEw==",
+    "Info": true
+  },
+  {
+    "Type": "PrepareInsulinChange",
+    "Time": "2019-02-12T19:15:23-05:00",
+    "Data": "HAAXjxMMEw=="
+  },
+  {
+    "Type": "Prime",
+    "Time": "2019-02-12T19:08:03-05:00",
+    "Data": "AwAAAAADiDMMEw==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T19:07:46-05:00",
+    "Data": "IQAuhxMMEw=="
+  },
+  {
+    "Type": "ConfirmInsulinChange",
+    "Time": "2019-02-12T19:07:44-05:00",
+    "Data": "OgAshzMMEw==",
+    "Info": false
+  },
+  {
+    "Type": "PrepareInsulinChange",
+    "Time": "2019-02-12T19:07:44-05:00",
+    "Data": "HAAshxMMEw=="
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2019-02-12T10:22:38-05:00",
+    "Data": "AVBQACaWKgwT",
+    "Info": {
+      "Programmed": 8,
+      "Amount": 8,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2019-02-12T10:21:52-05:00",
+    "Data": "AwAAAAA0lSoMEw==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-12T10:21:41-05:00",
+    "Data": "IQAplQoMEw=="
+  },
+  {
+    "Type": "ConfirmInsulinChange",
+    "Time": "2019-02-12T10:21:39-05:00",
+    "Data": "OgEnlQoMEw==",
+    "Info": true
+  },
+  {
+    "Type": "PrepareInsulinChange",
+    "Time": "2019-02-12T10:21:39-05:00",
+    "Data": "HAAnlQoMEw=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2019-02-11T00:00:00-05:00",
+    "Data": "BwAAAUArEw==",
+    "Info": 8
+  },
+  {
+    "Type": "Unknown2E",
+    "Time": "2019-02-11T18:50:42-05:00",
+    "Data": "LgoqshILEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFREADwAAAAAAAAAAAAAAAAAAADIAAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "Type": "EnableBolusWizard",
+    "Time": "2019-02-11T18:50:42-05:00",
+    "Data": "LQEqshILEw==",
+    "Info": true
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2019-02-11T18:06:52-05:00",
+    "Data": "AVBQADSGMgsT",
+    "Info": {
+      "Programmed": 8,
+      "Amount": 8,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2019-02-11T18:02:07-05:00",
+    "Data": "AwAAAAAHgjILEw==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2019-02-11T18:02:00-05:00",
+    "Data": "IQAAghILEw=="
+  },
+  {
+    "Type": "ConfirmInsulinChange",
+    "Time": "2019-02-11T18:01:58-05:00",
+    "Data": "OgA6gTILEw==",
+    "Info": false
+  },
+  {
+    "Type": "PrepareInsulinChange",
+    "Time": "2019-02-11T18:01:58-05:00",
+    "Data": "HAA6gRILEw=="
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2019-02-11T18:00:26-05:00",
+    "Data": "JgEagBILEycBsgcAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2019-02-11T18:00:11-05:00",
+    "Data": "JgELgBILEycAAAAAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2019-02-11T17:55:30-05:00",
+    "Data": "JgAetxELEycAAAAAAAAoAAAAAAAA",
+    "Info": false
+  },
+  {
+    "Type": "EnableRemote",
+    "Time": "2019-02-11T17:55:28-05:00",
+    "Data": "JgEctxELEycAAAAAAAAoAAAAAAAA",
+    "Info": true
+  },
+  {
+    "Type": "ChangeMeterID",
+    "Time": "2019-02-11T17:51:29-05:00",
+    "Data": "NgEdsxELEzcAAAAAAAA4AAAAAAAA"
+  },
+  {
+    "Type": "ChangeMeterID",
+    "Time": "2019-02-11T17:51:09-05:00",
+    "Data": "NgEJsxELEzcAAAAAAAA4AAAAAAAA"
+  },
+  {
+    "Type": "SetAutoOff",
+    "Time": "2019-02-11T17:48:39-05:00",
+    "Data": "Gw0nsBELEw==",
+    "Info": "13h0m0s"
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2006-01-01T00:00:00-05:00",
+    "Data": "BwAAAAABhg==",
+    "Info": 0
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2019-02-11T17:45:12-05:00",
+    "Data": "GAAMrRFLEw=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2006-01-01T00:03:34-05:00",
+    "Data": "FwAiQwBBBg=="
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2006-01-01T00:00:20-05:00",
+    "Data": "BqEBlxRAIOEG",
+    "Info": 161
+  },
+  {
+    "Type": "Prime",
+    "Time": "2006-01-01T00:00:12-05:00",
+    "Data": "AwAAAAAMQCABBg==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2006-01-01T00:00:03-05:00",
+    "Data": "IQADQAABBg=="
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2006-01-01T00:00:00-05:00",
+    "Data": "GAAAQAABBg=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2006-01-01T00:00:21-05:00",
+    "Data": "FwAVQAABBg=="
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2006-01-01T00:00:00-05:00",
+    "Data": "BhEBggBAQKEG",
+    "Info": 17
+  },
+  {
+    "Type": "LowBattery",
+    "Time": "2006-01-01T00:00:07-05:00",
+    "Data": "GQAHQAABBg=="
+  }
+]

@@ -20,7 +20,8 @@ type testCase struct {
 
 func TestDecodeHistoryRecord(t *testing.T) {
 	cases := []testCase{
-		{"model", 512, 0},
+		{"model", 512, 1},
+		{"model", 512, 2},
 		{"model", 515, 0},
 		{"model", 522, 0},
 		{"model", 523, 1},
@@ -108,7 +109,8 @@ func decodeFromData(file string, family Family) (History, error) {
 
 func TestDecodeHistory(t *testing.T) {
 	cases := []testCase{
-		{"model", 512, 0},
+		{"model", 512, 1},
+		{"model", 512, 2},
 		{"model", 515, 0},
 		{"model", 522, 0},
 		{"model", 523, 1},
@@ -202,7 +204,8 @@ const jqFilter = "cmd/pumphistory/openaps.jq"
 
 func TestJQFilter(t *testing.T) {
 	cases := []testCase{
-		{"model", 512, 0},
+		{"model", 512, 1},
+		{"model", 512, 2},
 		{"model", 515, 0},
 		{"model", 522, 0},
 		{"model", 523, 1},
