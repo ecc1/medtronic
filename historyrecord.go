@@ -28,6 +28,7 @@ const (
 	LowBattery              HistoryRecordType = 0x19
 	BatteryChange           HistoryRecordType = 0x1A
 	SetAutoOff              HistoryRecordType = 0x1B
+	PrepareInsulinChange    HistoryRecordType = 0x1C
 	SuspendPump             HistoryRecordType = 0x1E
 	ResumePump              HistoryRecordType = 0x1F
 	SelfTest                HistoryRecordType = 0x20
@@ -48,6 +49,7 @@ const (
 	AlarmClock              HistoryRecordType = 0x35
 	ChangeMeterID           HistoryRecordType = 0x36
 	BGReceived512           HistoryRecordType = 0x39
+	ConfirmInsulinChange    HistoryRecordType = 0x3A
 	SensorStatus            HistoryRecordType = 0x3B
 	EnableMeter             HistoryRecordType = 0x3C
 	BGReceived              HistoryRecordType = 0x3F
@@ -111,6 +113,7 @@ var decode = map[HistoryRecordType]decoder{
 	LowBattery:              decodeLowBattery,
 	BatteryChange:           decodeBatteryChange,
 	SetAutoOff:              decodeSetAutoOff,
+	PrepareInsulinChange:    decodePrepareInsulinChange,
 	SuspendPump:             decodeSuspendPump,
 	ResumePump:              decodeResumePump,
 	SelfTest:                decodeSelfTest,
@@ -131,6 +134,7 @@ var decode = map[HistoryRecordType]decoder{
 	AlarmClock:              decodeAlarmClock,
 	ChangeMeterID:           decodeChangeMeterID,
 	BGReceived512:           decodeBGReceived512,
+	ConfirmInsulinChange:    decodeConfirmInsulinChange,
 	SensorStatus:            decodeSensorStatus,
 	EnableMeter:             decodeEnableMeter,
 	BGReceived:              decodeBGReceived,
@@ -465,6 +469,8 @@ func decodeSetAutoOff(data []byte, family Family) HistoryRecord {
 	return r
 }
 
+var decodePrepareInsulinChange = decodeBase
+
 var decodeSuspendPump = decodeBase
 
 var decodeResumePump = decodeBase
@@ -544,6 +550,8 @@ var decodeAlarmClock = decodeBase
 var decodeChangeMeterID = decodeBaseN(21)
 
 var decodeBGReceived512 = decodeBGReceived
+
+var decodeConfirmInsulinChange = decodeEnable
 
 var decodeSensorStatus = decodeEnable
 
