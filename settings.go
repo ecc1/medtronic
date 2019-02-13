@@ -24,6 +24,13 @@ func decodeSettings(data []byte, family Family) (SettingsInfo, error) {
 		}
 		info.MaxBolus = byteToInsulin(data[6], 22)
 		info.MaxBasal = twoByteInsulin(data[7:9], 23)
+		if data[18] == 0 {
+			// Fast-acting insulin type.
+			info.InsulinAction = 6 * time.Hour
+		} else {
+			// Regular insulin type.
+			info.InsulinAction = 8 * time.Hour
+		}
 	} else if family <= 22 {
 		if len(data) < 22 || data[0] != 21 {
 			return info, BadResponseError{Command: settings, Data: data}
