@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"sort"
 	"time"
 
 	"github.com/ecc1/medtronic"
@@ -11,18 +12,38 @@ import (
 )
 
 const (
-	sensorVersion     = 13
 	sensorCalibration = 10
+
+	sensorPeriod = 40 * time.Minute
 )
 
 var (
-	sensorID      = flag.String("s", "000000", "sensor `ID`")
+	sensorID = flag.String("s", "000000", "sensor `ID`")
+	//sensorID      = flag.String("s", "257EB6", "sensor `ID`")
 	sensorAddress []byte
 
 	jsonFile = flag.String("f", "glucose.json", "read BGs from JSON `file`")
 
 	nsEntries nightscout.Entries
+
+	intervalSec = []int{
+		285, 15, 285, 15, 285, 15, 285, 15, 285, 15, 285, 15, 285, 15, 285, 15,
+		//279, 17, 262, 15, 347, 18, 253, 13, 283, 15, 306, 15, 227, 18, 316, 16,
+	}
+
+	transmitTime = make([]time.Duration, len(intervalSec))
 )
+
+func init() {
+	var cur time.Duration
+	for i, s := range intervalSec {
+		cur += time.Duration(s) * time.Second
+		transmitTime[i] = cur
+	}
+	if cur != sensorPeriod {
+		log.Panicf("intervals sum to %v", cur)
+	}
+}
 
 func main() {
 	flag.Parse()
@@ -33,6 +54,9 @@ func main() {
 		log.Fatal(err)
 	}
 	readBGs()
+	if len(nsEntries) < 2 {
+		log.Fatal("not enough BG entries")
+	}
 	sendBGs()
 }
 
@@ -48,50 +72,59 @@ func readBGs() {
 	}
 }
 
-var retransmitInterval = []int8{16, 17, 17, 11, 13, 12, 14, 11}
-
 func sendBGs() {
+	// Synchronize to sensor transmission schedule.
+	e := nsEntries[0]
+	log.Printf("latest BG: %d at %s", e.SGV, e.Time().Format(medtronic.UserTimeLayout))
+	d := time.Duration(medtronic.SinceMidnight(time.Now()))
+	m := d % sensorPeriod
+	index := sort.Search(len(transmitTime), func(i int) bool {
+		return transmitTime[i] >= m
+	})
+	var delta time.Duration
+	if index < len(transmitTime) {
+		delta = transmitTime[index] - m
+	} else {
+		index = 0
+		delta = sensorPeriod - m
+	}
+	log.Printf("sleeping for %v", delta)
+	time.Sleep(delta)
+
+	for i := range isigBuffer {
+		isigBuffer[i] = getISIG(i)
+	}
+	seq := getSequence(index)
+	p := sensorPacket(seq)
+	log.Printf("sending packet %02X", seq)
 	pump := medtronic.Open()
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
-	defer pump.Close()
+	pump.Radio.Send(p)
+	pump.Close()
 
-	pump.Wakeup()
+	if index%2 == 1 {
+		log.Printf("warning: missed initial transmission of this packet")
+		return
+	}
+	delta = transmitTime[index+1] - transmitTime[index]
+	log.Printf("sleeping for %v", delta)
+	time.Sleep(delta)
+
+	seq = getSequence(index + 1)
+	p = sensorPacket(seq)
+	log.Printf("sending packet %02X", seq)
+	pump = medtronic.Open()
 	if pump.Error() != nil {
 		log.Fatal(pump.Error())
 	}
-	p := sensorPacket()
-	for n := 0; n < 2; n++ {
-		if n != 0 {
-			r := time.Duration(retransmitInterval[p.Seq&0x7])
-			time.Sleep(r * time.Second)
-		}
-		p.Repeat = n
-		log.Printf("sending %+v", p)
-		pump.Radio.Send(marshalSensorPacket(p, 0x3))
-	}
-	if pump.Error() != nil {
-		log.Fatal(pump.Error())
-	}
+	pump.Radio.Send(p)
+	pump.Close()
 }
 
-func sensorPacket() SensorPacket {
-	p := SensorPacket{Address: sensorAddress, Version: sensorVersion}
-	p.Adjust = 0x1D
-	p.Battery = 160
-	p.Seq = getSequence()
-	p.ISIG = make([]int, ISIGsPerPacket)
-	for i := range p.ISIG {
-		p.ISIG[i] = getISIG(i)
-	}
-	return p
-}
-
-func getSequence() int {
-	e := nsEntries[0]
-	n := e.Date / (5 * 60 * 1000)
-	return int(n & 0xF)
+func getSequence(i int) byte {
+	return byte((i/2)<<4 | i%2)
 }
 
 func getISIG(pos int) int {
