@@ -15,7 +15,7 @@ func sensorPacket(seq byte) []byte {
 	v := make([]byte, 32)
 	v[0] = packet.Sensor | 0x3 // 0xAB
 	v[1] = 0x0F
-	copy(v[2:5], sensorAddress)
+	// v[2:5] = sensor ID 000000
 	v[5] = 13 // Firmware version 1.3
 	v[6] = 0x0E
 	v[7] = 0x1E
