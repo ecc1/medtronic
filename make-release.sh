@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-programs="cgmhistory cgmpage cgmupdate fakemeter historypage listen mdt mmtune pumphistory setbasals sniff"
+programs="bgproxy cgmhistory cgmpage cgmupdate fakemeter historypage listen mdt mmtune pumphistory setbasals sniff"
 others="cmd/pumphistory/openaps.jq"
 go_ldflags="-s -w"
 target_archs="arm 386"
