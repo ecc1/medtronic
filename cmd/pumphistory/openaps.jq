@@ -49,13 +49,13 @@ def bg_values_with_units:
 [
   # Treat null as an empty array.
   (. // []) |
-  # Keep an array of the fakeMeterTimestamps
+  # Keep an array of the fake meter timestamps.
   [.[] | (select(.Type == "BGReceived" and .Info.MeterID == "000000") | .Time)] as $fakeMeterTimes |
   # Perform the following on each element of the input array.
   .[] |
   # Filter out fake meter entries.
   select(((.Type == "BGReceived" and .Info.MeterID == "000000") or
-  # Filter out BGCapture entries where the time is in the fakeMeterTimes array
+  # Filter out BGCapture entries where the time is in the fakeMeterTimes array.
           (.Type == "BGCapture" and (.Time as $time | $fakeMeterTimes | any(. == $time)))
          ) | not) |
   # Start with the timestamp field, common to all record types,
