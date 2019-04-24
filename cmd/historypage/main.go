@@ -12,6 +12,7 @@ import (
 func main() {
 	pump := medtronic.Open()
 	defer pump.Close()
+	pump.Wakeup()
 	switch len(os.Args) {
 	case 1:
 		result := pump.LastHistoryPage()

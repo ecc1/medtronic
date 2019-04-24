@@ -20,6 +20,7 @@ func main() {
 	flag.Parse()
 	pump := medtronic.Open()
 	defer pump.Close()
+	pump.Wakeup()
 	var data []byte
 	if *glucosePage >= 0 {
 		data = pump.GlucosePage(*glucosePage)
