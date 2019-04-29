@@ -18,7 +18,7 @@ func decodeInsulinSensitivitySchedule(data []byte, units GlucoseUnitsType) Insul
 	var sched []InsulinSensitivity
 	for i := 0; i < len(data)-1; i += 2 {
 		n := data[i]
-		start := halfHoursToTimeOfDay(n & 0x1F)
+		start := halfHoursToTimeOfDay(n & 0x3F)
 		if start == 0 && len(sched) != 0 {
 			break
 		}

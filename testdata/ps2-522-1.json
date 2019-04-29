@@ -900,7 +900,7 @@
             "Units": "mg/dL"
           },
           {
-            "Start": "00:30",
+            "Start": "16:30",
             "Sensitivity": 30,
             "Units": "mg/dL"
           }
@@ -935,7 +935,7 @@
             "Units": "mg/dL"
           },
           {
-            "Start": "06:30",
+            "Start": "22:30",
             "Sensitivity": 30,
             "Units": "mg/dL"
           }

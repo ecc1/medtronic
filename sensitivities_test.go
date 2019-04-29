@@ -8,13 +8,11 @@ import (
 
 func TestInsulinSensitivities(t *testing.T) {
 	cases := []struct {
-		name  string
 		data  []byte
 		units GlucoseUnitsType
 		sched InsulinSensitivitySchedule
 	}{
 		{
-			"1_sens",
 			parseBytes("00 28"),
 			MgPerDeciLiter,
 			InsulinSensitivitySchedule{
@@ -22,7 +20,14 @@ func TestInsulinSensitivities(t *testing.T) {
 			},
 		},
 		{
-			"8_sens",
+			parseBytes("00 32 2C 3C"),
+			MgPerDeciLiter,
+			InsulinSensitivitySchedule{
+				{parseTD("00:00"), 50, MgPerDeciLiter},
+				{parseTD("22:00"), 60, MgPerDeciLiter},
+			},
+		},
+		{
 			parseBytes("00 14 02 19 04 1E 06 23 08 28 0A 2D 0C 32 0E 37 00 00 00"),
 			MgPerDeciLiter,
 			InsulinSensitivitySchedule{
@@ -38,7 +43,7 @@ func TestInsulinSensitivities(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
+		t.Run("", func(t *testing.T) {
 			s := decodeInsulinSensitivitySchedule(c.data, c.units)
 			if !reflect.DeepEqual(s, c.sched) {
 				t.Errorf("decodeInsulinSensitivitySchedule(% X, %v) == %+v, want %+v", c.data, c.units, s, c.sched)
