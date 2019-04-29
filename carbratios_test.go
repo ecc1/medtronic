@@ -9,14 +9,12 @@ import (
 // Ratio values are 10x grams/unit or 100x units/exchange (see carbratios.go).
 func TestCarbRatios(t *testing.T) {
 	cases := []struct {
-		name   string
 		data   []byte
 		units  CarbUnitsType
 		family Family
 		sched  CarbRatioSchedule
 	}{
 		{
-			"2_carbratios",
 			parseBytes("00 06 12 08"),
 			Grams,
 			22,
@@ -26,7 +24,6 @@ func TestCarbRatios(t *testing.T) {
 			},
 		},
 		{
-			"8_carbratios",
 			parseBytes("00 0A 02 0B 04 0C 06 0D 08 0E 0A 0F 0C 10 0E 11 00 00 00 00"),
 			Grams,
 			12,
@@ -42,7 +39,6 @@ func TestCarbRatios(t *testing.T) {
 			},
 		},
 		{
-			"12_carbratios",
 			parseBytes("00 05 01 06 02 07 03 08 04 09 05 0A 06 0B 07 0C 00 00"),
 			Grams,
 			22,
@@ -59,7 +55,7 @@ func TestCarbRatios(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
+		t.Run("", func(t *testing.T) {
 			s := decodeCarbRatioSchedule(c.data, c.units, c.family)
 			if !reflect.DeepEqual(s, c.sched) {
 				t.Errorf("decodeCarbRatioSchedule(% X, %v, %d) == %+v, want %+v", c.data, c.units, c.family, s, c.sched)

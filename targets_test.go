@@ -8,14 +8,12 @@ import (
 
 func TestGlucoseTargets(t *testing.T) {
 	cases := []struct {
-		name   string
 		data   []byte
 		units  GlucoseUnitsType
 		family Family
 		sched  GlucoseTargetSchedule
 	}{
 		{
-			"1_target",
 			parseBytes("00 50 78"),
 			MgPerDeciLiter,
 			22,
@@ -24,7 +22,6 @@ func TestGlucoseTargets(t *testing.T) {
 			},
 		},
 		{
-			"1_target_mmol",
 			parseBytes("00 2C 43"),
 			MMolPerLiter,
 			22,
@@ -33,7 +30,6 @@ func TestGlucoseTargets(t *testing.T) {
 			},
 		},
 		{
-			"8_targets_x23",
 			parseBytes("00 64 64 02 65 65 04 66 66 06 67 67 08 68 68 0A 69 69 0C 6A 6A 0E 6B 6B 00 00 00"),
 			MgPerDeciLiter,
 			23,
@@ -49,7 +45,6 @@ func TestGlucoseTargets(t *testing.T) {
 			},
 		},
 		{
-			"8_targets_x12",
 			parseBytes("00 64 02 65 04 66 06 67 08 68 0A 69 0C 6A 0E 6B 00 00"),
 			MgPerDeciLiter,
 			12,
@@ -66,7 +61,7 @@ func TestGlucoseTargets(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
+		t.Run("", func(t *testing.T) {
 			s := decodeGlucoseTargetSchedule(c.data, c.units, c.family)
 			if !reflect.DeepEqual(s, c.sched) {
 				t.Errorf("decodeGlucoseTargetSchedule(% X, %v, %d) == %+v, want %+v", c.data, c.units, c.family, s, c.sched)
