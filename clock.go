@@ -20,7 +20,7 @@ func (pump *Pump) Clock() time.Time {
 	if pump.Error() != nil {
 		return time.Time{}
 	}
-	if len(data) < 8 && data[0] != 7 {
+	if len(data) < 8 || data[0] != 7 {
 		pump.BadResponse(clock, data)
 		return time.Time{}
 	}
