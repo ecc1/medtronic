@@ -110,9 +110,13 @@ func TestDecodeTime(t *testing.T) {
 		t time.Time
 	}{
 		{parseBytes("1F 40 00 01 05"), parseTime("2005-01-01T00:00:31")},
+		{parseBytes("09 A2 0A 15 10"), parseTime("2016-02-21T10:34:09")},
+		{parseBytes("42 22 54 65 10"), parseTime("2016-04-05T20:34:02")},
+		{parseBytes("79 23 0C 12 10"), parseTime("2016-04-18T12:35:57")},
 		{parseBytes("75 B7 13 04 10"), parseTime("2016-06-04T19:55:53")},
 		{parseBytes("5D B3 0F 06 10"), parseTime("2016-06-06T15:51:29")},
 		{parseBytes("40 94 12 0F 10"), parseTime("2016-06-15T18:20:00")},
+		{parseBytes("B1 34 87 6B 12"), parseTime("2018-08-11T07:52:49")},
 	}
 	for _, c := range cases {
 		t.Run(c.t.Format(time.Kitchen), func(t *testing.T) {
