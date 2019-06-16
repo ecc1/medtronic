@@ -3,6 +3,7 @@ package medtronic
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"time"
 )
 
@@ -78,9 +79,9 @@ func (r *BolusWizardRecord) UnmarshalJSON(data []byte) error {
 	}
 	switch r.CarbUnits {
 	case Grams:
-		r.CarbRatio = Ratio(10*rep.CarbRatio + 0.5)
+		r.CarbRatio = Ratio(math.Round(10 * rep.CarbRatio))
 	case Exchanges:
-		r.CarbRatio = Ratio(1000*rep.CarbRatio + 0.5)
+		r.CarbRatio = Ratio(math.Round(1000 * rep.CarbRatio))
 	default:
 		err = fmt.Errorf("unknown carb unit %d unmarshaling BolusWizardRecord", r.CarbUnits)
 	}
@@ -122,9 +123,9 @@ func (r *CarbRatio) UnmarshalJSON(data []byte) error {
 	}
 	switch r.Units {
 	case Grams:
-		r.Ratio = Ratio(10*rep.Ratio + 0.5)
+		r.Ratio = Ratio(math.Round(10 * rep.Ratio))
 	case Exchanges:
-		r.Ratio = Ratio(1000*rep.Ratio + 0.5)
+		r.Ratio = Ratio(math.Round(1000 * rep.Ratio))
 	default:
 		err = fmt.Errorf("unknown carb unit %d unmarshaling CarbRatio", r.Units)
 	}
@@ -277,7 +278,7 @@ func (r *Insulin) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	*r = Insulin(1000*v + 0.5)
+	*r = Insulin(math.Round(1000 * v))
 	return nil
 }
 
@@ -293,7 +294,7 @@ func (r *Voltage) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	*r = Voltage(1000*v + 0.5)
+	*r = Voltage(math.Round(1000 * v))
 	return nil
 }
 

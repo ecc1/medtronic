@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"time"
@@ -85,7 +86,7 @@ func bolus(pump *medtronic.Pump, args Arguments) interface{} {
 	if err != nil {
 		cmdError("bolus", "units", err)
 	}
-	amount := medtronic.Insulin(1000.0*f + 0.5)
+	amount := medtronic.Insulin(math.Round(1000.0 * f))
 	log.Printf("performing bolus of %v units", amount)
 	pump.Bolus(amount)
 	return nil
@@ -222,7 +223,7 @@ func setMaxBasal(pump *medtronic.Pump, args Arguments) interface{} {
 	if err != nil {
 		cmdError("setmaxbasal", "rate", err)
 	}
-	rate := medtronic.Insulin(1000.0*f + 0.5)
+	rate := medtronic.Insulin(math.Round(1000.0 * f))
 	log.Printf("setting max basal rate to %v units/hour", rate)
 	pump.SetMaxBasal(rate)
 	return nil
@@ -233,7 +234,7 @@ func setMaxBolus(pump *medtronic.Pump, args Arguments) interface{} {
 	if err != nil {
 		cmdError("setmaxbolus", "units", err)
 	}
-	amount := medtronic.Insulin(1000.0*f + 0.5)
+	amount := medtronic.Insulin(math.Round(1000.0 * f))
 	log.Printf("setting max bolus to %v units", amount)
 	pump.SetMaxBolus(amount)
 	return nil
@@ -255,11 +256,11 @@ func setTempBasal(pump *medtronic.Pump, args Arguments) interface{} {
 	}
 	switch temp {
 	case "absolute":
-		rate := medtronic.Insulin(1000.0*f + 0.5)
+		rate := medtronic.Insulin(math.Round(1000.0 * f))
 		log.Printf("setting temporary basal of %v units/hour for %d minutes", rate, minutes)
 		pump.SetAbsoluteTempBasal(duration, rate)
 	case "percent":
-		percent := int(f + 0.5)
+		percent := int(math.Round(f))
 		log.Printf("setting temporary basal of %d%% for %d minutes", percent, minutes)
 		pump.SetPercentTempBasal(duration, percent)
 	default:

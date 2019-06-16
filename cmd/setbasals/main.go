@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"strconv"
 	"time"
 
@@ -79,7 +80,7 @@ func getRate(arg string) medtronic.Insulin {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return medtronic.Insulin(1000.0*f + 0.5)
+	return medtronic.Insulin(math.Round(1000.0 * f))
 }
 
 func parseTD(s string) medtronic.TimeOfDay {
