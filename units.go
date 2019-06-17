@@ -89,7 +89,7 @@ func (pump *Pump) GlucoseUnits() GlucoseUnitsType {
 type Insulin int
 
 func (r Insulin) String() string {
-	return fmt.Sprintf("%g", float64(r)/1000)
+	return fmt.Sprintf("%.3f", float64(r)/1000)
 }
 
 func milliUnitsPerStroke(family Family) Insulin {
