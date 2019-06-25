@@ -16,7 +16,7 @@ const (
 	sensorInterval1 = 15 * time.Second
 	sensorCycle     = sensorInterval0 + sensorInterval1
 
-	sensorCalibrationFactor = 10
+	sensorCalibrationFactor = 3
 )
 
 var (
