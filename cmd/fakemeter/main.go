@@ -23,7 +23,7 @@ var (
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s [options] bg", os.Args[0])
+	fmt.Fprintf(os.Stderr, "usage: %s [options] bg\n", os.Args[0])
 	flag.PrintDefaults()
 	os.Exit(1)
 }
