@@ -270,21 +270,6 @@ func (r HistoryRecord) Type() HistoryRecordType {
 	return HistoryRecordType(r.Data[0])
 }
 
-// BasalRate returns the basal rate for TempBasal or BasalProfileStart records.
-func (r HistoryRecord) BasalRate() (Insulin, error) {
-	switch info := r.Info.(type) {
-	case TempBasalRecord:
-		v, ok := info.Value.(Insulin)
-		if info.Type != Absolute || !ok {
-			return 0, fmt.Errorf("BasalRate: non-absolute TempBasal %+v", info)
-		}
-		return v, nil
-	case BasalProfileStartRecord:
-		return info.BasalRate.Rate, nil
-	}
-	return 0, fmt.Errorf("BasalRate: unexpected %+v", r)
-}
-
 func decodeBase(data []byte, family Family) HistoryRecord {
 	return HistoryRecord{
 		Time: decodeTime(data[2:7]),
