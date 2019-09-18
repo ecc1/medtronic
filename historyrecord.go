@@ -181,6 +181,21 @@ var decode = map[HistoryRecordType]decoder{
 	EnableCaptureEvent:      decodeEnableCaptureEvent,
 }
 
+//AlarmCode represents a pump alarm code.
+type AlarmCode byte
+
+//go:generate stringer -type AlarmCode
+
+const (
+	BatteryOutLimitExceeded AlarmCode = 0x03
+	NoDelivery              AlarmCode = 0x04
+	BatteryDepleted         AlarmCode = 0x05
+	AutoOff                 AlarmCode = 0x06
+	DeviceReset             AlarmCode = 0x10
+	ReprogramError          AlarmCode = 0x3D
+	EmptyReservoir          AlarmCode = 0x3E
+)
+
 // nolint
 type (
 	decoder func([]byte, Family) HistoryRecord
@@ -358,7 +373,7 @@ func decodeAlarm(data []byte, family Family) HistoryRecord {
 		Time: decodeTime(data[4:9]),
 		Data: data[:9],
 	}
-	r.Info = int(data[1])
+	r.Info = AlarmCode(data[1])
 	return r
 }
 
