@@ -161,7 +161,7 @@ func TestDecodeHistory(t *testing.T) {
 func checkHistory(t *testing.T, decoded History, jsonFile string) {
 	eq, msg := compareDataToJSON(decoded, jsonFile)
 	if !eq {
-		t.Errorf("JSON is different:\n%s\n", msg)
+		t.Errorf("JSON is different:\n%s", msg)
 	}
 }
 
@@ -194,7 +194,7 @@ func TestTreatments(t *testing.T) {
 			treatmentFile := testFileName(c.treatments) + ".json"
 			eq, msg := compareDataToJSON(treatments, treatmentFile)
 			if !eq {
-				t.Errorf("JSON is different:\n%s\n", msg)
+				t.Errorf("JSON is different:\n%s", msg)
 			}
 		})
 	}
@@ -251,7 +251,7 @@ func TestJQFilter(t *testing.T) {
 			tmpfile.Close()
 			eq, msg := diffJSON(filterOutput, openAPSFile)
 			if !eq {
-				t.Errorf("JSON is different:\n%s\n", msg)
+				t.Errorf("JSON is different:\n%s", msg)
 			}
 		})
 	}
