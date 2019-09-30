@@ -277,22 +277,22 @@ type pageStructure struct {
 }
 
 var pageData = map[Command]pageStructure{
-	historyPage: pageStructure{
+	historyPage: {
 		numFragments:    16,
 		historyPageSize: 1024,
 		paramBits:       8,
 	},
-	glucosePage: pageStructure{
+	glucosePage: {
 		numFragments:    16,
 		historyPageSize: 1024,
 		paramBits:       32,
 	},
-	isigPage: pageStructure{
+	isigPage: {
 		numFragments:    32,
 		historyPageSize: 2048,
 		paramBits:       32,
 	},
-	vcntrPage: pageStructure{
+	vcntrPage: {
 		numFragments:    16,
 		historyPageSize: 1024,
 		paramBits:       8,
