@@ -66,15 +66,19 @@ func (pump *Pump) BasalPatternB() BasalRateSchedule {
 	return pump.basalSchedule(basalPatternB)
 }
 
-// BasalRateAt returns the basal rate in effect at the given time.
-func (s BasalRateSchedule) BasalRateAt(t time.Time) BasalRate {
+// BasalRateAt returns the index of the basal rate in effect at the given time.
+func (s BasalRateSchedule) BasalRateAt(t time.Time) int {
 	d := SinceMidnight(t)
-	last := BasalRate{}
-	for _, v := range s {
+	last := -1
+	for i, v := range s {
 		if v.Start > d {
 			break
 		}
-		last = v
+		last = i
+	}
+	if last == -1 {
+		// Schedule started after time t?
+		log.Printf("cannot find basal rate at %s in profile %+v", t.Format(UserTimeLayout), s)
 	}
 	return last
 }

@@ -7,7 +7,6 @@ import (
 	"log"
 	"reflect"
 	"testing"
-	"time"
 )
 
 func TestEncodeBasalRate(t *testing.T) {
@@ -164,24 +163,29 @@ func TestBasalRates(t *testing.T) {
 }
 
 func TestBasalRateAt(t *testing.T) {
+	sched := BasalRateSchedule{
+		{parseTD("00:00"), 1000},
+		{parseTD("04:00"), 2000},
+		{parseTD("08:00"), 3000},
+		{parseTD("12:00"), 4000},
+		{parseTD("16:00"), 5000},
+		{parseTD("20:00"), 6000},
+	}
 	cases := []struct {
-		sched  BasalRateSchedule
-		at     time.Time
-		target BasalRate
+		at    string
+		index int
 	}{
-		{
-			BasalRateSchedule{
-				{parseTD("00:00"), 1000},
-			},
-			parseTime("2016-11-06T23:00:00"),
-			BasalRate{parseTD("00:00"), 1000},
-		},
+		{"2016-11-06T00:00:00", 0},
+		{"2016-11-06T01:00:00", 0},
+		{"2016-11-06T10:00:00", 2},
+		{"2016-11-06T23:00:00", 5},
+		{"2016-11-07T00:00:00", 0},
 	}
 	for _, c := range cases {
 		t.Run("", func(t *testing.T) {
-			target := c.sched.BasalRateAt(c.at)
-			if !reflect.DeepEqual(target, c.target) {
-				t.Errorf("%v.BasalRateAt(%v) == %+v, want %+v", c.sched, c.at, target, c.target)
+			index := sched.BasalRateAt(parseTime(c.at))
+			if index != c.index {
+				t.Errorf("BasalRateAt(%s) == %d, want %d", c.at, index, c.index)
 			}
 		})
 	}
