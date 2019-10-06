@@ -83,6 +83,18 @@ func (s BasalRateSchedule) BasalRateAt(t time.Time) int {
 	return last
 }
 
+// NextChange returns the time when the next scheduled rate will take effect (strictly after t).
+func (s BasalRateSchedule) NextChange(t time.Time) time.Time {
+	i := s.BasalRateAt(t)
+	var next time.Duration
+	if i+1 < len(s) {
+		next = time.Duration(s[i+1].Start)
+	} else {
+		next = 24 * time.Hour
+	}
+	return t.Add(next - time.Duration(SinceMidnight(t)))
+}
+
 func (pump *Pump) setBasalSchedule(cmd Command, s BasalRateSchedule) {
 	if len(s) == 0 {
 		pump.SetError(fmt.Errorf("%v: empty schedule", cmd))

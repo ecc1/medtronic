@@ -190,3 +190,32 @@ func TestBasalRateAt(t *testing.T) {
 		})
 	}
 }
+
+func TestNextChange(t *testing.T) {
+	sched := BasalRateSchedule{
+		{parseTD("00:00"), 1000},
+		{parseTD("04:00"), 2000},
+		{parseTD("08:00"), 3000},
+		{parseTD("12:00"), 4000},
+		{parseTD("16:00"), 5000},
+		{parseTD("20:00"), 6000},
+	}
+	cases := []struct {
+		cur  string
+		next string
+	}{
+		{"2019-10-05T00:00:00", "2019-10-05T04:00:00"},
+		{"2019-10-05T03:00:00", "2019-10-05T04:00:00"},
+		{"2019-10-05T04:00:00", "2019-10-05T08:00:00"},
+		{"2019-10-05T18:00:00", "2019-10-05T20:00:00"},
+		{"2019-10-05T23:00:00", "2019-10-06T00:00:00"},
+	}
+	for _, c := range cases {
+		t.Run("", func(t *testing.T) {
+			next := sched.NextChange(parseTime(c.cur))
+			if !next.Equal(parseTime(c.next)) {
+				t.Errorf("NextChange(%s) == %s, want %s", c.cur, next, c.next)
+			}
+		})
+	}
+}
