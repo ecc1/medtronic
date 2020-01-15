@@ -80,10 +80,9 @@ func main() {
 	exitOnError(pump)
 	result := cmd.Cmd(pump, args)
 	exitOnError(pump)
-	if result == nil {
-		return
+	if result != nil {
+		printFn(result)
 	}
-	printFn(result)
 }
 
 func exitOnError(pump *medtronic.Pump) {
