@@ -29,7 +29,6 @@ func main() {
 	for _, v := range maps {
 		m := v.(map[string]interface{})
 		base64data := m["Data"].(string)
-		var data []byte
 		data, err := base64.StdEncoding.DecodeString(base64data)
 		if err != nil {
 			log.Fatal(err)
