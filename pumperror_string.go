@@ -5,12 +5,12 @@ package medtronic
 import "strconv"
 
 const (
-	_PumpError_name_0 = "CommandRefusedMaxSettingExceeded"
+	_PumpError_name_0 = "CommandRefusedSettingOutOfRange"
 	_PumpError_name_1 = "BolusInProgressInvalidHistoryPageNumber"
 )
 
 var (
-	_PumpError_index_0 = [...]uint8{0, 14, 32}
+	_PumpError_index_0 = [...]uint8{0, 14, 31}
 	_PumpError_index_1 = [...]uint8{0, 15, 39}
 )
 

@@ -86,7 +86,7 @@ type PumpError byte
 // Pump error codes.
 const (
 	CommandRefused           PumpError = 0x08
-	MaxSettingExceeded       PumpError = 0x09
+	SettingOutOfRange        PumpError = 0x09
 	BolusInProgress          PumpError = 0x0C
 	InvalidHistoryPageNumber PumpError = 0x0D
 )
