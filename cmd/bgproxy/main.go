@@ -37,7 +37,7 @@ func main() {
 
 func readBGs() nightscout.Entries {
 	var err error
-	entries, err := nightscout.ReadEntries(*jsonFile)
+	entries, err := nightscout.ReadEntriesFile(*jsonFile)
 	if err != nil {
 		log.Fatal(err)
 	}

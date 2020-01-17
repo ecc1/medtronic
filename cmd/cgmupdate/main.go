@@ -186,7 +186,7 @@ func printGaps(gaps []nightscout.Gap) {
 }
 
 func readJSON() Entries {
-	entries, err := nightscout.ReadEntries(*jsonFile)
+	entries, err := nightscout.ReadEntriesFile(*jsonFile)
 	if err != nil && !os.IsNotExist(err) {
 		log.Printf("%s: %v", *jsonFile, err)
 		somethingFailed = true
