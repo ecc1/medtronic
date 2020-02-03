@@ -35,6 +35,7 @@ var (
 	jsonFile           = flag.String("f", "", "append results to JSON `file`")
 	jsonCutoff         = flag.Duration("k", 7*24*time.Hour, "maximum age of CGM entries to keep in JSON file")
 
+	ns            *nightscout.Website
 	pump          *medtronic.Pump
 	cgmTime       time.Time
 	cgmEpoch      time.Time
@@ -52,8 +53,13 @@ func main() {
 	if *simulateUploadFlag {
 		*uploadFlag = true
 	}
-	nightscout.SetNoUpload(*simulateUploadFlag)
-	nightscout.SetVerbose(*verboseFlag)
+	var err error
+	ns, err = nightscout.DefaultSite()
+	if err != nil {
+		log.Fatal(err)
+	}
+	ns.SetNoUpload(*simulateUploadFlag)
+	ns.SetVerbose(*verboseFlag)
 	papertrail.StartLogging()
 	if *jsonFile != "" {
 		oldEntries = readJSON()
@@ -133,7 +139,7 @@ func uploadEntries() {
 	if cgmEpoch.Before(uploadStart) {
 		uploadStart = cgmEpoch
 	}
-	gaps, err := nightscout.Gaps(uploadStart, gapDuration)
+	gaps, err := ns.Gaps(uploadStart, gapDuration)
 	if err != nil {
 		log.Print(err)
 		uploadFailed = true
@@ -149,7 +155,7 @@ func uploadEntries() {
 	missing := nightscout.Missing(mergedEntries, gaps)
 	log.Printf("uploading %d entries to Nightscout", len(missing))
 	for _, e := range missing {
-		err := nightscout.Upload("POST", "entries", e)
+		err := ns.Upload("api/v1/entries", e)
 		if err != nil {
 			log.Print(err)
 			uploadFailed = true
