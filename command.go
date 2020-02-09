@@ -271,47 +271,43 @@ func (pump *Pump) ExtendedResponse(cmd Command, params ...byte) []byte {
 // The final 2 bytes are the CRC-16 of the preceding data.
 
 type pageStructure struct {
-	numFragments    int // 16 or 32
-	historyPageSize int // 1024 or 2048, including CRC-16
-	paramBits       int // 8 or 32
+	paramBytes   int // 1 or 4
+	numFragments int // 16 or 32 fragments of 64 bytes each
 }
 
 var pageData = map[Command]pageStructure{
 	historyPage: {
-		numFragments:    16,
-		historyPageSize: 1024,
-		paramBits:       8,
+		paramBytes:   1,
+		numFragments: 16,
 	},
 	glucosePage: {
-		numFragments:    16,
-		historyPageSize: 1024,
-		paramBits:       32,
+		paramBytes:   4,
+		numFragments: 16,
 	},
 	isigPage: {
-		numFragments:    32,
-		historyPageSize: 2048,
-		paramBits:       32,
+		paramBytes:   4,
+		numFragments: 32,
 	},
 	vcntrPage: {
-		numFragments:    16,
-		historyPageSize: 1024,
-		paramBits:       8,
+		paramBytes:   1,
+		numFragments: 16,
 	},
 }
 
 // Download requests the given history page from the pump.
 func (pump *Pump) Download(cmd Command, page int) []byte {
-	data, ps := pump.execPage(cmd, page)
+	data := pump.execPage(cmd, page)
 	if pump.Error() != nil {
 		return nil
 	}
 	retries := pump.Retries()
 	defer pump.SetRetries(retries)
 	pump.SetRetries(1)
-	results := make([]byte, 0, ps.historyPageSize)
+	numFragments := pageData[cmd].numFragments
+	results := make([]byte, 0, numFragments*payloadLength)
 	seq := 1
 	for {
-		payload, n := pump.checkFragment(ps, page, data, seq)
+		payload, n := pump.checkFragment(page, data, seq, numFragments)
 		if pump.Error() != nil {
 			return nil
 		}
@@ -319,8 +315,8 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 			results = append(results, payload...)
 			seq++
 		}
-		if n == ps.numFragments {
-			return pump.checkPageCRC(ps, page, results)
+		if n == numFragments {
+			return pump.checkPageCRC(page, results)
 		}
 		// Acknowledge the current fragment and receive the next.
 		next := pump.perform(ack, cmd, ackPacket)
@@ -334,22 +330,22 @@ func (pump *Pump) Download(cmd Command, page int) []byte {
 	}
 }
 
-func (pump *Pump) execPage(cmd Command, page int) ([]byte, pageStructure) {
-	ps := pageData[cmd]
-	switch ps.paramBits {
-	case 8:
-		return pump.Execute(cmd, byte(page)), ps
-	case 32:
-		return pump.Execute(cmd, marshalUint32(uint32(page))...), ps
+func (pump *Pump) execPage(cmd Command, page int) []byte {
+	n := pageData[cmd].paramBytes
+	switch n {
+	case 1:
+		return pump.Execute(cmd, byte(page))
+	case 4:
+		return pump.Execute(cmd, marshalUint32(uint32(page))...)
 	default:
-		log.Panicf("%v: unexpected parameter size (%d)", cmd, ps.paramBits)
+		log.Panicf("%v: unexpected parameter size (%d bytes)", cmd, n)
 	}
 	panic("unreachable")
 }
 
 // checkFragment verifies that a fragment has the expected sequence number
 // and returns the payload and sequence number.
-func (pump *Pump) checkFragment(ps pageStructure, page int, data []byte, expected int) ([]byte, int) {
+func (pump *Pump) checkFragment(page int, data []byte, expected int, numFragments int) ([]byte, int) {
 	if len(data) != fragmentLength {
 		pump.SetError(fmt.Errorf("history page %d: unexpected fragment length (%d)", page, len(data)))
 		return nil, 0
@@ -366,7 +362,7 @@ func (pump *Pump) checkFragment(ps pageStructure, page int, data []byte, expecte
 	}
 	// This is the next fragment.
 	done := data[0]&doneBit != 0
-	if (done && seqNum != ps.numFragments) || (!done && seqNum == ps.numFragments) {
+	if (done && seqNum != numFragments) || (!done && seqNum == numFragments) {
 		pump.SetError(fmt.Errorf("history page %d: unexpected final sequence number (%d)", page, seqNum))
 		return nil, seqNum
 	}
@@ -397,13 +393,13 @@ func (pump *Pump) handleNoResponse(cmd Command, page int, expected int) []byte {
 
 // checkPageCRC verifies the history page CRC and returns the page data with the CRC removed.
 // In a 2048-byte ISIG page, the CRC-16 is stored in the last 4 bytes: [high 0 low 0]
-func (pump *Pump) checkPageCRC(ps pageStructure, page int, data []byte) []byte {
-	if len(data) != ps.historyPageSize {
+func (pump *Pump) checkPageCRC(page int, data []byte) []byte {
+	if len(data) != cap(data) {
 		pump.SetError(fmt.Errorf("history page %d: unexpected size (%d)", page, len(data)))
 		return nil
 	}
 	var dataCRC uint16
-	switch ps.historyPageSize {
+	switch cap(data) {
 	case 1024:
 		dataCRC = twoByteUint(data[1022:])
 		data = data[:1022]
@@ -411,7 +407,7 @@ func (pump *Pump) checkPageCRC(ps pageStructure, page int, data []byte) []byte {
 		dataCRC = uint16(data[2044])<<8 | uint16(data[2046])
 		data = data[:2044]
 	default:
-		log.Panicf("unexpected history page size (%d)", ps.historyPageSize)
+		log.Panicf("unexpected history page size (%d)", cap(data))
 	}
 	calcCRC := packet.CRC16(data)
 	if calcCRC != dataCRC {
