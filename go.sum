@@ -4,8 +4,8 @@ github.com/ecc1/cc111x v0.0.0-20190717175223-bdf71148b791 h1:2dHyz/TxMDleCQG81rd
 github.com/ecc1/cc111x v0.0.0-20190717175223-bdf71148b791/go.mod h1:VrKfnQvzzQH4xt1IfGVQSx5P8DZmLyOQjTzAnz1wVww=
 github.com/ecc1/gpio v0.0.0-20171107174639-450ac9ea6df7 h1:87CukuBNR73j2KmipKlPkTLR1JaxTt0r9HXTDLUclD4=
 github.com/ecc1/gpio v0.0.0-20171107174639-450ac9ea6df7/go.mod h1:LXSJyYdvUHvdCZFUJDqKHv0aRRXrTfZIVlYfBOslPmQ=
-github.com/ecc1/nightscout v0.0.0-20181103224750-3f979d458431 h1:3lgVEsdAD735AUeQYK8zgHYwgxkLcmW2PdOSK01AY/c=
-github.com/ecc1/nightscout v0.0.0-20181103224750-3f979d458431/go.mod h1:/T0Ahv0JLgzHq6yEPWWLBg6+YKPgQFbRemd+9UESIqE=
+github.com/ecc1/nightscout v0.0.0-20200213203029-ed33226ae4c7 h1:1lXPKv8WNil2xfAMQ7B2YaU53j+PNgl8jRVBSw8AGGM=
+github.com/ecc1/nightscout v0.0.0-20200213203029-ed33226ae4c7/go.mod h1:DEIYft0t/2xFPBA8hCqRh+ZB1vDk34JdmU4L5gTjDww=
 github.com/ecc1/papertrail v0.0.0-20180201023728-df9ed971a7a4 h1:8+OWigohhMPxo6Lt9i9AXJGwqG74CBA6YRr8vBL1cCY=
 github.com/ecc1/papertrail v0.0.0-20180201023728-df9ed971a7a4/go.mod h1:7L6EbYeVEr0TtlZZ33Hom8BKdY8P6BLg+z74kThMTMU=
 github.com/ecc1/radio v0.0.0-20180304192111-a935dc251ef0 h1:YSYhEBsDZ5PkA3QF+MCcdCTGh0cGqzUBwkNe2TmmQOE=
