@@ -4,6 +4,29 @@ package medtronic
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[CGMDataEnd-1]
+	_ = x[CGMWeakSignal-2]
+	_ = x[CGMCal-3]
+	_ = x[CGMPacket-4]
+	_ = x[CGMError-5]
+	_ = x[CGMDataLow-6]
+	_ = x[CGMDataHigh-7]
+	_ = x[CGMTimestamp-8]
+	_ = x[CGMBatteryChange-10]
+	_ = x[CGMStatus-11]
+	_ = x[CGMTimeChange-12]
+	_ = x[CGMSync-13]
+	_ = x[CGMCalBG-14]
+	_ = x[CGMCalFactor-15]
+	_ = x[CGMEvent10-16]
+	_ = x[CGMEvent13-19]
+	_ = x[CGMGlucose-32]
+}
+
 const (
 	_CGMRecordType_name_0 = "CGMDataEndCGMWeakSignalCGMCalCGMPacketCGMErrorCGMDataLowCGMDataHighCGMTimestamp"
 	_CGMRecordType_name_1 = "CGMBatteryChangeCGMStatusCGMTimeChangeCGMSyncCGMCalBGCGMCalFactorCGMEvent10"

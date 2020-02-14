@@ -4,6 +4,16 @@ package medtronic
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[CommandRefused-8]
+	_ = x[SettingOutOfRange-9]
+	_ = x[BolusInProgress-12]
+	_ = x[InvalidHistoryPageNumber-13]
+}
+
 const (
 	_PumpError_name_0 = "CommandRefusedSettingOutOfRange"
 	_PumpError_name_1 = "BolusInProgressInvalidHistoryPageNumber"

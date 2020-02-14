@@ -4,6 +4,19 @@ package medtronic
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[BatteryOutLimitExceeded-3]
+	_ = x[NoDelivery-4]
+	_ = x[BatteryDepleted-5]
+	_ = x[AutoOff-6]
+	_ = x[DeviceReset-16]
+	_ = x[ReprogramError-61]
+	_ = x[EmptyReservoir-62]
+}
+
 const (
 	_AlarmCode_name_0 = "BatteryOutLimitExceededNoDeliveryBatteryDepletedAutoOff"
 	_AlarmCode_name_1 = "DeviceReset"

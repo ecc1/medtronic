@@ -4,6 +4,17 @@ package medtronic
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[BolusButton-0]
+	_ = x[EscButton-1]
+	_ = x[ActButton-2]
+	_ = x[UpButton-3]
+	_ = x[DownButton-4]
+}
+
 const _PumpButton_name = "BolusButtonEscButtonActButtonUpButtonDownButton"
 
 var _PumpButton_index = [...]uint8{0, 11, 20, 29, 37, 47}

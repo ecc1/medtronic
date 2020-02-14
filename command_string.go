@@ -4,6 +4,55 @@ package medtronic
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[ack-6]
+	_ = x[nak-21]
+	_ = x[cgmWriteTimestamp-40]
+	_ = x[setBasalPatternA-48]
+	_ = x[setBasalPatternB-49]
+	_ = x[setClock-64]
+	_ = x[setMaxBolus-65]
+	_ = x[bolus-66]
+	_ = x[selectBasalPattern-74]
+	_ = x[setAbsoluteTempBasal-76]
+	_ = x[suspend-77]
+	_ = x[button-91]
+	_ = x[wakeup-93]
+	_ = x[setPercentTempBasal-105]
+	_ = x[setMaxBasal-110]
+	_ = x[setBasalRates-111]
+	_ = x[clock-112]
+	_ = x[pumpID-113]
+	_ = x[battery-114]
+	_ = x[reservoir-115]
+	_ = x[firmwareVersion-116]
+	_ = x[errorStatus-117]
+	_ = x[historyPage-128]
+	_ = x[carbUnits-136]
+	_ = x[glucoseUnits-137]
+	_ = x[carbRatios-138]
+	_ = x[insulinSensitivities-139]
+	_ = x[glucoseTargets512-140]
+	_ = x[model-141]
+	_ = x[settings512-145]
+	_ = x[basalRates-146]
+	_ = x[basalPatternA-147]
+	_ = x[basalPatternB-148]
+	_ = x[tempBasal-152]
+	_ = x[glucosePage-154]
+	_ = x[isigPage-155]
+	_ = x[calibrationFactor-156]
+	_ = x[lastHistoryPage-157]
+	_ = x[glucoseTargets-159]
+	_ = x[settings-192]
+	_ = x[cgmPageCount-205]
+	_ = x[status-206]
+	_ = x[vcntrPage-213]
+}
+
 const _Command_name = "acknakcgmWriteTimestampsetBasalPatternAsetBasalPatternBsetClocksetMaxBolusbolusselectBasalPatternsetAbsoluteTempBasalsuspendbuttonwakeupsetPercentTempBasalsetMaxBasalsetBasalRatesclockpumpIDbatteryreservoirfirmwareVersionerrorStatushistoryPagecarbUnitsglucoseUnitscarbRatiosinsulinSensitivitiesglucoseTargets512modelsettings512basalRatesbasalPatternAbasalPatternBtempBasalglucosePageisigPagecalibrationFactorlastHistoryPageglucoseTargetssettingscgmPageCountstatusvcntrPage"
 
 var _Command_map = map[Command]string{

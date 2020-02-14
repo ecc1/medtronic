@@ -4,6 +4,14 @@ package medtronic
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[Grams-1]
+	_ = x[Exchanges-2]
+}
+
 const _CarbUnitsType_name = "GramsExchanges"
 
 var _CarbUnitsType_index = [...]uint8{0, 5, 14}
