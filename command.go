@@ -296,13 +296,25 @@ var pageData = map[Command]pageStructure{
 
 // Download requests the given history page from the pump.
 func (pump *Pump) Download(cmd Command, page int) []byte {
+	maxTries := pump.Retries()
+	defer pump.SetRetries(maxTries)
+	pump.SetRetries(1)
+	for tries := 0; tries < maxTries; tries++ {
+		pump.SetError(nil)
+		data := pump.tryDownload(cmd, page)
+		if pump.Error() == nil {
+			logTries(cmd, tries)
+			return data
+		}
+	}
+	return nil
+}
+
+func (pump *Pump) tryDownload(cmd Command, page int) []byte {
 	data := pump.execPage(cmd, page)
 	if pump.Error() != nil {
 		return nil
 	}
-	retries := pump.Retries()
-	defer pump.SetRetries(retries)
-	pump.SetRetries(1)
 	numFragments := pageData[cmd].numFragments
 	results := make([]byte, 0, numFragments*payloadLength)
 	seq := 1
