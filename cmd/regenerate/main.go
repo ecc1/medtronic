@@ -14,7 +14,10 @@ import (
 )
 
 var (
-	model = flag.Int("m", 523, "pump model")
+	model       = flag.Int("m", 523, "pump model")
+	dataField   = flag.String("d", "Data", "JSON `field` containing base64-encoded data")
+	nsFlag      = flag.Bool("ns", false, "format as Nightscout treatments")
+	reverseFlag = flag.Bool("r", false, "reverse the history records")
 )
 
 func main() {
@@ -22,13 +25,15 @@ func main() {
 	family := medtronic.Family(*model % 100)
 	d := json.NewDecoder(os.Stdin)
 	var maps []interface{}
-	if err := d.Decode(&maps); err != nil {
+	var err error
+	err = d.Decode(&maps)
+	if err != nil {
 		log.Fatal(err)
 	}
 	var records medtronic.History
 	for _, v := range maps {
 		m := v.(map[string]interface{})
-		base64data := m["Data"].(string)
+		base64data := m[*dataField].(string)
 		data, err := base64.StdEncoding.DecodeString(base64data)
 		if err != nil {
 			log.Fatal(err)
@@ -39,9 +44,17 @@ func main() {
 		}
 		records = append(records, r)
 	}
+	if *reverseFlag {
+		medtronic.ReverseHistory(records)
+	}
 	e := json.NewEncoder(os.Stdout)
 	e.SetIndent("", "  ")
-	if err := e.Encode(records); err != nil {
+	if *nsFlag {
+		err = e.Encode(medtronic.Treatments(records))
+	} else {
+		err = e.Encode(records)
+	}
+	if err != nil {
 		log.Fatal(err)
 	}
 }
