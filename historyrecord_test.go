@@ -190,6 +190,7 @@ func TestTreatments(t *testing.T) {
 				t.Error(err)
 				return
 			}
+			ReverseHistory(records)
 			treatments := Treatments(records)
 			treatmentFile := testFileName(c.treatments) + ".json"
 			eq, msg := compareDataToJSON(treatments, treatmentFile)
