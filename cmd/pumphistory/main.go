@@ -23,7 +23,7 @@ var (
 	all       = flag.Bool("a", false, "get entire pump history")
 	numHours  = flag.Int("n", 6, "number of `hours` of history to get")
 	nsFlag    = flag.Bool("ns", false, "format as Nightscout treatments")
-	fromFlag  = flag.String("f", "", "get history since the specified record `ID` (the base64-encoding the record data)")
+	fromFlag  = flag.String("f", "", "get history since the specified record `ID` (the base64-encoding of the record data)")
 	sinceFlag = flag.String("s", "", "get history since the specified `time` in RFC3339 format")
 
 	cutoff   time.Time

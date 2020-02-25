@@ -42,7 +42,7 @@ func (pump *Pump) findHistory(check func(HistoryRecord) bool) History {
 // an earlier timestamp than the cutoff (in the case of DailyTotal records).
 func (pump *Pump) History(since time.Time) History {
 	check := func(r HistoryRecord) bool {
-		return checkSince(r, since)
+		return checkBefore(r, since)
 	}
 	results := pump.findHistory(check)
 	n := len(results)
@@ -50,15 +50,15 @@ func (pump *Pump) History(since time.Time) History {
 		return nil
 	}
 	r := results[n-1]
-	if checkSince(r, since) {
+	if checkBefore(r, since) {
 		log.Printf("stopping pump history scan at %s", r.Time.Format(UserTimeLayout))
 		return results[:n-1]
 	}
 	return results
 }
 
-// checkSince returns true if r occurred no later than the cutoff.
-func checkSince(r HistoryRecord, cutoff time.Time) bool {
+// checkBefore returns true if r occurred no later than the cutoff.
+func checkBefore(r HistoryRecord, cutoff time.Time) bool {
 	switch r.Type() {
 	// Don't use DailyTotal timestamps to decide when to stop,
 	// because they appear out of order (at the end of the day).
