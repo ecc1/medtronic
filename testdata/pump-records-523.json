@@ -1,0 +1,2414 @@
+[
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T11:00:00-05:00",
+    "Data": "ewgAgAsZFBYjAA==",
+    "Info": {
+      "ProfileIndex": 8,
+      "BasalRate": {
+        "Start": "11:00",
+        "Rate": 0.875
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T10:00:00-05:00",
+    "Data": "ewcAgAoZFBQlAA==",
+    "Info": {
+      "ProfileIndex": 7,
+      "BasalRate": {
+        "Start": "10:00",
+        "Rate": 0.925
+      }
+    }
+  },
+  {
+    "Type": "ChangeTempBasalType",
+    "Time": "2020-02-25T09:30:36-05:00",
+    "Data": "YgEkngkZFA==",
+    "Info": "Percent"
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T09:30:31-05:00",
+    "Data": "ewYfngkZFBIjAA==",
+    "Info": {
+      "ProfileIndex": 6,
+      "BasalRate": {
+        "Start": "09:00",
+        "Rate": 0.875
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T09:30:30-05:00",
+    "Data": "FgAengkZFA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T09:30:30-05:00",
+    "Data": "MwAengkZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T09:04:19-05:00",
+    "Data": "FgEThAlZFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T09:04:19-05:00",
+    "Data": "Mx4ThAlZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.75
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2020-02-25T08:55:50-05:00",
+    "Data": "AwAAAAAytygZFA==",
+    "Info": {
+      "Fixed": 0,
+      "Manual": 0
+    }
+  },
+  {
+    "Type": "Rewind",
+    "Time": "2020-02-25T08:55:13-05:00",
+    "Data": "IQANtwgZFA=="
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T08:50:45-05:00",
+    "Data": "FgEtsghZFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T08:50:45-05:00",
+    "Data": "MyYtsghZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.95
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-25T08:46:46-05:00",
+    "Data": "AQAQABAAygAurkhZFA==",
+    "Info": {
+      "Programmed": 0.4,
+      "Amount": 0.4,
+      "Unabsorbed": 5.05,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-25T08:43:03-05:00",
+    "Data": "AQAMAAwAwgADq0hZFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.85,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T08:42:47-05:00",
+    "Data": "FgIvqghZFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T08:42:47-05:00",
+    "Data": "MwAvqghZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-25T08:35:54-05:00",
+    "Data": "AQAMAAwAwwA2o0hZFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.875,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T08:35:43-05:00",
+    "Data": "FgErowhZFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T08:35:43-05:00",
+    "Data": "MwArowhZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T08:35:23-05:00",
+    "Data": "ewUXowgZFBAoAA==",
+    "Info": {
+      "ProfileIndex": 5,
+      "BasalRate": {
+        "Start": "08:00",
+        "Rate": 1
+      }
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-25T08:31:44-05:00",
+    "Data": "AQAQABAAugAsn0hZFA==",
+    "Info": {
+      "Programmed": 0.4,
+      "Amount": 0.4,
+      "Unabsorbed": 4.65,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T08:05:23-05:00",
+    "Data": "FgEXhQhZFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T08:05:23-05:00",
+    "Data": "M14XhQhZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.35
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T07:59:23-05:00",
+    "Data": "FgEXuwdZFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T07:59:23-05:00",
+    "Data": "MxgXuwdZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.6
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T07:56:29-05:00",
+    "Data": "ewQduAcZFA4jAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "07:00",
+        "Rate": 0.875
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T07:56:29-05:00",
+    "Data": "FgAduAcZFA==",
+    "Info": "0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T07:56:29-05:00",
+    "Data": "MwAduAcZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T07:47:52-05:00",
+    "Data": "GgE0rwcZFA=="
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T07:47:27-05:00",
+    "Data": "GgAbrwcZFA=="
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-25T07:40:32-05:00",
+    "Data": "FgEgqAdZFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-25T07:40:32-05:00",
+    "Data": "M14gqAdZFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.35
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T07:37:17-05:00",
+    "Data": "ewQRpQcZFA4jAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "07:00",
+        "Rate": 0.875
+      }
+    }
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T07:37:16-05:00",
+    "Data": "GgEQpQcZFA=="
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T07:36:46-05:00",
+    "Data": "GgAupAcZFA=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T07:16:00-05:00",
+    "Data": "ewQAkAcZFA4jAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "07:00",
+        "Rate": 0.875
+      }
+    }
+  },
+  {
+    "Type": "NewTime",
+    "Time": "2020-02-25T07:16:00-05:00",
+    "Data": "GAAAkAcZFA=="
+  },
+  {
+    "Type": "ChangeTime",
+    "Time": "2007-01-01T00:01:14-05:00",
+    "Data": "FwAOQQABBw=="
+  },
+  {
+    "Type": "ChangeTimeFormat",
+    "Time": "2007-01-01T00:00:18-05:00",
+    "Data": "ZAASQAABBw==",
+    "Info": 0
+  },
+  {
+    "Type": "ClearAlarm",
+    "Time": "2007-01-01T00:00:16-05:00",
+    "Data": "DAMQQAABBw==",
+    "Info": 3
+  },
+  {
+    "Type": "Alarm",
+    "Time": "2020-02-25T07:11:30-05:00",
+    "Data": "BgMDaB6LZxkU",
+    "Info": 3
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T07:11:30-05:00",
+    "Data": "GgAeiwcZFA=="
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T07:00:00-05:00",
+    "Data": "ewQAgAcZFA4jAA==",
+    "Info": {
+      "ProfileIndex": 4,
+      "BasalRate": {
+        "Start": "07:00",
+        "Rate": 0.875
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T06:36:53-05:00",
+    "Data": "ewM1pAYZFAweAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.75
+      }
+    }
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T06:36:53-05:00",
+    "Data": "GgE1pAYZFA=="
+  },
+  {
+    "Type": "BatteryChange",
+    "Time": "2020-02-25T06:36:31-05:00",
+    "Data": "GgAfpAYZFA=="
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-25T06:24:35-05:00",
+    "Data": "AQFAAUAAAAAjmEZ5FA==",
+    "Info": {
+      "Programmed": 8,
+      "Amount": 8,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T06:00:00-05:00",
+    "Data": "ewMAgAYZFAweAA==",
+    "Info": {
+      "ProfileIndex": 3,
+      "BasalRate": {
+        "Start": "06:00",
+        "Rate": 0.75
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T05:00:00-05:00",
+    "Data": "ewIAgAUZFAocAA==",
+    "Info": {
+      "ProfileIndex": 2,
+      "BasalRate": {
+        "Start": "05:00",
+        "Rate": 0.7
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T03:00:00-05:00",
+    "Data": "ewEAgAMZFAYbAA==",
+    "Info": {
+      "ProfileIndex": 1,
+      "BasalRate": {
+        "Start": "03:00",
+        "Rate": 0.675
+      }
+    }
+  },
+  {
+    "Type": "DailyTotal523",
+    "Time": "2020-02-24T00:00:00-05:00",
+    "Data": "bjgUBQAAAAAAAAAFfAEUFARoUAAAAAAAAAAABGgAAAAnAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+  },
+  {
+    "Type": "DailyTotal",
+    "Time": "2020-02-24T00:00:00-05:00",
+    "Data": "BwAABXw4FAAAAA==",
+    "Info": 35.1
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-25T00:00:00-05:00",
+    "Data": "ewAAgAAZFAAYAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.6
+      }
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-24T23:53:44-05:00",
+    "Data": "exEstRcYFCwYAA==",
+    "Info": {
+      "ProfileIndex": 17,
+      "BasalRate": {
+        "Start": "22:00",
+        "Rate": 0.6
+      }
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T22:23:44-05:00",
+    "Data": "FgMslxZYFA==",
+    "Info": "1h30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T22:23:44-05:00",
+    "Data": "MwAslxZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T22:17:22-05:00",
+    "Data": "FgEWkRZYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T22:17:22-05:00",
+    "Data": "MxIWkRZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.45
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T21:49:48-05:00",
+    "Data": "FgEwsRVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T21:49:48-05:00",
+    "Data": "M0YwsRVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.75
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T21:34:24-05:00",
+    "Data": "FgEYohVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T21:34:24-05:00",
+    "Data": "M0QYohVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.7
+    }
+  },
+  {
+    "Type": "Prime",
+    "Time": "2020-02-24T21:07:26-05:00",
+    "Data": "AwADAAMahxUYFA==",
+    "Info": {
+      "Fixed": 0.3,
+      "Manual": 0.3
+    }
+  },
+  {
+    "Type": "ResumePump",
+    "Time": "2020-02-24T21:07:22-05:00",
+    "Data": "HyAWhxUYFA=="
+  },
+  {
+    "Type": "SuspendPump",
+    "Time": "2020-02-24T20:58:11-05:00",
+    "Data": "HgELuhQYFA=="
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T20:46:57-05:00",
+    "Data": "FgQ5rhRYFA==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T20:46:57-05:00",
+    "Data": "MwA5rhRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T20:33:47-05:00",
+    "Data": "FgQvoRRYFA==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T20:33:47-05:00",
+    "Data": "MwAvoRRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T20:23:51-05:00",
+    "Data": "FgIzlxRYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T20:23:51-05:00",
+    "Data": "MwAzlxRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T20:15:54-05:00",
+    "Data": "FgI2jxRYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T20:15:54-05:00",
+    "Data": "MwA2jxRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T20:06:53-05:00",
+    "Data": "FgE1hhRYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T20:06:53-05:00",
+    "Data": "MwA1hhRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T19:52:22-05:00",
+    "Data": "FgMWtBNYFA==",
+    "Info": "1h30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T19:52:22-05:00",
+    "Data": "MwAWtBNYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T19:07:16-05:00",
+    "Data": "AQA8ADwBAAAQh1N4FA==",
+    "Info": {
+      "Programmed": 1.5,
+      "Amount": 1.5,
+      "Unabsorbed": 6.4,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T19:06:55-05:00",
+    "Data": "FgQ3hhNYFA==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T19:06:55-05:00",
+    "Data": "MwA3hhNYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T18:51:30-05:00",
+    "Data": "FgQesxJYFA==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T18:51:30-05:00",
+    "Data": "MwAesxJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T18:43:00-05:00",
+    "Data": "AQCgAKAAeAAAq1J4FA==",
+    "Info": {
+      "Programmed": 4,
+      "Amount": 4,
+      "Unabsorbed": 3,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T18:39:22-05:00",
+    "Data": "FgIWpxJYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T18:39:22-05:00",
+    "Data": "MwAWpxJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T18:23:39-05:00",
+    "Data": "AQAIAAgAjQAnl1JYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 3.525,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T18:23:20-05:00",
+    "Data": "FgIUlxJYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T18:23:20-05:00",
+    "Data": "MwAUlxJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T18:14:55-05:00",
+    "Data": "AQAMAAwAiwA3jlJYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 3.475,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T18:10:35-05:00",
+    "Data": "AQAMAAwAhgAjilJYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 3.35,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T18:10:14-05:00",
+    "Data": "FgEOihJYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T18:10:14-05:00",
+    "Data": "MwAOihJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T18:02:48-05:00",
+    "Data": "AQAIAAgAhwAwglJYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 3.375,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T17:57:42-05:00",
+    "Data": "AQAIAAgAhQAquVFYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 3.325,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T17:57:32-05:00",
+    "Data": "FgEguRFYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T17:57:32-05:00",
+    "Data": "MwAguRFYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T17:52:18-05:00",
+    "Data": "AQAIAAgAgwAStFFYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 3.275,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T17:51:58-05:00",
+    "Data": "FgE6sxFYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T17:51:58-05:00",
+    "Data": "MxM6sxFYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.475
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T17:48:59-05:00",
+    "Data": "FgE7sBFYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T17:48:59-05:00",
+    "Data": "MwA7sBFYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T17:20:12-05:00",
+    "Data": "FgEMlBFYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T17:20:12-05:00",
+    "Data": "MxYMlBFYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.55
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T17:10:59-05:00",
+    "Data": "FgE7ihFYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T17:10:59-05:00",
+    "Data": "MyA7ihFYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.8
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T17:05:12-05:00",
+    "Data": "FgIMhRFYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T17:05:12-05:00",
+    "Data": "MwAMhRFYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:56:06-05:00",
+    "Data": "AQAMAAwAwwAGuFBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.875,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:52:03-05:00",
+    "Data": "AQAMAAwAvgADtFBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.75,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T16:51:46-05:00",
+    "Data": "FgIusxBYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T16:51:46-05:00",
+    "Data": "MwAusxBYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:42:13-05:00",
+    "Data": "AQAMAAwAwQANqlBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.825,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T16:41:56-05:00",
+    "Data": "FgI4qRBYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T16:41:56-05:00",
+    "Data": "MwA4qRBYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:37:47-05:00",
+    "Data": "AQAMAAwAvQAvpVBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.725,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T16:33:59-05:00",
+    "Data": "FgI7oRBYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T16:33:59-05:00",
+    "Data": "MwA7oRBYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:24:05-05:00",
+    "Data": "AQAMAAwAxQAFmFBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.925,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T16:23:56-05:00",
+    "Data": "FgI4lxBYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T16:23:56-05:00",
+    "Data": "MwA4lxBYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:18:00-05:00",
+    "Data": "AQAMAAwAwwAAklBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.875,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T16:17:42-05:00",
+    "Data": "FgIqkRBYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T16:17:42-05:00",
+    "Data": "MwAqkRBYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:10:44-05:00",
+    "Data": "AQAMAAwAxAAsilBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.9,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T16:10:24-05:00",
+    "Data": "FgIYihBYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T16:10:24-05:00",
+    "Data": "MwAYihBYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T16:02:48-05:00",
+    "Data": "AQAMAAwAxAAwglBYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 4.9,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T15:58:56-05:00",
+    "Data": "FgI4ug9YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T15:58:56-05:00",
+    "Data": "MwA4ug9YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T15:39:42-05:00",
+    "Data": "FgEqpw9YFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T15:39:42-05:00",
+    "Data": "M14qpw9YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.35
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T15:32:46-05:00",
+    "Data": "FgEuoA9YFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T15:32:46-05:00",
+    "Data": "MyQuoA9YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.9
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T15:26:16-05:00",
+    "Data": "FgEQmg9YFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T15:26:16-05:00",
+    "Data": "MxgQmg9YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.6
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T15:21:59-05:00",
+    "Data": "AQAMAAwA+QA7lU9YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.225,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T15:16:21-05:00",
+    "Data": "AQAMAAwA9QAVkE9YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.125,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T15:16:04-05:00",
+    "Data": "FgIEkA9YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T15:16:04-05:00",
+    "Data": "MwAEkA9YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T15:05:01-05:00",
+    "Data": "FgIBhQ9YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T15:05:01-05:00",
+    "Data": "MwABhQ9YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T14:59:14-05:00",
+    "Data": "AQAMAAwA/wAOu05YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.375,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T14:58:54-05:00",
+    "Data": "FgI2ug5YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T14:58:54-05:00",
+    "Data": "MwA2ug5YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T14:52:27-05:00",
+    "Data": "AQAMAAwA/AAbtE5YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.3,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T14:52:09-05:00",
+    "Data": "FgIJtA5YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T14:52:09-05:00",
+    "Data": "MwAJtA5YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T14:46:15-05:00",
+    "Data": "AQAMAAwA9wAPrk5YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.175,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T14:45:54-05:00",
+    "Data": "FgI2rQ5YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T14:45:54-05:00",
+    "Data": "MwA2rQ5YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T14:41:32-05:00",
+    "Data": "AQAMAAwA8gAgqU5YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.05,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T14:37:14-05:00",
+    "Data": "FgIOpQ5YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T14:37:14-05:00",
+    "Data": "MwAOpQ5YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T14:14:50-05:00",
+    "Data": "AQAMAAwBAAAyjk5YFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 6.4,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T14:10:56-05:00",
+    "Data": "AQAEAAQBAAA4ik5YFA==",
+    "Info": {
+      "Programmed": 0.1,
+      "Amount": 0.1,
+      "Unabsorbed": 6.4,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T14:10:34-05:00",
+    "Data": "FgIiig5YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T14:10:34-05:00",
+    "Data": "MwAiig5YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T14:03:55-05:00",
+    "Data": "FgI3gw5YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T14:03:55-05:00",
+    "Data": "MwA3gw5YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T13:58:08-05:00",
+    "Data": "AQAQABAA+QAIuk1YFA==",
+    "Info": {
+      "Programmed": 0.4,
+      "Amount": 0.4,
+      "Unabsorbed": 6.225,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T13:57:57-05:00",
+    "Data": "FgI5uQ1YFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T13:57:57-05:00",
+    "Data": "MwA5uQ1YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T13:48:54-05:00",
+    "Data": "FgQ2sA1YFA==",
+    "Info": "2h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T13:48:54-05:00",
+    "Data": "MwA2sA1YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T13:41:35-05:00",
+    "Data": "AQDIAMgAOAAjqU14FA==",
+    "Info": {
+      "Programmed": 5,
+      "Amount": 5,
+      "Unabsorbed": 1.4,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T13:39:41-05:00",
+    "Data": "FgEppw1YFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T13:39:41-05:00",
+    "Data": "MxYppw1YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.55
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T13:18:02-05:00",
+    "Data": "AQAoACgAGAACkk14FA==",
+    "Info": {
+      "Programmed": 1,
+      "Amount": 1,
+      "Unabsorbed": 0.6,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T13:07:27-05:00",
+    "Data": "FgMbhw1YFA==",
+    "Info": "1h30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T13:07:27-05:00",
+    "Data": "MwAbhw1YFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T12:55:48-05:00",
+    "Data": "FgMwtwxYFA==",
+    "Info": "1h30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T12:55:48-05:00",
+    "Data": "MwAwtwxYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T12:49:51-05:00",
+    "Data": "FgIzsQxYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T12:49:51-05:00",
+    "Data": "MwAzsQxYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T12:28:51-05:00",
+    "Data": "FgEznAxYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T12:28:51-05:00",
+    "Data": "MwAznAxYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T12:16:57-05:00",
+    "Data": "FgE5kAxYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T12:16:57-05:00",
+    "Data": "MwA5kAxYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T12:08:34-05:00",
+    "Data": "FgEiiAxYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T12:08:34-05:00",
+    "Data": "MwYiiAxYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.15
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T12:02:32-05:00",
+    "Data": "FgEgggxYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T12:02:32-05:00",
+    "Data": "MxggggxYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.6
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T11:52:57-05:00",
+    "Data": "FgE5tAtYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T11:52:57-05:00",
+    "Data": "MwA5tAtYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T11:49:00-05:00",
+    "Data": "FgEAsQtYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T11:49:00-05:00",
+    "Data": "MxgAsQtYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.6
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T11:32:34-05:00",
+    "Data": "FgIioAtYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T11:32:34-05:00",
+    "Data": "MwAioAtYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T11:23:34-05:00",
+    "Data": "FgEilwtYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T11:23:34-05:00",
+    "Data": "MxoilwtYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.65
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T11:13:40-05:00",
+    "Data": "FgEojQtYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T11:13:40-05:00",
+    "Data": "MwYojQtYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.15
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T11:02:41-05:00",
+    "Data": "FgEpggtYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T11:02:41-05:00",
+    "Data": "Mw4pggtYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.35
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T10:56:30-05:00",
+    "Data": "AQAEAAQAdgAeuEpYFA==",
+    "Info": {
+      "Programmed": 0.1,
+      "Amount": 0.1,
+      "Unabsorbed": 2.95,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:56:17-05:00",
+    "Data": "FgERuApYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:56:17-05:00",
+    "Data": "MxQRuApYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T10:52:43-05:00",
+    "Data": "AQAIAAgAcgArtEpYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 2.85,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:52:25-05:00",
+    "Data": "FgEZtApYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:52:25-05:00",
+    "Data": "MwgZtApYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.2
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T10:47:17-05:00",
+    "Data": "AQAIAAgAbwARr0pYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 2.775,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:41:56-05:00",
+    "Data": "FgE4qQpYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:41:56-05:00",
+    "Data": "MzY4qQpYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.35
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:35:19-05:00",
+    "Data": "FgETowpYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:35:19-05:00",
+    "Data": "Mx4TowpYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.75
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:31:38-05:00",
+    "Data": "FgEmnwpYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:31:38-05:00",
+    "Data": "MxYmnwpYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.55
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:18:51-05:00",
+    "Data": "FgEzkgpYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:18:51-05:00",
+    "Data": "MwAzkgpYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:10:40-05:00",
+    "Data": "FgEoigpYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:10:40-05:00",
+    "Data": "MyIoigpYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.85
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T10:04:24-05:00",
+    "Data": "FgEYhApYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T10:04:24-05:00",
+    "Data": "MxoYhApYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.65
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T09:57:04-05:00",
+    "Data": "AQAQABAAlgAEuUlYFA==",
+    "Info": {
+      "Programmed": 0.4,
+      "Amount": 0.4,
+      "Unabsorbed": 3.75,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:56:46-05:00",
+    "Data": "FgEuuAlYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:56:46-05:00",
+    "Data": "Mw4uuAlYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.35
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T09:47:45-05:00",
+    "Data": "AQAMAAwAlwAtr0lYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 3.775,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:47:34-05:00",
+    "Data": "FgEirwlYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:47:34-05:00",
+    "Data": "Mw4irwlYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.35
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T09:41:16-05:00",
+    "Data": "AQAMAAwAkwAQqUlYFA==",
+    "Info": {
+      "Programmed": 0.3,
+      "Amount": 0.3,
+      "Unabsorbed": 3.675,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:40:58-05:00",
+    "Data": "FgE6qAlYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:40:58-05:00",
+    "Data": "Mws6qAlYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.275
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T09:31:40-05:00",
+    "Data": "AQAIAAgAmQAon0lYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 3.825,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:31:29-05:00",
+    "Data": "FgEdnwlYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:31:29-05:00",
+    "Data": "Mw4dnwlYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.35
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T09:25:47-05:00",
+    "Data": "AQAQABAAkgAvmUlYFA==",
+    "Info": {
+      "Programmed": 0.4,
+      "Amount": 0.4,
+      "Unabsorbed": 3.65,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:25:34-05:00",
+    "Data": "FgEimQlYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:25:34-05:00",
+    "Data": "MwAimQlYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:22:28-05:00",
+    "Data": "FgEclglYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:22:28-05:00",
+    "Data": "MwYclglYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.15
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T09:11:48-05:00",
+    "Data": "AQAQABAAlgAwi0lYFA==",
+    "Info": {
+      "Programmed": 0.4,
+      "Amount": 0.4,
+      "Unabsorbed": 3.75,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T09:11:34-05:00",
+    "Data": "FgEiiwlYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T09:11:34-05:00",
+    "Data": "M14iiwlYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.35
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T08:50:00-05:00",
+    "Data": "AQAIAAgArgAAskhYFA==",
+    "Info": {
+      "Programmed": 0.2,
+      "Amount": 0.2,
+      "Unabsorbed": 4.35,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T08:49:52-05:00",
+    "Data": "FgE0sQhYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T08:49:52-05:00",
+    "Data": "Mwc0sQhYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.175
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T08:41:32-05:00",
+    "Data": "FgEgqQhYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T08:41:32-05:00",
+    "Data": "MwAgqQhYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T08:32:52-05:00",
+    "Data": "AQAEAAQAxQA0oEhYFA==",
+    "Info": {
+      "Programmed": 0.1,
+      "Amount": 0.1,
+      "Unabsorbed": 4.925,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T08:12:34-05:00",
+    "Data": "FgMijAhYFA==",
+    "Info": "1h30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T08:12:34-05:00",
+    "Data": "MwAijAhYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T08:00:54-05:00",
+    "Data": "FgI2gAhYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T08:00:54-05:00",
+    "Data": "MwA2gAhYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T07:54:01-05:00",
+    "Data": "FgIBtgdYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T07:54:01-05:00",
+    "Data": "MwABtgdYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T07:46:11-05:00",
+    "Data": "FgILrgdYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T07:46:11-05:00",
+    "Data": "MwALrgdYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T06:56:20-05:00",
+    "Data": "FgMUuAZYFA==",
+    "Info": "1h30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T06:56:20-05:00",
+    "Data": "MwAUuAZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "Bolus",
+    "Time": "2020-02-24T06:44:19-05:00",
+    "Data": "AQEsASwAAAATrEZ4FA==",
+    "Info": {
+      "Programmed": 7.5,
+      "Amount": 7.5,
+      "Unabsorbed": 0,
+      "Duration": "0s"
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T06:32:34-05:00",
+    "Data": "FgEioAZYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T06:32:34-05:00",
+    "Data": "MyYioAZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.95
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T06:19:17-05:00",
+    "Data": "FgERkwZYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T06:19:17-05:00",
+    "Data": "M1QRkwZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 2.1
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T06:08:52-05:00",
+    "Data": "FgE0iAZYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T06:08:52-05:00",
+    "Data": "MzA0iAZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.2
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T06:02:50-05:00",
+    "Data": "FgEyggZYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T06:02:50-05:00",
+    "Data": "MyIyggZYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.85
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T05:46:16-05:00",
+    "Data": "FgEQrgVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T05:46:16-05:00",
+    "Data": "MxoQrgVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.65
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T05:31:30-05:00",
+    "Data": "FgEenwVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T05:31:30-05:00",
+    "Data": "MxQenwVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T05:12:13-05:00",
+    "Data": "FgENjAVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T05:12:13-05:00",
+    "Data": "MxQNjAVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T05:07:11-05:00",
+    "Data": "FgELhwVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T05:07:11-05:00",
+    "Data": "Mw4LhwVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.35
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T05:02:15-05:00",
+    "Data": "FgEPggVYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T05:02:15-05:00",
+    "Data": "MxQPggVYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T04:57:37-05:00",
+    "Data": "FgEluQRYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T04:57:37-05:00",
+    "Data": "MxwluQRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.7
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T04:27:52-05:00",
+    "Data": "FgE0mwRYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T04:27:52-05:00",
+    "Data": "MxQ0mwRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.5
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T04:23:34-05:00",
+    "Data": "FgEilwRYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T04:23:34-05:00",
+    "Data": "MygilwRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T04:19:48-05:00",
+    "Data": "FgEwkwRYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T04:19:48-05:00",
+    "Data": "MxwwkwRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0.7
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T04:11:12-05:00",
+    "Data": "FgIMiwRYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T04:11:12-05:00",
+    "Data": "MwAMiwRYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T03:51:46-05:00",
+    "Data": "FgIuswNYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T03:51:46-05:00",
+    "Data": "MwAuswNYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T03:39:40-05:00",
+    "Data": "FgIopwNYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T03:39:40-05:00",
+    "Data": "MwAopwNYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T03:26:12-05:00",
+    "Data": "FgIMmgNYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T03:26:12-05:00",
+    "Data": "MwAMmgNYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T03:11:28-05:00",
+    "Data": "FgIciwNYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T03:11:28-05:00",
+    "Data": "MwAciwNYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T02:53:40-05:00",
+    "Data": "FgIotQJYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T02:53:40-05:00",
+    "Data": "MwAotQJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T02:37:05-05:00",
+    "Data": "FgIFpQJYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T02:37:05-05:00",
+    "Data": "MwAFpQJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T02:22:37-05:00",
+    "Data": "FgIllgJYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T02:22:37-05:00",
+    "Data": "MwAllgJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T02:12:24-05:00",
+    "Data": "FgEYjAJYFA==",
+    "Info": "30m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T02:12:24-05:00",
+    "Data": "MzQYjAJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 1.3
+    }
+  },
+  {
+    "Type": "TempBasalDuration",
+    "Time": "2020-02-24T02:05:56-05:00",
+    "Data": "FgI4hQJYFA==",
+    "Info": "1h0m0s"
+  },
+  {
+    "Type": "TempBasalRate",
+    "Time": "2020-02-24T02:05:56-05:00",
+    "Data": "MwA4hQJYFAA=",
+    "Info": {
+      "Type": "Absolute",
+      "Value": 0
+    }
+  },
+  {
+    "Type": "BasalProfileStart",
+    "Time": "2020-02-24T01:59:50-05:00",
+    "Data": "ewAyuwEYFAAYAA==",
+    "Info": {
+      "ProfileIndex": 0,
+      "BasalRate": {
+        "Start": "00:00",
+        "Rate": 0.6
+      }
+    }
+  }
+]

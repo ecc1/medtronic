@@ -44,6 +44,7 @@ func TestDecodeHistoryRecord(t *testing.T) {
 		{"ps2", 554, 4},
 		{"ps2", 554, 5},
 		{"pump-records", 522, 0},
+		{"pump-records", 523, 0},
 		{"records", 522, 0},
 		{"records", 523, 0},
 		{"records", 554, 0},
@@ -179,6 +180,7 @@ func TestTreatments(t *testing.T) {
 		treatments testCase
 	}{
 		{testCase{"pump-records", 522, 0}, testCase{"pump-treatments", 522, 0}},
+		{testCase{"pump-records", 523, 0}, testCase{"pump-treatments", 523, 0}},
 	}
 	for _, c := range cases {
 		testFile := testFileName(c.records)
@@ -229,6 +231,7 @@ func TestJQFilter(t *testing.T) {
 		{"ps2", 554, 4},
 		{"ps2", 554, 5},
 		{"pump-records", 522, 0},
+		{"pump-records", 523, 0},
 		{"records", 522, 0},
 		{"records", 523, 0},
 		{"records", 554, 0},
