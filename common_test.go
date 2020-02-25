@@ -104,7 +104,7 @@ func diffJSON(file1, file2 string) (bool, string) {
 func canonicalJSON(file string) string {
 	canon, err := exec.Command("jq", "-S", ".", file).Output()
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("%s: %v", file, err))
 	}
 	tmpfile, err := ioutil.TempFile("", "json")
 	if err != nil {
