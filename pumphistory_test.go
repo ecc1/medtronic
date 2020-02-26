@@ -7,14 +7,7 @@ import (
 )
 
 func TestPumpHistory(t *testing.T) {
-	tc := testCase{"pump-records", 523, 0}
-	file := testFileName(tc) + ".json"
-	family := testPumpFamily(tc)
-	records, err := decodeFromData(file, family)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	records := setupPumpHistory()
 	cases := []struct {
 		cutoff string
 		index  int
@@ -36,14 +29,7 @@ func TestPumpHistory(t *testing.T) {
 }
 
 func TestPumpHistoryFrom(t *testing.T) {
-	tc := testCase{"pump-records", 523, 0}
-	file := testFileName(tc) + ".json"
-	family := testPumpFamily(tc)
-	records, err := decodeFromData(file, family)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	records := setupPumpHistory()
 	cases := []struct {
 		id    string
 		index int
@@ -75,6 +61,17 @@ func TestPumpHistoryFrom(t *testing.T) {
 			}
 		})
 	}
+}
+
+func setupPumpHistory() History {
+	tc := testCase{"pump-records", 523, 0}
+	file := testFileName(tc) + ".json"
+	family := testPumpFamily(tc)
+	records, err := decodeFromData(file, family)
+	if err != nil {
+		panic(err)
+	}
+	return records
 }
 
 // Mimic the behavior of Pump.findRecords.
