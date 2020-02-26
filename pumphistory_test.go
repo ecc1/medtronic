@@ -77,29 +77,31 @@ func TestPumpHistoryFrom(t *testing.T) {
 	}
 }
 
-// Mimic the behavior of Pump.findHistory.
-func findRecords(records History, check func(HistoryRecord) bool) History {
+// Mimic the behavior of Pump.findRecords.
+func findRecords(records History, check func(HistoryRecord) bool) (History, bool) {
+	results := records
 	for i, r := range records {
 		if check(r) {
-			return records[:i+1]
+			results = records[:i+1]
+			break
 		}
 	}
-	return records
+	n := len(results)
+	if n == 0 {
+		return nil, false
+	}
+	r := results[n-1]
+	if check(r) {
+		return results[:n-1], true
+	}
+	return results, false
 }
 
 func findSince(records History, since time.Time) History {
 	check := func(r HistoryRecord) bool {
 		return checkBefore(r, since)
 	}
-	results := findRecords(records, check)
-	n := len(results)
-	if n == 0 {
-		return nil
-	}
-	r := results[n-1]
-	if checkBefore(r, since) {
-		return results[:n-1]
-	}
+	results, _ := findRecords(records, check)
 	return results
 }
 
@@ -107,14 +109,5 @@ func findID(records History, id []byte) (History, bool) {
 	check := func(r HistoryRecord) bool {
 		return checkID(r, id)
 	}
-	results := findRecords(records, check)
-	n := len(results)
-	if n == 0 {
-		return nil, false
-	}
-	r := results[n-1]
-	if checkID(r, id) {
-		return results[:n-1], true
-	}
-	return results, false
+	return findRecords(records, check)
 }

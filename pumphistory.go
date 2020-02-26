@@ -37,6 +37,20 @@ func (pump *Pump) findHistory(check func(HistoryRecord) bool) History {
 	return results
 }
 
+func (pump *Pump) findRecords(check func(HistoryRecord) bool, msg func(HistoryRecord)) (History, bool) {
+	results := pump.findHistory(check)
+	n := len(results)
+	if n == 0 {
+		return nil, false
+	}
+	r := results[n-1]
+	if check(r) {
+		msg(r)
+		return results[:n-1], true
+	}
+	return results, false
+}
+
 // History returns the history records since the specified time.
 // Note that the results may include records with a zero timestamp or
 // an earlier timestamp than the cutoff (in the case of DailyTotal records).
@@ -44,16 +58,10 @@ func (pump *Pump) History(since time.Time) History {
 	check := func(r HistoryRecord) bool {
 		return checkBefore(r, since)
 	}
-	results := pump.findHistory(check)
-	n := len(results)
-	if n == 0 {
-		return nil
-	}
-	r := results[n-1]
-	if checkBefore(r, since) {
+	msg := func(r HistoryRecord) {
 		log.Printf("stopping pump history scan at %s", r.Time.Format(UserTimeLayout))
-		return results[:n-1]
 	}
+	results, _ := pump.findRecords(check, msg)
 	return results
 }
 
@@ -78,17 +86,10 @@ func (pump *Pump) HistoryFrom(id []byte) (History, bool) {
 	check := func(r HistoryRecord) bool {
 		return checkID(r, id)
 	}
-	results := pump.findHistory(check)
-	n := len(results)
-	if n == 0 {
-		return nil, false
-	}
-	r := results[n-1]
-	if checkID(r, id) {
+	msg := func(r HistoryRecord) {
 		log.Printf("stopping pump history scan at record %s", base64.StdEncoding.EncodeToString(id))
-		return results[:n-1], true
 	}
-	return results, false
+	return pump.findRecords(check, msg)
 }
 
 // checkID returns true if r has a given record ID.
