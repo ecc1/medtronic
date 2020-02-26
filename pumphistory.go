@@ -58,6 +58,8 @@ func (pump *Pump) History(since time.Time) History {
 }
 
 // checkBefore returns true if r occurred no later than the cutoff.
+// The time must also be after 2015, to avoid stopping too soon when
+// history records are created before the pump clock has been set correctly.
 func checkBefore(r HistoryRecord, cutoff time.Time) bool {
 	switch r.Type() {
 	// Don't use DailyTotal timestamps to decide when to stop,
@@ -66,7 +68,7 @@ func checkBefore(r HistoryRecord, cutoff time.Time) bool {
 		return false
 	}
 	t := r.Time
-	return !t.IsZero() && !t.After(cutoff)
+	return !t.After(cutoff) && t.Year() > 2015
 }
 
 // HistoryFrom returns the history records since the specified record ID
