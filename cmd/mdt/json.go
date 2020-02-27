@@ -30,7 +30,7 @@ func showOpenAPS(v interface{}) {
 
 // OpenAPSJSON converts v into a value that the json package
 // will marshal in a format compatible with openaps.
-func OpenAPSJSON(v interface{}) interface{} { // nolint
+func OpenAPSJSON(v interface{}) interface{} {
 	switch r := v.(type) {
 	case medtronic.BasalRateSchedule:
 		return convertBasalRateSchedule(r)

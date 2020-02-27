@@ -196,7 +196,6 @@ const (
 	EmptyReservoir          AlarmCode = 0x3E
 )
 
-// nolint
 type (
 	decoder func([]byte, Family) HistoryRecord
 
