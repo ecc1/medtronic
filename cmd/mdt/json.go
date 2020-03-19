@@ -253,7 +253,7 @@ func convertBatteryInfo(r medtronic.BatteryInfo) interface{} {
 	}
 	return struct {
 		Voltage medtronic.Voltage `json:"voltage"`
-		Status  string            `json:"string"`
+		Status  string            `json:"status"`
 	}{
 		Voltage: r.Voltage,
 		Status:  status,
