@@ -26,7 +26,7 @@ func main() {
 			continue
 		}
 		if verbose {
-			log.Printf("raw data: % X (RSSI = %d)", p, rssi)
+			log.Printf("raw data: % X (%d bytes, RSSI = %d)", p, len(p), rssi)
 		}
 		data, err := packet.Decode(p)
 		if err != nil {
@@ -36,7 +36,7 @@ func main() {
 		if verbose {
 			log.Printf("decoded:  % X", data)
 		} else {
-			log.Printf("% X (RSSI = %d)", data, rssi)
+			log.Printf("% X (%d bytes, RSSI = %d)", data, len(data), rssi)
 		}
 
 	}
