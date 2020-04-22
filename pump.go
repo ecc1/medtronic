@@ -38,7 +38,7 @@ func DeviceAddress(id string) ([]byte, error) {
 	}
 	h, err := strconv.ParseUint(id, 16, 24)
 	if err != nil {
-		return nil, fmt.Errorf("device ID %q: %v", id, err)
+		return nil, fmt.Errorf("device ID %q: %w", id, err)
 	}
 	return []byte{byte(h >> 16), byte(h >> 8), byte(h >> 0)}, nil
 }
