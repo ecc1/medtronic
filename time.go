@@ -72,7 +72,7 @@ func ParseTimeOfDay(s string) (TimeOfDay, error) {
 			return Duration(d).TimeOfDay(), nil
 		}
 	}
-	return 0, fmt.Errorf("parseTimeOfDay: %q must be of the form HH:MM", s)
+	return 0, fmt.Errorf("ParseTimeOfDay: %q must be of the form HH:MM", s)
 }
 
 // halfHoursToTimeOfDay converts n half-hours to a time of day.
