@@ -12,10 +12,13 @@ along with [Pete Schwamb's code for RileyLink.](https://github.com/ps2/rileylink
 The `medtronic` package and any programs that use it must be built
 with the appropriate Go build tag for the radio. Currently supported radios:
 
-* `-tags cc1101` for a [CC1101 radio module](http://www.ti.com/product/CC1101)
-* `-tags cc111x` for a [CC1110 or CC1111 radio module](http://www.ti.com/product/cc1110-cc1111)
+* `-tags cc1101` for a [CC1101 radio module](https://www.ti.com/product/CC1101)
+* `-tags cc111x` for a [CC1110 or CC1111 radio module](https://www.ti.com/product/cc1110-cc1111)
   flashed with [`subg_rfspy` firmware](https://github.com/ps2/subg_rfspy)
-* `-tags rfm69` for a [RFM69HCW radio module](http://www.hoperf.com/rf_transceiver/modules/RFM69HCW.html)
+* `-tags rfm69` for a [RFM69HCW radio module](https://hoperf.com/modules/rf_transceiver/RFM69HCW.html)
+* `-tags rfm95` for a [RFM95W radio module](https://www.hoperf.com/modules/lora/RFM95.html)
+
+The default is the CC111x driver if no tags are specified.
 
 ### Utility programs
 
@@ -25,6 +28,9 @@ The `cmd` directory contains a number of command-line applications:
 (analogous to the the `openaps use pump ...` commands)
 * `mmtune` scans for the best frequency to communicate with the pump
 * `pumphistory` retrieves pump history records and prints them
+* `fakemeter` sends a glucose value to the pump, as if from a connected glucometer
+* `setbasals` sets the pump's basal rate schedule from the command line
+* `listen` waits for a packet or a timeout, for use in scripts
 * `sniff` listens for pump communications and prints the packets it receives
 
 ### Documentation
