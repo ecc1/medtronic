@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -18,6 +19,7 @@ var (
 	dataField   = flag.String("d", "Data", "JSON `field` containing base64-encoded data")
 	nsFlag      = flag.Bool("ns", false, "format as Nightscout treatments")
 	reverseFlag = flag.Bool("r", false, "reverse the history records")
+	binaryFlag  = flag.Bool("b", false, "output base64-encoded data")
 )
 
 func main() {
@@ -30,6 +32,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if *reverseFlag {
+		Reverse(maps)
+	}
 	var records medtronic.History
 	for _, v := range maps {
 		m := v.(map[string]interface{})
@@ -38,14 +43,19 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		if *binaryFlag {
+			fmt.Printf("% X ", data)
+			continue
+		}
 		r, err := medtronic.DecodeHistoryRecord(data, family)
 		if err != nil {
 			log.Fatal(err)
 		}
 		records = append(records, r)
 	}
-	if *reverseFlag {
-		medtronic.ReverseHistory(records)
+	if *binaryFlag {
+		fmt.Println()
+		return
 	}
 	e := json.NewEncoder(os.Stdout)
 	e.SetIndent("", "  ")
@@ -56,5 +66,11 @@ func main() {
 	}
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func Reverse(a []interface{}) {
+	for i, j := 0, len(a)-1; i < len(a)/2; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
 	}
 }
