@@ -11,5 +11,5 @@ require (
 	github.com/ecc1/rfm69 v0.0.0-20200419204709-806f65f1e062
 	github.com/ecc1/rfm95 v0.0.0-20200708180402-343c671fa94f
 	github.com/ecc1/serial v0.0.0-20200212223647-200c4b677936 // indirect
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c
+	golang.org/x/sys v0.1.0
 )
